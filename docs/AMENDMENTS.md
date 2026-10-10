@@ -2,6 +2,13 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-10: Navigation, spot-colour vibrance, Chapter II timing
+Status: Confirmed by the owner.
+
+- Readers get four ways to move through a chapter: a timeline scrubber with scene marks, skip keys (sentence and scene), playback speed (up to 2×, pitch kept), and a chapter scene menu.
+- Spot colours (docs/COLOR.md) are made richer and brighter, with a slight glow. Ink and paper are unchanged.
+- Chapter II starts after the Chapter I Notes 1.0 are done. Its art is made the same way as Chapter I's.
+
 ## 2026-10-10: Alice's poses are whole figures, not a jointed puppet
 Status: In effect; owner may revisit.
 

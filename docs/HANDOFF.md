@@ -66,7 +66,13 @@ Status key: ☐ to do. The owner's answers to the open questions are at the end 
 13. ☐ **Chapter II preparation**: the questions were put to the owner; answers go below.
 14. ☐ **Colours more vibrant.** The spot colours (pink eyes, golden key, red-hot poker) should be more saturated and luminous. Plan: raise the saturation of the `SPOT` values, multiply less with the engraving (keep the line work but let the colour sit on top), and consider a soft glow on the poker. Check whether the owner also means the paper tone (see their answer).
 
-### Owner's answers (fill in)
-- Note 7:
-- Note 13:
-- Note 14:
+### Owner's answers (2026-10-10)
+- **Note 7**: all four: a timeline scrubber with scene marks, skip keys (←/→ a sentence, Shift+←/→ a scene), playback speed (1×, 1.25×, 1.5×, 2×, pitch kept), and a chapter scene menu (start screen and pause).
+- **Note 13**: start Chapter II **after Notes 1.0** are done. Chapter II art is made **the same way as Chapter I**: Tenniel plates where they exist, ChatGPT for the rest, in the same conversation. Write the Chapter II asset list and prompts first, so the owner can generate art while Notes 1.0 are built.
+- **Note 14**: **spot colours only**: richer and brighter pink eyes, golden key and red-hot poker, with a slight glow. Ink and paper unchanged.
+
+## Suggested order for the next session
+1. Notes 3, 5, 6, 9, 10 (staging, transitions, chapter end: code only, no art needed), then 7 (navigation), 11 (Rabbit idle), 14 (colours), and 2 (slow walking without the run stride until the walk art comes).
+2. Drop in each new asset from "Chapter I asset list v2" as it arrives (notes 2, 4, 8 and the rest). Log each one in PROVENANCE.md.
+3. Write the Chapter II asset list and prompts (CHAPTER_02_ASSETS.md + ART_PROMPTS.md), checking Tenniel's Chapter II plates on Victorian Web (2.1 Alice's long neck, 2.2 Rabbit with gloves and fan, 2.3 pool of tears).
+4. Chapter II: align its LibriVox narration (same recording, file `aliceinwonderland_02_carroll.mp3`), then build its scenes with the same engine. Add chapter selection.
