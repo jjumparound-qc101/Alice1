@@ -1,6 +1,6 @@
 # Chapter I Asset List: "Down the Rabbit-Hole"
 Date: 2026-10-10
-Status: Draft. **The plate list needs checking against a scan** (see Caveats).
+Status: Draft. The Chapter I plates were checked against secondary sources on 2026-10-10 (see Sources). The plates borrowed from other chapters are partly confirmed.
 
 ## Why this exists
 The art-style decision says: "Tenniel scans used directly, with AI only to fill hidden areas and missing poses." This list checks whether that holds for Chapter I. It goes through every story beat that needs a character pose or set piece and marks where each one can come from.
@@ -17,14 +17,16 @@ The art-style decision says: "Tenniel scans used directly, with AI only to fill 
 
 *Wonderland* (1865) has 42 illustrations. *Through the Looking-Glass* (1871) is also public domain, which widens the pool of pose references. Its Alice wears a different costume (striped stockings and a hairband), so those plates are pose references only, not direct sources.
 
-| ID | Plate | Chapter | Used for |
-|---|---|---|---|
-| W-01-1 | White Rabbit, upright, waistcoat, looking at his pocket watch | I (chapter head) | R02 |
-| W-01-2 | Alice lifting the low curtain to find the little door | I | A12, hall set |
-| W-01-3 | Alice holding the "DRINK ME" bottle | I | A14, A15, bottle prop |
-| W-02-2 | White Rabbit startled, dropping his gloves and fan | II | R01, R04 (as a base) |
-| W-04-x | Small Alice with the Puppy | IV | A17 (scale and stance) |
-| W-08-x | Gardeners painting the roses | VIII | Garden view through the little door |
+Chapter I has exactly three plates. The frontispiece (the King and Queen of Hearts at the trial) comes before Chapter I and isn't used here.
+
+| ID | Plate | Chapter | Status | Used for |
+|---|---|---|---|---|
+| W-01-1 | "I'm late": the White Rabbit, upright, holding his watch in one hand, umbrella under the other arm | I | Confirmed | R02 |
+| W-01-2 | "Alice, key in hand, finds the door": Alice pulling back the curtain to show the little door | I | Confirmed | A12, hall set, golden key |
+| W-01-3 | "Drink me": Alice holding the bottle in her right hand; the three-legged glass table, with the key on it, to her left | I | Confirmed | A14, A15, bottle, table |
+| W-02-2 | "Alice catches sight of the White Rabbit": the Rabbit startled, dropping his gloves and fan | II | Confirmed | R01, R04 (as a base) |
+| W-04-x | "Dog looking at tiny Alice" | IV (from the text) | Plate exists; contents not seen | A17 (scale and stance) |
+| W-08-x | "Two, Five, and Seven painting the rosebush" | VIII | Confirmed | Garden view (weak base: a close-up of a rosebush, not a vista) |
 | LG-x | Looking-Glass plates (Alice running with the Red Queen; Dinah) | LG I–II | Pose references for A04 and A09; optional Dinah vignette |
 
 ## Alice: 22 poses
@@ -42,7 +44,7 @@ The art-style decision says: "Tenniel scans used directly, with AI only to fill 
 | A09 | Landing on sticks and leaves, getting up | New | — |
 | A10 | Running down the long passage | New | LG running pose as reference |
 | A11 | Walking the hall, trying the locked doors | New | — |
-| A12 | Lifting the curtain and finding the little door | **Direct** | W-01-2 |
+| A12 | Lifting the curtain and finding the little door, key in hand | **Direct** | W-01-2 |
 | A13 | Kneeling at the little door, looking into the garden | New | — |
 | A14 | Holding the "DRINK ME" bottle, reading the label | **Direct** | W-01-3 |
 | A15 | Drinking | Adapt | W-01-3 (head and arm swap) |
@@ -80,9 +82,9 @@ The art-style decision says: "Tenniel scans used directly, with AI only to fill 
 | Long passage | New | — |
 | Long low hall: hanging lamps, doors all round | Adapt | Extend from the W-01-2 background |
 | Low curtain and the little door | **Direct** | W-01-2 |
-| Three-legged glass table and golden key | Adapt | Check whether W-01-3 shows the table |
+| Three-legged glass table and golden key | **Direct** | W-01-3 shows the table with the key on it. W-01-2 shows the key. |
 | "DRINK ME" bottle | **Direct** | W-01-3 |
-| Garden view through the door | Adapt | Recompose from W-08-x |
+| Garden view through the door | Adapt | Recompose from W-08-x. This is closer to New than the other Adapt rows. |
 | Glass box with the "EAT ME" cake | New | Small prop |
 
 ## Coverage
@@ -90,10 +92,10 @@ The art-style decision says: "Tenniel scans used directly, with AI only to fill 
 | | Direct | Adapt | New | Effect | Total |
 |---|---|---|---|---|---|
 | Character poses | 3 (11%) | 4 (14%) | 20 (71%) | 1 | 28 |
-| Sets and props | 2 | 3 | 6 | — | 11 |
+| Sets and props | 3 | 2 | 6 | — | 11 |
 
 ## What this means
-1. **For Chapter I, "scans first, AI only for gaps" is backwards.** About 7 in 10 character poses and about half the sets have no Tenniel source. Tenniel skipped the riverbank, the whole fall, the passage, and Alice's sister.
+1. **For Chapter I, "scans first, AI only for gaps" is backwards.** About 7 in 10 character poses and more than half the sets and props (6 of 11) have no Tenniel source. Tenniel skipped the riverbank, the whole fall, the passage, and Alice's sister.
 2. **The vertical slice tests the hardest case.** The riverbank scene is almost all new art. Only R02 is a direct scan. That's useful: if new Tenniel-style art passes there, the rest of the book is easier. But a pass on the slice says little about the cutout workflow for scans.
 3. **Ways to cut the new-art load:**
    - Rig reuse. Build Alice as one cutout puppet with swappable heads, arms and hands, so a new pose means a few new parts, not a whole new drawing. This probably turns many "New" rows into "parts only".
@@ -102,5 +104,11 @@ The art-style decision says: "Tenniel scans used directly, with AI only to fill 
 4. **Owner decision needed before production:** either reword art-style decision 2 so it matches this ratio, or choose one of the options in point 3 and recount.
 
 ## Caveats
-- **The plate IDs and contents come from secondary knowledge, not from a scan.** The network here blocked Project Gutenberg and Wikisource. Before relying on the counts, check them against a scan of the 1865 or 1866 edition, especially W-01-3 (is the table shown?), W-02-2, W-04-x and W-08-x. The total of 42 illustrations and the Chapter I White Rabbit drawing are confirmed by [Project MUSE](https://muse.jhu.edu/article/55720) and [The Morgan Library](https://www.themorgan.org/drawings/item/123374).
+- I checked the plates through web-search summaries of the sources below. The network here blocks direct page fetches, so I haven't seen the images. Before cutting assets, look at a scan of the 1865 or 1866 edition, mainly to confirm the poses in W-04-x and W-08-x.
 - The pose count assumes one pose per distinct beat. Explore Mode idles and reactions to hotspots will add more.
+
+## Sources
+- [Victorian Web: Tenniel's Wonderland plates, numbered by chapter](https://victorianweb.org/art/illustration/tenniel/alice/), including [1.2](https://victorianweb.org/art/illustration/tenniel/alice/1.2.html), [1.3](https://victorianweb.org/art/illustration/tenniel/alice/1.3.html), [1.4](https://victorianweb.org/art/illustration/tenniel/alice/1.4.html) and [2.2](https://victorianweb.org/art/illustration/tenniel/alice/2.2.html)
+- [Open University: a description of the "Drink me" plate](https://www.open.edu/openlearn/history-the-arts/exploring-books-children-words-and-pictures/content-section-6)
+- [Project Gutenberg #114: list of Tenniel's illustrations](https://www.gutenberg.org/files/114/114-h/114-h.htm)
+- [Project MUSE: Tenniel's 42 illustrations](https://muse.jhu.edu/article/55720); [The Morgan Library: preparatory drawing of the White Rabbit](https://www.themorgan.org/drawings/item/123374)
