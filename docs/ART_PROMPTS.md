@@ -461,3 +461,47 @@ Background and sources: [CHAPTER_06_ASSETS.md](CHAPTER_06_ASSETS.md). Same conve
 35. `vignette_pigs.png`: "Two or three children with little pigs' faces, in their best clothes."
 
 Priority if time is short: 14, 19, 22, 28, 30, 5, 6, 10, 11, 17, 23, 20, 21, then the rest.
+
+---
+
+## Chapter VII asset list (2026-10-10): "A Mad Tea-Party"
+Background and sources: [CHAPTER_07_ASSETS.md](CHAPTER_07_ASSETS.md). Same conversation, same rules. Attach the Alice model sheet with every Alice prompt.
+
+**References to download first:** 7.1 (the tea-party) https://victorianweb.org/art/illustration/tenniel/alice/7.1.html · 7.2 (the Hatter) …/7.2.html · 7.3 (the Dormouse into the teapot) …/7.3.html
+
+### Alice (whole figures on white, three-quarter view facing left unless stated)
+1. `alice7_chair.png` (attach 7.1): "Same Alice in Tenniel's pose from this plate: sitting in a large arm-chair (draw the chair), indignant, hands on the table edge. Facing right."
+2. `alice7_lean.png`: "Same Alice, sitting, leaning forward with curiosity. Facing right."
+3. `alice7_tea.png`: "Same Alice, sitting, pouring herself a cup of tea, a slice of bread-and-butter on her plate. Facing right."
+4. `alice7_walkoff.png`: "Same Alice, full figure: walking off in disgust, glancing back over her shoulder."
+5. `alice7_treedoor.png`: "Same Alice, full figure: opening a small door set into the trunk of a tree (draw the trunk and door)."
+6. `alice7_unlock.png`: "Same Alice, full figure: bending to unlock a little door at floor level with a tiny key."
+7. `alice7_garden.png`: "Same Alice, full figure: standing delighted among flower-beds, hands clasped."
+
+### The Hatter, the March Hare and the Dormouse (attach the plate named)
+8. `hatter_stare.png` (7.1): "The Hatter from this plate, at a table (draw him from the waist up, as seated), staring with great curiosity, his hat with its ticket 'In this Style 10/6'."
+9. `hatter_riddle.png` (7.2): "The Hatter from this plate, mouth open, one hand raised. Seated, waist up."
+10. `hatter_watch.png`: "The same Hatter holding a pocket-watch to his ear, shaking it, uneasy. Seated, waist up."
+11. `hatter_move.png` (7.3): "The same Hatter, full figure, standing and stepping along to the next place, a teacup in hand."
+12. `march_hare.png` (7.1): "The March Hare from this plate, seated at a table, waist up, a straw in his hair."
+13. `march_hare_dip.png`: "The same March Hare dipping a pocket-watch into his cup of tea, gloomy."
+14. `march_hare_push.png` (7.3): "The March Hare from this plate, full figure, pushing something down into a teapot."
+15. `dormouse_sleep.png` (7.1): "The Dormouse from this plate, curled up fast asleep. White background."
+16. `dormouse_talk.png`: "The same Dormouse sitting up, eyes half shut, telling a story sleepily."
+17. `dormouse_teapot.png` (7.3): "The Dormouse half in a big teapot, as in this plate, alone. White background."
+
+### Sets and props
+18. `tea_table.png` (landscape, attach 7.1): "A very long table under a tree, with a white cloth, laid with many cups, saucers and plates, side view. White background."
+19. `armchair.png` (7.1): "A large old arm-chair. White background."
+20. `tea_things.png`: "Separate on white: a big teapot, a milk-jug, cups and saucers, plates, bread-and-butter, a butter dish."
+21. `hatter_watch_close.png`: "A pocket-watch with a dial showing the days of the month instead of hours, a little butter smeared on it."
+22. `tea_tree.png`: "The large tree that shades the table, after plate 7.1. White background."
+23. `tree_door.png`: "A tree in a wood with a small door set into its trunk. White background."
+
+### Thought vignettes (oval, engraved, white background)
+24. `vignette_raven.png`: "A raven perched on a writing-desk."
+25. `vignette_concert.png`: "A concert: a hatter singing on a little stage, a Queen jumping up in a rage."
+26. `vignette_bat.png`: "A bat flying above the world like a tea-tray in the sky."
+27. `vignette_treacle.png`: "Three little sisters at the bottom of a well of treacle, drawing pictures."
+
+Priority if time is short: 8, 12, 15, 18, 1, 9, 17, 14, 19, 20, 16, then the rest.
