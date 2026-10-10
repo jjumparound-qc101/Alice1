@@ -1,0 +1,20 @@
+{
+  "name": "alice-wonderland-slice",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Vertical slice: Chapter I riverbank, 2.5D toy-theater test.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "smoke": "node tools/smoke.mjs"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.64.0",
+    "vite": "^8.3.4"
+  }
+}

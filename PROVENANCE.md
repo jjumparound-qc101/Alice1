@@ -20,3 +20,7 @@ Every shipped asset is listed here with its source. AI-generated or AI-modified 
 
 | Asset ID | File | Origin | Source plate or recording | AI tool and version | What AI did | Date | Reviewed by |
 |---|---|---|---|---|---|---|---|
+| rabbit_w01-1 | `public/art/rabbit_w01-1.png` | scan | Tenniel, *Wonderland* ch. I, "I'm late" (W-01-1). Web-resolution image from [Victorian Web](https://victorianweb.org/art/illustration/tenniel/alice/1.2.html), kept as `source/plates/tenniel_w01-1_white_rabbit_victorianweb.jpg` | none | Nothing. Cut out with `tools/cutout.py` and a hand-traced mask (`source/plates/tenniel_w01-1_white_rabbit.poly.json`). Slice only: replace with a high-resolution scan. | 2026-10-10 | Claude Code |
+| narration_ch01_slice | `public/audio/ch01_slice.mp3` | original | LibriVox dramatic reading, Chapter I, 0:14.0–1:51.4 | none | Nothing. Trimmed and re-encoded (mono, 96 kbps) with a 0.8 s fade-out | 2026-10-10 | Claude Code |
+| ch01_slice_words | `public/data/ch01_slice_words.json` | original | Project Gutenberg #11 text, aligned to the narration | faster-whisper `small.en` (speech-to-text timings only) | AI supplied word timings, which were matched to the book text. 99.3% of words matched directly; the rest were interpolated. No AI-generated text. | 2026-10-10 | Claude Code |
+| placeholder art | `src/art.js` | original | — | none | Nothing. Procedural placeholder set and figures, drawn in code. To be replaced by the master drawings. | 2026-10-10 | Claude Code |

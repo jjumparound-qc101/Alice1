@@ -1,0 +1,62 @@
+// The book page: shows the passage being read, a sentence or phrase at a time,
+// with the spoken word marked. Clicking any word seeks the narration there.
+
+const SENTENCE_END = /[.!?][”’)]*$/;
+const PHRASE_END = /[,;:—][”’)]*$/;
+
+// Split a paragraph into chunks short enough for a three-line strip:
+// break at sentence ends, and at phrase ends once a chunk is long enough.
+function chunk(words, soft = 22, hard = 38) {
+  const out = [];
+  let cur = [];
+  for (const w of words) {
+    cur.push(w);
+    const n = cur.length;
+    if (SENTENCE_END.test(w.t) || (n >= soft && PHRASE_END.test(w.t)) || n >= hard) {
+      out.push(cur);
+      cur = [];
+    }
+  }
+  if (cur.length) out.push(cur);
+  return out;
+}
+
+export class Page {
+  constructor(el, words, onSeek) {
+    this.chunks = [];
+    words.paragraphs.forEach((para, p) => {
+      chunk(para).forEach((c, k) => this.chunks.push({ words: c, first: k === 0, p }));
+    });
+    this.chunks.forEach((c) => {
+      const div = document.createElement('p');
+      div.className = 'para' + (c.first ? ' first' : '');
+      div.hidden = true;
+      c.spans = c.words.map((w, i) => {
+        const s = document.createElement('span');
+        s.textContent = w.t;
+        s.className = 'w';
+        s.addEventListener('click', () => onSeek(w.s));
+        div.append(s, i < c.words.length - 1 ? ' ' : '');
+        return s;
+      });
+      c.div = div;
+      el.append(div);
+    });
+    this.cur = { c: -1, w: -2 };
+  }
+
+  update(t) {
+    let c = 0;
+    for (let k = 0; k < this.chunks.length; k++) if (this.chunks[k].words[0].s <= t + 0.05) c = k;
+    const words = this.chunks[c].words;
+    let w = -1;
+    words.forEach((x, i) => { if (x.s <= t) w = i; });
+    if (c === this.cur.c && w === this.cur.w) return;
+    if (c !== this.cur.c) this.chunks.forEach((x, k) => (x.div.hidden = k !== c));
+    this.chunks[c].spans.forEach((s, i) => {
+      s.classList.toggle('said', i < w);
+      s.classList.toggle('now', i === w);
+    });
+    this.cur = { c, w };
+  }
+}

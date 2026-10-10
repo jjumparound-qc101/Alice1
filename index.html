@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alice: Riverbank Slice</title>
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body data-mode="watch">
+  <canvas id="stage"></canvas>
+  <audio id="narration" src="audio/ch01_slice.mp3" preload="auto"></audio>
+
+  <div id="fade"></div>
+
+  <section id="intro">
+    <h1>Alice’s Adventures in Wonderland</h1>
+    <p class="sub">Chapter I · Down the Rabbit-Hole</p>
+    <p class="note">Vertical slice: the riverbank. Narration is the LibriVox full-cast reading.<br />
+      The White Rabbit is Tenniel’s engraving; Alice, her sister and the set are placeholders.</p>
+    <button id="begin">Begin</button>
+  </section>
+
+  <article id="page" aria-live="polite"></article>
+
+  <nav id="controls">
+    <button id="playBtn">Play</button>
+    <button id="restartBtn">Restart</button>
+    <button id="modeBtn">Explore</button>
+  </nav>
+
+  <p id="hint">Explore: W A S D to walk · drag or ← → to look · E to inspect · Tab to return</p>
+  <p id="prompt" hidden></p>
+
+  <aside id="card" hidden>
+    <h2 id="cardTitle"></h2>
+    <p id="cardText"></p>
+    <button id="cardClose">Close</button>
+  </aside>
+
+  <section id="endCard" hidden>
+    <p>“…never once considering how in the world she was to get out again.”</p>
+    <p class="sub">End of the riverbank slice</p>
+  </section>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
