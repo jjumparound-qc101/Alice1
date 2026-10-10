@@ -77,5 +77,5 @@ Status key: ☐ to do, ◐ partly done (waiting on art), ☑ done. The owner's a
 ## Suggested order for the next session
 1. ~~Notes 3, 5, 6, 9, 10, 7, 11, 14, 2 (code only)~~: done 2026-10-10.
 2. Drop in each new asset from "Chapter I asset list v2" as it arrives (notes 2, 4, 8 and the rest). Log each one in PROVENANCE.md.
-3. Write the Chapter II asset list and prompts (CHAPTER_02_ASSETS.md + ART_PROMPTS.md), checking Tenniel's Chapter II plates on Victorian Web (2.1 Alice's long neck, 2.2 Rabbit with gloves and fan, 2.3 pool of tears).
+3. ~~Write the Chapter II asset list and prompts~~: done 2026-10-10 (CHAPTER_02_ASSETS.md, ART_PROMPTS.md "Chapter II asset list"). The plates are 2.1 long neck, 2.2 giant Alice kneeling with the Rabbit trotting away, 2.3 swimming, 2.4 Alice and the Mouse.
 4. Chapter II: align its LibriVox narration (same recording, file `aliceinwonderland_02_carroll.mp3`), then build its scenes with the same engine. Add chapter selection.
