@@ -7,7 +7,7 @@ Every shipped asset is listed here with its source. AI-generated or AI-modified 
 | Source | What it is | Where it came from (URL or archive and shelfmark) | Rights basis | Notes |
 |---|---|---|---|---|
 | _TBD_ | Tenniel illustrations, scan source | | Public domain (1865) | Record the exact edition and the scanning institution. |
-| _TBD_ | LibriVox recording, full cast | | Public domain (LibriVox) | Record the recording's URL and version. |
+| Candidate | LibriVox "Alice's Adventures in Wonderland (Dramatic Reading)", full cast. David Goldfarb narrates, Miss Avarice reads Alice and BellonaTimes the White Rabbit. Released 2011-02-21. | https://librivox.org/4511 · https://archive.org/details/aliceinwonderland_1102_librivox | Public Domain Mark 1.0 | Not downloaded yet: the network blocks librivox.org and archive.org. Confirm the Chapter I cast and audio quality before locking it in. |
 
 ## Asset log
 
