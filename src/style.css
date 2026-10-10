@@ -81,3 +81,9 @@ body[data-mode="explore"] #hint { display: block; }
 #card p { font-size: 1.15rem; line-height: 1.5; }
 
 .error { position: fixed; top: 16px; left: 16px; right: 16px; background: #fff; color: #900; padding: 1em; z-index: 9; white-space: pre-wrap; }
+
+#perf {
+  position: fixed; top: 8px; left: 8px; margin: 0; z-index: 6; pointer-events: none;
+  background: rgba(23, 20, 15, 0.8); color: var(--paper); padding: 0.4em 0.6em;
+  font: 12px/1.4 ui-monospace, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums;
+}

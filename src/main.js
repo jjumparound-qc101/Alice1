@@ -4,6 +4,7 @@ import { Puppet } from './puppet.js';
 import { makeTimeline } from './timeline.js';
 import { Page } from './narration.js';
 import { Explorer } from './explore.js';
+import { PerfMeter } from './perf.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -107,6 +108,7 @@ async function main() {
 
   const look = new THREE.Vector3();
   let last = performance.now();
+  const perf = new PerfMeter(renderer);
   renderer.setAnimationLoop((now) => {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
@@ -132,10 +134,11 @@ async function main() {
     $('fade').style.opacity = f;
     $('endCard').hidden = f < 0.99;
     renderer.render(scene, camera);
+    perf.tick(now);
   });
 
   // Exposed for automated checks (tools/smoke.mjs).
-  window.__slice = { audio, tl, setMode, setLayout, camera, ready: true };
+  window.__slice = { audio, tl, setMode, setLayout, camera, perf, ready: true };
 }
 
 main().catch((e) => {
