@@ -12,7 +12,7 @@ Status: The whole chapter plays start to finish (about 12 minutes). Riverbank ar
 | Scene | From | To | What happens | Art |
 |---|---|---|---|---|
 | Riverbank | "Alice was beginning…" | "…how in the world she was to get out again." | Sister reading, the Rabbit and his watch, the chase, down the hole | AI masters, Tenniel Rabbit |
-| The fall | "The rabbit-hole went straight on like a tunnel…" | "thump! thump!" | Alice drifts down; shelves, maps and cupboards pass; she takes the ORANGE MARMALADE jar (empty, as in the text) and puts it back | AI shaft walls; placeholder side walls and jar |
+| The fall | "The rabbit-hole went straight on like a tunnel…" | "thump! thump!" | Alice drifts down; shelves, maps and cupboards pass; she takes the ORANGE MARMALADE jar (empty, all ink, as in the text) and puts it back. The jar is lifted out of the wall art (`tools/shaft_strip.py`), so the shelf jar and the jar in her hand are the same image and size | AI shaft walls; placeholder side walls |
 | The passage | landing on the leaves | the corner | She lands, jumps up, chases the Rabbit, who turns the corner and is gone | Placeholder |
 | The hall | "a long, low hall…" | "…finished off the cake." | Lamps, locked doors, glass table and golden key, curtain, little door and garden, DRINK ME, the red-hot poker thought, shrinking to ten inches, the key out of reach, crying, the EAT ME cake | Placeholder; Alice is the AI turnaround |
 
@@ -23,5 +23,4 @@ Spot colours so far (docs/COLOR.md): the Rabbit's pink eyes, the golden key, the
 - **The Rabbit** is one pose (watch in hand), also used running away down the passage. Tenniel's back view (plate W-02-2) would suit the passage.
 - **Placeholder sets**: the passage, the hall, the little door and the garden view need master drawings. The marmalade jar, bottle, cake and poker vignette are drawn in code.
 - **Thought vignettes**: only the poker is staged. Dinah and the bats ("Do cats eat bats?") and the candle are not yet.
-- **The marmalade**: the text says the jar was empty, so nothing is orange yet. This needs an owner decision (COLOR.md rule 5).
 - **Explore-mode hotspots** exist only for the main props.

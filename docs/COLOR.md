@@ -6,7 +6,7 @@ The world is black-and-white ink, like Tenniel's engravings. **A thing has color
 2. **Only that thing, not its kind.** Chapter V's "sea of green leaves" colors those treetops only, not every leaf in the book.
 3. **Face changes are shown.** "Turned crimson", "turning purple" and "turned pale" are brief flushes on that character's face, then back to ink.
 4. **Real objects in Alice's thoughts count.** The "red-hot poker" is shown red in a thought vignette.
-5. **Labels that name contents count.** "ORANGE MARMALADE" means the marmalade is orange; the jar and label stay ink.
+5. **Labels that name contents count**, but only if the contents are there. The ORANGE MARMALADE jar is empty ("to her great disappointment it was empty"), so the jar and its label stay ink (owner decision, 2026-10-10).
 6. **Colors in poems and songs** at least color that word in the text strip (e.g. *green* in "Beautiful Soup, so rich and green"). They can be staged where it suits the scene.
 7. **Not colors:** "dark", "bright", "brightened", "goldfish" (the word only; no color is stated), "blacking" (a polish, not a stated color).
 8. **White is still white.** White things (the White Rabbit, white kid gloves, white roses) are paper-white. Being named white means they stay unshaded.
@@ -16,7 +16,7 @@ The world is black-and-white ink, like Tenniel's engravings. **A thing has color
 |---|---|---|---|
 | White Rabbit's eyes | pink | "a White Rabbit with pink eyes ran close by her" | Every scene with the Rabbit |
 | The little key | gold | "a tiny golden key" | The hall, and later chapters |
-| Marmalade (in the jar) | orange | "labelled 'ORANGE MARMALADE'" | The fall |
+| Marmalade jar | none: the jar is empty | "labelled 'ORANGE MARMALADE', but to her great disappointment it was empty" | The fall |
 | Red-hot poker | red (glowing) | "a red-hot poker will burn you if you hold it too long" | Thought vignette, "Drink me" scene |
 
 ## Rest of the book (for planning)

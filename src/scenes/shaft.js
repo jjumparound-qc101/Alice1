@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture } from '../ink.js';
-import { earth, marmaladeJar } from '../props.js';
+import { earth } from '../props.js';
 import { smooth, lerp, cameraTrack } from '../track.js';
 
 const FALL = 0.35; // metres per second the walls pass by ("she fell very slowly")
@@ -14,7 +14,7 @@ export const shaft = {
   title: 'Down the rabbit-hole',
   start: (cue) => cue.para('The rabbit-hole went straight on'),
 
-  build({ group, ai, cue }) {
+  build({ group, ai, cue, shaftMeta }) {
     const at = cue.at;
     const start = shaft.start(cue);
     const T = {
@@ -42,12 +42,21 @@ export const shaft = {
       group.add(side);
     }
 
-    const jar = paperFlat(texture(marmaladeJar(true)), 0.22, 0.26);
+    // The ORANGE MARMALADE jar was lifted out of the wall art (tools/shaft_strip.py) so
+    // the jar on the shelf and the jar in her hand are one sprite: same image, same size.
+    const px = WALL_W / shaftMeta.width; // metres per strip pixel
+    const J = shaftMeta.jar;
+    const jar = paperFlat(ai.jar.tex, J.w * px, J.h * px, { anchor: 'center' });
     group.add(jar);
+    const SHELF = { x: (J.cx / shaftMeta.width - 0.5) * WALL_W, z: -1.58 };
+    const HAND = { x: 0.32, y: 0.55, z: -0.95 };
+    const CUPBOARD = { x: -0.75, z: -1.58 };
 
-    // The wall moves up FALL m/s; things fixed to it move with it.
-    const wallY = (t, y0, t0) => y0 + FALL * (t - t0);
-    const HAND = { x: 0.32, y: 0.55, z: -0.35 };
+    // Scroll the wall so the jar's shelf reaches her hand at the moment she takes it.
+    const wallBottom = 1 - WALL_H / 2;
+    const vJar = 1 - J.cy / shaftMeta.height;
+    const offsetAtTake = vJar - ((HAND.y - wallBottom) / WALL_H) * (WALL_H / tileH);
+    const wallY = (t, y0, t0) => y0 + FALL * (t - t0); // things on the wall rise with it
 
     function alice(t) {
       // Drops in from above when the tunnel "dipped suddenly down".
@@ -55,7 +64,7 @@ export const shaft = {
       const sway = Math.sin(t * 0.7) * 0.12;
       return {
         visible: t > T.dipped - 0.2, pose: 'stand', dir: 1,
-        x: Math.sin(t * 0.31) * 0.15, z: -0.4,
+        x: Math.sin(t * 0.31) * 0.15, z: -1.0, // close to the wall, so the jar in her hand looks the size it did on the shelf
         y: lerp(5, 0.15, enter) + Math.sin(t * 0.9) * 0.05,
         tilt: sway,
       };
@@ -63,13 +72,24 @@ export const shaft = {
 
     function update(t) {
       // Walls scroll upward as she falls.
-      strip.offset.y = -(FALL * t) / tileH;
+      strip.offset.y = offsetAtTake - (FALL * (t - T.jar)) / tileH;
       sideTex.offset.y = -(FALL * t) / (WALL_H / 3);
       // The jar: on a shelf rising toward her, in her hand, then put back on a shelf.
-      jar.visible = t > T.jar - 6 && t < T.putBack + 12;
-      if (t < T.jar) jar.position.set(-0.9, wallY(t, HAND.y, T.jar), -1.55);
-      else if (t < T.putBack) jar.position.set(HAND.x, HAND.y + Math.sin(t * 0.9) * 0.05, HAND.z);
-      else jar.position.set(0.9, wallY(t, HAND.y, T.putBack), -1.55);
+      // On its shelf, rising toward her; into her hand; then into a cupboard as she passes.
+      const held = { x: HAND.x, y: HAND.y + Math.sin(t * 0.9) * 0.05, z: HAND.z };
+      let p;
+      if (t < T.jar) p = { ...SHELF, y: wallY(t, HAND.y, T.jar) };
+      else if (t < T.putBack) {
+        const k = smooth((t - T.jar) / 0.8);
+        const from = { ...SHELF, y: wallY(t, HAND.y, T.jar) };
+        p = { x: lerp(from.x, held.x, k), y: lerp(from.y, held.y, k), z: lerp(from.z, held.z, k) };
+      } else {
+        const k = smooth((t - T.putBack) / 0.8);
+        const to = { ...CUPBOARD, y: wallY(t, HAND.y, T.putBack) };
+        p = { x: lerp(held.x, to.x, k), y: lerp(held.y, to.y, k), z: lerp(held.z, to.z, k) };
+      }
+      jar.position.set(p.x, p.y, p.z);
+      jar.visible = p.y < 6;
     }
 
     const camera = cameraTrack([

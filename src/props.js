@@ -5,7 +5,6 @@ import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, PAPE
 
 export const SPOT = {
   gold: '#c9a33b',    // "a tiny golden key"
-  orange: '#e0862a',  // "ORANGE MARMALADE"
   redHot: '#d8401f',  // "a red-hot poker"
 };
 
@@ -177,19 +176,6 @@ export function eatMeCake() {
   fillPaper(g, side); hatch(g, side, { angle: Math.PI / 2, gap: 5, seed: 181 }); outline(g, side, 3);
   fillPaper(g, top); outline(g, top, 3);
   g.fillStyle = INK; g.textAlign = 'center'; g.font = FONT(44); g.fillText('EAT ME', 160, 96);
-  return c;
-}
-
-// "labelled 'ORANGE MARMALADE'": the marmalade is orange, the jar and label stay ink.
-export function marmaladeJar(empty = true) {
-  const { c, g } = canvas(220, 260);
-  const jar = new Path2D(); jar.roundRect(20, 40, 180, 210, 22);
-  fillPaper(g, jar);
-  if (!empty) { const m = new Path2D(); m.roundRect(28, 90, 164, 152, 16); g.fillStyle = SPOT.orange; g.fill(m); }
-  outline(g, jar, 4);
-  g.fillStyle = INK; g.fillRect(14, 22, 192, 26);
-  g.fillStyle = PAPER; g.fillRect(40, 120, 140, 70); g.strokeStyle = INK; g.lineWidth = 2; g.strokeRect(40, 120, 140, 70);
-  g.fillStyle = INK; g.textAlign = 'center'; g.font = FONT(24); g.fillText('ORANGE', 110, 150); g.fillText('MARMALADE', 110, 178);
   return c;
 }
 
