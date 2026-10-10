@@ -358,3 +358,50 @@ Background and sources: [CHAPTER_04_ASSETS.md](CHAPTER_04_ASSETS.md). Same conve
 38. `vignette_book.png`: "A book with 'ALICE' on its cover, and a grown-up young woman at a desk writing it."
 
 Priority if time is short: 4, 25, 26, 5, 13, 18, 20, 33, 34, 36, 8, 3, 16, 19, 11, 12, then the rest.
+
+---
+
+## Chapter V asset list (2026-10-10): "Advice from a Caterpillar"
+Background and sources: [CHAPTER_05_ASSETS.md](CHAPTER_05_ASSETS.md). Same conversation, same rules. Attach the Alice model sheet with every Alice prompt.
+
+**References to download first:** 5.1 (the Caterpillar) https://victorianweb.org/art/illustration/tenniel/alice/5.1.html. The Father William plates 5.2–5.5 are recommended for use as they are (no prompts needed); prompts 18–21 are only if you'd rather have new drawings.
+
+### Alice (whole figures on white, three-quarter view facing left unless stated)
+1. `alice5_lookup.png` (attach 5.1): "Same Alice, full figure: standing, looking up at something just above her head, hands behind her back, polite and a little shy."
+2. `alice5_grave.png`: "Same Alice, full figure: drawing herself up very straight and grave, chin raised."
+3. `alice5_away.png`: "Same Alice, full figure: turning away, seen three-quarter from behind, offended."
+4. `alice5_recite.png`: "Same Alice, full figure: standing with her hands folded in front of her, reciting a poem."
+5. `alice5_break.png`: "Same Alice, full figure: arms stretched wide round the edge of something round at shoulder height, breaking off a piece with each hand."
+6. `alice5_squashed.png`: "Same Alice, shrunk so suddenly that her chin is pressed against her foot: a crouched, squashed figure, frightened, holding a bit of mushroom."
+7. `alice5_nibble.png`: "Same Alice, full figure: nibbling a small piece held in one hand, another piece in the other hand."
+8. `alice5_head.png`: "Same Alice, head only, turned to the left, surprised, as if at the top of an immensely long neck. Draw the head and the top of the neck only; the neck ends in a clean edge at the bottom." (The game draws the long neck.)
+
+### The Caterpillar (attach 5.1; the game colours him blue)
+9. `caterpillar_sit.png`: "The Caterpillar from this plate, full figure on white: sitting on top of a mushroom cap, arms folded, smoking a long hookah."
+10. `caterpillar_speak.png`: "The same Caterpillar, hookah out of his mouth, speaking languidly, looking down."
+11. `caterpillar_rear.png`: "The same Caterpillar rearing upright, angry."
+12. `caterpillar_yawn.png`: "The same Caterpillar yawning and shaking himself."
+13. `caterpillar_crawl.png`: "The same Caterpillar crawling away through grass, side view."
+
+### The Pigeon
+14. `pigeon_attack.png`: "A large wood-pigeon flying straight at us, wings spread and beating, beak open, furious. White background."
+15. `pigeon_scream.png`: "The same pigeon perched on a branch, feathers ruffled, screaming."
+16. `pigeon_nest.png`: "The same pigeon settling sulkily down into a nest of twigs with eggs, at the top of a tree. White background."
+
+### Sets and props
+17. `treetops.png` (landscape, tiles left to right): "The tops of a thick wood seen from far above: a sea of leaves, rounded crowns packed together. Edge to edge, tiling left to right." (The game colours them green.)
+- `mushroom_top.png`: "The same large mushroom, its cap seen from slightly above, a blue-caterpillar-sized dent in the top. White background."
+- `mushroom_bits.png`: "Two small pieces broken off the edge of a mushroom cap. White background."
+- `little_house.png`: "An open place in a wood with a small house about four feet high, a door and a window, trees round it. Fill the image." (Chapter VI uses it too.)
+
+### Thought vignettes (oval, engraved, white background)
+- `vignette_chrysalis.png`: "A chrysalis hanging from a twig, and beside it a butterfly just come out."
+- `vignette_eggs.png`: "A nest with three eggs in it."
+
+### Only if not using Tenniel's Father William plates
+18. `fw_head.png` (attach 5.2): "An old man standing on his head, a young man watching, after this plate."
+19. `fw_somersault.png` (attach 5.3): "A fat old man turning a back-somersault in at a door."
+20. `fw_goose.png` (attach 5.4): "An old man at table finishing a whole goose, bones and beak."
+21. `fw_eel.png` (attach 5.5): "An old man balancing an eel on the end of his nose."
+
+Priority if time is short: 9, 10, 8, 14, 17, 1, 5, 16, 6, 7, 11, 13, then the rest.
