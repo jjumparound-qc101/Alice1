@@ -131,3 +131,51 @@ Same Alice, full figure on white: standing, EATING a small cake held in one hand
 ```
 
 Upload as `alice_fall.png`, `alice_kneel.png`, `alice_reach.png`, `alice_bottle.png`, `alice_cry.png`, `alice_eat.png`.
+
+## Chapter I asset list v2 (2026-10-10): everything still needed
+Use the **same ChatGPT conversation** as the turnaround and the earlier pieces so the style matches. Every image: Tenniel wood-engraving style, black ink on white, hatching only, no colour, no text unless asked, white background (except full scenes). Upload with the file names given. This list **replaces** the "Alice poses" list above, which it includes.
+
+### Alice (whole figures, same scale as the turnaround, three-quarter view facing left unless stated)
+1. `alice_walk_a.png`, `alice_walk_b.png`: "Same Alice, full figure on white: WALKING at an easy pace. Frame A: left foot forward, heel down. Frame B: right foot forward, heel down. Arms swing gently opposite to the legs. Two separate images, identical in scale and position." *(note 2)*
+2. `alice_jump.png`: "Same Alice, full figure on white: JUMPING forward and down into a hole, knees bent, arms forward, hair and skirt lifting." *(note 6)*
+3. `alice_fall.png`: "…FALLING slowly down a well: arms raised and spread, skirt and hair floating upward, feet together, calm and curious."
+4. `alice_kneel.png`: "…KNEELING on the floor, bent forward, cheek close to the ground, peering through a tiny door at floor level. Side view facing right."
+5. `alice_reach.png`: "…REACHING UP with both arms, on tiptoe, for something just above her head."
+6. `alice_hold.png`: "…standing, HOLDING something small up in her right hand at chest height, looking at it. Nothing in the hand (the game adds the object)." *(note 3: the key and bottle go in this hand)*
+7. `alice_cry.png`: "…sitting on the floor CRYING, knees drawn up, face in her hands."
+8. `alice_eat.png`: "…standing, EATING a small cake held in one hand, the other hand on top of her head as if feeling whether she is growing."
+9. `alice_land.png`: "…sitting up suddenly on a heap of leaves after a fall, surprised, hands on the ground behind her. Side view facing right. Don't draw the leaves."
+
+### The White Rabbit (match Tenniel's Rabbit exactly: waistcoat, checked jacket, umbrella under the arm, pocket watch; attach the Tenniel 1.2 reference again)
+10. `rabbit_run_side.png`: "The White Rabbit RUNNING, side view facing left, a long hurried stride, watch in one paw."
+11. `rabbit_run_away.png`: "The White Rabbit seen FROM BEHIND, running away from us down a passage, ears up, coat tails flying."
+12. `rabbit_hop.png`: "The White Rabbit LEAPING head-first, diving forward and down as into a hole, side view facing right." *(note 6)*
+13. `rabbit_idle_b.png`: "The White Rabbit standing, same pose as Tenniel's plate but turned slightly toward us, glancing over his shoulder, watch in paw." *(note 11: alternates with the Tenniel pose)*
+
+### Sets and props
+14. `leaf_heap.png`: "A low heap of sticks and dry leaves on a dark earth floor at the bottom of a deep well, seen from the front, about three times as wide as it is tall. White background around it." *(note 4)*
+15. `passage_wall.png` (landscape, must tile left to right): "The earth wall of a long, dark underground passage, roots and stones in packed earth, dim light from the left. Fill the image edge to edge; the left and right edges must join seamlessly."
+16. `hall_wall.png` (landscape, tiles left to right): "The long wall of a low Victorian hall: a row of tall, narrow, locked wooden doors with brass knobs, panelled wainscot between them. Front view, flat, edge to edge; the left and right edges must join seamlessly."
+17. `hall_floor.png` (square, tiles both ways): "Flagstone floor seen from straight above, worn stone slabs, edge to edge, tiling seamlessly in both directions."
+18. `hall_lamp.png`: "A single Victorian lamp hanging from a chain, glass shade, lit. White background."
+19. `little_door.png`: "A tiny arched wooden door about fifteen inches high, set in a wall at floor level, closed, with a small keyhole. Front view, with a little of the wall around it."
+20. `low_curtain.png`: "A low velvet curtain hanging from a rod, gathered in heavy folds, about knee height. White background."
+21. `garden_through_door.png` (portrait): "Seen through a tiny doorway at floor level: a small passage, not much larger than a rat-hole, opening onto the loveliest garden — beds of bright flowers and cool fountains, sunlit, in the distance. Frame it as if looking along the little passage." *(note 8)*
+22. `glass_table.png`: "A little three-legged table made all of solid glass, seen from the side, transparent, with highlights. White background." *(the 3D glass table stays as a fallback)*
+23. `golden_key.png`: "A tiny ornate key, front view, white background. (The game colours it gold.)"
+24. `drink_me_bottle.png`: "A small Victorian glass bottle with a paper label tied round its neck, the words 'DRINK ME' beautifully printed on the label in large letters. White background."
+25. `glass_box.png`: "A very small glass box with a hinged lid, open, transparent, white background."
+26. `eat_me_cake.png`: "A very small round cake, the words 'EAT ME' marked on top in currants. White background."
+
+### Thought vignettes (oval vignette, engraved, white background; shown above Alice's head)
+27. `vignette_poker.png`: "A fire grate with a poker resting in the coals, its tip glowing hot." *(the game colours the tip red)*
+28. `vignette_knife.png`: "A child's hand with a small cut on one finger, a kitchen knife lying beside it." *(note 10; ink only)*
+29. `vignette_poison.png`: "A small dark bottle with a label marked 'POISON'." *(note 10)*
+30. `vignette_dinah.png`: "A cat (Dinah) lapping from a saucer of milk."
+31. `vignette_bats.png`: "A cat looking up at bats flying in the dusk."
+32. `vignette_candle.png`: "A candle flame going out, a thin curl of smoke."
+
+### Chapter end
+33. `chapter1_end.png`: "A small decorative tailpiece vignette for the end of a chapter: the White Rabbit's pocket watch lying on a curl of ribbon among a few leaves." *(note 9)*
+
+Priority if time is short: 1, 9, 2, 12, 10, 11, 14, 21, 6, 16, 17, 18, 20, 19, then the rest.
