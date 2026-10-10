@@ -11,6 +11,7 @@ import { texture } from './ink.js';
 import { mouseSwim, mouseLeap, duckSwim, dodoSwim, lorySwim, eagletSwim } from './props2.js';
 import { lizard, guineaPig, puppy, caterpillar } from './props4.js';
 import { pigeon } from './props5.js';
+import { footman, duchess, cook, pig } from './props6.js';
 import { mouseUp, mouseWalk, dodoStand, duckStand, loryStand, eagletStand, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
 
 const $ = (id) => document.getElementById(id);
@@ -51,6 +52,7 @@ const clock = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStar
 async function main() {
   const renderer = new THREE.WebGLRenderer({ canvas: $('stage'), antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.localClippingEnabled = true; // the Cheshire Cat fades from the tail (Chapter VI)
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog('#efe9da', 9, 34);
   const camera = new THREE.PerspectiveCamera(45, 1, 0.02, 80);
@@ -140,6 +142,12 @@ async function main() {
     // Chapter V placeholders.
     caterpillar: new Puppet({ sit: drawn(caterpillar(), 0.05) }, 0.05),
     pigeon: new Puppet({ fly: drawn(pigeon('fly'), 0.22), perch: drawn(pigeon('perch'), 0.2) }, 0.2),
+    // Chapter VI placeholders.
+    fish: new Puppet({ stand: drawn(footman('fish'), 0.3) }, 0.3),
+    frog: new Puppet({ stand: drawn(footman('frog'), 0.3), sit: drawn(footman('frog', 'sit'), 0.3) }, 0.3),
+    duchess: new Puppet({ sit: drawn(duchess('sit'), 0.3), stand: drawn(duchess('stand'), 0.32) }, 0.32),
+    cook: new Puppet({ stir: drawn(cook('stir'), 0.3), throw: drawn(cook('throw'), 0.3) }, 0.3),
+    pig: new Puppet({ trot: drawn(pig(), 0.07) }, 0.07),
     puppy: new Puppet({ stand: drawn(puppy('stand'), 0.75), sit: drawn(puppy('sit'), 0.8) }, 0.75),
   };
   Object.values(cast).forEach((p) => scene.add(p.root));
