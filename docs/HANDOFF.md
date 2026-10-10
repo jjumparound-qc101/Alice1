@@ -46,6 +46,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. They prefer brief, 
 
 ## Art in hand
 - **Tenniel**: White Rabbit with watch (W-01-1), cut out with pink eyes. Web resolution only; the NYPL Berg 1866 high-resolution source is still to be checked (the host needs allowing).
+- **Alice's model sheet** is the turnaround (`source/ai/alice_turnaround.webp`); every new Alice drawing must match it (owner, 2026-10-10).
 - **AI masters** (ChatGPT, OpenAI image generation; see PROVENANCE): riverbank sky, tree line, tree, hedge, grass; Alice turnaround (standing pose), sitting, two parts sheets, torso; the sister reading; two shaft walls (combined into a repeating strip; the ORANGE MARMALADE jar lifted out as its own sprite).
 - **Whole-figure poses**: Alice walking (`walk_a`) and jumping (`jump`), cut and scaled by `tools/compose_poses.py`.
 - **Composed**: Alice running (`run_a`, `run_b`). The parts sheets lack the mid-skirt, so a jointed puppet doesn't work and poses are whole figures (AMENDMENTS).

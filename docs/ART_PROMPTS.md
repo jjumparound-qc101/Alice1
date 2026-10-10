@@ -194,6 +194,8 @@ Background and sources: [CHAPTER_02_ASSETS.md](CHAPTER_02_ASSETS.md). Use the **
 - 2.4, Alice and the Mouse: https://victorianweb.org/art/illustration/tenniel/alice/2.4.html
 - 3.1 and 3.2, the Duck, Dodo, Lory and Eaglet: https://victorianweb.org/art/illustration/tenniel/alice/3.1.html and https://victorianweb.org/art/illustration/tenniel/alice/3.2.html
 
+**Alice's model sheet** is the turnaround (front, three-quarter, profile, back; owner, 2026-10-10). Attach it with **every** Alice prompt and add: "Match this model sheet exactly: same face, hair, collar, puffed sleeves, pinafore with pocket, sash bow, stockings and strap shoes, same proportions."
+
 Attach the reference named in a prompt when you send it. Where a prompt says "Tenniel's pose", keep **our** Alice's face, hair and dress (the turnaround), not Tenniel's: the plate is for the pose only.
 
 ### Alice (whole figures, same scale as the turnaround, three-quarter view facing left unless stated)

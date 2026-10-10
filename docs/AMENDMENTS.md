@@ -2,6 +2,11 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-10: The turnaround is Alice's model sheet
+Status: Confirmed by the owner.
+
+The Alice turnaround (`source/ai/alice_turnaround.webp`: front, three-quarter, profile and back) is the model for every Alice drawing from now on. Tenniel's plates are attached only as pose references; Alice keeps the turnaround's face, hair, dress and proportions. Attach the turnaround with every Alice prompt.
+
 ## 2026-10-10: Notes 1.0 staging choices (code only)
 Status: In effect; owner may revisit.
 
