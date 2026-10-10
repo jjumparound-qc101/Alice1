@@ -248,3 +248,56 @@ Attach the reference named in a prompt when you send it. Where a prompt says "Te
 36. `vignette_terrier.png`: "A small bright-eyed terrier with long curly hair, sitting up to beg." (The game colours its hair brown.)
 
 Priority if time is short: 2, 6, 11, 12, 17, 14, 16, 7, 4, 5, 25, 26, 21–24 (swimming), 18, 19, then the rest.
+
+---
+
+## Chapter III asset list (2026-10-10): "A Caucus-Race and a Long Tale"
+Background and sources: [CHAPTER_03_ASSETS.md](CHAPTER_03_ASSETS.md). Same conversation, same rules as before. Attach the Alice model sheet with every Alice prompt. Chapter III has no colours: everything is ink.
+
+**References to download first:** plate 3.1 (the party in a ring round the Mouse): https://victorianweb.org/art/illustration/tenniel/alice/3.1.html and plate 3.2 (Alice and the Dodo): https://victorianweb.org/art/illustration/tenniel/alice/3.2.html. Already saved for Chapter II: 2.4 (Alice and the Mouse).
+
+### Alice (whole figures on white, same scale as the model sheet, three-quarter view facing left unless stated)
+1. `alice3_wet.png`: "Same Alice, full figure on white: standing dripping wet after a swim, hair and dress clinging, water dripping from her hem, cross and uncomfortable."
+2. `alice3_ring.png` (attach 3.1): "Same Alice, in the pose of the seated girl in this plate: sitting on the ground, legs to one side, seen three-quarter from behind, listening. Keep our Alice's hair and dress."
+3. `alice3_argue.png`: "Same Alice, full figure on white: standing, arguing politely, one hand raised as if making a point."
+4. `alice3_comfits.png`: "Same Alice, full figure on white: one hand in her pinafore pocket pulling out a small round box, the other hand holding out a tiny sweet as if giving it away."
+5. `alice3_bow.png` (attach 3.2): "Same Alice, full figure on white: bowing solemnly, one hand reaching out to take something tiny, trying not to laugh. Pose after the Alice in this plate. Facing right."
+6. `alice3_wonder.png`: "Same Alice, full figure on white: standing, looking down with wonder at something long lying on the ground in front of her, head tilted."
+7. `alice3_call.png`: "Same Alice, full figure on white: calling after someone who is leaving, one arm stretched out, leaning forward."
+8. `alice3_alone.png`: "Same Alice, full figure on white: sitting on the ground alone, knees drawn up, crying into her hands."
+
+### The Mouse (attach 3.1 and 2.4)
+9. `mouse3_lecture.png`: "The Mouse from plate 3.1, full figure on white: standing upright on his hind legs, front paws raised, with an important air, as if giving a lecture. Side view facing left."
+10. `mouse3_cross.png`: "The same Mouse, standing upright, frowning crossly, one paw raised."
+11. `mouse3_sigh.png`: "The same Mouse, standing upright, turning his head to look at us and sighing, his very long tail curled in loops on the ground in front of him."
+12. `mouse3_angry.png`: "The same Mouse, shouting angrily, fur bristling, paws clenched."
+13. `mouse3_away.png`: "The same Mouse walking away on all fours, seen from three-quarter behind, shaking his head impatiently."
+
+### The Dodo and the birds (attach 3.1 and 3.2)
+14. `dodo3_rise.png`: "The Dodo from plate 3.2, full figure on white: rising to his feet, solemn, one wing raised as he speaks."
+15. `dodo3_think.png`: "The same Dodo, sitting, one wing-tip pressed to his forehead like the pictures of Shakespeare, deep in thought."
+16. `dodo3_point.png`: "The same Dodo, standing, pointing to the right with one wing-tip."
+17. `dodo3_thimble.png`: "The same Dodo as in plate 3.2: leaning on his walking stick, holding out a thimble solemnly. Facing left."
+18. `lory3_sulk.png`: "The Lory from plate 3.1, full figure on white: turned sulky, head turned away, feathers ruffled."
+19. `eaglet3_smile.png`: "The Eaglet from plate 3.1: bending its head down to hide a smile."
+20. `duck3_ask.png`: "The Duck from plate 3.1: standing, beak open, asking a question."
+21. `crabs3.png`: "An old mother Crab and her young daughter side by side, after the crab in plate 3.1. White background."
+22. `magpie3.png`: "An old Magpie wrapping itself up carefully in its wings, as if in a shawl, to go home."
+23. `canary3.png`: "A Canary calling to her little ones, two or three tiny chicks beside her."
+24. `creatures3.png`: "Two or three of the other curious creatures in plate 3.1 (the owl, and the small animals), each standing, separate, on white."
+
+### Props
+25. `comfits.png`: "A small round Victorian box of comfits (sugared sweets), lid open, with a few loose comfits beside it. White background."
+26. `thimble.png`: "A single thimble, engraved, front view. White background."
+
+### Thought vignettes (oval vignette, engraved, white background)
+27. `vignette_shakespeare.png`: "William Shakespeare, head and shoulders, one finger pressed to his forehead in thought, as in the old pictures of him."
+28. `vignette_knot.png`: "A long mouse's tail tied in a knot."
+29. `vignette_dinah_birds.png`: "A cat (Dinah) crouching, watching a little bird."
+
+### (B only, if the bank is staged outdoors)
+- 3B-1 `bank_rushes.png` (landscape, tiles left to right): "The edge of a pool: rushes, reeds and wet earth, seen from very low down, as by a creature a few inches tall. Edge to edge; left and right edges must join."
+- 3B-2 `bank_grass.png` (landscape, tiles): "Grass and weeds seen from very low down, after Tenniel's grass in plate 4.4. Edge to edge, tiling left to right."
+- 3B-3 `bank_backdrop.png` (landscape): "A dark wall of foliage and shadow, as behind the animals in plate 3.1. Fill the image."
+
+Priority if time is short: 9, 2, 17, 14, 11, 5, 4, 13, 15, 1, 21, then the rest.
