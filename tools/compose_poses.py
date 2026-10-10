@@ -36,7 +36,23 @@ POSES = {
 DRAWN = {
     "walk_a": {"src": "source/ai/alice_walk_a.webp", "h": 700, "bodyX": 185},
     "jump": {"src": "source/ai/alice_jump.webp", "h": 751, "bodyX": 350},
+    # A phone screenshot (382x515): grey fade over the bottom and two buttons, removed
+    # below. Interim until the full-size original is sent. Drawn facing right: mirrored.
+    "walk_b": {"src": "source/ai/alice_walk_b_screenshot.png", "h": 620, "bodyX": 193, "mirror": True,
+               "screenshot": {"fade_from": 430, "blank": [(0, 468, 58, 515), (336, 470, 382, 515)]}},
 }
+
+
+def unscreenshot(src, spec, dst):
+    """Make a screenshot of a drawing on white usable: lift the darkening fade back to
+    white row by row (dividing by each row's background level) and blank the buttons."""
+    g = np.asarray(Image.open(src).convert("L"), np.float32)
+    for y in range(spec["fade_from"], g.shape[0]):
+        bg = np.percentile(g[y], 90)
+        g[y] = np.clip(g[y] * 255 / bg, 0, 255)
+    for x0, y0, x1, y1 in spec["blank"]:
+        g[y0:y1, x0:x1] = 255
+    Image.fromarray(g.astype(np.uint8)).save(dst)
 
 
 def drawn(spec):
@@ -44,9 +60,15 @@ def drawn(spec):
     import sys
     import tempfile
     with tempfile.TemporaryDirectory() as d:
-        subprocess.run([sys.executable, "tools/whitecut.py", spec["src"], f"{d}/cut.png"], check=True)
+        src = spec["src"]
+        if "screenshot" in spec:
+            unscreenshot(src, spec["screenshot"], f"{d}/clean.png")
+            src = f"{d}/clean.png"
+        subprocess.run([sys.executable, "tools/whitecut.py", src, f"{d}/cut.png"], check=True)
         img = Image.open(f"{d}/cut.png").convert("RGBA")
         img.load()
+    if spec.get("mirror"):
+        img = img.transpose(Image.FLIP_LEFT_RIGHT)
     return img.resize((round(img.width * spec["h"] / img.height), spec["h"]), Image.LANCZOS)
 
 
@@ -99,7 +121,7 @@ def main():
     for name, spec in DRAWN.items():
         img = drawn(spec)
         img.save(f"{OUT}/{name}.webp", quality=90, method=6)
-        meta["poses"][name] = {"w": img.size[0], "h": img.size[1], "bodyX": spec["bodyX"]}
+        meta["poses"][name] = {"w": img.size[0], "h": img.size[1], "bodyX": spec["bodyX"] or img.size[0] / 2}
         print(f"{name}: {img.size[0]}x{img.size[1]} (drawn)")
     json.dump(meta, open(f"{OUT}/poses.json", "w"), indent=1)
 
