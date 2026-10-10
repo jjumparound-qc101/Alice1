@@ -13,6 +13,12 @@ export class PerfMeter {
     this.gpu = info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
     this.frames = [];
     this.last = performance.now();
+    this.steam = '';
+    window.desktop?.steamStatus().then((st) => {
+      this.steam = st.connected
+        ? `Steam: connected as ${st.user} (app ${st.appId}) · Shift+Tab opens the overlay`
+        : `Steam: not connected (${st.reason})`;
+    });
     addEventListener('keydown', (e) => { if (e.code === 'F3') { e.preventDefault(); this.el.hidden = !this.el.hidden; } });
   }
 
@@ -26,7 +32,7 @@ export class PerfMeter {
     const worst = Math.max(...this.frames);
     this.stats = { fps: (n * 1000) / sum, avg: sum / n, worst };
     if (!this.el.hidden) {
-      this.el.textContent = `${this.stats.fps.toFixed(0)} fps · avg ${this.stats.avg.toFixed(1)} ms · worst ${worst.toFixed(1)} ms\n${this.gpu}`;
+      this.el.textContent = `${this.stats.fps.toFixed(0)} fps · avg ${this.stats.avg.toFixed(1)} ms · worst ${worst.toFixed(1)} ms\n${this.gpu}${this.steam ? `\n${this.steam}` : ''}`;
     }
     this.frames = [];
   }

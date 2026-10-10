@@ -11,17 +11,18 @@
     "smoke": "node tools/smoke.mjs",
     "build:app": "vite build --base ./",
     "app": "npm run build:app && electron .",
-    "package:win": "npm run build:app && electron-packager . Alice --platform=win32 --arch=x64 --out=release --overwrite --prune=true --ignore=\"^/(src|public|source|godot|docs|tools|release|smoke-shots|node_modules|index\\.html|README\\.md|PROVENANCE\\.md)\"",
-    "package:linux": "npm run build:app && electron-packager . Alice --platform=linux --arch=x64 --out=release --overwrite --prune=true --ignore=\"^/(src|public|source|godot|docs|tools|release|smoke-shots|node_modules|index\\.html|README\\.md|PROVENANCE\\.md)\""
+    "package:win": "npm run build:app && electron-packager . Alice --platform=win32 --arch=x64 --out=release --overwrite --prune=true --asar.unpack=\"*.{node,dll,so,dylib}\" --ignore=\"^/(src|public|source|godot|docs|tools|release|smoke-shots|index\\.html|README\\.md|PROVENANCE\\.md)\"",
+    "package:linux": "npm run build:app && electron-packager . Alice --platform=linux --arch=x64 --out=release --overwrite --prune=true --asar.unpack=\"*.{node,dll,so,dylib}\" --ignore=\"^/(src|public|source|godot|docs|tools|release|smoke-shots|index\\.html|README\\.md|PROVENANCE\\.md)\""
   },
   "dependencies": {
-    "three": "^0.186.1"
+    "steamworks.js": "^0.4.0"
   },
   "devDependencies": {
     "@electron/packager": "^20.3.0",
     "electron": "^44.7.0",
     "playwright-core": "^1.64.0",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "three": "^0.186.1"
   },
   "main": "electron/main.cjs"
 }

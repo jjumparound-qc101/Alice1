@@ -18,6 +18,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run package:win
+      # Test builds connect to Steam as Valve's "Spacewar" test app (480) until
+      # the game has its own app ID. Remove this before any public release.
+      - run: Set-Content -Path release/Alice-win32-x64/steam_appid.txt -Value 480 -NoNewline
       - uses: actions/upload-artifact@v4
         with:
           name: Alice-windows-x64
