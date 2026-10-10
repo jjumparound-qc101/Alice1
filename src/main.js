@@ -6,10 +6,10 @@ import { Page } from './narration.js';
 import { Explorer } from './explore.js';
 import { PerfMeter } from './perf.js';
 import { sentenceStarts, skip, Timeline } from './navigate.js';
-import { CHAPTER_1 } from './scenes/index.js';
+import { CHAPTERS } from './chapters.js';
 
 const $ = (id) => document.getElementById(id);
-const SAVE_KEY = 'alice.place.v1';
+const SAVE_KEY = 'alice.place.v2';
 const SPEED_KEY = 'alice.speed.v1';
 const SPEEDS = [1, 1.25, 1.5, 2];
 
@@ -20,11 +20,25 @@ async function loadTexture(url) {
   return { tex: t, aspect: t.image.width / t.image.height };
 }
 
-// The reader's place: chapter and time. Browser storage can be missing or blocked,
-// so every access is guarded and the game works without it.
+// The reader's place: the chapter, and the time reached in each chapter. Browser storage
+// can be missing or blocked, so every access is guarded and the game works without it.
 const place = {
-  load() { try { return JSON.parse(localStorage.getItem(SAVE_KEY)); } catch { return null; } },
-  save(t) { try { localStorage.setItem(SAVE_KEY, JSON.stringify({ chapter: 1, t })); } catch {} },
+  load() {
+    try {
+      const p = JSON.parse(localStorage.getItem(SAVE_KEY));
+      if (p) return p;
+      const v1 = JSON.parse(localStorage.getItem('alice.place.v1')); // Chapter I only
+      return v1 ? { chapter: 1, times: { 1: v1.t } } : null;
+    } catch { return null; }
+  },
+  save(chapter, t) {
+    try {
+      const p = this.load() ?? { times: {} };
+      p.chapter = chapter;
+      p.times[chapter] = t;
+      localStorage.setItem(SAVE_KEY, JSON.stringify(p));
+    } catch {}
+  },
 };
 const play = (audio) => audio.play().catch(() => {}); // interrupted by pause(): expected
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
@@ -36,18 +50,19 @@ async function main() {
   scene.fog = new THREE.Fog('#efe9da', 9, 34);
   const camera = new THREE.PerspectiveCamera(45, 1, 0.02, 80);
 
-  // Interim AI master drawings (PROVENANCE.md).
+  // Interim AI master drawings (PROVENANCE.md), shared by every chapter.
   const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar',
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf'];
-  const [words, shaftMeta, hallMeta, poseMeta, rabbitArt, ...aiArt] = await Promise.all([
-    fetch('data/ch01_words.json').then((r) => r.json()),
+  const narrated = CHAPTERS.filter((c) => c.narrated);
+  const [wordsList, shaftMeta, hallMeta, poseMeta, rabbitArt, ...aiArt] = await Promise.all([
+    Promise.all(narrated.map((c) => fetch(c.words).then((r) => r.json()))),
     fetch('art/ai/shaft_strip.json').then((r) => r.json()),
     fetch('art/ai/hall/hall.json').then((r) => r.json()),
     fetch('art/ai/poses/poses.json').then((r) => r.json()),
     loadTexture('art/rabbit_w01-1.png'),
     ...AI_ART.map((n) => loadTexture(`art/ai/${n}.webp`)),
   ]);
-  // Composed poses (tools/compose_poses.py), sized and lined up to match the standing Alice.
+  // Whole-figure poses (tools/compose_poses.py), sized and lined up to match the standing Alice.
   const ALICE_H = 1.25;
   const posed = Object.fromEntries(await Promise.all(Object.entries(poseMeta.poses).filter(([name]) => !name.startsWith('run_')).map(async ([name, m]) => {
     const art = await loadTexture(`art/ai/poses/${name}.webp`);
@@ -55,18 +70,31 @@ async function main() {
     return [name, { ...art, facesLeft: true, height: m.h * k, offsetX: (m.w / 2 - m.bodyX) * k }];
   })));
   const ai = Object.fromEntries(AI_ART.map((n, i) => [n, aiArt[i]]));
-  // Lettering on the proscenium and props is drawn to canvas, so the fonts must be loaded first.
+  // Lettering on the proscenium, props and title pages is drawn to canvas, so the fonts must be loaded first.
   if (document.fonts) await Promise.all([document.fonts.load('600 64px "IM Fell English"'), document.fonts.load('italic 40px "IM Fell English"')]);
 
-  // Build every scene's set up front; only the active one is shown.
-  const cue = makeCues(words);
-  const scenes = CHAPTER_1.map((def) => {
-    const group = new THREE.Group();
-    group.visible = false;
-    scene.add(group);
-    return { def, group, start: def.start(cue), ...def.build({ group, ai, cue, shaftMeta, hallMeta }) };
+  // Each narrated chapter's text timings and scene start times are known up front (for the
+  // contents); its sets are built the first time it is opened.
+  narrated.forEach((c, i) => {
+    c.wordsData = wordsList[i];
+    c.cue = makeCues(c.wordsData);
+    c.starts = c.scenes.map((def) => def.start(c.cue));
   });
-  const sceneAt = (t) => scenes.reduce((cur, s) => (t >= s.start ? s : cur), scenes[0]);
+  function build(c) {
+    if (c.built) return c.built;
+    const scenes = c.scenes.map((def, i) => {
+      const group = new THREE.Group();
+      group.visible = false;
+      scene.add(group);
+      return { def, group, start: c.starts[i], ...def.build({ group, ai, cue: c.cue, shaftMeta, hallMeta }) };
+    });
+    const words = c.wordsData;
+    const flat = words.paragraphs.flat();
+    const sentences = sentenceStarts(words);
+    const lastSentence = flat.filter((w) => w.s >= sentences[sentences.length - 1]).map((w) => w.t).join(' ');
+    c.built = { scenes, cue: c.cue, words, sentences, sceneStarts: scenes.map((s) => s.start), lastSentence };
+    return c.built;
+  }
 
   // Shared cast.
   const cast = {
@@ -84,8 +112,11 @@ async function main() {
   Object.values(cast).forEach((p) => scene.add(p.root));
 
   const audio = $('narration');
-  const page = new Page($('page'), words, (t) => { audio.currentTime = t; if (mode === 'watch') play(audio); });
-  const explorer = new Explorer(camera, renderer.domElement, scenes[0].bounds);
+  const explorer = new Explorer(camera, renderer.domElement, null);
+
+  // The open chapter. Everything that differs between chapters hangs off `ch`.
+  let chapter = null, ch = null, page = null;
+  const sceneAt = (t) => ch.scenes.reduce((cur, s) => (t >= s.start ? s : cur), ch.scenes[0]);
 
   let mode = 'watch';
   let active = null;
@@ -94,17 +125,48 @@ async function main() {
   function setLayout(l) {
     layout = l;
     document.body.dataset.text = l;
-    page.setLayout(l);
+    page?.setLayout(l);
     $('layoutBtn').textContent = `Text: ${l[0].toUpperCase()}${l.slice(1)}`;
     resize();
   }
   let shown = null;
   // The chapter's end: the narration fades, then the end card offers what to do next.
-  const atEnd = () => audio.ended || audio.currentTime >= cue.end + 0.8;
+  const atEnd = () => audio.ended || audio.currentTime >= ch.cue.end + 0.8;
   let endDismissed = false;
 
+  // Open a chapter: build its sets if needed, point the narration, text, timeline and
+  // end card at it, and wait until its audio can be positioned.
+  let switching = false; // while a chapter's narration loads, don't save its time
+  async function openChapter(c) {
+    if (chapter === c) return;
+    if (chapter) place.save(chapter.n, audio.currentTime);
+    switching = true;
+    audio.pause();
+    chapter = c;
+    ch = build(c);
+    if (active) { active.group.visible = false; active = null; }
+    page = new Page($('page'), ch.words, (t) => { audio.currentTime = t; if (mode === 'watch') play(audio); });
+    page.setLayout(layout);
+    timeline.set(ch.cue.end + 0.9, ch.scenes.map((s) => ({ t: s.start, title: s.def.title })));
+    const next = CHAPTERS[c.n];
+    $('endQuote').textContent = `“${ch.lastSentence.replace(/^[“"]|[”"]$/g, '')}”`;
+    $('endTitle').textContent = `Chapter ${c.roman} complete`;
+    $('endSub').textContent = c.title;
+    const last = ch.scenes[ch.scenes.length - 1];
+    $('endExplore').hidden = !last.bounds;
+    $('endExplore').textContent = `Explore ${last.def.title.replace(/^The /, 'the ')}`;
+    $('endNext').disabled = !next?.narrated;
+    $('endNext').textContent = next ? `Continue to Chapter ${next.roman}` : 'The end';
+    $('endNext').title = next && !next.narrated ? `Chapter ${next.roman} is not ready yet` : '';
+    endDismissed = false;
+    audio.src = c.audio;
+    audio.defaultPlaybackRate = audio.playbackRate = speed;
+    await new Promise((ok) => audio.addEventListener('loadedmetadata', ok, { once: true }));
+    switching = false;
+  }
+
   function setMode(m) {
-    if (m === 'explore' && !active.bounds) return; // e.g. mid-fall: nowhere to stand
+    if (m === 'explore' && !active?.bounds) return; // e.g. mid-fall: nowhere to stand
     mode = m;
     document.body.dataset.mode = m;
     $('modeBtn').textContent = m === 'watch' ? 'Explore' : 'Back to the story';
@@ -121,32 +183,38 @@ async function main() {
   }
   function closeCard() { shown = null; $('card').hidden = true; }
 
-  function begin(t) {
+  // Start reading chapter c at time t.
+  async function begin(c, t) {
     $('intro').hidden = true;
+    closeMenu(false);
+    if (mode !== 'watch') setMode('watch');
+    await openChapter(c);
     audio.currentTime = t;
     play(audio);
+    started = true;
   }
-  // Moving through the chapter: scrubber, skip keys, reading speed and the scene menu.
+  let started = false; // a chapter is open and positioned (for automated checks)
+  // Moving through the chapter: scrubber, skip keys, reading speed and the contents.
   // `resume` plays after the seek; otherwise the narration keeps its playing/paused state.
   function seek(t, resume = !audio.paused) {
-    audio.currentTime = Math.max(0, Math.min(t, cue.end + 0.9));
-    if (mode === 'watch' && resume && t < cue.end) play(audio);
+    audio.currentTime = Math.max(0, Math.min(t, ch.cue.end + 0.9));
+    if (mode === 'watch' && resume && t < ch.cue.end) play(audio);
   }
-  const sentences = sentenceStarts(words);
-  const sceneStarts = scenes.map((s) => s.start);
-  const timeline = new Timeline($('timeline'), {
-    duration: cue.end + 0.9,
-    marks: scenes.map((s) => ({ t: s.start, title: s.def.title })),
-    onSeek: (() => { let was = false, dragging = false; // hold the narration while dragging
-      return (t, done) => {
-        if (!dragging) { was = !audio.paused; dragging = true; audio.pause(); }
-        seek(t, false);
-        if (done) { dragging = false; if (was) seek(t, true); }
-      }; })(),
-  });
+  const timeline = new Timeline($('timeline'), (() => {
+    let was = false, dragging = false; // hold the narration while dragging
+    return (t, done) => {
+      if (!ch) return;
+      if (!dragging) { was = !audio.paused; dragging = true; audio.pause(); }
+      endDismissed = false;
+      seek(t, false);
+      if (done) { dragging = false; if (was) seek(t, true); }
+    };
+  })());
 
+  let speed = 1;
   function setSpeed(r) {
-    audio.playbackRate = r;
+    speed = r;
+    audio.defaultPlaybackRate = audio.playbackRate = r;
     audio.preservesPitch = true; // faster, not higher
     $('speedBtn').textContent = `${r}×`;
     try { localStorage.setItem(SPEED_KEY, String(r)); } catch {}
@@ -154,72 +222,86 @@ async function main() {
   let savedSpeed = 1;
   try { savedSpeed = Number(localStorage.getItem(SPEED_KEY)) || 1; } catch {}
   setSpeed(SPEEDS.includes(savedSpeed) ? savedSpeed : 1);
-  $('speedBtn').addEventListener('click', () => setSpeed(SPEEDS[(SPEEDS.indexOf(audio.playbackRate) + 1) % SPEEDS.length]));
+  $('speedBtn').addEventListener('click', () => setSpeed(SPEEDS[(SPEEDS.indexOf(speed) + 1) % SPEEDS.length]));
 
-  // The scene menu, from the controls (pausing the reading) and on the start screen.
+  // The contents: every chapter, and the scenes of each narrated one. From the controls
+  // (pausing the reading) and on the start screen.
+  const sceneButtons = [];
+  for (const c of CHAPTERS) {
+    const h = document.createElement('h3');
+    const hb = document.createElement('button');
+    hb.textContent = `${c.roman}. ${c.title}`;
+    hb.disabled = !c.narrated;
+    hb.addEventListener('click', () => begin(c, 0));
+    h.append(hb);
+    if (!c.narrated) h.insertAdjacentHTML('beforeend', ' <span class="later">(coming)</span>');
+    $('contents').append(h);
+    if (!c.narrated || !c.starts || c.scenes.length < 2) continue;
+    const ol = document.createElement('ol');
+    c.scenes.forEach((def, i) => {
+      const li = document.createElement('li');
+      const b = document.createElement('button');
+      b.innerHTML = '<span></span><span></span>';
+      b.children[0].textContent = def.title;
+      b.children[1].textContent = clock(c.starts[i]);
+      b.addEventListener('click', () => begin(c, c.starts[i]));
+      sceneButtons.push({ b, c, i });
+      li.append(b);
+      ol.append(li);
+    });
+    $('contents').append(ol);
+  }
   let menuResume = false;
   function openMenu() {
     menuResume = !audio.paused;
     audio.pause();
-    const here = sceneAt(audio.currentTime);
-    $('sceneList').querySelectorAll('button').forEach((b, i) => b.classList.toggle('here', scenes[i] === here));
+    const here = ch && sceneAt(audio.currentTime);
+    sceneButtons.forEach(({ b, c, i }) => b.classList.toggle('here', c === chapter && ch.scenes[i] === here));
     $('sceneMenu').hidden = false;
   }
   function closeMenu(resume = menuResume) {
     $('sceneMenu').hidden = true;
-    if (resume && mode === 'watch' && !atEnd()) play(audio);
+    if (resume && ch && mode === 'watch' && $('intro').hidden && !atEnd()) play(audio);
   }
-  function goToScene(s) {
-    closeMenu(false);
-    endDismissed = false;
-    if (mode !== 'watch') setMode('watch');
-    if (!$('intro').hidden) begin(s.start); else seek(s.start, true);
-  }
-  scenes.forEach((s) => {
-    const li = document.createElement('li');
-    const b = document.createElement('button');
-    b.innerHTML = `<span></span><span></span>`;
-    b.children[0].textContent = s.def.title;
-    b.children[1].textContent = clock(s.start);
-    b.addEventListener('click', () => goToScene(s));
-    li.append(b);
-    $('sceneList').append(li);
-    const ib = document.createElement('button');
-    ib.textContent = s.def.title;
-    ib.addEventListener('click', () => goToScene(s));
-    $('introScenes').append(ib);
-  });
   $('scenesBtn').addEventListener('click', () => ($('sceneMenu').hidden ? openMenu() : closeMenu()));
+  $('contentsIntro').addEventListener('click', openMenu);
   $('sceneClose').addEventListener('click', () => closeMenu());
 
+  // Start screen: continue where the reader left off, or begin at Chapter I.
   const saved = place.load();
-  if (saved?.t > 5 && saved.t < cue.end - 2) {
+  const savedCh = CHAPTERS.find((c) => c.n === saved?.chapter && c.narrated);
+  const savedT = savedCh ? saved.times?.[savedCh.n] ?? 0 : 0;
+  if (savedCh && (savedT > 5 || savedCh.n > 1) && savedT < savedCh.cue.end - 2) {
+    const sceneTitle = savedCh.scenes[savedCh.starts.reduce((k, s, i) => (savedT >= s ? i : k), 0)].title;
     $('continue').hidden = false;
-    $('continue').textContent = `Continue (${sceneAt(saved.t).def.title}, ${clock(saved.t)})`;
-    $('continue').addEventListener('click', () => begin(saved.t));
+    $('continue').textContent = `Continue (Chapter ${savedCh.roman}: ${sceneTitle}, ${clock(savedT)})`;
+    $('continue').addEventListener('click', () => begin(savedCh, savedT));
   }
-  $('begin').addEventListener('click', () => begin(0));
+  $('begin').addEventListener('click', () => begin(CHAPTERS[0], 0));
   $('modeBtn').addEventListener('click', () => setMode(mode === 'watch' ? 'explore' : 'watch'));
   $('playBtn').addEventListener('click', () => (audio.paused ? play(audio) : audio.pause()));
-  $('restartBtn').addEventListener('click', () => { audio.currentTime = 0; if (mode === 'watch') play(audio); });
+  $('restartBtn').addEventListener('click', () => { endDismissed = false; audio.currentTime = 0; if (mode === 'watch') play(audio); });
   $('cardClose').addEventListener('click', closeCard);
   $('endExplore').addEventListener('click', () => { endDismissed = true; setMode('explore'); });
   $('endReplay').addEventListener('click', () => { endDismissed = false; audio.currentTime = 0; play(audio); });
+  $('endNext').addEventListener('click', () => { const next = CHAPTERS[chapter.n]; if (next?.narrated) begin(next, 0); });
   $('layoutBtn').addEventListener('click', () => setLayout(LAYOUTS[(LAYOUTS.indexOf(layout) + 1) % LAYOUTS.length]));
   audio.addEventListener('play', () => ($('playBtn').textContent = 'Pause'));
-  audio.addEventListener('pause', () => { $('playBtn').textContent = 'Play'; place.save(audio.currentTime); });
-  addEventListener('pagehide', () => place.save(audio.currentTime));
-  setInterval(() => { if (!audio.paused) place.save(audio.currentTime); }, 3000);
+  const savePlace = () => { if (chapter && !switching) place.save(chapter.n, audio.currentTime); };
+  audio.addEventListener('pause', () => { $('playBtn').textContent = 'Play'; savePlace(); });
+  addEventListener('pagehide', savePlace);
+  setInterval(() => { if (!audio.paused) savePlace(); }, 3000);
   addEventListener('keydown', (e) => {
-    if (!$('intro').hidden) return;
+    if (e.code === 'Escape' && !$('sceneMenu').hidden) { closeMenu(); return; }
+    if (!$('intro').hidden || !ch) return;
     if (e.code === 'Tab') { e.preventDefault(); setMode(mode === 'watch' ? 'explore' : 'watch'); }
     if (e.code === 'KeyE' && mode === 'explore') { const h = explorer.facing(active.hotspots); h ? openCard(h) : closeCard(); }
-    if (e.code === 'Escape') { closeCard(); if (!$('sceneMenu').hidden) closeMenu(); }
+    if (e.code === 'Escape') closeCard();
     if (e.code === 'KeyM') $('scenesBtn').click();
     if (e.code === 'KeyS' && mode === 'watch') $('speedBtn').click();
     if ((e.code === 'ArrowLeft' || e.code === 'ArrowRight') && mode === 'watch' && $('sceneMenu').hidden) {
       e.preventDefault();
-      const to = skip(e.shiftKey ? sceneStarts : sentences, audio.currentTime, e.code === 'ArrowLeft' ? -1 : 1, e.shiftKey ? 3 : 1.5);
+      const to = skip(e.shiftKey ? ch.sceneStarts : ch.sentences, audio.currentTime, e.code === 'ArrowLeft' ? -1 : 1, e.shiftKey ? 3 : 1.5);
       if (to !== null) { endDismissed = false; seek(to); }
     }
     if (e.code === 'KeyL') $('layoutBtn').click();
@@ -247,7 +329,7 @@ async function main() {
   };
   function turnsAt(t) {
     const o = { turn: 0, dark: 0 };
-    for (const s of scenes.slice(1)) {
+    for (const s of ch.scenes.slice(1)) {
       const k = TURNS[s.def.turn ?? 'paper'];
       const v = t < s.start ? smooth((t - (s.start - k.out)) / k.out) : 1 - smooth((t - s.start) / k.in);
       o[k.el] = Math.max(o[k.el], v);
@@ -285,6 +367,7 @@ async function main() {
   renderer.setAnimationLoop((now) => {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
+    if (!ch) { renderer.clear(); return; }
     const t = audio.currentTime;
     show(sceneAt(t));
 
@@ -309,17 +392,25 @@ async function main() {
     const turns = turnsAt(t);
     $('turn').style.opacity = turns.turn;
     $('dark').style.opacity = turns.dark;
-    if (t < cue.end) endDismissed = false;
-    audio.volume = 1 - smooth((t - cue.end) / 0.8);
-    const f = mode !== 'watch' || endDismissed ? 0 : atEnd() ? 1 : smooth((t - cue.end + 0.1) / 0.8);
+    if (t < ch.cue.end) endDismissed = false;
+    audio.volume = 1 - smooth((t - ch.cue.end) / 0.8);
+    const f = mode !== 'watch' || endDismissed ? 0 : atEnd() ? 1 : smooth((t - ch.cue.end + 0.1) / 0.8);
     $('fade').style.opacity = f;
     $('endCard').hidden = f < 0.99;
     renderer.render(scene, camera);
     perf.tick(now);
   });
 
-  // Exposed for automated checks (tools/smoke.mjs).
-  window.__slice = { audio, scenes, cue, setMode, setLayout, camera, perf, ready: true };
+  // Exposed for automated checks (tools/smoke.mjs). Chapter I's sets are built up front
+  // so checks can read its scenes before Begin is pressed.
+  build(CHAPTERS[0]);
+  window.__slice = {
+    audio, setMode, setLayout, camera, perf, chapters: CHAPTERS, begin,
+    get chapter() { return chapter; },
+    get scenes() { return (ch ?? CHAPTERS[0].built).scenes; },
+    get cue() { return (ch ?? CHAPTERS[0].built).cue; },
+    get ready() { return started && !switching; },
+  };
 }
 
 main().catch((e) => {

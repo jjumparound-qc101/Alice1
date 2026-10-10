@@ -25,6 +25,7 @@ function chunk(words, soft = 22, hard = 38) {
 
 export class Page {
   constructor(el, words, onSeek) {
+    el.replaceChildren(); // one page element serves every chapter
     this.chunks = [];
     words.paragraphs.forEach((para, p) => {
       chunk(para).forEach((c, k) => this.chunks.push({ words: c, first: k === 0, p }));

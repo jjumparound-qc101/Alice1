@@ -17,7 +17,8 @@ Works on Windows, with VS Code and GitHub; not a programmer. They prefer brief, 
 ## Code map
 | File | What |
 |---|---|
-| `src/main.js` | Chapter engine: loads art, builds every scene, picks the active scene by narration time, page-turn fade, Watch/Explore, saves the reader's place (localStorage), text layouts, end fade |
+| `src/main.js` | Book engine: loads shared art, opens a chapter (builds its sets on first open, points narration, text, timeline and end card at it), picks the active scene by narration time, scene turns, Watch/Explore, saves the place per chapter (localStorage), contents menu, text layouts, chapter end |
+| `src/chapters.js` | The twelve chapters: titles, which are narrated (`NARRATED`) and which are staged (`STAGED`); unstaged chapters play on `scenes/placeholder.js` (their title page) |
 | `src/scenes/*.js` | `riverbank`, `shaft` (the fall), `passage`, `hall`. Each has `start(cue)` and `build()`, which returns `{ T, bg, fog, bounds, hotspots, camera(t), actors(t), update?(t) }` |
 | `src/cues.js` | `at(word, n, after)`: time of the n-th occurrence of a word. **Count occurrences carefully**: "box" #1 is "box her own ears"; "telescope" vs "telescopes". Prefer an `after` anchor |
 | `src/track.js` | `smooth`, `path`, `route` (waypoints), `cameraTrack` (eased keys) |
@@ -30,7 +31,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. They prefer brief, 
 | `src/explore.js` | Explore mode |
 | `src/perf.js` | F3 readout: fps, GPU, Steam status |
 | `electron/` | Desktop wrapper (`app://` protocol, Steam via steamworks.js, preload) |
-| `tools/` | `align.py` (text↔audio word timings), `transcribe.py` (faster-whisper), `cutout.py` (Tenniel scans), `whitecut.py` (AI art on white → paper-tinted cutout), `shaft_strip.py`, `rig_parts.py`, `compose_poses.py`, `smoke.mjs` (headless browser check, screenshots), `walk_report.mjs` (Alice's steps per second on every leg), `electron_smoke.mjs` |
+| `tools/` | `narration.py` (one command per chapter: cut its text, align, trim and encode the audio), `align.py` (text↔audio word timings), `transcribe.py` (faster-whisper), `cutout.py` (Tenniel scans), `whitecut.py` (AI art on white → paper-tinted cutout), `shaft_strip.py`, `rig_parts.py`, `compose_poses.py`, `smoke.mjs` (headless browser check, screenshots), `walk_report.mjs` (Alice's steps per second on every leg), `electron_smoke.mjs` |
 | `godot/` | Gate A comparison only; not maintained |
 
 ## Running and checking
@@ -80,4 +81,4 @@ Status key: ☐ to do, ◐ partly done (waiting on art), ☑ done. The owner's a
 1. ~~Notes 3, 5, 6, 9, 10, 7, 11, 14, 2 (code only)~~: done 2026-10-10.
 2. Drop in each new asset from "Chapter I asset list v2" as it arrives (notes 2, 4, 8 and the rest). Log each one in PROVENANCE.md.
 3. ~~Write the Chapter II asset list and prompts~~: done 2026-10-10 (CHAPTER_02_ASSETS.md, ART_PROMPTS.md "Chapter II asset list"). The plates are 2.1 long neck, 2.2 giant Alice kneeling with the Rabbit trotting away, 2.3 swimming, 2.4 Alice and the Mouse.
-4. Chapter II: align its LibriVox narration (same recording, file `aliceinwonderland_02_carroll.mp3`), then build its scenes with the same engine. Add chapter selection.
+4. ~~Multi-chapter engine and chapter selection~~: done 2026-10-10 (contents menu, Continue to the next chapter, place saved per chapter). Chapter II narration aligned. Next: stage Chapter II with what exists plus placeholders; align the other chapters' narration as their transcripts finish (`tools/transcribe.py`, then `tools/narration.py N file.mp3`, then add N to `NARRATED`).

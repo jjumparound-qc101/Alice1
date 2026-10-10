@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Alice Chapter One</title>
+  <title>Alice in Wonderland</title>
   <link rel="icon" href="data:," />
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body data-mode="watch" data-text="bottom">
   <canvas id="stage"></canvas>
-  <audio id="narration" src="audio/ch01.mp3" preload="auto"></audio>
+  <audio id="narration" preload="auto"></audio>
 
   <div id="turn"></div>
   <div id="dark"></div>
@@ -17,14 +17,13 @@
 
   <section id="intro">
     <h1>Alice’s Adventures in Wonderland</h1>
-    <p class="sub">Chapter I · Down the Rabbit-Hole</p>
-    <p class="note">Chapter I, rough cut. Narration is the LibriVox full-cast reading.<br />
-      The White Rabbit is Tenniel’s engraving; the riverbank and Alice are interim AI drawings; the fall, passage and hall are placeholders.</p>
+    <p class="sub">Lewis Carroll · with John Tenniel’s pictures, in a toy theater</p>
+    <p class="note">Narration is the LibriVox full-cast reading. The White Rabbit is Tenniel’s engraving; Alice and most of the sets are interim AI drawings; chapters not yet staged play on their title page.</p>
     <div class="start">
       <button id="continue" hidden>Continue</button>
       <button id="begin">Begin</button>
+      <button id="contentsIntro">Contents</button>
     </div>
-    <p class="chooser">Or start at: <span id="introScenes"></span></p>
   </section>
 
   <article id="page" aria-live="polite"></article>
@@ -35,7 +34,7 @@
     <button id="modeBtn">Explore</button>
     <button id="layoutBtn">Text: Bottom</button>
     <button id="speedBtn" title="Reading speed (S)">1×</button>
-    <button id="scenesBtn" title="Scenes (M)">Scenes</button>
+    <button id="scenesBtn" title="Contents: chapters and scenes (M)">Contents</button>
   </nav>
 
   <div id="timeline" title="Click or drag to move through the chapter">
@@ -43,8 +42,8 @@
   </div>
 
   <aside id="sceneMenu" hidden>
-    <h2>Chapter I · Scenes</h2>
-    <ol id="sceneList"></ol>
+    <h2>Contents</h2>
+    <div id="contents"></div>
     <p class="keys">← → a sentence back or on · Shift+← → a scene · S speed · M this menu</p>
     <button id="sceneClose">Close</button>
   </aside>
@@ -59,13 +58,13 @@
   </aside>
 
   <section id="endCard" hidden>
-    <p class="quote">“So she set to work, and very soon finished off the cake.”</p>
-    <h2>Chapter I complete</h2>
-    <p class="sub">Down the Rabbit-Hole</p>
+    <p class="quote" id="endQuote"></p>
+    <h2 id="endTitle"></h2>
+    <p class="sub" id="endSub"></p>
     <div class="start">
-      <button id="endExplore">Explore the hall</button>
+      <button id="endExplore">Explore</button>
       <button id="endReplay">Replay the chapter</button>
-      <button id="endNext" disabled title="Chapter II is not ready yet">Continue to Chapter II</button>
+      <button id="endNext">Continue</button>
     </div>
   </section>
 
