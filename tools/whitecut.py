@@ -6,7 +6,9 @@ transparent; white enclosed by ink lines (faces, aprons, leaf highlights) stays
 as paper. Small gaps in the outline are sealed first so the fill can't leak in.
 
 Usage:
-  python3 tools/whitecut.py IN OUT.png [--crop x0,y0,x1,y1] [--seal 2] [--opaque]
+  python3 tools/whitecut.py IN OUT.png [--crop x0,y0,x1,y1] [--seal 2] [--opaque] [--clear x,y;x,y]
+--clear also makes the enclosed white regions at these points (source pixels) transparent,
+e.g. the gaps between a lamp's chains.
 --opaque keeps the whole image (no transparency) and only tints it, e.g. for the sky.
 Requires Pillow, NumPy and SciPy.
 """
@@ -27,6 +29,7 @@ def main():
     ap.add_argument("--white", type=int, default=225, help="gray level above which a pixel counts as background")
     ap.add_argument("--seal", type=int, default=2, help="radius in pixels used to close gaps in outlines")
     ap.add_argument("--opaque", action="store_true")
+    ap.add_argument("--clear", default=None, help="x,y;x,y points inside enclosed gaps to make transparent")
     a = ap.parse_args()
 
     img = Image.open(a.src).convert("L")
@@ -50,7 +53,14 @@ def main():
     # Background = non-ink pixels connected to the border.
     lab, _ = ndi.label(~ink)
     border = np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))
-    bg = np.isin(lab, border[border > 0])
+    clear = []
+    if a.clear:
+        x0, y0 = (int(v) for v in a.crop.split(",")[:2]) if a.crop else (0, 0)
+        for pt in a.clear.split(";"):
+            x, y = (int(v) for v in pt.split(","))
+            clear.append(lab[y - y0, x - x0])
+    keep = [v for v in list(border) + clear if v > 0]
+    bg = np.isin(lab, keep)
     fg = ~bg
     alpha = Image.fromarray((fg * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.8))
 

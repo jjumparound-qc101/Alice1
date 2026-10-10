@@ -37,10 +37,12 @@ async function main() {
   const camera = new THREE.PerspectiveCamera(45, 1, 0.02, 80);
 
   // Interim AI master drawings (PROVENANCE.md).
-  const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar'];
-  const [words, shaftMeta, poseMeta, rabbitArt, ...aiArt] = await Promise.all([
+  const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar',
+    'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf'];
+  const [words, shaftMeta, hallMeta, poseMeta, rabbitArt, ...aiArt] = await Promise.all([
     fetch('data/ch01_words.json').then((r) => r.json()),
     fetch('art/ai/shaft_strip.json').then((r) => r.json()),
+    fetch('art/ai/hall/hall.json').then((r) => r.json()),
     fetch('art/ai/poses/poses.json').then((r) => r.json()),
     loadTexture('art/rabbit_w01-1.png'),
     ...AI_ART.map((n) => loadTexture(`art/ai/${n}.webp`)),
@@ -62,7 +64,7 @@ async function main() {
     const group = new THREE.Group();
     group.visible = false;
     scene.add(group);
-    return { def, group, start: def.start(cue), ...def.build({ group, ai, cue, shaftMeta }) };
+    return { def, group, start: def.start(cue), ...def.build({ group, ai, cue, shaftMeta, hallMeta }) };
   });
   const sceneAt = (t) => scenes.reduce((cur, s) => (t >= s.start ? s : cur), scenes[0]);
 
