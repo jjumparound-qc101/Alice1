@@ -24,7 +24,6 @@ Tech: Node, Vite and three.js. No physics engine; nothing needed one.
 - Saves, settings and menus, accessibility (caption size, reduced motion), controller input.
 - Desktop packaging for Steam (Electron or Tauri around this build, compared against Godot).
 - Performance on low-end hardware. It has only run in headless Chromium with software rendering.
-- Fonts load from Google Fonts at runtime; they need to be bundled to ship.
 - High-resolution scan source for the plates (to be recorded in PROVENANCE.md).
 
 ## How to check it

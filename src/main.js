@@ -26,7 +26,8 @@ async function main() {
     fetch('data/ch01_slice_words.json').then((r) => r.json()),
     loadTexture('art/rabbit_w01-1.png'),
   ]);
-  if (document.fonts) await document.fonts.ready; // the proscenium lettering is drawn to canvas
+  // The proscenium lettering is drawn to canvas, so the fonts must be loaded first.
+  if (document.fonts) await Promise.all([document.fonts.load('600 64px "IM Fell English"'), document.fonts.load('italic 40px "IM Fell English"')]);
 
   const stage = buildStage(scene);
   const tl = makeTimeline(words, stage.holePos);

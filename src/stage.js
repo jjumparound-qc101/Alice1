@@ -69,7 +69,7 @@ export function buildStage(scene) {
   });
 
   [[0, 1.0, 5], [0.5, -0.9, 6]].forEach(([dx, z, seed]) => {
-    const g = paperFlat(texture(art.grassStrip(seed)), 18, 0.55, { edge: false });
+    const g = paperFlat(texture(art.grassStrip(seed)), 32, 0.55, { edge: false });
     g.position.set(dx, 0, z);
     scene.add(g);
   });

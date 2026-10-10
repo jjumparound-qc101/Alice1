@@ -1,3 +1,7 @@
+/* IM FELL English, bundled (SIL Open Font License, public/fonts/OFL.txt). */
+@font-face { font-family: "IM Fell English"; src: url("/fonts/IMFeENrm28P.ttf") format("truetype"); font-style: normal; font-display: swap; }
+@font-face { font-family: "IM Fell English"; src: url("/fonts/IMFeENit28P.ttf") format("truetype"); font-style: italic; font-display: swap; }
+
 :root {
   --paper: #efe9da;
   --ink: #17140f;
