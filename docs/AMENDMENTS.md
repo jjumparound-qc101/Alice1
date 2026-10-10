@@ -2,6 +2,19 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-10: The art source is hybrid (master drawings, then AI fill)
+Status: Confirmed by the owner.
+
+This replaces art-style decision 2 ("Tenniel scans used directly, with AI only to fill hidden areas and missing poses").
+
+1. Tenniel scans are used directly wherever a plate covers the pose or set.
+2. A small set of style-matched master drawings is commissioned from an artist: an Alice turnaround, the riverbank, and the rabbit-hole shaft wall. Extend the list as later chapters need.
+3. Characters are built as cutout puppets with swappable parts (heads, arms, hands), drawn from the scans and the masters.
+4. AI fills the remaining gaps, using the scans and masters as reference, never in-style from nothing.
+5. Every AI-generated or AI-modified asset is logged in PROVENANCE.md and disclosed on Steam.
+
+Reason: about two-thirds of Chapter I's poses have no Tenniel source (see [CHAPTER_01_ASSETS.md](CHAPTER_01_ASSETS.md)), so "scans first, AI only for gaps" doesn't hold.
+
 ## 2026-10-09: Art direction is 2.5D "pop-up book / toy theater"
 Status: Proposed. To be confirmed in Gate A.
 

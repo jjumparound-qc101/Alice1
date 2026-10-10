@@ -101,7 +101,7 @@ Chapter I has exactly three plates. The frontispiece (the King and Queen of Hear
    - Rig reuse. Build Alice as one cutout puppet with swappable heads, arms and hands, so a new pose means a few new parts, not a whole new drawing. This probably turns many "New" rows into "parts only".
    - Staging. Show the fall partly in silhouette or at a distance. Show the sister from behind.
    - Commission a small set of style-matched master drawings (Alice turnaround, the riverbank, the shaft wall). AI can fill gaps from those, rather than imitating Tenniel from nothing.
-4. **Owner decision needed before production:** either reword art-style decision 2 so it matches this ratio, or choose one of the options in point 3 and recount.
+4. **Decided 2026-10-10: hybrid.** Scans where they exist, a few commissioned master drawings, swappable-part puppets, and AI fill guided by the masters. See [AMENDMENTS.md](AMENDMENTS.md).
 
 ## Caveats
 - I checked the plates against Victorian Web's web-resolution images. For production cutouts, use a high-resolution scan of the 1865 or 1866 edition, and log its source in PROVENANCE.md.
