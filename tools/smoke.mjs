@@ -21,8 +21,9 @@ page.on('pageerror', (e) => errors.push(String(e)));
 await page.goto(url);
 await page.waitForFunction(() => window.__slice, null, { timeout: 120000 }); // the shared art and cast are ready
 await page.screenshot({ path: `${out}/00-intro.png` });
-await page.click('#begin');
-await page.waitForFunction(() => window.__slice?.ready);
+// The first frames after load can keep the page busy for a while in software rendering.
+await page.click('#begin', { timeout: 120000 });
+await page.waitForFunction(() => window.__slice?.ready, null, { timeout: 120000 });
 
 // Seek to moments across every scene, pause, let a few frames render.
 const moments = await page.evaluate(() => {

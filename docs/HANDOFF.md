@@ -7,7 +7,7 @@ Updated: 2026-10-10 (end of session 2: Chapters VIII–X staged). For the next C
 ## Where the project stands
 - **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly). Unstaged chapters play on an engraved title page with the text in sync.
 - **Chapters I–X are staged** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
-- **Art**: 8 of 257 AI images received (hall floor, lamp, curtain, little door, glass table, Alice walking A/B, Alice jumping), plus the earlier riverbank/shaft masters and Alice's model sheet. Everything else is a placeholder.
+- **Art**: 13 of 324 AI images received and in the game (hall floor, lamp, curtain, little door, glass table, Alice walking A/B, Alice jumping; the golden key, DRINK ME bottle, EAT ME cake, glass box and fan via `tools/small_props.py`), plus the earlier riverbank/shaft masters and Alice's model sheet. Everything else is a placeholder.
 
 | Chapter | Asset list | Staged | Scenes (`src/scenes/`) |
 |---|---|---|---|
@@ -44,7 +44,7 @@ None. (Chapter VIII card suits: ink, owner 2026-10-10.)
 
 ## When art arrives
 - Uploads that arrive mid-turn aren't saved; ask the owner to resend as a normal message. Screenshots are low quality: ask for the downloaded original.
-- Save the original to `source/ai/<name given in the prompt>.webp|png`. Process it: `tools/whitecut.py` (cut out from white, paper-tint; `--clear x,y;…` clears enclosed gaps; `--opaque` for full-frame art), `tools/compose_poses.py` (Alice whole-figure poses, scaled to the model sheet; `DRAWN` list), `tools/hall_props.py` (an example of a set-piece pipeline). Output to `public/art/ai/…`.
+- Save the original to `source/ai/<name given in the prompt>.webp|png`. Process it: `tools/whitecut.py` (cut out from white, paper-tint; `--clear x,y;…` clears enclosed gaps; `--opaque` for full-frame art), `tools/compose_poses.py` (Alice whole-figure poses, scaled to the model sheet; `DRAWN` list), `tools/hall_props.py` (an example of a set-piece pipeline), `tools/small_props.py` (small props: key, bottle, cake, glass box, fan; gold colouring, see-through glass). Output to `public/art/ai/…`.
 - Wire it into the scene in place of the placeholder; screenshot and look.
 - **Log every asset in PROVENANCE.md** (AI disclosure for Steam), then rerun `python3 tools/assets_master.py` (ticks it).
 - Alice's model sheet is `source/ai/alice_turnaround.webp`: every Alice drawing must match it.

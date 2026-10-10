@@ -62,7 +62,8 @@ async function main() {
 
   // Interim AI master drawings (PROVENANCE.md), shared by every chapter.
   const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar',
-    'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf'];
+    'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
+    'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan']; // tools/small_props.py
   const narrated = CHAPTERS.filter((c) => c.narrated);
   const [wordsList, shaftMeta, hallMeta, poseMeta, rabbitArt, ...aiArt] = await Promise.all([
     Promise.all(narrated.map((c) => fetch(c.words).then((r) => r.json()))),

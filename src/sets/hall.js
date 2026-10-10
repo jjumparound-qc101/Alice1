@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { paperFlat, halo } from '../stage.js';
 import { texture, canvas, INK } from '../ink.js';
-import { SPOT, hallWall, earth, garden, goldenKey } from '../props.js';
+import { SPOT, hallWall, earth, garden } from '../props.js';
 
 export const HALL_W = 12, HALL_D = 6, H = 3.2;
 export const TABLE = { x: 0.4, z: -1.1, top: 0.92, r: 0.42 };
@@ -18,7 +18,7 @@ export function glass(geometry) {
   return g;
 }
 
-export const KEY = { w: 0.12, h: 0.045 }; // "a tiny golden key"
+export const KEY = { w: 0.12, h: 0.048 }; // "a tiny golden key" (the AI drawing, coloured gold: tools/small_props.py)
 
 // Builds the hall into `group`. Returns the parts a scene moves: the key, the door's hinge
 // and the curtain.
@@ -68,7 +68,7 @@ export function buildHall({ group, ai, hallMeta }) {
   }
   table.position.set(TABLE.x, 0, TABLE.z); group.add(table);
 
-  const key = paperFlat(texture(goldenKey()), KEY.w, KEY.h, { anchor: 'center' });
+  const key = paperFlat(ai['props/key'].tex, KEY.w, KEY.h, { anchor: 'center' });
   key.add(halo(SPOT.gold, KEY.w * 1.6, 0.4)); // a slight glow
   group.add(key);
 

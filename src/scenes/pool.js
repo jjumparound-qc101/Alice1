@@ -8,7 +8,7 @@ import { paperFlat } from '../stage.js';
 import { texture } from '../ink.js';
 import { buildHall, TABLE, DOOR, KEY, H } from '../sets/hall.js';
 import {
-  kidGloves, fan, tear, water, footParcelVignette, adaMabelVignette, crocodileVignette,
+  kidGloves, tear, water, footParcelVignette, adaMabelVignette, crocodileVignette,
   seasideVignette, walrusVignette, dinahFireVignette, terrierVignette,
 } from '../props2.js';
 import { thoughts } from '../thoughts.js';
@@ -76,7 +76,7 @@ export const pool = {
 
     // The Rabbit's white kid gloves and large fan, which Alice picks up.
     const gloves = paperFlat(texture(kidGloves()), 0.1, 0.06, { anchor: 'center' });
-    const fanProp = paperFlat(texture(fan()), 0.14, 0.088, { anchor: 'center' });
+    const fanProp = paperFlat(ai['props/fan'].tex, 0.2, 0.2 / ai['props/fan'].aspect, { anchor: 'center' }); // AI drawing (tools/small_props.py)
     group.add(gloves, fanProp);
 
     const think = thoughts(group, [

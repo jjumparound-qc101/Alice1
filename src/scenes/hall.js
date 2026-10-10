@@ -4,8 +4,8 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
-import { buildHall, glass, TABLE, DOOR, KEY } from '../sets/hall.js';
-import { drinkMeBottle, eatMeCake, pokerVignette, knifeVignette, poisonVignette, candleVignette } from '../props.js';
+import { buildHall, TABLE, DOOR, KEY } from '../sets/hall.js';
+import { pokerVignette, knifeVignette, poisonVignette, candleVignette } from '../props.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, step, cameraTrack } from '../track.js';
@@ -32,9 +32,11 @@ export const hall = {
 
     // --- The set (src/sets/hall.js) and this chapter's props --------------------
     const { key, hinge, curt } = buildHall({ group, ai, hallMeta });
-    const bottle = paperFlat(texture(drinkMeBottle()), 0.11, 0.22);
-    const box = glass(new THREE.BoxGeometry(0.24, 0.12, 0.18));
-    const cake = paperFlat(texture(eatMeCake()), 0.15, 0.094);
+    // The AI drawings (tools/small_props.py): the bottle, the open glass box with the cake in it.
+    const flat = (name, w) => paperFlat(ai[name].tex, w, w / ai[name].aspect);
+    const bottle = flat('props/bottle', 0.13);
+    const box = flat('props/box', 0.15);   // "a little glass box"; Alice is ten inches high here
+    const cake = flat('props/cake', 0.065);
     group.add(bottle, box, cake);
 
     // "the simple rules their friends had taught them", and later the candle going out.
@@ -100,9 +102,9 @@ export const hall = {
       think(t, { x: a.x - 0.2 * a.scale, y: (a.y ?? 0) + 1.75 * a.scale, z: a.z + 0.15 }, Math.max(a.scale, 0.35));
       // Under the table: the little glass box and the cake.
       box.visible = cake.visible = t >= T.box - 0.5;
-      box.position.set(TABLE.x - 0.05, 0.06, TABLE.z + 0.25);
+      box.position.set(TABLE.x - 0.05, 0, TABLE.z + 0.25);
       if (t >= T.ate && t < T.finished) carry(cake, cast.alice, { drop: 0.04 });
-      else rest(cake, TABLE.x - 0.05, 0.005, TABLE.z + 0.25);
+      else rest(cake, TABLE.x - 0.065, 0.012, TABLE.z + 0.245); // inside the box: just behind its card, seen through the glass
       if (t >= T.finished) cake.visible = false;
     }
 
@@ -120,6 +122,7 @@ export const hall = {
       { t: T.waiting - 6, dur: 3, pos: [DOOR.x - 1.2, 1.0, 0.1], look: [DOOR.x - 0.2, 0.5, DOOR.z] },
       { t: T.waiting, dur: 4, pos: [1.7, 1.2, 0.6], look: [TABLE.x + 0.3, 0.9, TABLE.z] },
       { t: T.bottle - 1, dur: 2, pos: [1.3, 1.1, -0.2], look: [TABLE.x - 0.2, 0.95, TABLE.z] }, // DRINK ME
+      { t: T.bottle + 2, dur: 3, pos: [0.9, 1.0, 0.75], look: [AT_TABLE.x + 0.05, 0.72, AT_TABLE.z] }, // the bottle in her hand
       { t: T.poker - 2, dur: 2, pos: [1.6, 1.6, 1.4], look: [AT_TABLE.x, 1.5, AT_TABLE.z] }, // the poker
       { t: T.notMarked - 0.5, dur: 2, pos: [1.6, 1.1, 0.5], look: [AT_TABLE.x, 0.85, AT_TABLE.z] },
       { t: T.telescope - 1, dur: 3, pos: [0.9, 0.6, 0.3], look: [AT_TABLE.x, 0.35, AT_TABLE.z] }, // shutting up like a telescope
