@@ -7,7 +7,7 @@ Every shipped asset is listed here with its source. AI-generated or AI-modified 
 | Source | What it is | Where it came from (URL or archive and shelfmark) | Rights basis | Notes |
 |---|---|---|---|---|
 | _TBD_ | Tenniel illustrations, scan source | | Public domain (1865) | Record the exact edition and the scanning institution. |
-| Candidate | LibriVox "Alice's Adventures in Wonderland (Dramatic Reading)", full cast. David Goldfarb narrates, Miss Avarice reads Alice and BellonaTimes the White Rabbit. Released 2011-02-21. | https://librivox.org/4511 · https://archive.org/details/aliceinwonderland_1102_librivox | Public Domain Mark 1.0 | Not downloaded yet: the network blocks librivox.org and archive.org. Confirm the Chapter I cast and audio quality before locking it in. |
+| Candidate | LibriVox "Alice's Adventures in Wonderland (Dramatic Reading)", full cast, released 2011-02-21. Chapter I speakers: Narrator (David Goldfarb), Alice (Miss Avarice), White Rabbit (BellonaTimes). Alice's Sister (Diana Majlinger) is cast for the final chapter. | https://librivox.org/4511 · https://archive.org/details/aliceinwonderland_1102_librivox · Chapter I file: `aliceinwonderland_01_carroll.mp3` (VBR) | Public Domain Mark 1.0 | Cast confirmed from the LibriVox page. Not yet listened to: the network blocks archive.org's download hosts (`*.ca.archive.org`). The catalog lists Chapter I at 10:29, but the archive file is 12:20. Check what the extra time is. |
 
 ## Asset log
 
