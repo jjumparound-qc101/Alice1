@@ -12,7 +12,7 @@ const TITLES = [
   'Advice from a Caterpillar', 'Pig and Pepper', 'A Mad Tea-Party', 'The Queen’s Croquet-Ground',
   'The Mock Turtle’s Story', 'The Lobster Quadrille', 'Who Stole the Tarts?', 'Alice’s Evidence',
 ];
-const NARRATED = new Set([1, 2, 3, 4, 5, 6, 7]); // add each chapter as its narration is aligned
+const NARRATED = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]); // every chapter's narration is aligned
 const STAGED = { 1: CHAPTER_1, 2: [pool] };
 
 export const CHAPTERS = TITLES.map((title, i) => {
