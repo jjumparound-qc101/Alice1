@@ -37,7 +37,7 @@ const moments = await page.evaluate(() => {
     ['30-rabbit-hop', rb.pop + 0.1], ['31-alice-hop', rb.downWent + 1.1], ['32-passage-rabbit-far', pa.thump + 3],
     ['33-dark-turn', ha.hall - 1.2], ['34-lamps-lighting', ha.hall], ['35-key-in-hand', ha.tryKey + 1],
     ['36-dinah', sh.dinah + 2], ['37-cats-bats', sh.cats + 4], ['38-knife', ha.finger + 1], ['39-poison', ha.poison + 1],
-    ['40-candle', ha.candle + 1], ['41-rabbit-idle', rb.hurried + 6], ['42-hall-walk', ha.doors + 2], ['43-run', rb.ranAcross + 2],
+    ['40-candle', ha.candle + 1], ['41-rabbit-idle', rb.hurried + 6], ['42-hall-walk', ha.doors + 2], ['43-run', rb.ranAcross + 2], ['44-hall-walk-b', ha.doors + 2.5], ['45-alice-takeoff', rb.downWent + 0.95],
   ];
 });
 for (const [name, t] of moments) {

@@ -75,6 +75,8 @@ async function main() {
       ...posed,
       run_a: { ...posed.run_a, hand: [0.62, 0.53] },
       run_b: { ...posed.run_b, hand: [0.66, 0.57] },
+      walk_a: { ...posed.walk_a, hand: [0.04, 0.5] },
+      jump: { ...posed.jump, hand: [0.03, 0.37] },
     }, ALICE_H),
     sister: new Puppet({ read: { ...ai.sister_read, facesLeft: false, height: 1.05 } }, 1.05),
   };

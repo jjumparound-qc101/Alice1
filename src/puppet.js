@@ -43,13 +43,17 @@ export class Puppet {
     const striding = canStride && running;
     const strolling = canStride && !running;
     if (striding) pose = Math.floor(s.phase * 2) % 2 ? 'run_b' : 'run_a';
+    // Walking: step drawings alternate (walk_a with walk_b, or with the standing pose until
+    // walk_b is drawn). Without walk art, the standing pose bobs.
+    const stepping = strolling && this.poses.walk_a;
+    if (stepping) pose = Math.floor(s.phase) % 2 ? (this.poses.walk_b ? 'walk_b' : 'stand') : 'walk_a';
     if (pose !== this.pose) {
       if (this.pose) this.poses[this.pose].visible = false;
       this.poses[pose].visible = true;
       this.pose = pose;
     }
     const flat = this.poses[pose];
-    const lift = striding ? 0.04 : strolling ? 0.012 : 0.12;
+    const lift = striding ? 0.04 : stepping ? 0.006 : strolling ? 0.012 : 0.12;
     const beat = s.phase * Math.PI * 2 * (strolling ? 0.5 : 1); // a walk is about two steps a second
     const hop = s.moving ? Math.abs(Math.sin(beat)) * lift * this.height : 0;
     let rock = s.moving ? Math.sin(beat) * (strolling ? 0.025 : 0.06) : 0;
