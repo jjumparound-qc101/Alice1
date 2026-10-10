@@ -405,3 +405,59 @@ Background and sources: [CHAPTER_05_ASSETS.md](CHAPTER_05_ASSETS.md). Same conve
 21. `fw_eel.png` (attach 5.5): "An old man balancing an eel on the end of his nose."
 
 Priority if time is short: 9, 10, 8, 14, 17, 1, 5, 16, 6, 7, 11, 13, then the rest.
+
+---
+
+## Chapter VI asset list (2026-10-10): "Pig and Pepper"
+Background and sources: [CHAPTER_06_ASSETS.md](CHAPTER_06_ASSETS.md). Same conversation, same rules. Attach the Alice model sheet with every Alice prompt. No colours in this chapter.
+
+**References to download first:** 6.1 (the Footmen) https://victorianweb.org/art/illustration/tenniel/alice/6.1.html · 6.2 (the kitchen) …/6.2.html · 6.3 (Alice and the pig) …/6.3.html · 6.4 (the Cat in the tree) …/6.4.html · 6.5 (the grin fading) …/6.5.html (all under https://victorianweb.org/art/illustration/tenniel/alice/)
+
+### Alice (whole figures on white, three-quarter view facing left unless stated)
+1. `alice6_peep.png`: "Same Alice, full figure: peeping out from behind a tree trunk (draw the edge of the trunk), curious."
+2. `alice6_laugh.png`: "Same Alice, full figure: laughing so much she covers her mouth with her hand."
+3. `alice6_knock.png`: "Same Alice, full figure: knocking at a door with her knuckles. Facing right."
+4. `alice6_sneeze.png`: "Same Alice, full figure: sneezing, eyes shut, a hand half raised."
+5. `alice6_baby.png` (attach 6.3): "Same Alice in Tenniel's pose from this plate, holding a baby in long white clothes against her chest, looking down at it anxiously. Our Alice's face and dress."
+6. `alice6_pig.png` (attach 6.3): "The same pose, but what she holds is a little pig in the baby's clothes."
+7. `alice6_terror.png`: "Same Alice, full figure: jumping up and down in terror, both hands raised."
+8. `alice6_back.png` (attach 6.4): "Same Alice in Tenniel's pose from this plate: seen from behind, hands behind her back, looking up into a tree."
+9. `alice6_catch.png`: "Same Alice, full figure: arms out, catching a wriggling bundle thrown at her."
+
+### The Footmen (attach 6.1)
+10. `fish_footman.png`: "The Fish-Footman from this plate, full figure on white: in livery and powdered curls, the great letter with a crown seal under his arm."
+11. `frog_footman.png`: "The Frog-Footman from this plate, full figure on white: in livery, round face and large eyes, taking a letter."
+12. `frog_footman_sit.png`: "The same Frog-Footman sitting on the ground, legs out, staring stupidly up at the sky."
+13. `footmen_bow.png`: "The Fish-Footman and the Frog-Footman bowing low to each other, their powdered curls entangled together."
+
+### The kitchen (attach 6.2)
+14. `duchess_nurse.png`: "The Duchess from this plate, full figure on white: sitting on a three-legged stool, nursing a howling baby."
+15. `duchess_toss.png`: "The same Duchess, standing, tossing the baby up and down violently while she sings."
+16. `duchess_fling.png`: "The same Duchess flinging the baby away from her, turning to hurry out."
+17. `cook_stir.png`: "The Cook from this plate, full figure on white: leaning over, stirring a large cauldron."
+18. `cook_throw.png`: "The same Cook throwing a saucepan overarm."
+19. `baby_starfish.png`: "The baby from this plate, howling, arms and legs out in all directions like a star-fish. White background."
+20. `baby_snout.png`: "The same baby, its nose turned up into a snout, its eyes getting very small."
+21. `pig_trot.png`: "A little pig trotting away into a wood, seen from three-quarter behind."
+22. `cheshire_hearth.png`: "The Cheshire Cat from this plate, sitting, grinning from ear to ear. White background."
+23. `kitchen_back.png` (landscape): "A large kitchen's back wall, straight on: a big fireplace with a cauldron hanging over the fire, a hearth, a dresser with plates, smoke. Edge to edge."
+24. `stool.png`: "A three-legged wooden stool. White background."
+25. `thrown_things.png`: "Separate on white: fire-irons (poker, tongs, shovel), two saucepans, a frying-pan, three plates and a dish."
+26. `pepper_box.png`: "An old-fashioned pepper-box. White background."
+27. `great_letter.png` (attach 6.1): "The great letter from this plate, with its crown seal. White background."
+
+### The Cheshire Cat in the wood (attach 6.4 and 6.5)
+28. `cheshire_bough.png`: "The Cheshire Cat from plate 6.4, sitting on a bough, grinning. Draw the bough too. White background."
+29. `cheshire_paw.png`: "The same Cat on the bough, waving one paw to the side."
+30. `cheshire_grin.png`: "Only the grin of the same Cat, exactly the same size and position as in `cheshire_bough.png`, everything else left out. White background."
+31. `tree_bough.png`: "A tree with one long low bough reaching out, after plates 6.4 and 6.5. White background."
+
+### Sets for the end of the chapter
+32. `door_close.png` (attach 6.1): "The door of the little house and its step, as in this plate, with a bit of wall and a tree. Fill the image."
+33. `march_hare_house.png`: "A large house with chimneys shaped like a hare's ears and a roof thatched with fur, in a wood. Fill the image." (Chapter VII uses it.)
+
+### Thought vignettes (oval, engraved, white background)
+34. `vignette_axis.png`: "The earth as a globe turning on its axis, a sun and moon beside it."
+35. `vignette_pigs.png`: "Two or three children with little pigs' faces, in their best clothes."
+
+Priority if time is short: 14, 19, 22, 28, 30, 5, 6, 10, 11, 17, 23, 20, 21, then the rest.
