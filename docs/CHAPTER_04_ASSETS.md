@@ -18,7 +18,7 @@ The hall is gone: "the great hall, with the glass table and the little door, had
 | W-04-3 | Bill the Lizard flying up out of the chimney-pot in a puff of soot | Seen | B4-03 (cut out), the chimney-pot |
 | W-04-4 | The enormous puppy, and tiny Alice behind a thistle holding out a stick | Seen | P4-01 (cut out), A4-10 (reference), the thistle and grass (already the Chapter I grass reference) |
 
-## Colour (one decision for the owner)
+## Colour (owner, 2026-10-10: the plate is brass-coloured)
 - **"a large blue caterpillar"** (the chapter's last sentence): the Caterpillar is blue from here on (COLOR.md rule 1). Only his first moment is in this chapter; most of his art belongs to Chapter V's list.
 - **"a bright brass plate with the name 'W. RABBIT'"**: COLOR.md lists brass as an open question. **Recommendation: ink.** Brass is a material, not a stated colour, and rule 7 already says "bright" is not a colour. The alternative is a soft brass gold on the plate only.
 

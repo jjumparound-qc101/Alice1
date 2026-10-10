@@ -9,6 +9,7 @@ import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { CHAPTERS } from './chapters.js';
 import { texture } from './ink.js';
 import { mouseSwim, mouseLeap, duckSwim, dodoSwim, lorySwim, eagletSwim } from './props2.js';
+import { lizard, guineaPig, puppy } from './props4.js';
 import { mouseUp, mouseWalk, dodoStand, duckStand, loryStand, eagletStand, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
 
 const $ = (id) => document.getElementById(id);
@@ -128,6 +129,12 @@ async function main() {
     canary: new Puppet({ up: drawn(canaryStand(), 0.06) }, 0.06),
     crab: new Puppet({ stand: drawn(crabStand(), 0.035) }, 0.035),
     crabling: new Puppet({ stand: drawn(crabStand(true), 0.022) }, 0.022),
+    // Chapter IV placeholders (props4.js).
+    bill: new Puppet({ stand: drawn(lizard('stand'), 0.3), fly: drawn(lizard('fly'), 0.3) }, 0.3),
+    pat: new Puppet({ spade: drawn(guineaPig(true), 0.4) }, 0.4),
+    pig1: new Puppet({ up: drawn(guineaPig(), 0.32) }, 0.32),
+    pig2: new Puppet({ up: drawn(guineaPig(), 0.32) }, 0.32),
+    puppy: new Puppet({ stand: drawn(puppy('stand'), 0.75), sit: drawn(puppy('sit'), 0.8) }, 0.75),
   };
   Object.values(cast).forEach((p) => scene.add(p.root));
 

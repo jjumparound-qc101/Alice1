@@ -29,7 +29,7 @@ Rich and bright, with a slight glow (owner, Notes 1.0 #14): the colour lies over
 | II | The terrier's hair (Alice's description) | brown | 4 (thought vignette) |
 | II | The Mouse's face | pale | 3 |
 | II | "every golden scale" (poem) | gold | 6 |
-| IV | Brass plate on the Rabbit's door ("bright brass") | brass is a material, not a stated color | Open question |
+| IV | Brass plate on the Rabbit's door ("bright brass") | brass (soft gold) | Owner, 2026-10-10: shown in the colour of brass, on the plate only |
 | IV | The Caterpillar | blue | 1 |
 | V | "your hair has become very white", "grey locks" (poem) | white, grey | 6 |
 | V | The treetops seen from Alice's long neck | green | 1, 2 |

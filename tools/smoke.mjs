@@ -89,6 +89,20 @@ for (const [name, t] of ch3) {
   await page.screenshot({ path: `${out}/${name}.png` });
 }
 
+// Chapter IV.
+await page.evaluate(() => window.__slice.begin(window.__slice.chapters[3], 0));
+await page.waitForFunction(() => window.__slice.ready && window.__slice.chapter?.n === 4);
+const ch4 = await page.evaluate(() => {
+  const [, H, W] = window.__slice.chapter.built.scenes.map((s) => s.T);
+  return [['70-ch4-lane', 45], ['71-ch4-plate', H.house + 3], ['72-ch4-giant', H.effect + 4], ['73-ch4-frame', H.shriek + 1],
+    ['74-ch4-bill', H.kick + 1], ['75-ch4-puppy', W.puppy + 3], ['76-ch4-caterpillar', W.caterpillar + 2]];
+});
+for (const [name, t] of ch4) {
+  await page.evaluate((t) => { const a = window.__slice.audio; a.pause(); a.currentTime = t; }, t);
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `${out}/${name}.png` });
+}
+
 console.log(JSON.stringify({ cam, errors }, null, 1));
 await browser.close();
 if (errors.length) process.exit(1);

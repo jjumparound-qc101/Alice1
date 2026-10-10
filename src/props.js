@@ -9,6 +9,9 @@ export const SPOT = {
   redHot: '#f0381a',  // "a red-hot poker"
   redGlow: '#ff9a3c', // its glowing tip
   brown: '#9a6232',   // the terrier's "long curly brown hair" (Chapter II, a thought)
+  brass: '#c29a3f',   // "a bright brass plate" on the Rabbit's door (owner, 2026-10-10: brass-coloured)
+  brassLight: '#e8cf7a',
+  blue: '#5b86c4',    // "a large blue caterpillar" (Chapter IV onward)
 };
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;
