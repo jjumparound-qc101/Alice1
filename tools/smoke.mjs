@@ -145,6 +145,23 @@ for (const [name, t] of ch7) {
   await page.screenshot({ path: `${out}/${name}.png` });
 }
 
+// Chapters VIII onward: open chapter n, pick moments from its scenes' cue times, screenshot each.
+async function chapterShots(n, pick) {
+  await page.evaluate((n) => window.__slice.begin(window.__slice.chapters[n - 1], 0), n);
+  await page.waitForFunction((n) => window.__slice.ready && window.__slice.chapter?.n === n, n);
+  const list = await page.evaluate(pick);
+  for (const [name, t] of list) {
+    await page.evaluate((t) => { const a = window.__slice.audio; a.pause(); a.currentTime = t; }, t);
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: `${out}/${name}.png` });
+  }
+}
+await chapterShots(8, () => {
+  const [R, C] = window.__slice.chapter.built.scenes.map((s) => s.T);
+  return [['B0-ch8-painting', R.tulip], ['B1-ch8-procession', R.soldiers + 12], ['B2-ch8-crimson', R.crimson + 2], ['B3-ch8-pot', R.pot + 1],
+    ['B4-ch8-flamingo', C.twist + 1], ['B5-ch8-cat', C.whole + 3], ['B6-ch8-tree', C.tree + 1], ['B7-ch8-fading', C.fading + 2]];
+});
+
 console.log(JSON.stringify({ cam, errors }, null, 1));
 await browser.close();
 if (errors.length) process.exit(1);

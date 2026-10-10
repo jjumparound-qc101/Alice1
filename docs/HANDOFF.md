@@ -6,8 +6,7 @@ Updated: 2026-10-10 (end of session). For the next Claude Code session (or anyon
 
 ## Where the project stands
 - **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly). Unstaged chapters play on an engraved title page with the text in sync.
-- **Chapters I–VII are staged** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
-- **Chapter VIII**: asset list written and in the master list; **not staged yet**, waiting on one owner decision (below).
+- **Chapters I–VIII are staged** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
 - **Art**: 8 of 257 AI images received (hall floor, lamp, curtain, little door, glass table, Alice walking A/B, Alice jumping), plus the earlier riverbank/shaft masters and Alice's model sheet. Everything else is a placeholder.
 
 | Chapter | Asset list | Staged | Scenes (`src/scenes/`) |
@@ -19,17 +18,16 @@ Updated: 2026-10-10 (end of session). For the next Claude Code session (or anyon
 | V Advice from a Caterpillar | CHAPTER_05_ASSETS.md | ✓ | `caterpillar.js`: `mushroom`, `treetops`, `clearing` |
 | VI Pig and Pepper | CHAPTER_06_ASSETS.md | ✓ | `duchess.js`: `doorstep`, `kitchen`, `wood6` |
 | VII A Mad Tea-Party | CHAPTER_07_ASSETS.md | ✓ | `teaParty.js`: `teaParty`, `hallAgain`, `garden` |
-| VIII The Queen's Croquet-Ground | CHAPTER_08_ASSETS.md | — | |
+| VIII The Queen's Croquet-Ground | CHAPTER_08_ASSETS.md | ✓ | `croquet.js`: `roseTree`, `croquet` (set: `src/sets/croquet.js`) |
 | IX–XII | — | — | title pages |
 
-## Open decision for the owner (ask first thing)
-**Chapter VIII card suits: ink or red?** The text says the courtiers are "ornamented all over with diamonds" and the children "with hearts" but never says red. Recommendation put to the owner: **ink** (COLOR.md rule: only text-named colours), so the painted red roses and the crimson cushion are the only red. Alternative: red hearts and diamonds. Record the answer in docs/COLOR.md and CHAPTER_08_ASSETS.md, then stage Chapter VIII.
+## Open decisions for the owner
+None. (Chapter VIII card suits: ink, owner 2026-10-10.)
 
 ## Next steps, in order
-1. Get the card-suit answer; **stage Chapter VIII** with placeholders (see "How a chapter is done" below). Its croquet-ground set is shared with Chapter IX, so build it as `src/sets/croquet.js`.
-2. Then Chapters IX–XII the same way: asset list → master list → stage.
-3. **Drop in art as the owner sends it** (see "When art arrives"). The owner sends art in batches.
-4. Later, after the whole book (owner's decision): low-end hardware test, code signing, high-resolution Tenniel scans (NYPL/British Library; Victorian Web images are only 432 px tall).
+1. Chapters IX–XII the same way (Chapter IX starts on the croquet-ground: reuse `src/sets/croquet.js`): asset list → master list → stage.
+2. **Drop in art as the owner sends it** (see "When art arrives"). The owner sends art in batches.
+3. Later, after the whole book (owner's decision): low-end hardware test, code signing, high-resolution Tenniel scans (NYPL/British Library; Victorian Web images are only 432 px tall).
 
 ## How a chapter is done (the owner's process)
 1. Read the chapter (`source/text/chNN.txt`) and its Tenniel plates (Victorian Web `…/tenniel/alice/N.M.html`; download the `.jpg` to look).
@@ -71,7 +69,9 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 | `src/chapters.js` | The twelve chapters: `NARRATED`, `STAGED` |
 | `src/scenes/*.js` | One file per chapter (see the table). A scene: `start(cue)`, optional `parts(cue)` (named marks for the contents/timeline/Shift+arrows), `turn`, and `build()` → `{ T, bg, fog, bounds, hotspots, camera(t), actors(t), update?(t, cast) }`. `placeholder.js`: the title page |
 | `src/sets/hall.js` | The hall set, shared by Chapters I, II, III, VII |
-| `src/props.js` … `props7.js` | Placeholder art drawn in code, per chapter (props.js = Chapter I and shared helpers: `vignette`, `shape`, `line`, `cat`, `SPOT` colours) |
+| `src/sets/croquet.js` | The Queen's garden: rose-tree, flower-pot, croquet-ground (Chapters VIII, IX) |
+| `src/crowd.js` | Scene-only puppets ("extras": processions, crowds), posed in a scene's `update(t, cast, camera)` |
+| `src/props.js` … `props8.js` | Placeholder art drawn in code, per chapter (props.js = Chapter I and shared helpers: `vignette`, `shape`, `line`, `cat`, `SPOT` colours) |
 | `src/puppet.js` | Paper-cutout puppets: poses swapped by name; `x z y scale tilt dir`, walking by distance (`walk_a`/`walk_b`), `idle`, `float` (swimmers); `handPoint()` and `carry(obj, puppet)` for held props |
 | `src/thoughts.js` | Thought vignettes (oval cards that pop open while the text speaks of them) |
 | `src/cues.js` | `at(word, n, after)` and `para(text)` |

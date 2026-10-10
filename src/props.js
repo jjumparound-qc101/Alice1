@@ -14,6 +14,9 @@ export const SPOT = {
   blue: '#5b86c4',    // "a large blue caterpillar" (Chapter IV onward)
   leaf: '#7fae5a',    // "a sea of green leaves" (Chapter V: those treetops only)
   leafDark: '#4f7d3a',
+  rose: '#d8283a',    // the roses "painting them red" (Chapter VIII onward: the painted roses)
+  roseDark: '#a01828',
+  crimson: '#a3123a', // "a crimson velvet cushion"; the Queen "turned crimson with fury"
 };
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;

@@ -2,6 +2,11 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-10: Chapter VIII card suits stay ink
+Status: Confirmed by the owner.
+
+The text says the courtiers are "ornamented all over with diamonds" and the royal children "with hearts", but never says red. By the colour rule (docs/COLOR.md) the suits stay ink, like Tenniel's prints, so the painted red roses and the crimson cushion are the only red on the croquet-ground.
+
 ## 2026-10-10: The turnaround is Alice's model sheet
 Status: Confirmed by the owner.
 

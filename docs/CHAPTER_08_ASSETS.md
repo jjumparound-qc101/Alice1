@@ -1,6 +1,6 @@
 # Chapter VIII Asset List: "The Queen's Croquet-Ground"
 Date: 2026-10-10
-Status: Draft for the owner. Plates checked against web-resolution images from Victorian Web on 2026-10-10. The prompts are in [ART_PROMPTS.md](ART_PROMPTS.md), "Chapter VIII asset list", and are added to [ASSETS_MASTER.md](ASSETS_MASTER.md). Same method as before: the Alice model sheet attached for every Alice drawing; Tenniel plates as references, and cut out directly for figures other than Alice (from high-resolution scans).
+Status: Confirmed (card suits: ink). Plates checked against web-resolution images from Victorian Web on 2026-10-10. The prompts are in [ART_PROMPTS.md](ART_PROMPTS.md), "Chapter VIII asset list", and are added to [ASSETS_MASTER.md](ASSETS_MASTER.md). Same method as before: the Alice model sheet attached for every Alice drawing; Tenniel plates as references, and cut out directly for figures other than Alice (from high-resolution scans).
 
 ## The chapter in places
 1. **The garden entrance**: a large rose-tree of white roses, three card-gardeners painting them red; the great procession arrives; a large flower-pot.
@@ -23,7 +23,7 @@ Both are parts of one garden, the "beautiful garden" Alice reached at the end of
 | The Queen's face | crimson, briefly | "The Queen turned crimson with fury" | 3 (a flush, then back to ink) |
 | The White Rabbit | paper-white, pink eyes | as before | 1, 8 |
 
-**One decision for you: the card suits.** The text says the courtiers are "ornamented all over with diamonds" and the children "with hearts", but never says *red*. By the colour rule they stay ink, like Tenniel's prints. **Recommendation: ink**, so the painted red roses and the crimson cushion are the only red on the croquet-ground and stand out. The alternative is red hearts and diamonds, as on real playing cards.
+**The card suits: ink (owner decision, 2026-10-10).** The text says the courtiers are "ornamented all over with diamonds" and the children "with hearts", but never says *red*. By the colour rule they stay ink, like Tenniel's prints. So the painted red roses and the crimson cushion are the only red on the croquet-ground and stand out. (The alternative, red hearts and diamonds as on real playing cards, was not taken.)
 
 ## Alice: 6 poses (whole figures, model sheet attached)
 | ID | Beat | Source | Base |
