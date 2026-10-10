@@ -17,7 +17,7 @@ Status: Draft for the owner. Plates checked against web-resolution images from V
 | W-05-5 | Father William balancing an eel on his nose | Seen | Poem plate 4 |
 | (W-05-6) | Alice with her immensely long neck, and the Pigeon | **Not on Victorian Web**: find it in another scan (the NYPL or British Library 1865/66 editions) | A5-05 (reference), PG5-01 |
 
-## Recommendation: show the Father William plates as they are
+## Father William: Tenniel's plates as they are (owner, 2026-10-10)
 The poem is a story inside the story, and Tenniel drew exactly four pictures for its four questions. Rather than drawing new art, **show Tenniel's four plates themselves**, one per verse pair, as framed engravings that turn like book pages while the poem is recited. They contain no Alice, so there's no clash with our Alice. They need high-resolution scans (the Victorian Web images are 432 px tall). Until then, the web images can stand in at a small size. If you prefer new drawings, prompts are included (marked "if not using the plates").
 
 ## Colour

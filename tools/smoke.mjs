@@ -103,6 +103,20 @@ for (const [name, t] of ch4) {
   await page.screenshot({ path: `${out}/${name}.png` });
 }
 
+// Chapter V.
+await page.evaluate(() => window.__slice.begin(window.__slice.chapters[4], 0));
+await page.waitForFunction(() => window.__slice.ready && window.__slice.chapter?.n === 5);
+const ch5 = await page.evaluate(() => {
+  const [M, N] = window.__slice.chapter.built.scenes.map((s) => s.T);
+  return [['80-ch5-caterpillar', 20], ['81-ch5-father-william', M.v2 + 3], ['82-ch5-squashed', M.blow + 2], ['83-ch5-neck', N.free + 4],
+    ['84-ch5-pigeon', N.hiss + 2], ['85-ch5-house', window.__slice.chapter.cue.end - 3]];
+});
+for (const [name, t] of ch5) {
+  await page.evaluate((t) => { const a = window.__slice.audio; a.pause(); a.currentTime = t; }, t);
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `${out}/${name}.png` });
+}
+
 console.log(JSON.stringify({ cam, errors }, null, 1));
 await browser.close();
 if (errors.length) process.exit(1);

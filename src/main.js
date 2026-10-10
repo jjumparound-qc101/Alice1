@@ -9,7 +9,8 @@ import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { CHAPTERS } from './chapters.js';
 import { texture } from './ink.js';
 import { mouseSwim, mouseLeap, duckSwim, dodoSwim, lorySwim, eagletSwim } from './props2.js';
-import { lizard, guineaPig, puppy } from './props4.js';
+import { lizard, guineaPig, puppy, caterpillar } from './props4.js';
+import { pigeon } from './props5.js';
 import { mouseUp, mouseWalk, dodoStand, duckStand, loryStand, eagletStand, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
 
 const $ = (id) => document.getElementById(id);
@@ -74,6 +75,8 @@ async function main() {
     return [name, { ...art, facesLeft: true, height: m.h * k, offsetX: (m.w / 2 - m.bodyX) * k }];
   })));
   const ai = Object.fromEntries(AI_ART.map((n, i) => [n, aiArt[i]]));
+  // Tenniel's own plates shown as pictures (Chapter V's Father William), paper-tinted.
+  for (const n of ['father_william_1', 'father_william_2', 'father_william_3', 'father_william_4']) ai[`tenniel/${n}`] = await loadTexture(`art/tenniel/${n}.webp`);
   // Lettering on the proscenium, props and title pages is drawn to canvas, so the fonts must be loaded first.
   if (document.fonts) await Promise.all([document.fonts.load('600 64px "IM Fell English"'), document.fonts.load('italic 40px "IM Fell English"')]);
 
@@ -134,6 +137,9 @@ async function main() {
     pat: new Puppet({ spade: drawn(guineaPig(true), 0.4) }, 0.4),
     pig1: new Puppet({ up: drawn(guineaPig(), 0.32) }, 0.32),
     pig2: new Puppet({ up: drawn(guineaPig(), 0.32) }, 0.32),
+    // Chapter V placeholders.
+    caterpillar: new Puppet({ sit: drawn(caterpillar(), 0.05) }, 0.05),
+    pigeon: new Puppet({ fly: drawn(pigeon('fly'), 0.22), perch: drawn(pigeon('perch'), 0.2) }, 0.2),
     puppy: new Puppet({ stand: drawn(puppy('stand'), 0.75), sit: drawn(puppy('sit'), 0.8) }, 0.75),
   };
   Object.values(cast).forEach((p) => scene.add(p.root));

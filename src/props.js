@@ -12,6 +12,8 @@ export const SPOT = {
   brass: '#c29a3f',   // "a bright brass plate" on the Rabbit's door (owner, 2026-10-10: brass-coloured)
   brassLight: '#e8cf7a',
   blue: '#5b86c4',    // "a large blue caterpillar" (Chapter IV onward)
+  leaf: '#7fae5a',    // "a sea of green leaves" (Chapter V: those treetops only)
+  leafDark: '#4f7d3a',
 };
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;

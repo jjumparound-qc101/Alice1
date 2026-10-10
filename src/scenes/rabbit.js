@@ -21,11 +21,11 @@ import { smooth, lerp, route, cameraTrack } from '../track.js';
 
 const MAID = 0.5;    // Alice's size here: small enough to be taken for the Rabbit's housemaid
 const TINY = 0.13;   // after the little cakes: about three inches
-const tiled = (t, rx, ry = 1) => { t = t.clone(); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx, ry); t.needsUpdate = true; return t; };
+export const tiled = (t, rx, ry = 1) => { t = t.clone(); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx, ry); t.needsUpdate = true; return t; };
 const plain = (map, opts = {}) => new THREE.MeshBasicMaterial({ map, ...opts });
 
 // Ground, sky and far trees for the two outdoor scenes.
-function outdoors(group, ai, { groundRepeat = 14 } = {}) {
+export function outdoors(group, ai, { groundRepeat = 14 } = {}) {
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), plain(texture(art.groundTile(), { repeat: [groundRepeat, groundRepeat] })));
   floor.rotation.x = -Math.PI / 2; group.add(floor);
   const sky = paperFlat(tiled(ai.sky.tex, 40 / (14 * ai.sky.aspect)), 40, 14, { edge: false, opaque: true });
