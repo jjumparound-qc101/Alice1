@@ -51,7 +51,7 @@ export const riverbank = {
       else if (t < T.downWent) s = { ...WAIT, moving: false, dir: 1 };
       else if (t < T.downWent + 0.9) s = path(t, T.downWent, T.downWent + 0.9, WAIT, MOUTH);
       else s = { ...hop(t, T.downWent + 0.9, MOUTH, INSIDE, { dur: 0.6, peak: 0.3, drop: 0.5 }), pose: 'jump' }; // "down went Alice after it"
-      return { pose: 'stand', phase: t * 2.2, gait: 'run', ...s }; // "she ran across the field after it"
+      return { pose: 'stand', phase: t * 2.2, ...s };
     }
 
     const camera = cameraTrack([

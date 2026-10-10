@@ -10,7 +10,7 @@ The Alice turnaround (`source/ai/alice_turnaround.webp`: front, three-quarter, p
 ## 2026-10-10: Notes 1.0 staging choices (code only)
 Status: In effect; owner may revisit.
 
-- **Walk or run by speed.** Alice uses her stride drawings only when running (over 1 m/s, or where the text says she ran). Slower, she keeps the standing pose with a gentle bob, until walk-cycle art arrives.
+- **One walk for all movement.** The composed running poses are retired (their legs read wrongly in motion; owner). Alice walks with `walk_a`/`walk_b` at every speed; one step per 0.4 of her height covered, so her feet keep pace with the ground. `tools/walk_report.mjs` lists every leg's steps per second (keep them under about 4). Running art can come back later as a proper drawn cycle.
 - **Held things follow the drawn hand.** Each pose records where its hand is drawn, and props she holds are placed there.
 - **Into the hall through black.** Scene changes can fade through paper (the default) or through black; the hall uses black, then lights up from dark.
 - **Thought vignettes** are oval cards beside Alice: the poker, knife, poison, candle, Dinah's milk, and cats and bats.

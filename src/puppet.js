@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { paperFlat } from './stage.js';
 
 const MAX_TURN = 0.6; // radians the cutout may turn toward the camera
-const RUN_SPEED = 1.0; // m/s: faster than this, a figure with stride drawings runs
+const STEP = 0.4; // one step, as a fraction of the figure's height
 
 export class Puppet {
   // poses: { name: { tex, aspect, height?, facesLeft, hand? } }
@@ -30,33 +30,30 @@ export class Puppet {
 
   // state: { pose, x, z, visible, moving, dir (+1 right / -1 left), sink (0..1), phase,
   //          y (lift, metres), scale (1 = normal size), tilt (radians),
-  //          speed (m/s), gait ('walk' | 'run': overrides the speed),
+  //          dist (metres walked along the current leg, from track.js),
   //          idle (seconds: standing-still life, a gentle rock and a bounce on the toes) }
   apply(s, camera) {
     this.root.visible = s.visible !== false;
     if (!this.root.visible) return;
-    // Running: while a standing figure runs, alternate its two stride drawings. Walking
-    // slowly, it keeps the standing pose with a gentle bob (the stride reads oddly at walking pace).
+    // Walking (any speed): the two step drawings alternate once per step, and the step
+    // count comes from the distance covered, so the feet keep pace with the ground at any
+    // speed or size. Without walk drawings, the standing pose bobs. (The composed running
+    // poses are retired: their legs read wrongly in motion. Owner, 2026-10-10.)
     let pose = s.pose;
-    const canStride = pose === 'stand' && s.moving && this.poses.run_a && this.poses.run_b;
-    const running = s.gait ? s.gait === 'run' : (s.speed ?? Infinity) >= RUN_SPEED;
-    const striding = canStride && running;
-    const strolling = canStride && !running;
-    if (striding) pose = Math.floor(s.phase * 2) % 2 ? 'run_b' : 'run_a';
-    // Walking: step drawings alternate (walk_a with walk_b, or with the standing pose until
-    // walk_b is drawn). Without walk art, the standing pose bobs.
-    const stepping = strolling && this.poses.walk_a;
-    if (stepping) pose = Math.floor(s.phase) % 2 ? (this.poses.walk_b ? 'walk_b' : 'stand') : 'walk_a';
+    const walking = pose === 'stand' && s.moving;
+    const steps = walking ? (s.dist !== undefined ? s.dist / (STEP * this.height * (s.scale ?? 1)) : s.phase) : 0;
+    if (walking && this.poses.walk_a) pose = Math.floor(steps) % 2 ? (this.poses.walk_b ? 'walk_b' : 'stand') : 'walk_a';
     if (pose !== this.pose) {
       if (this.pose) this.poses[this.pose].visible = false;
       this.poses[pose].visible = true;
       this.pose = pose;
     }
     const flat = this.poses[pose];
-    const lift = striding ? 0.04 : stepping ? 0.006 : strolling ? 0.012 : 0.12;
-    const beat = s.phase * Math.PI * 2 * (strolling ? 0.5 : 1); // a walk is about two steps a second
-    const hop = s.moving ? Math.abs(Math.sin(beat)) * lift * this.height : 0;
-    let rock = s.moving ? Math.sin(beat) * (strolling ? 0.025 : 0.06) : 0;
+    // A walk rises a little mid-step; anything else that moves (the Rabbit) hops.
+    const hop = !s.moving ? 0 : walking
+      ? Math.sin((steps % 1) * Math.PI) * 0.01 * this.height
+      : Math.abs(Math.sin(s.phase * Math.PI * 2)) * 0.12 * this.height;
+    let rock = !s.moving ? 0 : walking ? Math.sin(steps * Math.PI) * 0.02 : Math.sin(s.phase * Math.PI * 2) * 0.06;
     let bounce = 0;
     if (s.idle !== undefined && !s.moving) {
       rock = Math.sin(s.idle * 2.1) * 0.05; // about ±3°

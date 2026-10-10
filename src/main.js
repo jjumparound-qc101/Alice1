@@ -49,7 +49,7 @@ async function main() {
   ]);
   // Composed poses (tools/compose_poses.py), sized and lined up to match the standing Alice.
   const ALICE_H = 1.25;
-  const posed = Object.fromEntries(await Promise.all(Object.entries(poseMeta.poses).map(async ([name, m]) => {
+  const posed = Object.fromEntries(await Promise.all(Object.entries(poseMeta.poses).filter(([name]) => !name.startsWith('run_')).map(async ([name, m]) => {
     const art = await loadTexture(`art/ai/poses/${name}.webp`);
     const k = ALICE_H / poseMeta.base.h; // metres per pixel
     return [name, { ...art, facesLeft: true, height: m.h * k, offsetX: (m.w / 2 - m.bodyX) * k }];
@@ -75,8 +75,6 @@ async function main() {
       sit: { ...ai.alice_sit, facesLeft: false, height: 0.85, hand: [0.65, 0.7] },
       stand: { ...ai.alice_stand, facesLeft: true, hand: [0.55, 0.57] },
       ...posed,
-      run_a: { ...posed.run_a, hand: [0.62, 0.53] },
-      run_b: { ...posed.run_b, hand: [0.66, 0.57] },
       walk_a: { ...posed.walk_a, hand: [0.04, 0.5] },
       walk_b: { ...posed.walk_b, hand: [0.03, 0.5] },
       jump: { ...posed.jump, hand: [0.03, 0.37] },

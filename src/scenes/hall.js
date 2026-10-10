@@ -10,7 +10,7 @@ import { smooth, lerp, route, step, cameraTrack } from '../track.js';
 
 const HALL_W = 12, HALL_D = 6, H = 3.2;
 const TABLE = { x: 0.4, z: -1.1, top: 0.92, r: 0.42 };
-const DOOR = { x: 4.5, z: -2.97, w: 0.21, h: 0.4 }; // the leaf: "about fifteen inches high"
+const DOOR = { x: 2.6, z: -2.97, w: 0.21, h: 0.4 }; // the leaf: "about fifteen inches high"
 
 // Glass reads as a pale, see-through solid with inked edges.
 function glass(geometry) {
@@ -143,10 +143,9 @@ export const hall = {
       [T.curtain + 1.5, AT_DOOR],
       [T.waiting, AT_DOOR],
       [T.backToTable, AT_TABLE],
-      [T.decided, AT_TABLE],
-      [T.decided + 6, AT_DOOR],                // off to the garden, small now
-      [T.forgotten, AT_DOOR],
-      [T.forgotten + 5, BY_LEG],
+      [T.decided - 1.5, AT_TABLE],
+      [T.forgotten + 0.5, AT_DOOR],          // off to the garden, small now: the whole way at her pace
+      [T.forgotten + 6.5, BY_LEG],
       [T.box, BY_LEG],
       [T.box + 2.5, { x: TABLE.x - 0.05, z: TABLE.z + 0.45 }],
     ], { phase: t * 2.2 });
@@ -202,19 +201,19 @@ export const hall = {
       { t: T.table - 0.5, dur: 2.5, pos: [1.6, 1.25, 0.7], look: [TABLE.x, 0.85, TABLE.z] },
       { t: T.key - 1, dur: 2, pos: [1.25, 1.2, -0.3], look: [TABLE.x - 0.1, 0.92, TABLE.z] }, // the golden key
       { t: T.tryKey, dur: 3, pos: [-1.2, 1.3, 1.0], look: [-2.5, 1.0, -3] },
-      { t: T.curtain - 1.5, dur: 3, pos: [3.2, 0.9, -0.3], look: [DOOR.x, 0.4, DOOR.z] },
-      { t: T.fits, dur: 2, pos: [4.95, 0.5, -1.6], look: [DOOR.x - 0.05, 0.22, DOOR.z] },
+      { t: T.curtain - 1.5, dur: 3, pos: [DOOR.x - 1.3, 0.9, -0.3], look: [DOOR.x, 0.4, DOOR.z] },
+      { t: T.fits, dur: 2, pos: [DOOR.x + 0.45, 0.5, -1.6], look: [DOOR.x - 0.05, 0.22, DOOR.z] },
       { t: T.knelt, dur: 3, pos: [DOOR.x - 0.02, 0.22, DOOR.z + 0.55], look: [DOOR.x, 0.2, DOOR.z - 0.5] }, // the garden
-      { t: T.waiting - 6, dur: 3, pos: [3.3, 1.0, 0.1], look: [DOOR.x - 0.2, 0.5, DOOR.z] },
+      { t: T.waiting - 6, dur: 3, pos: [DOOR.x - 1.2, 1.0, 0.1], look: [DOOR.x - 0.2, 0.5, DOOR.z] },
       { t: T.waiting, dur: 4, pos: [1.7, 1.2, 0.6], look: [TABLE.x + 0.3, 0.9, TABLE.z] },
       { t: T.bottle - 1, dur: 2, pos: [1.3, 1.1, -0.2], look: [TABLE.x - 0.2, 0.95, TABLE.z] }, // DRINK ME
       { t: T.poker - 2, dur: 2, pos: [1.6, 1.6, 1.4], look: [AT_TABLE.x, 1.5, AT_TABLE.z] }, // the poker
       { t: T.notMarked - 0.5, dur: 2, pos: [1.6, 1.1, 0.5], look: [AT_TABLE.x, 0.85, AT_TABLE.z] },
       { t: T.telescope - 1, dur: 3, pos: [0.9, 0.6, 0.3], look: [AT_TABLE.x, 0.35, AT_TABLE.z] }, // shutting up like a telescope
       { t: T.telescope + 3, dur: 3, pos: [0.6, 0.28, -0.2], look: [AT_TABLE.x, 0.15, AT_TABLE.z] },
-      { t: T.decided, dur: 6, pos: [3.2, 0.3, -1.2], look: [DOOR.x, 0.15, DOOR.z] },
-      { t: T.forgotten, dur: 4, pos: [1.1, 0.22, -0.2], look: [TABLE.x, 0.45, TABLE.z] },
-      { t: T.forgotten + 6, dur: 2, pos: [TABLE.x + 0.35, 0.14, TABLE.z + 0.45], look: [TABLE.x, 1.0, TABLE.z] }, // the key, through the glass
+      { t: T.decided - 1.5, dur: 7, pos: [DOOR.x - 1.3, 0.3, -1.2], look: [DOOR.x, 0.15, DOOR.z] },
+      { t: T.forgotten, dur: 2.5, pos: [1.3, 0.4, 0.4], look: [1.3, 0.1, -1.7] }, // facing her as she goes back (a cutout must be seen from the front) to the table
+      { t: T.forgotten + 6.5, dur: 2, pos: [TABLE.x + 0.35, 0.14, TABLE.z + 0.45], look: [TABLE.x, 1.0, TABLE.z] }, // the key, through the glass
       { t: T.sat, dur: 2, pos: [TABLE.x + 0.5, 0.25, TABLE.z + 0.7], look: [BY_LEG.x, 0.1, BY_LEG.z] },
       { t: T.box - 1, dur: 3, pos: [TABLE.x + 0.35, 0.22, TABLE.z + 1.0], look: [TABLE.x - 0.05, 0.07, TABLE.z + 0.25] }, // EAT ME
       { t: T.finished - 3, dur: 4, pos: [TABLE.x + 0.6, 0.45, TABLE.z + 1.5], look: [TABLE.x, 0.15, TABLE.z + 0.3] },
