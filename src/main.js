@@ -67,9 +67,11 @@ async function main() {
   const cast = {
     rabbit: new Puppet({ watch: { ...rabbitArt, facesLeft: true } }, 0.85),
     alice: new Puppet({
-      sit: { ...ai.alice_sit, facesLeft: false, height: 0.85 },
-      stand: { ...ai.alice_stand, facesLeft: true },
+      sit: { ...ai.alice_sit, facesLeft: false, height: 0.85, hand: [0.65, 0.7] },
+      stand: { ...ai.alice_stand, facesLeft: true, hand: [0.55, 0.57] },
       ...posed,
+      run_a: { ...posed.run_a, hand: [0.62, 0.53] },
+      run_b: { ...posed.run_b, hand: [0.66, 0.57] },
     }, ALICE_H),
     sister: new Puppet({ read: { ...ai.sister_read, facesLeft: false, height: 1.05 } }, 1.05),
   };
@@ -91,13 +93,17 @@ async function main() {
     resize();
   }
   let shown = null;
+  // The chapter's end: the narration fades, then the end card offers what to do next.
+  const atEnd = () => audio.ended || audio.currentTime >= cue.end + 0.8;
+  let endDismissed = false;
 
   function setMode(m) {
     if (m === 'explore' && !active.bounds) return; // e.g. mid-fall: nowhere to stand
     mode = m;
     document.body.dataset.mode = m;
     $('modeBtn').textContent = m === 'watch' ? 'Explore' : 'Back to the story';
-    if (m === 'explore') { audio.pause(); explorer.bounds = active.bounds; explorer.enter(); } else { explorer.exit(); closeCard(); play(audio); }
+    if (m === 'explore') { audio.pause(); explorer.bounds = active.bounds; explorer.enter(); }
+    else { explorer.exit(); closeCard(); if (atEnd()) endDismissed = false; else play(audio); }
     resize();
   }
 
@@ -125,6 +131,8 @@ async function main() {
   $('playBtn').addEventListener('click', () => (audio.paused ? play(audio) : audio.pause()));
   $('restartBtn').addEventListener('click', () => { audio.currentTime = 0; if (mode === 'watch') play(audio); });
   $('cardClose').addEventListener('click', closeCard);
+  $('endExplore').addEventListener('click', () => { endDismissed = true; setMode('explore'); });
+  $('endReplay').addEventListener('click', () => { endDismissed = false; audio.currentTime = 0; play(audio); });
   $('layoutBtn').addEventListener('click', () => setLayout(LAYOUTS[(LAYOUTS.indexOf(layout) + 1) % LAYOUTS.length]));
   audio.addEventListener('play', () => ($('playBtn').textContent = 'Pause'));
   audio.addEventListener('pause', () => { $('playBtn').textContent = 'Play'; place.save(audio.currentTime); });
@@ -136,7 +144,7 @@ async function main() {
     if (e.code === 'KeyE' && mode === 'explore') { const h = explorer.facing(active.hotspots); h ? openCard(h) : closeCard(); }
     if (e.code === 'Escape') closeCard();
     if (e.code === 'KeyL') $('layoutBtn').click();
-    if (e.code === 'Space' && mode === 'watch') { e.preventDefault(); $('playBtn').click(); }
+    if (e.code === 'Space' && mode === 'watch' && $('endCard').hidden) { e.preventDefault(); $('playBtn').click(); }
   });
 
   // Shift the picture away from the text so shots stay framed whatever the layout.
@@ -152,9 +160,33 @@ async function main() {
   addEventListener('resize', resize);
   setLayout('bottom');
 
-  // Scene changes turn like a page: a quick fade through paper.
-  const turnAt = (t) => scenes.slice(1).reduce((m, s) => Math.max(m,
-    t < s.start ? smooth((t - (s.start - 0.6)) / 0.6) : 1 - smooth((t - s.start) / 0.7)), 0);
+  // Scene changes. 'paper' (the default) turns like a page: a quick fade through paper.
+  // 'dark' fades to black, changes scene while black, then fades up slowly, as if lamps were lit.
+  const TURNS = {
+    paper: { out: 0.6, in: 0.7, el: 'turn' },
+    dark: { out: 0.8, in: 2.0, light: 3.5, el: 'dark' },
+  };
+  function turnsAt(t) {
+    const o = { turn: 0, dark: 0 };
+    for (const s of scenes.slice(1)) {
+      const k = TURNS[s.def.turn ?? 'paper'];
+      const v = t < s.start ? smooth((t - (s.start - k.out)) / k.out) : 1 - smooth((t - s.start) / k.in);
+      o[k.el] = Math.max(o[k.el], v);
+    }
+    return o;
+  }
+  // After a 'dark' turn the set's own colours come up from black.
+  const lit = new THREE.Color();
+  function lightUp(t) {
+    const k = TURNS[active.def.turn ?? 'paper'];
+    if (!k.light) return;
+    const e = smooth((t - active.start) / k.light);
+    lit.set('#000').lerp(new THREE.Color(active.bg), e);
+    scene.background.copy(lit);
+    scene.fog.color.copy(lit);
+    scene.fog.near = active.fog[0] * e;
+    scene.fog.far = 1.5 + (active.fog[1] - 1.5) * e;
+  }
 
   function show(s) {
     if (active === s) return;
@@ -188,13 +220,18 @@ async function main() {
       if (h) $('prompt').textContent = `E: ${h.title}`;
     }
 
-    active.update?.(t);
     const actors = active.actors(t);
     for (const [name, puppet] of Object.entries(cast)) puppet.apply(actors[name] ?? { visible: false }, camera);
+    active.update?.(t, cast); // after the cast, so props can follow a puppet's hand
 
+    lightUp(t);
     page.update(t);
-    $('turn').style.opacity = turnAt(t);
-    const f = audio.ended ? 1 : smooth((t - cue.end + 0.1) / 0.8);
+    const turns = turnsAt(t);
+    $('turn').style.opacity = turns.turn;
+    $('dark').style.opacity = turns.dark;
+    if (t < cue.end) endDismissed = false;
+    audio.volume = 1 - smooth((t - cue.end) / 0.8);
+    const f = mode !== 'watch' || endDismissed ? 0 : atEnd() ? 1 : smooth((t - cue.end + 0.1) / 0.8);
     $('fade').style.opacity = f;
     $('endCard').hidden = f < 0.99;
     renderer.render(scene, camera);

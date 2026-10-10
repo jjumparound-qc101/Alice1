@@ -65,13 +65,15 @@ export const passage = {
     }
 
     function rabbit(t) {
-      // "as it turned a corner, 'Oh my ears and whiskers…'" — gone by the time she gets there.
+      // Far off in the dark from the start, "still in sight, hurrying down it"; then
+      // "as it turned a corner, 'Oh my ears and whiskers…'": gone by the time she gets there.
       const s = route(t, [
-        [T.passage - 0.5, { x: 0.45, z: -6, dir: -1 }],
+        [start, { x: 0.35, z: -12, dir: -1 }],
+        [T.passage, { x: 0.35, z: -12 }],
         [T.corner, { x: 0.1, z: CORNER_Z + 1 }],
         [T.corner + 1.8, ROUND],
       ], { pose: 'watch', phase: t * 2.8 });
-      return { ...s, visible: t > T.passage - 0.5 && t < T.corner + 1.8 };
+      return { ...s, visible: t < T.corner + 1.8 };
     }
 
     const camera = cameraTrack([

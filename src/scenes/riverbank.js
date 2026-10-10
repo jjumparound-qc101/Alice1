@@ -1,6 +1,6 @@
 // Scene 1: the riverbank, from "Alice was beginning…" to "…how in the world she was to get out again."
 import { buildStage } from '../stage.js';
-import { smooth, path, cameraTrack } from '../track.js';
+import { path, hop, cameraTrack } from '../track.js';
 import { PAPER } from '../ink.js';
 
 export const riverbank = {
@@ -22,6 +22,9 @@ export const riverbank = {
     const NEAR_HEDGE = { x: 1.6, z: -3.7 };
     const HOLE = { x: set.holePos.x, z: set.holePos.z + 0.08 };
     const WAIT = { x: NEAR_HEDGE.x - 0.4, z: NEAR_HEDGE.z + 0.2 };
+    // In front of the hole's mouth, and just behind the hedge flat, where a figure is hidden.
+    const MOUTH = { x: HOLE.x, z: HOLE.z + 0.35 };
+    const INSIDE = { x: HOLE.x + 0.05, z: set.holePos.z - 0.35 };
 
     function rabbit(t) {
       const enter = T.rabbit - 0.4;
@@ -31,9 +34,9 @@ export const riverbank = {
       else if (t < T.hurried) s = { ...MID, moving: false, dir: -1 };
       else if (t < T.hurried + 5) s = path(t, T.hurried, T.hurried + 5, MID, NEAR_HEDGE);
       else if (t < T.pop - 1.4) s = { ...NEAR_HEDGE, moving: false, dir: -1 };
-      else s = path(t, T.pop - 1.4, T.pop, NEAR_HEDGE, HOLE);
-      const sink = smooth((t - T.pop) / 0.6);
-      return { ...s, pose: 'watch', phase: t * 2.6, sink, visible: sink < 1 };
+      else if (t < T.pop - 0.2) s = path(t, T.pop - 1.4, T.pop - 0.2, NEAR_HEDGE, MOUTH);
+      else s = hop(t, T.pop - 0.2, MOUTH, INSIDE, { dur: 0.5, peak: 0.25 }); // "pop down a large rabbit-hole"
+      return { pose: 'watch', phase: t * 2.6, ...s };
     }
 
     function alice(t) {
@@ -43,9 +46,9 @@ export const riverbank = {
       if (t < T.ranAcross) s = { ...stand, moving: false, dir: 1 };
       else if (t < T.ranAcross + 4.5) s = path(t, T.ranAcross, T.ranAcross + 4.5, stand, WAIT);
       else if (t < T.downWent) s = { ...WAIT, moving: false, dir: 1 };
-      else s = path(t, T.downWent, T.downWent + 0.9, WAIT, HOLE);
-      const sink = smooth((t - T.downWent - 0.9) / 0.7);
-      return { ...s, pose: 'stand', phase: t * 2.2, sink, visible: sink < 1 };
+      else if (t < T.downWent + 0.9) s = path(t, T.downWent, T.downWent + 0.9, WAIT, MOUTH);
+      else s = hop(t, T.downWent + 0.9, MOUTH, INSIDE, { dur: 0.6, peak: 0.3, drop: 0.5 }); // "down went Alice after it"
+      return { pose: 'stand', phase: t * 2.2, ...s };
     }
 
     const camera = cameraTrack([

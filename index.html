@@ -12,6 +12,7 @@
   <audio id="narration" src="audio/ch01.mp3" preload="auto"></audio>
 
   <div id="turn"></div>
+  <div id="dark"></div>
   <div id="fade"></div>
 
   <section id="intro">
@@ -44,8 +45,14 @@
   </aside>
 
   <section id="endCard" hidden>
-    <p>“So she set to work, and very soon finished off the cake.”</p>
-    <p class="sub">End of Chapter I</p>
+    <p class="quote">“So she set to work, and very soon finished off the cake.”</p>
+    <h2>Chapter I complete</h2>
+    <p class="sub">Down the Rabbit-Hole</p>
+    <div class="start">
+      <button id="endExplore">Explore the hall</button>
+      <button id="endReplay">Replay the chapter</button>
+      <button id="endNext" disabled title="Chapter II is not ready yet">Continue to Chapter II</button>
+    </div>
   </section>
 
   <script type="module" src="/src/main.js"></script>

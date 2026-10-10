@@ -4,7 +4,8 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, INK, PAPER } from '../ink.js';
-import { hallWall, flagstones, earth, lamp, curtain, littleDoor, garden, goldenKey, drinkMeBottle, eatMeCake, pokerVignette } from '../props.js';
+import { hallWall, flagstones, earth, lamp, curtain, littleDoor, garden, goldenKey, drinkMeBottle, eatMeCake, pokerVignette, knifeVignette, poisonVignette, candleVignette } from '../props.js';
+import { thoughts } from '../thoughts.js';
 import { smooth, lerp, route, step, cameraTrack } from '../track.js';
 
 const HALL_W = 12, HALL_D = 6, H = 3.2;
@@ -22,6 +23,7 @@ function glass(geometry) {
 export const hall = {
   id: 'hall',
   title: 'The hall',
+  turn: 'dark', // from the dark passage: black, then the lamps light the hall
   start: (cue) => cue.at('hall', 1) - 1.5,
 
   build({ group, cue }) {
@@ -31,7 +33,8 @@ export const hall = {
       hall: at('hall', 1), lamps: at('lamps'), doors: at('doors', 1), table: at('three-legged'),
       key: at('key', 1), tryKey: at('key', 2), curtain: at('curtain'), fits: at('key', 3),
       knelt: at('knelt'), waiting: cue.para('There seemed to be no use'), backToTable: at('table', 2),
-      bottle: at('bottle', 1), poker: at('poker'), bleeds: at('bleeds'), ventured: at('ventured'),
+      bottle: at('bottle', 1), poker: at('poker'), finger: at('finger'), bleeds: at('bleeds'),
+      poison: at('poison', 2), notMarked: at('poison', 3), candle: at('candle', 1), blownOut: at('candle', 3), ventured: at('ventured'),
       drunk: at('finished', 1), telescope: at('telescope', 1, at('ventured')), decided: at('decided'), forgotten: at('forgotten', 2),
       legs: at('legs'), sat: at('sat'), scold: cue.para('“Come, there’s no use'), box: at('box', 2), // #1 is "box her own ears"
       ate: cue.para('She ate a little bit'), finished: at('finished', 2),
@@ -69,12 +72,12 @@ export const hall = {
     }
     table.position.set(TABLE.x, 0, TABLE.z); group.add(table);
 
-    const key = paperFlat(texture(goldenKey()), 0.18, 0.068);
+    const KEY = { w: 0.12, h: 0.045 }; // "a tiny golden key"
+    const key = paperFlat(texture(goldenKey()), KEY.w, KEY.h, { anchor: 'center' });
     const bottle = paperFlat(texture(drinkMeBottle()), 0.11, 0.22);
-    const poker = paperFlat(texture(pokerVignette()), 1.0, 0.7, { anchor: 'center' });
     const box = glass(new THREE.BoxGeometry(0.24, 0.12, 0.18));
     const cake = paperFlat(texture(eatMeCake()), 0.15, 0.094);
-    group.add(key, bottle, poker, box, cake);
+    group.add(key, bottle, box, cake);
 
     // Behind the curtain: the little door, and the garden seen through it.
     const gardenView = new THREE.Mesh(new THREE.PlaneGeometry(DOOR.w * 0.9, DOOR.h * 0.95), plain(texture(garden())));
@@ -85,6 +88,14 @@ export const hall = {
     door.position.x = DOOR.w / 2; hinge.add(door); group.add(hinge);
     const curt = paperFlat(texture(curtain()), 1.0, 0.93);
     group.add(curt);
+
+    // "the simple rules their friends had taught them", and later the candle going out.
+    const think = thoughts(group, [
+      { t0: T.poker - 2, t1: T.finger - 0.3, art: pokerVignette() },
+      { t0: T.finger - 0.3, t1: T.poison - 1.2, art: knifeVignette() },
+      { t0: T.poison - 1.2, t1: T.notMarked - 0.5, art: poisonVignette() },
+      { t0: T.candle - 1.5, t1: T.blownOut + 2, art: candleVignette() },
+    ]);
 
     // --- Alice -----------------------------------------------------------------
     const AT_TABLE = { x: TABLE.x - 0.6, z: TABLE.z + 0.2 };
@@ -123,32 +134,36 @@ export const hall = {
       return { ...s, pose: kneeling || crying ? 'sit' : 'stand', scale, y, moving: s.moving || (y > 0.01 && !crying) };
     }
 
-    // Where her hand is, for things she carries.
-    function hand(a) {
-      return new THREE.Vector3(a.x + 0.22 * a.scale * (a.dir ?? 1), (a.y ?? 0) + 0.62 * a.scale, a.z + 0.05);
+    // Things she carries sit at the hand drawn in her current pose, in front of her card,
+    // turned with her toward the camera. `drop` lowers a bottom-anchored prop into the grip.
+    const held = new THREE.Vector3();
+    function carry(obj, puppet, { drop = 0, tilt = 0 } = {}) {
+      puppet.handPoint(held);
+      obj.position.set(held.x, held.y - drop * puppet.root.scale.y, held.z);
+      obj.rotation.set(0, puppet.root.rotation.y, tilt);
     }
+    const rest = (obj, x, y, z) => { obj.position.set(x, y, z); obj.rotation.set(0, 0, 0); };
 
-    function update(t) {
+    function update(t, cast) {
       const a = alice(t);
       // The key: on the table, then in her hand from "key" until she goes back to the table.
-      if (t >= T.key && t < T.backToTable) key.position.copy(hand(a));
-      else key.position.set(TABLE.x + 0.12, TABLE.top + 0.015, TABLE.z + 0.08);
+      if (t >= T.key && t < T.backToTable) carry(key, cast.alice, { tilt: -0.6 });
+      else rest(key, TABLE.x + 0.12, TABLE.top + 0.015 + KEY.h / 2, TABLE.z + 0.08);
       // The curtain is drawn aside; the little door opens while she's there, and shuts once she gives up waiting.
       curt.position.set(DOOR.x + (t >= T.curtain ? 0.72 : 0), 0, DOOR.z + 0.02);
       const open = smooth((t - T.fits) / 1.2) * (1 - smooth((t - T.waiting - 2) / 1.2));
       hinge.rotation.y = -1.7 * open;
       // The bottle appears on the table, is drunk, and is gone.
       bottle.visible = t >= T.bottle - 0.5 && t < T.drunk + 0.5;
-      if (t >= T.bottle + 1 && t < T.drunk + 0.5) bottle.position.copy(hand(a));
-      else bottle.position.set(TABLE.x - 0.12, TABLE.top + 0.015, TABLE.z + 0.05);
-      // A thought: "a red-hot poker will burn you if you hold it too long".
-      poker.visible = t > T.poker - 2 && t < T.bleeds;
-      poker.position.set(a.x - 0.2, 1.75, a.z + 0.15);
+      if (t >= T.bottle + 1 && t < T.drunk + 0.5) carry(bottle, cast.alice, { drop: 0.08 });
+      else rest(bottle, TABLE.x - 0.12, TABLE.top + 0.015, TABLE.z + 0.05);
+      // Her thoughts, above and beside her head, sized to her.
+      think(t, { x: a.x - 0.2 * a.scale, y: (a.y ?? 0) + 1.75 * a.scale, z: a.z + 0.15 }, Math.max(a.scale, 0.35));
       // Under the table: the little glass box and the cake.
       box.visible = cake.visible = t >= T.box - 0.5;
       box.position.set(TABLE.x - 0.05, 0.06, TABLE.z + 0.25);
-      if (t >= T.ate && t < T.finished) cake.position.copy(hand(a));
-      else cake.position.set(TABLE.x - 0.05, 0.005, TABLE.z + 0.25);
+      if (t >= T.ate && t < T.finished) carry(cake, cast.alice, { drop: 0.04 });
+      else rest(cake, TABLE.x - 0.05, 0.005, TABLE.z + 0.25);
       if (t >= T.finished) cake.visible = false;
     }
 
@@ -167,7 +182,7 @@ export const hall = {
       { t: T.waiting, dur: 4, pos: [1.7, 1.2, 0.6], look: [TABLE.x + 0.3, 0.9, TABLE.z] },
       { t: T.bottle - 1, dur: 2, pos: [1.3, 1.1, -0.2], look: [TABLE.x - 0.2, 0.95, TABLE.z] }, // DRINK ME
       { t: T.poker - 2, dur: 2, pos: [1.6, 1.6, 1.4], look: [AT_TABLE.x, 1.5, AT_TABLE.z] }, // the poker
-      { t: T.bleeds, dur: 2, pos: [1.6, 1.1, 0.5], look: [AT_TABLE.x, 0.85, AT_TABLE.z] },
+      { t: T.notMarked - 0.5, dur: 2, pos: [1.6, 1.1, 0.5], look: [AT_TABLE.x, 0.85, AT_TABLE.z] },
       { t: T.telescope - 1, dur: 3, pos: [0.9, 0.6, 0.3], look: [AT_TABLE.x, 0.35, AT_TABLE.z] }, // shutting up like a telescope
       { t: T.telescope + 3, dur: 3, pos: [0.6, 0.28, -0.2], look: [AT_TABLE.x, 0.15, AT_TABLE.z] },
       { t: T.decided, dur: 6, pos: [3.2, 0.3, -1.2], look: [DOOR.x, 0.15, DOOR.z] },

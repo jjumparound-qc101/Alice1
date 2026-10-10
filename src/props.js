@@ -6,6 +6,7 @@ import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, PAPE
 export const SPOT = {
   gold: '#c9a33b',    // "a tiny golden key"
   redHot: '#d8401f',  // "a red-hot poker"
+  redGlow: '#ff7a3a', // its glowing tip
 };
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;
@@ -179,20 +180,113 @@ export function eatMeCake() {
   return c;
 }
 
-// Thought vignette: "a red-hot poker will burn you if you hold it too long".
-export function pokerVignette() {
+// Thought vignettes: things Alice imagines, drawn in an oval frame with a line of the
+// text beneath the top edge. `draw(g)` inks the picture inside the oval (512 × 360).
+function vignette(caption, draw) {
   const { c, g } = canvas(512, 360);
   const v = new Path2D(); v.ellipse(256, 180, 246, 170, 0, 0, Math.PI * 2);
   fillPaper(g, v); outline(g, v, 4);
   g.save(); g.clip(v);
-  const grate = new Path2D(); grate.rect(60, 250, 200, 110); hatch(g, grate, { angle: 0.8, gap: 4, seed: 191 }); outline(g, grate, 2);
-  g.strokeStyle = INK; g.lineWidth = 12; g.lineCap = 'round';
-  g.beginPath(); g.moveTo(420, 70); g.lineTo(220, 250); g.stroke(); // handle and shaft
-  const glow = g.createRadialGradient(200, 268, 4, 200, 268, 70);
-  glow.addColorStop(0, SPOT.redHot); glow.addColorStop(1, 'rgba(216,64,31,0)');
-  g.fillStyle = glow; g.beginPath(); g.arc(200, 268, 70, 0, Math.PI * 2); g.fill();
-  g.strokeStyle = SPOT.redHot; g.lineWidth = 14; g.beginPath(); g.moveTo(250, 222); g.lineTo(185, 282); g.stroke();
+  g.strokeStyle = INK; g.fillStyle = INK; g.lineCap = 'round'; g.lineJoin = 'round';
+  draw(g);
   g.restore();
-  g.fillStyle = INK; g.font = FONT(22, true); g.textAlign = 'center'; g.fillText('a red-hot poker will burn you', 256, 40);
+  g.fillStyle = INK; g.font = FONT(22, true); g.textAlign = 'center'; g.fillText(caption, 256, 40);
   return c;
+}
+const line = (g, w, pts) => { g.lineWidth = w; g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.stroke(); };
+const shape = (g, p, seed, opts = {}) => { fillPaper(g, p); shadeEdge(g, p, { size: 120, dx: -0.15, dy: -0.1, angle: 0.9, gap: 4, seed, ...opts }); outline(g, p, 3); };
+
+// A cat in profile, sitting: the head, ears, back and tail in a few strokes.
+function cat(g, x, y, s, seed) {
+  const body = new Path2D();
+  body.moveTo(x, y); body.bezierCurveTo(x - 60 * s, y, x - 70 * s, y - 70 * s, x - 30 * s, y - 100 * s);
+  body.lineTo(x - 28 * s, y - 130 * s); body.lineTo(x - 14 * s, y - 116 * s); body.lineTo(x + 2 * s, y - 132 * s); body.lineTo(x + 6 * s, y - 104 * s);
+  body.bezierCurveTo(x + 22 * s, y - 80 * s, x + 20 * s, y - 40 * s, x + 30 * s, y); body.closePath();
+  shape(g, body, seed, { size: 100 * s });
+  line(g, 3, [[x - 50 * s, y - 4 * s], [x - 90 * s, y - 10 * s], [x - 100 * s, y - 40 * s]]); // tail
+  g.beginPath(); g.arc(x - 4 * s, y - 108 * s, 3, 0, Math.PI * 2); g.fill(); // eye
+}
+
+function bat(g, x, y, s) {
+  const b = new Path2D();
+  b.moveTo(x, y); b.quadraticCurveTo(x - 30 * s, y - 30 * s, x - 70 * s, y - 20 * s);
+  b.quadraticCurveTo(x - 60 * s, y - 5 * s, x - 62 * s, y + 8 * s); b.quadraticCurveTo(x - 45 * s, y, x - 40 * s, y + 12 * s);
+  b.quadraticCurveTo(x - 25 * s, y + 4 * s, x, y + 14 * s);
+  b.quadraticCurveTo(x + 25 * s, y + 4 * s, x + 40 * s, y + 12 * s); b.quadraticCurveTo(x + 45 * s, y, x + 62 * s, y + 8 * s);
+  b.quadraticCurveTo(x + 60 * s, y - 5 * s, x + 70 * s, y - 20 * s); b.quadraticCurveTo(x + 30 * s, y - 30 * s, x, y); b.closePath();
+  g.fill(b);
+}
+
+// "a red-hot poker will burn you if you hold it too long" (red: docs/COLOR.md)
+export function pokerVignette() {
+  return vignette('a red-hot poker will burn you', (g) => {
+    const grate = new Path2D(); grate.rect(60, 250, 200, 110); hatch(g, grate, { angle: 0.8, gap: 4, seed: 191 }); outline(g, grate, 2);
+    g.strokeStyle = INK; line(g, 12, [[420, 70], [220, 250]]); // handle and shaft
+    const glow = g.createRadialGradient(200, 268, 4, 200, 268, 80);
+    glow.addColorStop(0, SPOT.redGlow); glow.addColorStop(1, 'rgba(255,60,20,0)');
+    g.fillStyle = glow; g.beginPath(); g.arc(200, 268, 80, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = SPOT.redHot; line(g, 14, [[250, 222], [185, 282]]);
+    g.strokeStyle = SPOT.redGlow; line(g, 5, [[246, 226], [189, 278]]);
+  });
+}
+
+// "if you cut your finger very deeply with a knife, it usually bleeds" (no colour stated: ink only)
+export function knifeVignette() {
+  return vignette('if you cut your finger very deeply with a knife', (g) => {
+    const hand = new Path2D(); // a hand from the left, forefinger out
+    hand.moveTo(0, 230); hand.lineTo(150, 205); hand.lineTo(300, 200); hand.quadraticCurveTo(326, 210, 300, 222);
+    hand.lineTo(190, 232); hand.quadraticCurveTo(200, 262, 170, 270); hand.lineTo(0, 300); hand.closePath();
+    shape(g, hand, 201);
+    line(g, 2, [[170, 238], [175, 262]]); // knuckle crease
+    const blade = new Path2D(); blade.moveTo(250, 160); blade.lineTo(420, 110); blade.quadraticCurveTo(440, 112, 430, 124); blade.lineTo(262, 182); blade.closePath();
+    fillPaper(g, blade); hatch(g, blade, { angle: -0.3, gap: 5, seed: 202, alpha: 0.5 }); outline(g, blade, 3);
+    const handle = new Path2D(); handle.moveTo(430, 108); handle.lineTo(500, 88); handle.lineTo(508, 104); handle.lineTo(438, 126); handle.closePath();
+    g.fill(handle);
+    line(g, 2.5, [[262, 200], [268, 214]]); // the cut
+    [[266, 226, 5], [268, 246, 4], [270, 264, 3]].forEach(([x, y, r]) => { g.beginPath(); g.ellipse(x, y, r * 0.7, r, 0, 0, Math.PI * 2); g.fill(); }); // drops, in ink
+  });
+}
+
+// "if you drink much from a bottle marked 'poison,' it is almost certain to disagree with you"
+export function poisonVignette() {
+  return vignette('a bottle marked “poison”', (g) => {
+    const b = new Path2D();
+    b.moveTo(236, 70); b.lineTo(276, 70); b.lineTo(276, 120); b.quadraticCurveTo(330, 140, 330, 200); b.lineTo(330, 330);
+    b.lineTo(182, 330); b.lineTo(182, 200); b.quadraticCurveTo(182, 140, 236, 120); b.closePath();
+    shape(g, b, 211, { size: 150 });
+    g.fillStyle = INK; g.fillRect(230, 56, 52, 20); // stopper
+    for (let y = 140; y < 320; y += 16) line(g, 2, [[188, y], [200, y + 6]]); // ribbed glass
+    g.fillStyle = PAPER; g.fillRect(200, 220, 112, 64); g.strokeStyle = INK; g.lineWidth = 2; g.strokeRect(200, 220, 112, 64);
+    g.fillStyle = INK; g.textAlign = 'center'; g.font = FONT(26); g.fillText('POISON', 256, 260);
+  });
+}
+
+// "I hope they'll remember her saucer of milk at tea-time. Dinah my dear!"
+export function dinahVignette() {
+  return vignette('her saucer of milk at tea-time', (g) => {
+    const floor = new Path2D(); floor.rect(0, 290, 512, 80); hatch(g, floor, { angle: 0.05, gap: 7, seed: 221, alpha: 0.6 });
+    cat(g, 210, 300, 1.7, 222);
+    const saucer = new Path2D(); saucer.ellipse(360, 296, 70, 16, 0, 0, Math.PI * 2); shape(g, saucer, 223, { size: 60 });
+    const milk = new Path2D(); milk.ellipse(360, 293, 46, 9, 0, 0, Math.PI * 2); fillPaper(g, milk); outline(g, milk, 1.5);
+  });
+}
+
+// "Do cats eat bats? Do bats eat cats?"
+export function catsBatsVignette() {
+  return vignette('Do cats eat bats?', (g) => {
+    cat(g, 170, 320, 1.5, 231);
+    bat(g, 330, 140, 1.1); bat(g, 410, 210, 0.7); bat(g, 300, 250, 0.55);
+  });
+}
+
+// "for it might end, you know, … in my going out altogether, like a candle"
+export function candleVignette() {
+  return vignette('the flame of a candle after it is blown out', (g) => {
+    const stick = new Path2D(); stick.ellipse(256, 320, 110, 26, 0, 0, Math.PI * 2); shape(g, stick, 241, { size: 90 });
+    const wax = new Path2D(); wax.rect(226, 150, 60, 170); shape(g, wax, 242, { size: 60 });
+    line(g, 3, [[256, 150], [256, 130]]); // wick
+    g.lineWidth = 2.5; g.beginPath(); g.moveTo(256, 128); // a wisp of smoke where the flame was
+    for (let k = 0; k < 6; k++) g.quadraticCurveTo(256 + (k % 2 ? 26 : -26), 112 - k * 12, 256, 100 - k * 12);
+    g.stroke();
+  });
 }

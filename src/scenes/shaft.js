@@ -3,7 +3,8 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture } from '../ink.js';
-import { earth } from '../props.js';
+import { earth, dinahVignette, catsBatsVignette } from '../props.js';
+import { thoughts } from '../thoughts.js';
 import { smooth, lerp, cameraTrack } from '../track.js';
 
 const FALL = 0.35; // metres per second the walls pass by ("she fell very slowly")
@@ -20,8 +21,13 @@ export const shaft = {
     const T = {
       dipped: at('dipped'),
       jar: at('jar', 1), marmalade: at('marmalade'), putBack: at('cupboards', 2),
-      thump: at('thump'),
+      dinah: at('Dinah', 1), cats: at('cats', 1), batsEatCats: at('cats', 4), thump: at('thump'),
     };
+    // "Dinah'll miss me very much to-night", and "Do cats eat bats?"
+    const think = thoughts(group, [
+      { t0: T.dinah - 0.5, t1: T.cats - 0.4, art: dinahVignette() },
+      { t0: T.cats - 0.4, t1: T.batsEatCats + 2, art: catsBatsVignette() },
+    ]);
 
     // Back wall: the shelves, maps and cupboards from the AI master drawings.
     const strip = ai.shaft_strip.tex;
@@ -90,6 +96,7 @@ export const shaft = {
       }
       jar.position.set(p.x, p.y, p.z);
       jar.visible = p.y < 6;
+      think(t, { x: 0.78, y: 1.6, z: -0.9 }, 1.0);
     }
 
     const camera = cameraTrack([

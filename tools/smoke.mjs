@@ -32,6 +32,12 @@ const moments = await page.evaluate(() => {
     ['09-hall', ha.hall + 1], ['10-table-key', ha.key + 1], ['11-curtain-door', ha.fits + 2], ['12-garden', ha.knelt + 4],
     ['13-drink-me', ha.bottle + 2], ['14-poker', ha.poker], ['15-shrunk', ha.telescope + 6], ['16-key-through-glass', ha.forgotten + 9],
     ['17-crying', ha.sat + 2], ['18-eat-me', ha.box + 4], ['19-end', window.__slice.cue.end + 2],
+    // Notes 1.0: the hop into the hole, the Rabbit far down the passage, the dark turn into
+    // the hall, the key in her hand, and the thought vignettes.
+    ['30-rabbit-hop', rb.pop + 0.1], ['31-alice-hop', rb.downWent + 1.1], ['32-passage-rabbit-far', pa.thump + 3],
+    ['33-dark-turn', ha.hall - 1.2], ['34-lamps-lighting', ha.hall], ['35-key-in-hand', ha.tryKey + 1],
+    ['36-dinah', sh.dinah + 2], ['37-cats-bats', sh.cats + 4], ['38-knife', ha.finger + 1], ['39-poison', ha.poison + 1],
+    ['40-candle', ha.candle + 1],
   ];
 });
 for (const [name, t] of moments) {

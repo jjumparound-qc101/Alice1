@@ -47,3 +47,15 @@ export function cameraTrack(keys) {
     return { pos, look };
   };
 }
+
+// A hop from a to b ({x, z}) starting at t0: an arc up (peak, metres) and forward, then a
+// quick drop as the figure shrinks away into a hole. Puts b behind the hole's edge to vanish.
+export function hop(t, t0, a, b, { dur = 0.5, peak = 0.25, drop = 0.3, shrink = 0.3 } = {}) {
+  const k = Math.min(1, Math.max(0, (t - t0) / dur));
+  return {
+    x: lerp(a.x, b.x, k), z: lerp(a.z, b.z, k),
+    y: 4 * peak * k * (1 - k) - drop * k * k * k,
+    scale: 1 - shrink * k * k,
+    moving: false, dir: Math.sign(b.x - a.x) || 1, visible: k < 1,
+  };
+}

@@ -7,7 +7,8 @@ import { paperFlat } from './stage.js';
 const MAX_TURN = 0.6; // radians the cutout may turn toward the camera
 
 export class Puppet {
-  // poses: { name: { tex, aspect, height?, facesLeft } }
+  // poses: { name: { tex, aspect, height?, facesLeft, hand? } }
+  // hand: [u, v], where the near hand is drawn, as fractions of the image from its top left.
   constructor(poses, height) {
     this.root = new THREE.Group();
     this.height = height;
@@ -18,6 +19,8 @@ export class Puppet {
       flat.visible = false;
       flat.userData.facesLeft = p.facesLeft;
       flat.userData.offsetX = p.offsetX ?? 0; // shifts a pose so its body lines up with the others
+      flat.userData.size = [h * p.aspect, h];
+      flat.userData.hand = p.hand;
       this.root.add(flat);
       this.poses[name] = flat;
     }
@@ -52,5 +55,15 @@ export class Puppet {
     // Turn toward the camera, within limits.
     const toCam = Math.atan2(camera.position.x - s.x, camera.position.z - s.z);
     this.root.rotation.y = THREE.MathUtils.clamp(toCam, -MAX_TURN, MAX_TURN);
+  }
+
+  // World position of the hand drawn in the current pose, just in front of the card,
+  // so a carried prop follows the drawing through mirroring, tilt, turn and scale.
+  handPoint(out = new THREE.Vector3()) {
+    const flat = this.poses[this.pose];
+    const [u, v] = flat?.userData.hand ?? [0.5, 0.55];
+    const [w, h] = flat?.userData.size ?? [0, this.height];
+    this.root.updateMatrixWorld(true);
+    return flat.localToWorld(out.set((u - 0.5) * w, (1 - v) * h, 0.03));
   }
 }
