@@ -301,3 +301,60 @@ Background and sources: [CHAPTER_03_ASSETS.md](CHAPTER_03_ASSETS.md). Same conve
 - 3B-3 `bank_backdrop.png` (landscape): "A dark wall of foliage and shadow, as behind the animals in plate 3.1. Fill the image."
 
 Priority if time is short: 9, 2, 17, 14, 11, 5, 4, 13, 15, 1, 21, then the rest.
+
+---
+
+## Chapter IV asset list (2026-10-10): "The Rabbit Sends in a Little Bill"
+Background and sources: [CHAPTER_04_ASSETS.md](CHAPTER_04_ASSETS.md). Same conversation, same rules. Attach the Alice model sheet with every Alice prompt, and Tenniel 1.2 with every Rabbit prompt.
+
+**References to download first:** 4.1 (giant Alice in the room) https://victorianweb.org/art/illustration/tenniel/alice/4.1.html · 4.2 (the hand and the cucumber-frame) https://victorianweb.org/art/illustration/tenniel/alice/4.2.html · 4.3 (Bill out of the chimney) https://victorianweb.org/art/illustration/tenniel/alice/4.3.html · 4.4 (the puppy) https://victorianweb.org/art/illustration/tenniel/alice/4.4.html
+
+### Alice (whole figures on white unless stated, three-quarter view facing left)
+1. `alice4_hunt.png`: "Same Alice, full figure: bent forward, hunting about on the ground for something she has lost."
+2. `alice4_hold.png`: "Same Alice, full figure: holding a folding fan and a pair of small gloves in one hand, turning her head to look at something on a table behind her."
+3. `alice4_drink.png`: "Same Alice, full figure: drinking from a small bottle, head tipped back."
+4. `alice4_giant.png` (landscape; attach 4.1): "Our Alice in Tenniel's pose from this plate: so large she fills a small room, lying on her side, one elbow pressed against the door, the other arm out of the window, one foot up the chimney, her head bent under the ceiling. Draw the room around her as in the plate, our Alice's face and hair."
+5. `alice4_hand.png` (attach 4.2): "Our Alice's enormous arm and hand reaching out of a small cottage window, fingers spread, snatching at the air, as in this plate. Just the arm, hand and window; white background."
+6. `alice4_foot.png`: "Our Alice's enormous foot in a white stocking and strap shoe, pushed up into a narrow fireplace and chimney, about to kick. Just the foot and fireplace."
+7. `alice4_pebbles.png`: "Same Alice, head and shoulders, wincing and shielding her face with one hand as small pebbles fly at her."
+8. `alice4_stick.png` (attach 4.4): "Same Alice in Tenniel's pose from this plate: half behind a great thistle, holding out a small stick, frightened. Our Alice's face and dress."
+9. `alice4_buttercup.png`: "Same Alice, full figure: leaning against the stalk of a buttercup taller than she is, fanning herself with a leaf, out of breath."
+10. `alice4_tiptoe.png`: "Same Alice, full figure: standing on tiptoe, peeping over the edge of something just above her head."
+
+### The White Rabbit
+11. `rabbit4_search.png`: "The White Rabbit trotting slowly, looking anxiously about at the ground as if he had lost something. Side view facing left."
+12. `rabbit4_point.png`: "The White Rabbit pointing angrily with one paw, ordering someone off."
+13. `rabbit4_frame.png` (attach 4.2): "The White Rabbit from this plate, tumbling backwards into a glass cucumber-frame, the glass breaking. White background around the frame."
+14. `rabbit4_order.png`: "The White Rabbit giving orders, one paw raised, standing on a garden path."
+
+### New characters
+15. `pat.png`: "Pat, the Rabbit's gardener, a small animal (a guinea-pig) in a smock, holding a spade; then a second image of him standing nervously, cap in hand."
+16. `bill_ladder.png` (attach 4.3): "Bill, a small lizard in Tenniel's style, standing on his hind legs carrying a ladder over his shoulder."
+17. `bill_chimney.png`: "The same lizard climbing down into a chimney-pot, only his head and front legs showing."
+18. `bill_rocket.png` (attach 4.3): "The lizard from this plate, flying up out of a chimney-pot like a sky-rocket in a cloud of soot."
+19. `bill_held.png`: "The same lizard, limp and dazed, held up under the arms by two guinea-pigs; one of them holds a small bottle to his mouth."
+20. `puppy_look.png` (attach 4.4): "The enormous puppy from this plate, looking down with large round eyes, one paw stretched out. White background."
+21. `puppy_jump.png`: "The same puppy jumping into the air off all four feet at once, yelping with delight."
+22. `puppy_tumble.png`: "The same puppy tumbling head over heels."
+23. `puppy_sit.png`: "The same puppy sitting a good way off, panting, tongue hanging out, eyes half shut."
+24. `caterpillar_first.png`: "A large caterpillar sitting on the top of a mushroom, arms folded, quietly smoking a long hookah, after Tenniel's Caterpillar. Seen from just below the edge of the mushroom cap." (The game colours him blue.)
+
+### Sets and props
+25. `rabbit_house.png` (portrait): "A neat little cottage, front view: a door with a small brass name-plate engraved 'W. RABBIT', one upstairs window, a tall chimney-pot, a slate roof; a small garden with glass cucumber-frames in front. Fill the image."
+26. `rabbit_room_back.png` (landscape, flat): "Inside a tidy little upstairs room, back wall seen straight on: a small window with a table in front of it, a fireplace, a looking-glass on the wall. Fill the image edge to edge."
+27. `rabbit_room_side.png` (landscape, flat): "The side wall of the same little room, with the door. Edge to edge."
+28. `table_gloves.png`: "A small table with a folding fan and two or three pairs of tiny white kid gloves on it, and a little unlabelled bottle beside a looking-glass. White background."
+29. `cucumber_frames.png`: "A row of glass cucumber-frames in a kitchen garden, one smashed. White background."
+30. `ladders.png`: "Two wooden ladders tied together with rope, leaning. White background."
+31. `cart_barrow.png`: "A small hand-cart and a wheelbarrow full of pebbles. White background."
+32. `pebbles_cakes.png`: "A few small pebbles, and beside them the same shapes as little cakes. White background."
+33. `wood_grass.png` (landscape, tiles left to right): "A thick wood seen from very low down, as by someone three inches tall: tall grass blades, weeds and flower stems towering overhead, after Tenniel's grass in plate 4.4. Edge to edge, tiling left to right."
+34. `thistle.png` (attach 4.4): "The great thistle from this plate, alone. White background."
+35. `buttercup.png`: "A single buttercup plant, flower and leaves, drawn large. White background." (Uncoloured: the text gives no colour.)
+36. `mushroom.png`: "A large mushroom, seen from the side, as tall as a small child would be if she were three inches high: the cap's edge just above eye level. White background."
+
+### Thought vignettes (oval, engraved, white background)
+37. `vignette_dinah_nurse.png`: "A cat (Dinah) sitting up like a nurse, ordering a little girl to get ready for her walk."
+38. `vignette_book.png`: "A book with 'ALICE' on its cover, and a grown-up young woman at a desk writing it."
+
+Priority if time is short: 4, 25, 26, 5, 13, 18, 20, 33, 34, 36, 8, 3, 16, 19, 11, 12, then the rest.
