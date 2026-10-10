@@ -28,7 +28,16 @@ export function paperFlat(tex, width, height, { anchor = 'bottom', edge = true, 
   return group;
 }
 
-export function buildStage(scene) {
+// Load-on-demand art: `ai` holds the master drawings ({ tex, aspect }) that have
+// arrived; anything missing falls back to the procedural placeholder.
+function tiled(t, repeatX) {
+  t.wrapS = THREE.MirroredRepeatWrapping; // mirroring hides the seam between copies
+  t.repeat.set(repeatX, 1);
+  t.needsUpdate = true;
+  return t;
+}
+
+export function buildStage(scene, ai = {}) {
   scene.background = new THREE.Color(PAPER);
   scene.fog = new THREE.Fog(PAPER, 9, 34);
 
@@ -40,36 +49,47 @@ export function buildStage(scene) {
   scene.add(floor);
 
   // Back to front. Widths are generous so the 90° look arc never finds an edge.
-  const sky = paperFlat(texture(art.sky()), 40, 14, { edge: false, opaque: true });
+  const skyTex = ai.sky ? tiled(ai.sky.tex, 40 / (14 * ai.sky.aspect)) : texture(art.sky());
+  const sky = paperFlat(skyTex, 40, 14, { edge: false, opaque: true });
   sky.position.set(0, -0.5, -11);
   scene.add(sky);
 
-  const far = paperFlat(texture(art.treeLine(3)), 34, 8.5, { edge: false });
+  const far = ai.treeline
+    ? paperFlat(tiled(ai.treeline.tex, 34 / (3.2 * ai.treeline.aspect)), 34, 3.2, { edge: false })
+    : paperFlat(texture(art.treeLine(3)), 34, 8.5, { edge: false });
   far.position.set(0, 0, -8.5);
   scene.add(far);
 
-  const holeFraction = 0.45;
+  // holeFraction: where the rabbit-hole sits across the hedge drawing (measured from the art).
+  const holeFraction = ai.hedge ? 0.343 : 0.45;
   const hedgeW = 9, hedgeX = 3.2, hedgeZ = -4.6;
-  const hedge = paperFlat(texture(art.hedge(holeFraction)), hedgeW, 2.8);
+  const hedge = ai.hedge
+    ? paperFlat(ai.hedge.tex, hedgeW, hedgeW / ai.hedge.aspect)
+    : paperFlat(texture(art.hedge(holeFraction)), hedgeW, 2.8);
   hedge.position.set(hedgeX, 0, hedgeZ);
   scene.add(hedge);
   const holePos = new THREE.Vector3(hedgeX + (holeFraction - 0.5) * hedgeW, 0, hedgeZ + 0.05);
 
-  const tree = paperFlat(texture(art.bigTree()), 5, 6.8);
+  const treeTex = ai.tree ? ai.tree.tex : texture(art.bigTree());
+  const treeAspect = ai.tree ? ai.tree.aspect : 5 / 6.8;
+  const tree = paperFlat(treeTex, 6.8 * treeAspect, 6.8);
   tree.position.set(-4.4, 0, -3.3);
   scene.add(tree);
 
   // Wings: tree flats at the sides, staggered, hiding the set's edges.
-  const wingTex = texture(art.bigTree());
+  const wingTex = ai.tree ? ai.tree.tex : texture(art.bigTree());
   [[-7.2, 0.4, 1], [7.4, -1.2, -1], [-7.6, -5.6, 1], [7.8, -6.4, -1]].forEach(([x, z, s]) => {
-    const w = paperFlat(wingTex, 4.4, 6.2);
+    const w = paperFlat(wingTex, 6.2 * treeAspect, 6.2);
     w.position.set(x, 0, z);
     w.scale.x = s;
     scene.add(w);
   });
 
   [[0, 1.0, 5], [0.5, -0.9, 6]].forEach(([dx, z, seed]) => {
-    const g = paperFlat(texture(art.grassStrip(seed)), 32, 0.55, { edge: false });
+    // Each strip gets its own texture copy so the two rows can be offset.
+    const tex = ai.grass ? tiled(ai.grass.tex.clone(), 32 / (0.55 * ai.grass.aspect)) : texture(art.grassStrip(seed));
+    if (ai.grass) tex.offset.x = seed * 0.37;
+    const g = paperFlat(tex, 32, 0.55, { edge: false });
     g.position.set(dx, 0, z);
     scene.add(g);
   });

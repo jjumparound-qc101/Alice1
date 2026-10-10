@@ -22,21 +22,24 @@ async function main() {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.05, 80);
 
-  const [words, rabbitArt] = await Promise.all([
+  const AI_ART = ['sky', 'tree', 'hedge', 'grass', 'alice_stand']; // interim AI masters (PROVENANCE.md)
+  const [words, rabbitArt, ...aiArt] = await Promise.all([
     fetch('data/ch01_slice_words.json').then((r) => r.json()),
     loadTexture('art/rabbit_w01-1.png'),
+    ...AI_ART.map((n) => loadTexture(`art/ai/${n}.webp`)),
   ]);
+  const ai = Object.fromEntries(AI_ART.map((n, i) => [n, aiArt[i]]));
   // The proscenium lettering is drawn to canvas, so the fonts must be loaded first.
   if (document.fonts) await Promise.all([document.fonts.load('600 64px "IM Fell English"'), document.fonts.load('italic 40px "IM Fell English"')]);
 
-  const stage = buildStage(scene);
+  const stage = buildStage(scene, ai);
   const tl = makeTimeline(words, stage.holePos);
 
   const canvasPose = (c, facesLeft) => ({ tex: texture(c), aspect: c.width / c.height, facesLeft });
   const rabbit = new Puppet({ watch: { ...rabbitArt, facesLeft: true } }, 0.85);
   const alice = new Puppet({
     sit: { ...canvasPose(art.aliceSitting(), false), height: 0.78 },
-    stand: canvasPose(art.aliceStanding(), false),
+    stand: { ...ai.alice_stand, facesLeft: true },
   }, 1.25);
   const sister = new Puppet({ read: { ...canvasPose(art.sisterReading(), false), height: 0.95 } }, 0.95);
   [rabbit, alice, sister].forEach((p) => scene.add(p.root));
