@@ -5,7 +5,7 @@ Changes to the original spec, newest first. Each entry has a date, a status (Pro
 ## 2026-10-10: Gate A: three.js chosen
 Status: Confirmed by the owner.
 
-The game is built on a custom three.js engine (Node, Vite, three.js), after a side-by-side comparison with Godot 4.4 ([GATE_A.md](GATE_A.md)). The Godot build stays in `godot/` for reference only and won't be updated. Still to do: a Steam packaging test (Electron builds for Windows and Linux, Steamworks overlay, performance on low-end hardware). If it fails badly, revisit this decision. This also confirms the 2.5D "toy theater" art direction below.
+The game is built on a custom three.js engine (Node, Vite, three.js), after a side-by-side comparison with Godot 4.4 ([GATE_A.md](GATE_A.md)). The Godot build stays in `godot/` for reference only and won't be updated. Steam packaging test passed on 2026-10-10: Electron build on Windows, Steam connection and overlay, 60 fps on an RTX 3060 Ti. Still to do: a low-end hardware check and code signing before release. This also confirms the 2.5D "toy theater" art direction below.
 
 ## 2026-10-10: Text layout is a reader setting
 Status: Confirmed by the owner.
