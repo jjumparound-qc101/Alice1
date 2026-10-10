@@ -2,7 +2,7 @@
 Date: 2026-10-10
 Status: Draft for the owner. Plates checked against web-resolution images from Victorian Web on 2026-10-10. The prompts are in [ART_PROMPTS.md](ART_PROMPTS.md), "Chapter III asset list". Same method as Chapters I and II: Tenniel plates as references (cut directly only for figures other than Alice, from high-resolution scans), ChatGPT for the rest, in the same conversation, with the Alice model sheet attached for every Alice drawing.
 
-## Where it happens (one decision for the owner)
+## Where it happens (owner chose A, 2026-10-10)
 The text says only that the party "assembled on the bank" of the pool. Chapter II staged the pool inside the hall, and the hall doesn't "vanish" until Chapter IV. Two ways to stage the bank:
 - **A (recommended): the hall floor at Alice's tiny size.** The edge of the pool on the flagstones, with the huge table legs and doors behind. It continues straight on from Chapter II, keeps Alice small among the animals, and needs only one new set piece (the shore, already prompt 26 in the Chapter II list).
 - **B: an outdoor bank.** Rushes, grass and dark foliage like the background of plate 3.1. It looks more like Tenniel's picture but needs three or four new set pieces, and the hall then vanishes a chapter early.

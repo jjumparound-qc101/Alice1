@@ -9,6 +9,7 @@ import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { CHAPTERS } from './chapters.js';
 import { texture } from './ink.js';
 import { mouseSwim, mouseLeap, duckSwim, dodoSwim, lorySwim, eagletSwim } from './props2.js';
+import { mouseUp, mouseWalk, dodoStand, duckStand, loryStand, eagletStand, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
 
 const $ = (id) => document.getElementById(id);
 const SAVE_KEY = 'alice.place.v2';
@@ -116,11 +117,17 @@ async function main() {
     sister: new Puppet({ read: { ...ai.sister_read, facesLeft: false, height: 1.05 } }, 1.05),
     // Chapter II placeholders (props2.js), sized for a tiny Alice: swimmers show only what
     // is above the water.
-    mouse: new Puppet({ swim: drawn(mouseSwim(), 0.05), leap: drawn(mouseLeap(), 0.09) }, 0.05),
-    duck: new Puppet({ swim: drawn(duckSwim(), 0.07) }, 0.07),
-    dodo: new Puppet({ swim: drawn(dodoSwim(), 0.11) }, 0.11),
-    lory: new Puppet({ swim: drawn(lorySwim(), 0.065) }, 0.065),
-    eaglet: new Puppet({ swim: drawn(eagletSwim(), 0.065) }, 0.065),
+    mouse: new Puppet({ swim: drawn(mouseSwim(), 0.05), leap: drawn(mouseLeap(), 0.09), up: drawn(mouseUp(), 0.09), walk: drawn(mouseWalk(), 0.04) }, 0.05),
+    duck: new Puppet({ swim: drawn(duckSwim(), 0.07), up: drawn(duckStand(), 0.1) }, 0.07),
+    dodo: new Puppet({ swim: drawn(dodoSwim(), 0.11), up: drawn(dodoStand(), 0.2) }, 0.11),
+    lory: new Puppet({ swim: drawn(lorySwim(), 0.065), up: drawn(loryStand(), 0.1) }, 0.065),
+    eaglet: new Puppet({ swim: drawn(eagletSwim(), 0.065), up: drawn(eagletStand(), 0.1) }, 0.065),
+    // Chapter III placeholders (props3.js).
+    owl: new Puppet({ up: drawn(owlStand(), 0.09) }, 0.09),
+    magpie: new Puppet({ up: drawn(magpieStand(), 0.1) }, 0.1),
+    canary: new Puppet({ up: drawn(canaryStand(), 0.06) }, 0.06),
+    crab: new Puppet({ stand: drawn(crabStand(), 0.035) }, 0.035),
+    crabling: new Puppet({ stand: drawn(crabStand(true), 0.022) }, 0.022),
   };
   Object.values(cast).forEach((p) => scene.add(p.root));
 

@@ -5,6 +5,7 @@
 import { CHAPTER_1 } from './scenes/index.js';
 import { placeholder } from './scenes/placeholder.js';
 import { pool } from './scenes/pool.js';
+import { bank } from './scenes/bank.js';
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 const TITLES = [
@@ -13,7 +14,7 @@ const TITLES = [
   'The Mock Turtle’s Story', 'The Lobster Quadrille', 'Who Stole the Tarts?', 'Alice’s Evidence',
 ];
 const NARRATED = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]); // every chapter's narration is aligned
-const STAGED = { 1: CHAPTER_1, 2: [pool] };
+const STAGED = { 1: CHAPTER_1, 2: [pool], 3: [bank] };
 
 export const CHAPTERS = TITLES.map((title, i) => {
   const n = i + 1, nn = String(n).padStart(2, '0');
