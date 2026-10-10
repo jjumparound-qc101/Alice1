@@ -23,7 +23,7 @@ Controls:
 | `public/` | Shipped assets: the Rabbit cutout, the narration clip, the aligned word timings |
 | `source/` | Inputs the assets are built from: the plate scan, its mask, the book text, raw speech-to-text timings |
 | `tools/` | `cutout.py` (engraving → cutout), `transcribe.py` and `align.py` (narration → word timings), `smoke.mjs` (headless check) |
-| `godot/` | Godot 4.4 version of the same slice, for the Gate A comparison (see docs/GATE_A.md) |
+| `godot/` | Godot 4.4 version of the slice, kept for reference after Gate A chose three.js (docs/GATE_A.md). Not maintained. |
 | `docs/` | Art direction, amendments, color rule, the Chapter I asset list, slice notes, Gate A comparison, art prompts |
 | `PROVENANCE.md` | The source of every asset, including any AI involvement |
 

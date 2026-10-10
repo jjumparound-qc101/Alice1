@@ -2,6 +2,11 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-10: Gate A: three.js chosen
+Status: Confirmed by the owner.
+
+The game is built on a custom three.js engine (Node, Vite, three.js), after a side-by-side comparison with Godot 4.4 ([GATE_A.md](GATE_A.md)). The Godot build stays in `godot/` for reference only and won't be updated. Still to do: a Steam packaging test (Electron builds for Windows and Linux, Steamworks overlay, performance on low-end hardware). If it fails badly, revisit this decision. This also confirms the 2.5D "toy theater" art direction below.
+
 ## 2026-10-10: Text layout is a reader setting
 Status: Confirmed by the owner.
 
@@ -33,7 +38,7 @@ This replaces art-style decision 2 ("Tenniel scans used directly, with AI only t
 Reason: about two-thirds of Chapter I's poses have no Tenniel source (see [CHAPTER_01_ASSETS.md](CHAPTER_01_ASSETS.md)), so "scans first, AI only for gaps" doesn't hold.
 
 ## 2026-10-09: Art direction is 2.5D "pop-up book / toy theater"
-Status: Proposed. To be confirmed in Gate A.
+Status: Confirmed in Gate A (2026-10-10).
 
 The art direction changes from fully explorable 3D to 2.5D "pop-up book / toy theater":
 - Characters and scenery are hand-drawn, Tenniel-based 2D art in layered 3D sets, with a moving camera.
@@ -44,6 +49,6 @@ Reason: it's more faithful to the original illustrations, costs less and carries
 See [ART_DIRECTION_ANALYSIS.md](ART_DIRECTION_ANALYSIS.md).
 
 ## 2026-10-09: A custom three.js engine is allowed as a Gate A candidate
-Status: Proposed. To be confirmed in Gate A.
+Status: Confirmed; three.js was chosen in Gate A (2026-10-10).
 
 This amends the spec's caution against defaulting to a custom engine. A three.js-based engine may be chosen if Gate A shows it's the right choice. Gate A must still compare it honestly against Godot, covering the staging timeline, puppet animation, saves, UI, and Steam packaging.

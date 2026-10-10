@@ -1,6 +1,6 @@
 # Gate A: three.js vs Godot
 Date: 2026-10-10
-Status: **Comparison done. The owner is trying both builds before deciding.**
+Status: **Decided 2026-10-10: three.js.** The owner tried both builds and preferred three.js for how the text reads and how smoothly it runs. The Steam packaging test below is still to be done; Godot stays the fallback if it fails.
 
 The same riverbank slice is built twice with identical art, audio, timings and staging:
 - **three.js r186** with Vite (`src/`, `index.html`)
