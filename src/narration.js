@@ -23,8 +23,14 @@ function chunk(words, soft = 22, hard = 38) {
   return out;
 }
 
+const norm = (t) => t.replace(/[^\p{L}-]/gu, '').toLowerCase();
+
 export class Page {
-  constructor(el, words, onSeek) {
+  // tints: [[word, n, colour]]: the n-th occurrence of a word is shown in that colour once
+  // spoken (COLOR.md rule 6: colour words in poems and songs).
+  constructor(el, words, onSeek, tints = []) {
+    const seen = {};
+    const tintOf = (w) => { const k = norm(w.t); seen[k] = (seen[k] ?? 0) + 1; return tints.find(([word, n]) => word === k && n === seen[k])?.[2]; };
     el.replaceChildren(); // one page element serves every chapter
     this.chunks = [];
     words.paragraphs.forEach((para, p) => {
@@ -38,6 +44,8 @@ export class Page {
         const s = document.createElement('span');
         s.textContent = w.t;
         s.className = 'w';
+        const tint = tintOf(w);
+        if (tint) { s.classList.add('tint'); s.style.setProperty('--tint', tint); }
         s.addEventListener('click', () => onSeek(w.s));
         div.append(s, i < c.words.length - 1 ? ' ' : '');
         return s;

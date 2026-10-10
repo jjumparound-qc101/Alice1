@@ -202,7 +202,7 @@ async function main() {
     chapter = c;
     ch = build(c);
     if (active) { active.group.visible = false; active = null; }
-    page = new Page($('page'), ch.words, (t) => { audio.currentTime = t; if (mode === 'watch') play(audio); });
+    page = new Page($('page'), ch.words, (t) => { audio.currentTime = t; if (mode === 'watch') play(audio); }, c.tints);
     page.setLayout(layout);
     timeline.set(ch.cue.end + 0.9, c.marks);
     const next = CHAPTERS[c.n];

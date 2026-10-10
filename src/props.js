@@ -16,6 +16,9 @@ export const SPOT = {
   leafDark: '#4f7d3a',
   rose: '#d8283a',    // the roses "painting them red" (Chapter VIII onward: the painted roses)
   roseDark: '#a01828',
+  soup: '#6f9a2e',    // "Beautiful Soup, so rich and green" (Chapter X, the song and its vignette)
+  grey: '#7f7f7a',    // "his grey locks" (Chapter V, the poem: text strip)
+  pale: '#8c9aa6',    // "turn not pale" (Chapter X, the song: text strip)
   crimson: '#a3123a', // "a crimson velvet cushion"; the Queen "turned crimson with fury"
 };
 

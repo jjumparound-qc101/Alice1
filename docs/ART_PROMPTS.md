@@ -623,3 +623,45 @@ Background and sources: [CHAPTER_10_ASSETS.md](CHAPTER_10_ASSETS.md). Same conve
 17. `vignette_soup.png`: "A large steaming soup tureen with a ladle." (The game colours the soup green.)
 
 Priority if time is short: 6, 8, 1, 7, 15, 3, 11, 5, then the rest.
+
+## Chapter XI asset list (2026-10-10): "Who Stole the Tarts?"
+Background and sources: [CHAPTER_11_ASSETS.md](CHAPTER_11_ASSETS.md). Same conversation, same rules. Attach the Alice model sheet with every Alice prompt and Tenniel 1.2 with the Rabbit. Draw everything in ink; the game adds the Hatter's pale flush and the Rabbit's pink eyes.
+
+**References to download first:** 11.1 (the Rabbit as herald) https://victorianweb.org/art/illustration/tenniel/alice/11.1.html · 11.2 (the Hatter as witness) …/11.2.html · 11.3 (the Hatter leaving) …/11.3.html · the frontispiece (the trial), from any good scan of the 1865/1866 edition.
+
+### Alice (whole figures on white, three-quarter view facing left unless stated)
+1. `alice11_court.png`: "Same Alice, full figure: standing, looking round a courtroom with great interest, one hand raised to whisper to someone beside her."
+2. `alice11_pencil.png`: "Same Alice, full figure: reaching down behind someone to take away a squeaky pencil, mischievous."
+3. `alice11_sit_crowd.png`: "Same Alice sitting on a bench, squashed, a little guilty, as she begins to grow."
+4. `alice11_named.png`: "Same Alice, full figure: startled, hand to her chest, hearing her own name called out."
+
+### Characters (attach the plate named)
+5. `king_judge.png` (frontispiece): "The King of Hearts as judge, his crown on top of a great judge's wig, seated, from this plate. White background."
+6. `king_judge_frown.png`: "The same King folding his arms and frowning till his eyes are nearly out of sight; a second image putting on spectacles."
+7. `queen_throne.png`: "The Queen of Hearts seated on a throne, staring hard through spectacles."
+8. `knave_chains.png` (frontispiece): "The Knave of Hearts standing in chains, as in this plate."
+9. `rabbit_herald.png` (11.1): "The White Rabbit from this plate, alone, as herald, blowing a trumpet. Then a second image reading from an unrolled parchment scroll."
+10. `hatter_witness.png` (11.2): "The Hatter from this plate, alone, teacup in one hand, bread-and-butter in the other. A second image biting a piece out of the teacup."
+11. `hatter_tremble.png`: "The same Hatter trembling so hard that his shoes fly off; a second image down on one knee."
+12. `hatter_leaving.png` (11.3): "The Hatter from this plate, hurrying away in his stockinged feet."
+13. `hare_dormouse_arm.png`: "The March Hare and the Dormouse walking arm in arm (as in our Chapter VII drawings)."
+14. `dormouse_sulky.png`: "The Dormouse standing up very sulkily and walking off."
+15. `cook_pepper.png`: "The Duchess's cook (as in our Chapter VI drawing) carrying a pepper-box, scowling: 'Shan't.'"
+16. `jurors.png`: "Twelve small creatures in two rows of a jury-box, each writing on a slate: a lizard, two guinea-pigs, a dodo, a lory, an eaglet, a duck, a mouse, a frog, a hedgehog, a squirrel, a mole. White background."
+17. `bill_finger.png`: "Bill the Lizard writing on a slate with one finger, puzzled."
+18. `guinea_bag.png`: "A large canvas bag tied at the mouth with strings, a guinea-pig's feet sticking out, a court officer sitting on it."
+19. `crowd_court.png` (landscape, fill edge to edge): "Rows of spectators in a courtroom gallery: little birds and beasts and playing-card people, packed together, looking toward the viewer."
+
+### Sets and props
+20. `court_wall.png` (landscape, attach frontispiece): "The back wall of the courtroom: panelling, a canopy decorated with hearts over a throne, high windows. Fill the image edge to edge."
+21. `throne.png` (frontispiece): "A throne for two on a low dais, decorated with hearts. White background."
+22. `jury_box.png`: "An empty jury-box: a low railed wooden box with two rows of seats, seen from the front at three-quarters. White background."
+23. `tarts_table.png` (frontispiece): "A small table with a large dish of jam tarts. White background."
+24. `witness_box.png`: "A small wooden witness stand. White background."
+25. `herald_props.png`: "Separate on white: a long herald's trumpet with a banner of hearts; a parchment scroll; a slate and a slate-pencil; a pepper-box."
+
+### Thought vignettes (oval, engraved, white background)
+26. `vignette_refreshments.png`: "Plates of jam tarts being handed round on a tray."
+27. `vignette_slates.png`: "Several slates with 'stupid things!' written on them, one spelt wrong."
+
+Priority if time is short: 5, 9, 10, 8, 16, 20, 21, 22, 23, 12, 7, 11, then the rest.

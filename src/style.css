@@ -53,6 +53,7 @@ button:disabled:hover { background: var(--paper); color: var(--ink); }
 #page .w { color: var(--faint); cursor: pointer; transition: color 0.2s; }
 #page .w.said { color: var(--ink); }
 #page .w.now { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
+#page .w.tint.said, #page .w.tint.now { color: var(--tint); } /* colour words in poems and songs (COLOR.md rule 6) */
 body[data-mode="explore"] #page { display: none; }
 
 /* Text layouts (L key or the Text button). */

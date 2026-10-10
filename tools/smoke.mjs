@@ -19,6 +19,7 @@ page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
 page.on('pageerror', (e) => errors.push(String(e)));
 
 await page.goto(url);
+await page.waitForFunction(() => window.__slice, null, { timeout: 120000 }); // the shared art and cast are ready
 await page.screenshot({ path: `${out}/00-intro.png` });
 await page.click('#begin');
 await page.waitForFunction(() => window.__slice?.ready);
@@ -165,6 +166,11 @@ await chapterShots(9, () => {
   const [D, G, M] = window.__slice.chapter.built.scenes.map((s) => s.T);
   return [['C0-ch9-duchess', D.chin1 + 1], ['C1-ch9-queen', D.queen + 2], ['C2-ch9-custody', D.quarrel + 10], ['C3-ch9-gryphon', G.lazy + 1],
     ['C4-ch9-turtle', M.tears + 1], ['C5-ch9-school', M.school + 2], ['C6-ch9-paws', M.paws + 1], ['C7-ch9-faces', M.faces + 1]];
+});
+await chapterShots(10, () => {
+  const [Q] = window.__slice.chapter.built.scenes.map((s) => s.T);
+  return [['D0-ch10-thump', Q.shaking + 1], ['D1-ch10-caper', Q.bound + 0.4], ['D2-ch10-dance', Q.solemnly + 20], ['D3-ch10-lobster', Q.lobster + 2],
+    ['D4-ch10-soup', Q.soup + 5], ['D5-ch10-run', Q.hand + 3]];
 });
 
 console.log(JSON.stringify({ cam, errors }, null, 1));
