@@ -12,6 +12,7 @@ import { mouseSwim, mouseLeap, duckSwim, dodoSwim, lorySwim, eagletSwim } from '
 import { lizard, guineaPig, puppy, caterpillar } from './props4.js';
 import { pigeon } from './props5.js';
 import { footman, duchess, cook, pig } from './props6.js';
+import { hatter, marchHare } from './props7.js';
 import { mouseUp, mouseWalk, dodoStand, duckStand, loryStand, eagletStand, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
 
 const $ = (id) => document.getElementById(id);
@@ -148,6 +149,9 @@ async function main() {
     duchess: new Puppet({ sit: drawn(duchess('sit'), 0.3), stand: drawn(duchess('stand'), 0.32) }, 0.32),
     cook: new Puppet({ stir: drawn(cook('stir'), 0.3), throw: drawn(cook('throw'), 0.3) }, 0.3),
     pig: new Puppet({ trot: drawn(pig(), 0.07) }, 0.07),
+    // Chapter VII placeholders (seated, waist up).
+    hatter: new Puppet({ stare: drawn(hatter('stare'), 0.42), riddle: drawn(hatter('riddle'), 0.42), watch: drawn(hatter('watch'), 0.42) }, 0.42),
+    hare: new Puppet({ sit: drawn(marchHare('sit'), 0.4), dip: drawn(marchHare('dip'), 0.4) }, 0.4),
     puppy: new Puppet({ stand: drawn(puppy('stand'), 0.75), sit: drawn(puppy('sit'), 0.8) }, 0.75),
   };
   Object.values(cast).forEach((p) => scene.add(p.root));
