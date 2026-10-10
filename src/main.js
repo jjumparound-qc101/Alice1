@@ -4,8 +4,6 @@ import { Puppet } from './puppet.js';
 import { makeTimeline } from './timeline.js';
 import { Page } from './narration.js';
 import { Explorer } from './explore.js';
-import * as art from './art.js';
-import { texture } from './ink.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -22,7 +20,7 @@ async function main() {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.05, 80);
 
-  const AI_ART = ['sky', 'tree', 'hedge', 'grass', 'alice_stand']; // interim AI masters (PROVENANCE.md)
+  const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'alice_stand', 'alice_sit', 'sister_read']; // interim AI masters (PROVENANCE.md)
   const [words, rabbitArt, ...aiArt] = await Promise.all([
     fetch('data/ch01_slice_words.json').then((r) => r.json()),
     loadTexture('art/rabbit_w01-1.png'),
@@ -35,13 +33,12 @@ async function main() {
   const stage = buildStage(scene, ai);
   const tl = makeTimeline(words, stage.holePos);
 
-  const canvasPose = (c, facesLeft) => ({ tex: texture(c), aspect: c.width / c.height, facesLeft });
   const rabbit = new Puppet({ watch: { ...rabbitArt, facesLeft: true } }, 0.85);
   const alice = new Puppet({
-    sit: { ...canvasPose(art.aliceSitting(), false), height: 0.78 },
+    sit: { ...ai.alice_sit, facesLeft: false, height: 0.85 },
     stand: { ...ai.alice_stand, facesLeft: true },
   }, 1.25);
-  const sister = new Puppet({ read: { ...canvasPose(art.sisterReading(), false), height: 0.95 } }, 0.95);
+  const sister = new Puppet({ read: { ...ai.sister_read, facesLeft: false, height: 1.05 } }, 1.05);
   [rabbit, alice, sister].forEach((p) => scene.add(p.root));
 
   const audio = $('narration');

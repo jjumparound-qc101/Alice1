@@ -101,3 +101,9 @@ Save each image with these names and upload them here:
 | `shaft_wall_a.png`, `shaft_wall_b.png` | 3 |
 
 Also note which ChatGPT model made them (shown in the chat) for PROVENANCE.md.
+
+## Follow-up prompts (sent 2026-10-10)
+Used in the same conversation after the first set. The results are in `source/ai/`.
+- **Alice sitting:** "Same Alice, same style: sitting on the grass of a riverbank, legs tucked to one side, skirt spread around her, hands in her lap, looking bored. Side view facing right. White background, no ground."
+- **Sister reading:** "Alice's older sister, about 16, same 1860s style: a long full dress and a wide-brimmed straw hat, sitting on the grass with her back against a tree trunk (don't draw the tree), reading a small book. Seen from three-quarter behind, so the hat hides most of her face. White background."
+- **Alice torso:** "For the same Alice puppet: her torso alone (bodice, pinafore top and sash, no head, arms or skirt), front view and three-quarter view, same scale as the parts sheet. White background."
