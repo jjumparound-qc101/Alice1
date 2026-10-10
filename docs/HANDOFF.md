@@ -1,87 +1,106 @@
 # Handoff: read this first
-Updated: 2026-10-10. For the next Claude Code session (or anyone) picking up the work.
+Updated: 2026-10-10 (end of session). For the next Claude Code session (or anyone) picking up the work.
 
 ## The project in one paragraph
-*Alice's Adventures in Wonderland* as an interactive novel for Steam (a "Library of Living Books" title). The book's text is shown in sync with the LibriVox full-cast reading, staged as a 2.5D Victorian toy theater: flat engraving-style cutouts in layered 3D sets, with a moving camera (Watch mode) and free walking with a 90° look arc (Explore mode). Black-and-white ink, except things the text gives a colour (docs/COLOR.md). Engine: three.js + Vite, wrapped in Electron for desktop and Steam (Gate A: docs/GATE_A.md). Chapters I to VII play start to finish as rough cuts (docs/CHAPTER_01_ROUGHCUT.md, _02_ … _07_); every narrated chapter is readable from the contents.
+*Alice's Adventures in Wonderland* as an interactive novel for Steam (a "Library of Living Books" title). The book's text is shown in sync with the LibriVox full-cast reading, staged as a 2.5D Victorian toy theater: flat engraving-style cutouts in layered 3D sets, with a moving camera (Watch mode) and free walking with a 90° look arc (Explore mode). Black-and-white ink, except things the text gives a colour (docs/COLOR.md). Engine: three.js + Vite, wrapped in Electron for desktop and Steam (Gate A: docs/GATE_A.md).
+
+## Where the project stands
+- **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly). Unstaged chapters play on an engraved title page with the text in sync.
+- **Chapters I–VII are staged** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
+- **Chapter VIII**: asset list written and in the master list; **not staged yet**, waiting on one owner decision (below).
+- **Art**: 8 of 257 AI images received (hall floor, lamp, curtain, little door, glass table, Alice walking A/B, Alice jumping), plus the earlier riverbank/shaft masters and Alice's model sheet. Everything else is a placeholder.
+
+| Chapter | Asset list | Staged | Scenes (`src/scenes/`) |
+|---|---|---|---|
+| I Down the Rabbit-Hole | ART_PROMPTS "Chapter I asset list v2" | ✓ | `riverbank`, `shaft`, `passage`, `hall` |
+| II The Pool of Tears | CHAPTER_02_ASSETS.md | ✓ | `pool` |
+| III A Caucus-Race | CHAPTER_03_ASSETS.md | ✓ | `bank` |
+| IV The Rabbit Sends in a Little Bill | CHAPTER_04_ASSETS.md | ✓ | `rabbit.js`: `lane`, `house`, `wood` |
+| V Advice from a Caterpillar | CHAPTER_05_ASSETS.md | ✓ | `caterpillar.js`: `mushroom`, `treetops`, `clearing` |
+| VI Pig and Pepper | CHAPTER_06_ASSETS.md | ✓ | `duchess.js`: `doorstep`, `kitchen`, `wood6` |
+| VII A Mad Tea-Party | CHAPTER_07_ASSETS.md | ✓ | `teaParty.js`: `teaParty`, `hallAgain`, `garden` |
+| VIII The Queen's Croquet-Ground | CHAPTER_08_ASSETS.md | — | |
+| IX–XII | — | — | title pages |
+
+## Open decision for the owner (ask first thing)
+**Chapter VIII card suits: ink or red?** The text says the courtiers are "ornamented all over with diamonds" and the children "with hearts" but never says red. Recommendation put to the owner: **ink** (COLOR.md rule: only text-named colours), so the painted red roses and the crimson cushion are the only red. Alternative: red hearts and diamonds. Record the answer in docs/COLOR.md and CHAPTER_08_ASSETS.md, then stage Chapter VIII.
+
+## Next steps, in order
+1. Get the card-suit answer; **stage Chapter VIII** with placeholders (see "How a chapter is done" below). Its croquet-ground set is shared with Chapter IX, so build it as `src/sets/croquet.js`.
+2. Then Chapters IX–XII the same way: asset list → master list → stage.
+3. **Drop in art as the owner sends it** (see "When art arrives"). The owner sends art in batches.
+4. Later, after the whole book (owner's decision): low-end hardware test, code signing, high-resolution Tenniel scans (NYPL/British Library; Victorian Web images are only 432 px tall).
+
+## How a chapter is done (the owner's process)
+1. Read the chapter (`source/text/chNN.txt`) and its Tenniel plates (Victorian Web `…/tenniel/alice/N.M.html`; download the `.jpg` to look).
+2. Write **`docs/CHAPTER_NN_ASSETS.md`** (places, plates, colours, poses, characters, sets, vignettes, coverage), then the prompts as a "## Chapter … asset list" section at the end of **`docs/ART_PROMPTS.md`** (numbered lines starting `` N. `file.png` ``; a section headed `### Not needed…` is left out of the master list).
+3. Run **`python3 tools/assets_master.py`** to rebuild **`docs/ASSETS_MASTER.md`** (the one document the owner generates art from). Never edit the master by hand.
+4. Put any colour or staging decision to the owner **with a recommendation**, and wait.
+5. Stage it: placeholders in `src/propsN.js`, scenes in `src/scenes/<name>.js` exporting `CHAPTER_N`, new puppets in `main.js`'s `cast`, register in `src/chapters.js` (`STAGED`). Get cue times with a quick script over `public/data/chNN_words.json` (see "Cue words" below).
+6. Check it: `node tools/chapter_shots.mjs http://localhost:5173/ <outdir> N [t1,t2,…]`, contact-sheet the images, **look at them**, fix, repeat. Add a few moments to `tools/smoke.mjs`; run it (all chapters, ~15 min, run in the background).
+7. Write `docs/CHAPTER_NN_ROUGHCUT.md`, update this handoff's table, commit, push, republish the web link.
+
+## When art arrives
+- Uploads that arrive mid-turn aren't saved; ask the owner to resend as a normal message. Screenshots are low quality: ask for the downloaded original.
+- Save the original to `source/ai/<name given in the prompt>.webp|png`. Process it: `tools/whitecut.py` (cut out from white, paper-tint; `--clear x,y;…` clears enclosed gaps; `--opaque` for full-frame art), `tools/compose_poses.py` (Alice whole-figure poses, scaled to the model sheet; `DRAWN` list), `tools/hall_props.py` (an example of a set-piece pipeline). Output to `public/art/ai/…`.
+- Wire it into the scene in place of the placeholder; screenshot and look.
+- **Log every asset in PROVENANCE.md** (AI disclosure for Steam), then rerun `python3 tools/assets_master.py` (ticks it).
+- Alice's model sheet is `source/ai/alice_turnaround.webp`: every Alice drawing must match it.
 
 ## The owner
-Works on Windows, with VS Code and GitHub; not a programmer. They prefer brief, kind, factual replies with honest pushback, and decisions put to them with a recommendation. They generate the AI art in ChatGPT and upload it; you write the prompts (docs/ART_PROMPTS.md). They test the web link and the Windows build from GitHub Actions.
+Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind, factual replies with honest pushback, and decisions put to them with a recommendation. Generates the AI art in ChatGPT (one conversation for everything) and uploads it; you write the prompts. Tests the web link and the Windows build from GitHub Actions.
 
 ## Where things are
 - **Repo**: `jjumparound-qc101/Alice1`, branch `claude/literary-game-experience-1de414`. Commit and push there. No PR has been asked for.
-- **Playable web link** (private artifact, updated on each milestone): https://claude.ai/artifact/Run3pVwccFBgcP6AHgktXj. To republish: `npx vite build --base ./ --outDir <scratch>/dist`, strip `<html>/<head>/<body>` from `dist/index.html` into a page file, publish it with `root` = dist and the changed asset files in `files`. Remove old hashed JS bundles with `null`.
-- **Windows build**: every push runs `.github/workflows/desktop.yml`. The owner downloads the "Alice-windows-x64" artifact from the latest Actions run. It includes `steam_appid.txt` = 480 (Valve's Spacewar test app) for Steam testing.
-- **Art to generate**: docs/ASSETS_MASTER.md, every prompt for every chapter in one checklist (owner, 2026-10-10). Process for each chapter: write `docs/CHAPTER_NN_ASSETS.md` and its section in `docs/ART_PROMPTS.md`, then run `python3 tools/assets_master.py`. Run it again whenever art arrives (it ticks what's in `source/ai/`).
-- **Decisions**: docs/AMENDMENTS.md (newest first). **Colours**: docs/COLOR.md. **Asset sources and AI disclosure**: PROVENANCE.md, which must be updated for every asset.
-- **Chapter I status and gaps**: docs/CHAPTER_01_ROUGHCUT.md.
+- **Playable web link** (private artifact, updated on each milestone): https://claude.ai/artifact/Run3pVwccFBgcP6AHgktXj. To republish: `npx vite build --base ./ --outDir <scratch>/dist`, strip `<!doctype>/<html>/<head>/<body>/<meta>` from `dist/index.html` into a page file, publish it with `root` = dist and the changed files in `files` (new hashed JS bundle, any new art/audio); remove the old hashed bundle with `null`.
+- **Windows build**: every push runs `.github/workflows/desktop.yml`; the owner downloads "Alice-windows-x64" from the latest Actions run (includes `steam_appid.txt` = 480 for Steam testing).
+- **Art to generate**: `docs/ASSETS_MASTER.md`. **Why each asset**: `docs/CHAPTER_NN_ASSETS.md`. **Decisions**: `docs/AMENDMENTS.md` (newest first). **Colours**: `docs/COLOR.md`. **Asset sources and AI disclosure**: `PROVENANCE.md`.
+
+## Owner decisions so far (details in AMENDMENTS.md / COLOR.md)
+- Text layouts are a reader setting; spot colours only where the text names a colour; spot colours richer, with a slight glow.
+- Alice's poses are whole figures (no jointed puppet); the composed running poses are retired; one walk cycle for all movement.
+- Alice's model sheet is the turnaround. Tenniel plates are references for Alice, cut out directly only for other figures.
+- Chapter III's bank is the pool's edge on the hall floor (Alice tiny). Chapter IV's "W. RABBIT" plate is brass-coloured. Chapter V's Father William poem is shown in Tenniel's own four plates.
+- One master asset document, rebuilt after each chapter list.
+- Low-end testing, signing and high-res scans wait until the whole book is done.
 
 ## Code map
 | File | What |
 |---|---|
-| `src/main.js` | Book engine: loads shared art, opens a chapter (builds its sets on first open, points narration, text, timeline and end card at it), picks the active scene by narration time, scene turns, Watch/Explore, saves the place per chapter (localStorage), contents menu, text layouts, chapter end |
-| `src/chapters.js` | The twelve chapters: titles, which are narrated (`NARRATED`) and which are staged (`STAGED`); unstaged chapters play on `scenes/placeholder.js` (their title page) |
-| `src/scenes/*.js` | Chapter I: `riverbank`, `shaft` (the fall), `passage`, `hall`. Chapter II: `pool`. Chapter III: `bank`. Chapter IV: `lane`, `house`, `wood` (`rabbit.js`). Chapter V: `mushroom`, `treetops`, `clearing` (`caterpillar.js`). Chapter VI: `doorstep`, `kitchen`, `wood6` (`duchess.js`). Chapter VII: `teaParty`, `hallAgain`, `garden` (`teaParty.js`). `placeholder` (title page for unstaged chapters). Each has `start(cue)`, optional `parts(cue)` (named marks), and `build()`, which returns `{ T, bg, fog, bounds, hotspots, camera(t), actors(t), update?(t, cast) }` |
-| `src/sets/hall.js` | The hall set, shared by Chapters I and II |
-| `src/props2.js` | Chapter II placeholders drawn in code (Mouse, birds, gloves, fan, water, vignettes) |
-| `src/cues.js` | `at(word, n, after)`: time of the n-th occurrence of a word. **Count occurrences carefully**: "box" #1 is "box her own ears"; "telescope" vs "telescopes". Prefer an `after` anchor |
-| `src/track.js` | `smooth`, `path`, `route` (waypoints), `cameraTrack` (eased keys) |
-| `src/puppet.js` | Paper-cutout puppets: whole-figure poses swapped by name. Supports `y`, `scale`, `tilt`, `sink`. Alternates `run_a`/`run_b` while a standing figure moves |
-| `src/stage.js` | Riverbank set and `paperFlat()` (a card with paper edge) |
-| `src/props.js`, `src/art.js`, `src/ink.js` | Placeholder art drawn in code (engraving style); `SPOT` colours |
-| `src/thoughts.js` | Thought vignettes: oval cards that pop open beside Alice while the text speaks of them |
-| `src/navigate.js` | Timeline scrubber, sentence/scene skip |
-| `src/narration.js` | Book page (bottom, top or side layout), click-a-word-to-seek |
-| `src/explore.js` | Explore mode |
-| `src/perf.js` | F3 readout: fps, GPU, Steam status |
-| `electron/` | Desktop wrapper (`app://` protocol, Steam via steamworks.js, preload) |
-| `tools/` | `narration.py` (one command per chapter: cut its text, align, trim and encode the audio), `align.py` (text↔audio word timings), `transcribe.py` (faster-whisper), `cutout.py` (Tenniel scans), `whitecut.py` (AI art on white → paper-tinted cutout), `shaft_strip.py`, `rig_parts.py`, `compose_poses.py`, `smoke.mjs` (headless browser check, screenshots), `walk_report.mjs` (Alice's steps per second on every leg), `electron_smoke.mjs` |
+| `src/main.js` | Book engine: loads shared art, the cast of puppets (`cast`), opens a chapter (builds its sets on first open; points narration, text, timeline and end card at it), picks the active scene by narration time, scene turns (`paper`/`dark`), Watch/Explore, saves the place per chapter, contents menu, text layouts, speed, chapter end |
+| `src/chapters.js` | The twelve chapters: `NARRATED`, `STAGED` |
+| `src/scenes/*.js` | One file per chapter (see the table). A scene: `start(cue)`, optional `parts(cue)` (named marks for the contents/timeline/Shift+arrows), `turn`, and `build()` → `{ T, bg, fog, bounds, hotspots, camera(t), actors(t), update?(t, cast) }`. `placeholder.js`: the title page |
+| `src/sets/hall.js` | The hall set, shared by Chapters I, II, III, VII |
+| `src/props.js` … `props7.js` | Placeholder art drawn in code, per chapter (props.js = Chapter I and shared helpers: `vignette`, `shape`, `line`, `cat`, `SPOT` colours) |
+| `src/puppet.js` | Paper-cutout puppets: poses swapped by name; `x z y scale tilt dir`, walking by distance (`walk_a`/`walk_b`), `idle`, `float` (swimmers); `handPoint()` and `carry(obj, puppet)` for held props |
+| `src/thoughts.js` | Thought vignettes (oval cards that pop open while the text speaks of them) |
+| `src/cues.js` | `at(word, n, after)` and `para(text)` |
+| `src/track.js` | `smooth`, `lerp`, `path`, `route` (waypoints; reports `dist` walked), `hop`, `cameraTrack` |
+| `src/stage.js`, `art.js`, `ink.js` | Riverbank set, `paperFlat()`, `halo()`; engraving helpers (`hatch`, `flicks`, `shadeEdge`…) |
+| `src/navigate.js`, `narration.js`, `explore.js`, `perf.js` | Timeline and skips; the book page; Explore mode; F3 readout |
+| `electron/` | Desktop wrapper (Steam via steamworks.js) |
 | `godot/` | Gate A comparison only; not maintained |
 
+**Tools**: `narration.py` (prepare a chapter's narration: text, alignment, trimmed audio), `transcribe.py`, `align.py`, `assets_master.py`, `whitecut.py`, `cutout.py` (Tenniel scans, spot colour), `compose_poses.py`, `hall_props.py`, `shaft_strip.py`, `smoke.mjs` (all chapters; fails on console errors), `chapter_shots.mjs` (screenshots of one chapter), `walk_report.mjs` (Alice's steps per second; keep under ~4), `electron_smoke.mjs`.
+
+## Cue words
+Staging is keyed to words, not seconds. `at('word', n, after)`: the n-th occurrence **at or after** `after`. Count carefully: list a chapter's occurrences first, e.g.
+`python3 -c "import json,re; w=json.load(open('public/data/ch08_words.json')); [print(round(x['s'],1), x['t']) for p in w['paragraphs'] for x in p if re.sub(r'[^\w-]','',x['t']).lower() in {'queen','rose'}]"`.
+A wrong count throws "cue word not found" when the chapter opens; the scene's camera keys or actions will be wrong silently if the count is off but the word exists.
+
 ## Running and checking
-- `npm install`, then `npm run dev` (port 5173). `node tools/smoke.mjs http://localhost:5173/ <outdir>` takes screenshots of about 33 moments across all scenes plus Explore mode, and fails on console errors. **Always look at the screenshots after a staging change.** Read them in contact sheets.
-- Headless Chromium needs `--use-gl=angle --use-angle=swiftshader` (already in smoke.mjs).
-- In this container, start the dev server with `run_in_background` (it has a time limit, so restart it when needed).
-- Python tools: make a scratch venv with `pillow scipy numpy` (and `faster-whisper` for transcription).
+- `npm install`, then `npm run dev` (port 5173). In this container start it with `run_in_background` and a long timeout; it stops after its time limit.
+- Headless Chromium needs `--use-gl=angle --use-angle=swiftshader` (in the tools). A "Failed to fetch" on the first load right after editing a file is Vite reloading, not a bug; rerun.
+- **Always look at the screenshots.** Contact sheets of 4 per row work well.
+- Python tools: a scratch venv with `pillow scipy numpy` (`faster-whisper` for transcription; already done for every chapter, transcripts in `source/audio/`).
 
 ## Environment quirks (cloud container)
-- The network allowlist is set by the owner. These hosts have been allowed at some point: github.com, raw.githubusercontent.com, gutenberg.org, victorianweb.org, librivox.org, `*.archive.org` download hosts (dnXXXX.ca.archive.org; archive.org itself flickers), huggingface.co and `*.hf.co`. If a host is denied, say which one and ask the owner to allow it.
-- Uploads that arrive *mid-turn* aren't saved to disk. Ask the owner to resend them as a normal message.
-- Files sent to the owner directly are limited to 30 MB. Big builds go through GitHub Actions.
+- Network allowlist is set by the owner; allowed so far: github.com, raw.githubusercontent.com, gutenberg.org, victorianweb.org, librivox.org, archive.org and its download hosts, huggingface.co, `*.hf.co`. If a host is denied, name it and point the owner to the environment's network settings.
+- Files sent to the owner directly are limited to 30 MB; big builds go through GitHub Actions.
 
-## Art in hand
-- **Tenniel**: White Rabbit with watch (W-01-1), cut out with pink eyes. Web resolution only; the NYPL Berg 1866 high-resolution source is still to be checked (the host needs allowing).
-- **Alice's model sheet** is the turnaround (`source/ai/alice_turnaround.webp`); every new Alice drawing must match it (owner, 2026-10-10).
-- **AI masters** (ChatGPT, OpenAI image generation; see PROVENANCE): riverbank sky, tree line, tree, hedge, grass; Alice turnaround (standing pose), sitting, two parts sheets, torso; the sister reading; two shaft walls (combined into a repeating strip; the ORANGE MARMALADE jar lifted out as its own sprite).
-- **Whole-figure poses**: Alice walking (`walk_a`, `walk_b`) and jumping (`jump`), cut and scaled by `tools/compose_poses.py`.
-- **Composed**: Alice running (`run_a`, `run_b`). The parts sheets lack the mid-skirt, so a jointed puppet doesn't work and poses are whole figures (AMENDMENTS).
-- **Hall art in** (2026-10-10): floor, lamps, low curtain, little door (frame + swinging leaf, `tools/hall_props.py`); the glass table is 3D, modelled on the AI drawing.
-- **Still placeholders drawn in code**: passage walls, leaf heap, hall wall and its doors, garden view, key, bottle, cake, thought vignettes.
-
-## Owner's Notes 1.0 (2026-10-10): the backlog, with a plan for each
-Status key: ☐ to do, ◐ partly done (waiting on art), ☑ done. The owner's answers to the open questions are at the end of this section once given.
-
-1. ☑ **Handoff**: this document.
-2. ☑ **Walking legs look wrong.** *2026-10-10: running poses retired; all movement uses the two walk drawings, stepped by distance (`puppet.js`); tiny Alice's walks were lengthened and the door moved nearer the table so no leg goes over ~4 steps/s; `tools/walk_report.mjs` checks this.* Earlier: *Interim done 2026-10-10: below 1 m/s (or `gait: 'walk'`) Alice keeps the standing pose with a gentle bob; the stride is used only when running (`gait: 'run'` forces it, e.g. "she ran across the field"). `walk_a` and `walk_b` arrived and alternate while she walks. `walk_b` is an interim from a phone screenshot, near profile, so the swap shows; wanted: the full-size original, ideally redrawn in three-quarter view to match `walk_a`.* The composed stride is a running pose used for walking, and its legs read oddly at walking speed. Plan: when the owner's walk-cycle art arrives (ART_PROMPTS "Chapter I asset list v2"), add `walk_a`/`walk_b` and choose walk or run by speed. Until then, consider showing the standing pose with a gentle bob when walking slowly (speed under about 1 m/s), and the stride only when running.
-3. ☑ **Golden key floats in front of her.** *Done: each pose records where its hand is drawn (`hand: [u, v]` in `main.js`); `Puppet.handPoint()` gives the world position, and the hall's `carry()` puts the key, bottle and cake there, turned with her. The key is smaller. Swap in the "holding" pose when it arrives.* In `src/scenes/hall.js`, `hand()` uses a guessed offset. Plan: put the key at the hand actually drawn in the current pose (near-side hand at about x +0.13·h and y 0.47·h for the standing turnaround, mirrored by `dir`), slightly in front of her card (z +0.02), tilted, and scaled with her. Better still, use the new "holding" pose art when it arrives.
-4. ☐ **Heap of sticks and leaves looks bad.** Replace `leafHeap()` with the AI asset ("leaf_heap" prompt).
-5. ☑ **Passage Rabbit and corner transition.** *Done: the Rabbit stands far down the passage from the start; the hall has `turn: 'dark'` (black, then the set's colours and fog come up over 3.5 s).* (a) The Rabbit must be visible from the start of the passage scene, far away in the dark (z about -12, dimmed by fog), until he runs and turns the corner. Today he pops in at "passage" and out at "corner". (b) Replace the bright paper flash at the corner/scene change: fade fully to black, switch scenes while black, then fade up in the hall *from dark*, as if the lamps light it (animate fog/brightness up over about 2 s). Add a per-transition style to the engine (`turn: 'paper' | 'dark'`).
-6. ◐ **Going down the hole looks like sinking into the ground.** *Code done: `hop()` in `track.js`; both hop from the hole's mouth to just behind the hedge flat. Alice's jump art is in (`jump` pose); still to do: `rabbit_hop`.* Replace `sink` in the riverbank with a hop: a short arc up and forward into the hole mouth (y peak about 0.25 m, about 0.5 s), then a quick drop and scale toward the hole as they vanish *behind the hedge-hole edge*. Do it for both the Rabbit and Alice. Use the "Rabbit hopping" and "Alice jumping" art when it arrives.
-7. ☑ **Faster ways through the chapter.** *Done: timeline (`src/navigate.js`) with scene marks and a pointer label; ←/→ sentence, Shift+←/→ scene; S or the 1× button for speed (remembered); M or Scenes for the scene menu (pauses), also on the start screen.* Recommended: (a) a timeline scrubber at the bottom with scene markers (click to jump); (b) ← / → to jump a sentence back or forward, and Shift+← / Shift+→ for the previous or next scene; (c) a playback-speed control (1×, 1.25×, 1.5×, 2×) using `audio.playbackRate` with `preservesPitch`. Waiting on the owner's choice.
-8. ☐ **New asset behind the little door.** The text says it leads into "a small passage, not much larger than a rat-hole … into the loveliest garden you ever saw … beds of bright flowers and … cool fountains". Use the AI "garden_through_door" art (prompt written) in place of `garden()`.
-9. ☑ **Abrupt ending.** *Done.* At the chapter's end, fade the narration out, then show a "Chapter I complete" card with buttons: **Explore the hall**, **Replay the chapter**, **Continue to Chapter II** (disabled until it exists). Reuse the end card in `index.html`.
-10. ☑ **Second imagined vignette.** *Done with placeholder drawings (`src/thoughts.js`, `props.js`): poker, knife and finger, poison bottle, candle (hall); Dinah's saucer of milk, cats and bats (fall). Swap in the AI vignette art when it arrives.* After the poker, the text goes on: "if you cut your finger *very* deeply with a knife, it usually bleeds", and "if you drink much from a bottle marked 'poison,' it is almost certain to disagree with you". Stage both as thought vignettes, like the poker: knife and finger (ink only; "bleeds" isn't a stated colour), and a bottle marked "poison". Also consider the earlier imagined ones: Dinah and her saucer of milk, cats and bats, the candle going out. Art prompts are written.
-11. ☑ **The Rabbit standing still is lifeless.** *Done: `idle` in `puppet.js` (rock and toe bounce); at the hedge he now and then turns away and back.* While idle (riverbank, at MID and NEAR_HEDGE), add life: a small rhythmic rock (±3°), a slight bounce on his toes every 1–2 s, and an occasional turn toward Alice (mirror flip) or a glance at the watch. Done in `puppet.js` as an `idle` style or in the scene's actor function.
-12. ☐ **All Chapter I assets**: see ART_PROMPTS.md "Chapter I asset list v2".
-13. ☐ **Chapter II preparation**: the questions were put to the owner; answers go below.
-14. ☑ **Colours more vibrant.** *Done: richer key gold with a highlight and a soft halo (`halo()` in `stage.js`), a hotter poker with a glowing tip, and pink eyes re-cut with the colour laid over the ink (`"over": 0.4` in the spot JSON; `tools/cutout.py`).* The spot colours (pink eyes, golden key, red-hot poker) should be more saturated and luminous. Plan: raise the saturation of the `SPOT` values, multiply less with the engraving (keep the line work but let the colour sit on top), and consider a soft glow on the poker. Check whether the owner also means the paper tone (see their answer).
-
-### Owner's answers (2026-10-10)
-- **Note 7**: all four: a timeline scrubber with scene marks, skip keys (←/→ a sentence, Shift+←/→ a scene), playback speed (1×, 1.25×, 1.5×, 2×, pitch kept), and a chapter scene menu (start screen and pause).
-- **Note 13**: start Chapter II **after Notes 1.0** are done. Chapter II art is made **the same way as Chapter I**: Tenniel plates where they exist, ChatGPT for the rest, in the same conversation. Write the Chapter II asset list and prompts first, so the owner can generate art while Notes 1.0 are built.
-- **Note 14**: **spot colours only**: richer and brighter pink eyes, golden key and red-hot poker, with a slight glow. Ink and paper unchanged.
-
-## Suggested order for the next session
-1. ~~Notes 3, 5, 6, 9, 10, 7, 11, 14, 2 (code only)~~: done 2026-10-10.
-2. Drop in each new asset from "Chapter I asset list v2" as it arrives (notes 2, 4, 8 and the rest). Log each one in PROVENANCE.md.
-3. ~~Write the Chapter II asset list and prompts~~: done 2026-10-10 (CHAPTER_02_ASSETS.md, ART_PROMPTS.md "Chapter II asset list"). The plates are 2.1 long neck, 2.2 giant Alice kneeling with the Rabbit trotting away, 2.3 swimming, 2.4 Alice and the Mouse.
-4. ~~Multi-chapter engine and chapter selection~~: done 2026-10-10 (contents menu, Continue to the next chapter, place saved per chapter). All twelve chapters' narration is aligned and playable (`tools/transcribe.py`, then `tools/narration.py N file.mp3`). Chapter II is staged with placeholders (CHAPTER_02_ROUGHCUT.md). Chapter III's asset list and prompts are written (CHAPTER_03_ASSETS.md); the bank is the pool's edge on the hall floor (owner: option A); Chapter III is staged with placeholders (`scenes/bank.js`, `props3.js`). Chapter IV's asset list and prompts are written (CHAPTER_04_ASSETS.md); the brass plate is brass-coloured (owner); Chapter IV is staged with placeholders (`scenes/rabbit.js`, `props4.js`). Chapter V's asset list and prompts are written (CHAPTER_05_ASSETS.md); Tenniel's Father William plates are shown as they are (owner); Chapter V is staged (`scenes/caterpillar.js`, `props5.js`). Chapter VI's asset list and prompts are written (CHAPTER_06_ASSETS.md). Chapter VI is staged (`scenes/duchess.js`, `props6.js`). Chapter VII's asset list and prompts are written (CHAPTER_07_ASSETS.md). Chapter VII is staged (`scenes/teaParty.js`, `props7.js`). Chapter VIII's asset list is written and added to the master list; the owner is asked whether the card suits are red or ink. Next: stage Chapter VIII with placeholders, and art as it arrives.
+## Known gaps (across chapters)
+- Almost every character and set is a placeholder; the rough-cut notes list each chapter's.
+- `walk_b` is from a phone screenshot (near profile); a full-size three-quarter redraw is wanted.
+- Giant Alice (Chapters II, IV) is a scaled standing/sitting figure until the giant poses arrive.
+- At tiny scale the hall floor's cracks look very large.
+- Chapter I leftovers from Notes 1.0: the leaf heap (note 4), the garden behind the little door (note 8), the Rabbit's hop (note 6) wait on their art.
