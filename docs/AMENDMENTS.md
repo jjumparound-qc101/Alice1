@@ -2,6 +2,11 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-10: Text layout is a reader setting
+Status: Confirmed by the owner.
+
+The reader chooses how the text appears: a bottom strip (the default), a top strip, or a side page. All three are built in the slice (press L).
+
 ## 2026-10-10: Black and white with spot color from the text
 Status: Confirmed by the owner.
 

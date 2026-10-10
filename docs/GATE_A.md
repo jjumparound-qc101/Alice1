@@ -1,6 +1,6 @@
 # Gate A: three.js vs Godot
 Date: 2026-10-10
-Status: **Comparison done; decision pending (owner).**
+Status: **Comparison done. The owner is trying both builds before deciding.**
 
 The same riverbank slice is built twice with identical art, audio, timings and staging:
 - **three.js r186** with Vite (`src/`, `index.html`)
