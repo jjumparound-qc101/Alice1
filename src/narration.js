@@ -1,5 +1,7 @@
-// The book page: shows the passage being read, a sentence or phrase at a time,
-// with the spoken word marked. Clicking any word seeks the narration there.
+// The book page: shows the passage being read, with the spoken word marked.
+// Clicking any word seeks the narration there.
+// Layouts: 'bottom' and 'top' strips show one phrase at a time; 'side' is a
+// book page showing the paragraph so far.
 
 const SENTENCE_END = /[.!?][”’)]*$/;
 const PHRASE_END = /[,;:—][”’)]*$/;
@@ -43,6 +45,12 @@ export class Page {
       el.append(div);
     });
     this.cur = { c: -1, w: -2 };
+    this.layout = 'bottom';
+  }
+
+  setLayout(layout) {
+    this.layout = layout;
+    this.cur = { c: -1, w: -2 }; // force a redraw
   }
 
   update(t) {
@@ -52,7 +60,14 @@ export class Page {
     let w = -1;
     words.forEach((x, i) => { if (x.s <= t) w = i; });
     if (c === this.cur.c && w === this.cur.w) return;
-    if (c !== this.cur.c) this.chunks.forEach((x, k) => (x.div.hidden = k !== c));
+    if (c !== this.cur.c) {
+      const p = this.chunks[c].p;
+      this.chunks.forEach((x, k) => {
+        x.div.hidden = this.layout === 'side' ? x.p !== p || k > c : k !== c;
+        if (k < c) x.spans.forEach((s) => { s.classList.add('said'); s.classList.remove('now'); });
+      });
+      if (this.layout === 'side') this.chunks[c].div.scrollIntoView({ block: 'nearest' });
+    }
     this.chunks[c].spans.forEach((s, i) => {
       s.classList.toggle('said', i < w);
       s.classList.toggle('now', i === w);

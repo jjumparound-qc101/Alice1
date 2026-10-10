@@ -13,6 +13,7 @@ npm run smoke        # with the dev server running: headless run, screenshots in
 
 Controls:
 - **Watch mode** (default): the narration plays and the staging follows it. Space pauses. Click any word on the page to jump there.
+- **Text layout** (L or the Text button): bottom strip, top strip or side page.
 - **Explore mode** (Tab or the Explore button): walk with W A S D, look by dragging or with ← →, and press E near something to inspect it. The look arc is limited to about 90°.
 
 ## Layout

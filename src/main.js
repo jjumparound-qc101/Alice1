@@ -45,6 +45,15 @@ async function main() {
   const explorer = new Explorer(camera, renderer.domElement, stage.bounds);
 
   let mode = 'watch';
+  const LAYOUTS = ['bottom', 'top', 'side'];
+  let layout = 'bottom';
+  function setLayout(l) {
+    layout = l;
+    document.body.dataset.text = l;
+    page.setLayout(l);
+    $('layoutBtn').textContent = `Text: ${l[0].toUpperCase()}${l.slice(1)}`;
+    resize();
+  }
   let shown = null;
 
   function setMode(m) {
@@ -52,6 +61,7 @@ async function main() {
     document.body.dataset.mode = m;
     $('modeBtn').textContent = m === 'watch' ? 'Explore' : 'Back to the story';
     if (m === 'explore') { audio.pause(); explorer.enter(); } else { explorer.exit(); closeCard(); audio.play(); }
+    resize();
   }
 
   function openCard(h) {
@@ -70,23 +80,29 @@ async function main() {
   $('playBtn').addEventListener('click', () => (audio.paused ? audio.play() : audio.pause()));
   $('restartBtn').addEventListener('click', () => { audio.currentTime = 0; if (mode === 'watch') audio.play(); });
   $('cardClose').addEventListener('click', closeCard);
+  $('layoutBtn').addEventListener('click', () => setLayout(LAYOUTS[(LAYOUTS.indexOf(layout) + 1) % LAYOUTS.length]));
   audio.addEventListener('play', () => ($('playBtn').textContent = 'Pause'));
   audio.addEventListener('pause', () => ($('playBtn').textContent = 'Play'));
   addEventListener('keydown', (e) => {
     if (e.code === 'Tab') { e.preventDefault(); setMode(mode === 'watch' ? 'explore' : 'watch'); }
     if (e.code === 'KeyE' && mode === 'explore') { const h = explorer.facing(stage.hotspots); h ? openCard(h) : closeCard(); }
     if (e.code === 'Escape') closeCard();
+    if (e.code === 'KeyL') $('layoutBtn').click();
     if (e.code === 'Space' && mode === 'watch' && $('intro').hidden) { e.preventDefault(); $('playBtn').click(); }
   });
 
+  // Shift the picture away from the text so shots stay framed whatever the layout.
   function resize() {
     const w = innerWidth, h = innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
+    if (mode === 'watch' && layout === 'top') camera.setViewOffset(w, h, 0, -0.2 * h, w, h);
+    else if (mode === 'watch' && layout === 'side' && w > 700) camera.setViewOffset(w, h, 0.17 * w, 0.1 * h, w, h);
+    else camera.clearViewOffset();
     camera.updateProjectionMatrix();
   }
   addEventListener('resize', resize);
-  resize();
+  setLayout('bottom');
 
   const look = new THREE.Vector3();
   let last = performance.now();
@@ -118,7 +134,7 @@ async function main() {
   });
 
   // Exposed for automated checks (tools/smoke.mjs).
-  window.__slice = { audio, tl, setMode, camera, ready: true };
+  window.__slice = { audio, tl, setMode, setLayout, camera, ready: true };
 }
 
 main().catch((e) => {

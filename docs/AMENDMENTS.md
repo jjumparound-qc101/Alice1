@@ -2,6 +2,18 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-10: Black and white with spot color from the text
+Status: Confirmed by the owner.
+
+This amends art-style decision 1 ("black-and-white ink, matching Tenniel's engravings"). The world stays black-and-white ink, but anything the text gives a color has that color. The rules are in [COLOR.md](COLOR.md).
+
+## 2026-10-10: Interim AI master drawings; NYPL scans; Godot comparison slice
+Status: Confirmed by the owner.
+
+- The three master drawings (Alice turnaround, riverbank, rabbit-hole shaft) are AI-generated for now in ChatGPT (OpenAI image generation) by the owner, using Tenniel plates as reference. Prompts are in [ART_PROMPTS.md](ART_PROMPTS.md). An artist may replace them later. This is a temporary change to item 2 of the hybrid art-source entry below.
+- Tenniel scan source: the NYPL Berg Collection copy of the 1866 Macmillan second edition (to be confirmed that high-resolution downloads are available).
+- Gate A: rebuild the riverbank slice in Godot 4 for a side-by-side comparison with three.js.
+
 ## 2026-10-10: The art source is hybrid (master drawings, then AI fill)
 Status: Confirmed by the owner.
 

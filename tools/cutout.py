@@ -13,6 +13,9 @@ Usage:
   python3 tools/cutout.py IN.jpg OUT.png [--scale 3] [--close 4] [--poly POLY.json]
 POLY.json is a hand-traced keep-polygon, [[x, y], ...] in the input image's pixels.
 Use it where the figure touches scenery (grass, furniture) that the fill would swallow.
+--spot SPOT.json adds spot color where the text names one (docs/COLOR.md):
+  [{"ellipse": [cx, cy, rx, ry], "color": "#d9849a", "why": "pink eyes"}, ...] in input pixels.
+  The color multiplies the engraving, so ink lines stay dark and the paper takes the color.
 Requires Pillow, NumPy and SciPy.
 """
 import argparse
@@ -34,6 +37,7 @@ def main():
     ap.add_argument("--paper", type=int, default=175, help="gray level above which a pixel is paper")
     ap.add_argument("--close", type=int, default=4, help="gap-closing radius, in input pixels")
     ap.add_argument("--poly", default=None, help="JSON keep-polygon in input pixels")
+    ap.add_argument("--spot", default=None, help="JSON list of spot-color ellipses in input pixels")
     a = ap.parse_args()
 
     img = Image.open(a.src).convert("L")
@@ -68,9 +72,19 @@ def main():
     # 5. Feather.
     alpha = Image.fromarray((sil * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(a.scale * 0.6))
 
+    rgb = np.stack([clean] * 3, axis=-1)
+    if a.spot:
+        for spot in json.load(open(a.spot)):
+            cx, cy, rx, ry = (v * a.scale for v in spot["ellipse"])
+            m = Image.new("L", big.size, 0)
+            ImageDraw.Draw(m).ellipse((cx - rx, cy - ry, cx + rx, cy + ry), fill=255)
+            k = np.asarray(m.filter(ImageFilter.GaussianBlur(a.scale)), dtype=np.float32)[..., None] / 255
+            tint = np.array([int(spot["color"][i:i + 2], 16) for i in (1, 3, 5)], dtype=np.float32)
+            rgb = rgb * (1 - k) + (rgb * tint / 255) * k
+
     ys, xs = np.nonzero(sil)
     box = (max(0, xs.min() - 4), max(0, ys.min() - 4), min(sil.shape[1], xs.max() + 5), min(sil.shape[0], ys.max() + 5))
-    rgba = Image.merge("RGBA", [Image.fromarray(clean.astype(np.uint8))] * 3 + [alpha]).crop(box)
+    rgba = Image.merge("RGBA", [Image.fromarray(rgb[..., i].astype(np.uint8)) for i in range(3)] + [alpha]).crop(box)
     rgba.save(a.dst, optimize=True)
     print(f"{a.dst}: {rgba.size[0]}x{rgba.size[1]}, figure covers {sil.mean():.1%} of the frame")
 

@@ -41,6 +41,23 @@ button:hover { background: var(--ink); color: var(--paper); }
 #page .w.now { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
 body[data-mode="explore"] #page { display: none; }
 
+/* Text layouts (L key or the Text button). */
+body[data-text="top"] #page { bottom: auto; top: 16px; }
+body[data-text="side"] #page {
+  left: auto; right: 16px; top: 16px; bottom: 64px; transform: none;
+  width: min(24rem, 34vw); max-height: none; padding: 1.4rem 1.5rem;
+  background: rgba(239, 233, 218, 0.96); box-shadow: -4px 4px 0 rgba(23, 20, 15, 0.15);
+}
+/* Phrases flow together as one paragraph; each paragraph starts on a new, indented line. */
+body[data-text="side"] #page .para { display: inline; }
+body[data-text="side"] #page .para::after { content: " "; }
+body[data-text="side"] #page .para.first::before { content: ""; display: block; height: 0.5em; }
+body[data-text="side"] #page .para.first .w:first-child { margin-left: 1.5em; }
+body[data-text="side"] #page .para[hidden] { display: none; }
+@media (max-width: 700px) {
+  body[data-text="side"] #page { left: 16px; right: 16px; width: auto; top: auto; max-height: 30vh; }
+}
+
 #controls { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 2; }
 
 #hint, #prompt {
