@@ -2,6 +2,15 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-10: Notes 1.0 staging choices (code only)
+Status: In effect; owner may revisit.
+
+- **Walk or run by speed.** Alice uses her stride drawings only when running (over 1 m/s, or where the text says she ran). Slower, she keeps the standing pose with a gentle bob, until walk-cycle art arrives.
+- **Held things follow the drawn hand.** Each pose records where its hand is drawn, and props she holds are placed there.
+- **Into the hall through black.** Scene changes can fade through paper (the default) or through black; the hall uses black, then lights up from dark.
+- **Thought vignettes** are oval cards beside Alice: the poker, knife, poison, candle, Dinah's milk, and cats and bats.
+- **Spot colours** lie over the ink rather than being multiplied into it, so they read brighter while the line work still shows.
+
 ## 2026-10-10: Navigation, spot-colour vibrance, Chapter II timing
 Status: Confirmed by the owner.
 

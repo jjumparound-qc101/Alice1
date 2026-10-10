@@ -11,6 +11,9 @@ The world is black-and-white ink, like Tenniel's engravings. **A thing has color
 7. **Not colors:** "dark", "bright", "brightened", "goldfish" (the word only; no color is stated), "blacking" (a polish, not a stated color).
 8. **White is still white.** White things (the White Rabbit, white kid gloves, white roses) are paper-white. Being named white means they stay unshaded.
 
+## How spot colour is drawn
+Rich and bright, with a slight glow (owner, Notes 1.0 #14): the colour lies over the ink instead of being multiplied into it, so lines still show. The key and the poker have a soft halo. Ink and paper are unchanged.
+
 ## Chapter I
 | Thing | Color | Text | Where it appears |
 |---|---|---|---|

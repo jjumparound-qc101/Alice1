@@ -2,9 +2,9 @@
 // the doors, the glass table and golden key, the curtain and little door, the garden,
 // "DRINK ME", shrinking, the forgotten key, crying, and "EAT ME".
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
+import { paperFlat, halo } from '../stage.js';
 import { texture, INK, PAPER } from '../ink.js';
-import { hallWall, flagstones, earth, lamp, curtain, littleDoor, garden, goldenKey, drinkMeBottle, eatMeCake, pokerVignette, knifeVignette, poisonVignette, candleVignette } from '../props.js';
+import { SPOT, hallWall, flagstones, earth, lamp, curtain, littleDoor, garden, goldenKey, drinkMeBottle, eatMeCake, pokerVignette, knifeVignette, poisonVignette, candleVignette } from '../props.js';
 import { thoughts } from '../thoughts.js';
 import { smooth, lerp, route, step, cameraTrack } from '../track.js';
 
@@ -74,6 +74,7 @@ export const hall = {
 
     const KEY = { w: 0.12, h: 0.045 }; // "a tiny golden key"
     const key = paperFlat(texture(goldenKey()), KEY.w, KEY.h, { anchor: 'center' });
+    key.add(halo(SPOT.gold, KEY.w * 1.6, 0.4)); // a slight glow
     const bottle = paperFlat(texture(drinkMeBottle()), 0.11, 0.22);
     const box = glass(new THREE.BoxGeometry(0.24, 0.12, 0.18));
     const cake = paperFlat(texture(eatMeCake()), 0.15, 0.094);

@@ -4,9 +4,10 @@
 import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, PAPER, INK } from './ink.js';
 
 export const SPOT = {
-  gold: '#c9a33b',    // "a tiny golden key"
-  redHot: '#d8401f',  // "a red-hot poker"
-  redGlow: '#ff7a3a', // its glowing tip
+  gold: '#ebb420',    // "a tiny golden key"
+  goldLight: '#ffe27a',
+  redHot: '#f0381a',  // "a red-hot poker"
+  redGlow: '#ff9a3c', // its glowing tip
 };
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;
@@ -150,7 +151,9 @@ export function goldenKey() {
   const k = new Path2D();
   k.arc(48, 48, 34, 0, Math.PI * 2); k.rect(80, 40, 140, 16); k.rect(186, 56, 14, 24); k.rect(206, 56, 14, 30);
   g.fillStyle = SPOT.gold; g.fill(k);
-  hatch(g, k, { angle: 0.8, gap: 6, seed: 161, alpha: 0.35 });
+  hatch(g, k, { angle: 0.8, gap: 7, seed: 161, alpha: 0.15 }); // a little engraving, but the gold shows
+  g.save(); g.clip(k); g.strokeStyle = SPOT.goldLight; g.lineWidth = 5; // a highlight along the top
+  g.beginPath(); g.arc(48, 48, 26, Math.PI * 1.1, Math.PI * 1.7); g.moveTo(84, 44); g.lineTo(214, 44); g.stroke(); g.restore();
   g.globalCompositeOperation = 'destination-out'; g.beginPath(); g.arc(48, 48, 16, 0, Math.PI * 2); g.fill(); g.globalCompositeOperation = 'source-over';
   g.strokeStyle = INK; g.lineWidth = 3; g.stroke(k); g.beginPath(); g.arc(48, 48, 16, 0, Math.PI * 2); g.stroke();
   return c;
@@ -223,7 +226,7 @@ export function pokerVignette() {
     const grate = new Path2D(); grate.rect(60, 250, 200, 110); hatch(g, grate, { angle: 0.8, gap: 4, seed: 191 }); outline(g, grate, 2);
     g.strokeStyle = INK; line(g, 12, [[420, 70], [220, 250]]); // handle and shaft
     const glow = g.createRadialGradient(200, 268, 4, 200, 268, 80);
-    glow.addColorStop(0, SPOT.redGlow); glow.addColorStop(1, 'rgba(255,60,20,0)');
+    glow.addColorStop(0, SPOT.redGlow); glow.addColorStop(0.45, 'rgba(240,56,26,0.55)'); glow.addColorStop(1, 'rgba(240,56,26,0)');
     g.fillStyle = glow; g.beginPath(); g.arc(200, 268, 80, 0, Math.PI * 2); g.fill();
     g.strokeStyle = SPOT.redHot; line(g, 14, [[250, 222], [185, 282]]);
     g.strokeStyle = SPOT.redGlow; line(g, 5, [[246, 226], [189, 278]]);

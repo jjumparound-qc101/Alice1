@@ -16,6 +16,8 @@ Use it where the figure touches scenery (grass, furniture) that the fill would s
 --spot SPOT.json adds spot color where the text names one (docs/COLOR.md):
   [{"ellipse": [cx, cy, rx, ry], "color": "#d9849a", "why": "pink eyes"}, ...] in input pixels.
   The color multiplies the engraving, so ink lines stay dark and the paper takes the color.
+  Add "over": 0..1 to let the color sit on top of the ink instead: lines keep that fraction of
+  the color's brightness (e.g. 0.4), so the spot reads richer while the line work still shows.
 Requires Pillow, NumPy and SciPy.
 """
 import argparse
@@ -80,7 +82,9 @@ def main():
             ImageDraw.Draw(m).ellipse((cx - rx, cy - ry, cx + rx, cy + ry), fill=255)
             k = np.asarray(m.filter(ImageFilter.GaussianBlur(a.scale)), dtype=np.float32)[..., None] / 255
             tint = np.array([int(spot["color"][i:i + 2], 16) for i in (1, 3, 5)], dtype=np.float32)
-            rgb = rgb * (1 - k) + (rgb * tint / 255) * k
+            over = spot.get("over")
+            colored = rgb * tint / 255 if over is None else tint * (over + (1 - over) * rgb / 255)
+            rgb = rgb * (1 - k) + colored * k
 
     ys, xs = np.nonzero(sil)
     box = (max(0, xs.min() - 4), max(0, ys.min() - 4), min(sil.shape[1], xs.max() + 5), min(sil.shape[0], ys.max() + 5))

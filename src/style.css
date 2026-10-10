@@ -43,7 +43,7 @@ button:disabled { opacity: 0.4; cursor: default; }
 button:disabled:hover { background: var(--paper); color: var(--ink); }
 
 #page {
-  position: fixed; left: 50%; bottom: 64px; transform: translateX(-50%);
+  position: fixed; left: 50%; bottom: 78px; transform: translateX(-50%);
   width: min(46rem, calc(100% - 32px)); max-height: 22vh; overflow-y: auto;
   background: rgba(239, 233, 218, 0.9); border: 1px solid var(--faint);
   padding: 0.6rem 1.2rem; font-size: clamp(1rem, 2.1vw, 1.2rem); line-height: 1.5; z-index: 2;
@@ -58,7 +58,7 @@ body[data-mode="explore"] #page { display: none; }
 /* Text layouts (L key or the Text button). */
 body[data-text="top"] #page { bottom: auto; top: 16px; }
 body[data-text="side"] #page {
-  left: auto; right: 16px; top: 16px; bottom: 64px; transform: none;
+  left: auto; right: 16px; top: 16px; bottom: 78px; transform: none;
   width: min(24rem, 34vw); max-height: none; padding: 1.4rem 1.5rem;
   background: rgba(239, 233, 218, 0.96); box-shadow: -4px 4px 0 rgba(23, 20, 15, 0.15);
 }
@@ -72,7 +72,7 @@ body[data-text="side"] #page .para[hidden] { display: none; }
   body[data-text="side"] #page { left: 16px; right: 16px; width: auto; top: auto; max-height: 30vh; }
 }
 
-#controls { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 2; }
+#controls { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 2; }
 
 #hint, #prompt {
   position: fixed; left: 50%; transform: translateX(-50%); margin: 0; z-index: 2;
@@ -80,7 +80,34 @@ body[data-text="side"] #page .para[hidden] { display: none; }
 }
 #hint { top: 16px; display: none; font-size: 0.95rem; max-width: calc(100% - 32px); overflow: hidden; text-overflow: ellipsis; }
 body[data-mode="explore"] #hint { display: block; }
-#prompt { bottom: 70px; font-style: italic; }
+#prompt { bottom: 84px; font-style: italic; }
+
+/* The timeline: the chapter's length, with a mark at each scene. Click or drag to seek. */
+#timeline { position: fixed; left: 16px; right: 16px; bottom: 4px; height: 20px; z-index: 2; cursor: pointer; touch-action: none; }
+#timeline .track { position: absolute; left: 0; right: 0; top: 9px; height: 3px; background: var(--faint); transition: top 0.15s, height 0.15s; }
+#timeline:hover .track, #timeline.drag .track { top: 7px; height: 7px; }
+#timeline .fill { height: 100%; width: 0; background: var(--ink); }
+#timeline .mark { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--ink); }
+#timeline .tip {
+  position: absolute; bottom: 22px; transform: translateX(-50%); white-space: nowrap; font-size: 0.9rem; pointer-events: none;
+  background: rgba(239, 233, 218, 0.95); border: 1px solid var(--faint); padding: 0 0.4em; visibility: hidden;
+}
+#timeline:hover .tip, #timeline.drag .tip { visibility: visible; }
+body[data-mode="explore"] #timeline { display: none; }
+
+#sceneMenu {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 6;
+  width: min(26rem, calc(100% - 32px)); max-height: calc(100% - 32px); overflow-y: auto; background: var(--paper); border: 2px solid var(--ink);
+  padding: 1.2rem 1.5rem; text-align: center; box-shadow: 6px 6px 0 rgba(23, 20, 15, 0.25);
+}
+#sceneMenu h2 { margin: 0 0 0.6em; font-weight: normal; font-style: italic; }
+#sceneMenu ol { list-style: none; padding: 0; margin: 0 0 1em; display: grid; gap: 6px; }
+#sceneMenu li button { width: 100%; display: flex; justify-content: space-between; gap: 1em; }
+#sceneMenu li button.here { background: var(--ink); color: var(--paper); }
+#sceneMenu .keys { color: var(--faint); font-size: 0.95rem; }
+.chooser { color: var(--faint); margin-top: 1.4em; }
+.chooser button { border: none; padding: 0 0.3em; text-decoration: underline; color: var(--ink); background: none; }
+.chooser button:hover { background: none; color: var(--ink); text-decoration-thickness: 2px; }
 
 #card {
   position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 4;

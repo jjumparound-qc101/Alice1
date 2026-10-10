@@ -26,14 +26,17 @@ export const riverbank = {
     const MOUTH = { x: HOLE.x, z: HOLE.z + 0.35 };
     const INSIDE = { x: HOLE.x + 0.05, z: set.holePos.z - 0.35 };
 
+    // Standing still he fidgets: mostly facing Alice, now and then turning to look away.
+    const fidget = (t) => (Math.floor(t / 2.3) % 3 === 2 ? 1 : -1);
+
     function rabbit(t) {
       const enter = T.rabbit - 0.4;
       if (t < enter) return { visible: false, pose: 'watch', x: -9, z: -1.6 };
       let s;
       if (t < T.ranClose + 1.4) s = path(t, enter, T.ranClose + 1.4, { x: -8, z: -1.5 }, MID);
-      else if (t < T.hurried) s = { ...MID, moving: false, dir: -1 };
+      else if (t < T.hurried) s = { ...MID, moving: false, dir: -1, idle: t }; // looking at his watch
       else if (t < T.hurried + 5) s = path(t, T.hurried, T.hurried + 5, MID, NEAR_HEDGE);
-      else if (t < T.pop - 1.4) s = { ...NEAR_HEDGE, moving: false, dir: -1 };
+      else if (t < T.pop - 1.4) s = { ...NEAR_HEDGE, moving: false, dir: fidget(t), idle: t };
       else if (t < T.pop - 0.2) s = path(t, T.pop - 1.4, T.pop - 0.2, NEAR_HEDGE, MOUTH);
       else s = hop(t, T.pop - 0.2, MOUTH, INSIDE, { dur: 0.5, peak: 0.25 }); // "pop down a large rabbit-hole"
       return { pose: 'watch', phase: t * 2.6, ...s };
@@ -48,7 +51,7 @@ export const riverbank = {
       else if (t < T.downWent) s = { ...WAIT, moving: false, dir: 1 };
       else if (t < T.downWent + 0.9) s = path(t, T.downWent, T.downWent + 0.9, WAIT, MOUTH);
       else s = hop(t, T.downWent + 0.9, MOUTH, INSIDE, { dur: 0.6, peak: 0.3, drop: 0.5 }); // "down went Alice after it"
-      return { pose: 'stand', phase: t * 2.2, ...s };
+      return { pose: 'stand', phase: t * 2.2, gait: 'run', ...s }; // "she ran across the field after it"
     }
 
     const camera = cameraTrack([

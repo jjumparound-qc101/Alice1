@@ -24,6 +24,7 @@
       <button id="continue" hidden>Continue</button>
       <button id="begin">Begin</button>
     </div>
+    <p class="chooser">Or start at: <span id="introScenes"></span></p>
   </section>
 
   <article id="page" aria-live="polite"></article>
@@ -33,7 +34,20 @@
     <button id="restartBtn">Restart</button>
     <button id="modeBtn">Explore</button>
     <button id="layoutBtn">Text: Bottom</button>
+    <button id="speedBtn" title="Reading speed (S)">1×</button>
+    <button id="scenesBtn" title="Scenes (M)">Scenes</button>
   </nav>
+
+  <div id="timeline" title="Click or drag to move through the chapter">
+    <div class="track"><div class="fill"></div></div>
+  </div>
+
+  <aside id="sceneMenu" hidden>
+    <h2>Chapter I · Scenes</h2>
+    <ol id="sceneList"></ol>
+    <p class="keys">← → a sentence back or on · Shift+← → a scene · S speed · M this menu</p>
+    <button id="sceneClose">Close</button>
+  </aside>
 
   <p id="hint">Explore: W A S D to walk · drag or ← → to look · E to inspect · Tab to return</p>
   <p id="prompt" hidden></p>

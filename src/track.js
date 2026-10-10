@@ -6,7 +6,8 @@ export const lerp = (a, b, k) => a + (b - a) * k;
 // Move from a to b ({x, z}) over [t0, t1].
 export function path(t, t0, t1, a, b) {
   const k = smooth((t - t0) / (t1 - t0));
-  return { x: lerp(a.x, b.x, k), z: lerp(a.z, b.z, k), moving: t > t0 && t < t1, dir: Math.sign(b.x - a.x) || -1 };
+  const speed = Math.hypot(b.x - a.x, b.z - a.z) / (t1 - t0); // average, metres per second
+  return { x: lerp(a.x, b.x, k), z: lerp(a.z, b.z, k), moving: t > t0 && t < t1, dir: Math.sign(b.x - a.x) || -1, speed };
 }
 
 // A route through waypoints: [[t, {x, z}], ...]. Holds still between legs whose

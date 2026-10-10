@@ -114,3 +114,22 @@ export function buildStage(scene, ai = {}) {
     ],
   };
 }
+
+// A soft halo of light, for spot colours that glow (docs/COLOR.md). Sits just behind a prop.
+let haloTex = null;
+export function halo(color, size, strength = 0.45) {
+  if (!haloTex) {
+    const c = document.createElement('canvas');
+    c.width = c.height = 128;
+    const g = c.getContext('2d');
+    const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.4, 'rgba(255,255,255,0.45)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = r; g.fillRect(0, 0, 128, 128);
+    haloTex = new THREE.CanvasTexture(c);
+  }
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({
+    map: haloTex, color, transparent: true, opacity: strength, depthWrite: false,
+  }));
+  m.position.z = -0.005;
+  return m;
+}

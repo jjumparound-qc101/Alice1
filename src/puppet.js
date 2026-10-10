@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { paperFlat } from './stage.js';
 
 const MAX_TURN = 0.6; // radians the cutout may turn toward the camera
+const RUN_SPEED = 1.0; // m/s: faster than this, a figure with stride drawings runs
 
 export class Puppet {
   // poses: { name: { tex, aspect, height?, facesLeft, hand? } }
@@ -28,13 +29,19 @@ export class Puppet {
   }
 
   // state: { pose, x, z, visible, moving, dir (+1 right / -1 left), sink (0..1), phase,
-  //          y (lift, metres), scale (1 = normal size), tilt (radians) }
+  //          y (lift, metres), scale (1 = normal size), tilt (radians),
+  //          speed (m/s), gait ('walk' | 'run': overrides the speed),
+  //          idle (seconds: standing-still life, a gentle rock and a bounce on the toes) }
   apply(s, camera) {
     this.root.visible = s.visible !== false;
     if (!this.root.visible) return;
-    // Running: while a standing figure moves, alternate its two stride drawings.
+    // Running: while a standing figure runs, alternate its two stride drawings. Walking
+    // slowly, it keeps the standing pose with a gentle bob (the stride reads oddly at walking pace).
     let pose = s.pose;
-    const striding = pose === 'stand' && s.moving && this.poses.run_a && this.poses.run_b;
+    const canStride = pose === 'stand' && s.moving && this.poses.run_a && this.poses.run_b;
+    const running = s.gait ? s.gait === 'run' : (s.speed ?? Infinity) >= RUN_SPEED;
+    const striding = canStride && running;
+    const strolling = canStride && !running;
     if (striding) pose = Math.floor(s.phase * 2) % 2 ? 'run_b' : 'run_a';
     if (pose !== this.pose) {
       if (this.pose) this.poses[this.pose].visible = false;
@@ -42,11 +49,19 @@ export class Puppet {
       this.pose = pose;
     }
     const flat = this.poses[pose];
-    const hop = s.moving ? Math.abs(Math.sin(s.phase * Math.PI * 2)) * (striding ? 0.04 : 0.12) * this.height : 0;
-    const rock = s.moving ? Math.sin(s.phase * Math.PI * 2) * 0.06 : 0;
+    const lift = striding ? 0.04 : strolling ? 0.012 : 0.12;
+    const beat = s.phase * Math.PI * 2 * (strolling ? 0.5 : 1); // a walk is about two steps a second
+    const hop = s.moving ? Math.abs(Math.sin(beat)) * lift * this.height : 0;
+    let rock = s.moving ? Math.sin(beat) * (strolling ? 0.025 : 0.06) : 0;
+    let bounce = 0;
+    if (s.idle !== undefined && !s.moving) {
+      rock = Math.sin(s.idle * 2.1) * 0.05; // about ±3°
+      const k = (s.idle % 1.4) / 0.28; // a little bounce on his toes every 1.4 s
+      if (k < 1) bounce = Math.sin(k * Math.PI) * 0.025 * this.height;
+    }
     const scale = s.scale ?? 1;
     this.root.scale.setScalar(scale);
-    this.root.position.set(s.x, (s.y ?? 0) + hop * scale - (s.sink ?? 0) * this.height * scale * 1.1, s.z);
+    this.root.position.set(s.x, (s.y ?? 0) + (hop + bounce) * scale - (s.sink ?? 0) * this.height * scale * 1.1, s.z);
     flat.rotation.z = rock + (s.tilt ?? 0);
     // Mirror so the figure faces its direction of travel.
     const facingLeft = (s.dir ?? -1) < 0;

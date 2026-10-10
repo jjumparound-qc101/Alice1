@@ -5,10 +5,13 @@ import { smooth } from './track.js';
 import { Page } from './narration.js';
 import { Explorer } from './explore.js';
 import { PerfMeter } from './perf.js';
+import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { CHAPTER_1 } from './scenes/index.js';
 
 const $ = (id) => document.getElementById(id);
 const SAVE_KEY = 'alice.place.v1';
+const SPEED_KEY = 'alice.speed.v1';
+const SPEEDS = [1, 1.25, 1.5, 2];
 
 async function loadTexture(url) {
   const t = await new THREE.TextureLoader().loadAsync(url);
@@ -120,6 +123,72 @@ async function main() {
     audio.currentTime = t;
     play(audio);
   }
+  // Moving through the chapter: scrubber, skip keys, reading speed and the scene menu.
+  // `resume` plays after the seek; otherwise the narration keeps its playing/paused state.
+  function seek(t, resume = !audio.paused) {
+    audio.currentTime = Math.max(0, Math.min(t, cue.end + 0.9));
+    if (mode === 'watch' && resume && t < cue.end) play(audio);
+  }
+  const sentences = sentenceStarts(words);
+  const sceneStarts = scenes.map((s) => s.start);
+  const timeline = new Timeline($('timeline'), {
+    duration: cue.end + 0.9,
+    marks: scenes.map((s) => ({ t: s.start, title: s.def.title })),
+    onSeek: (() => { let was = false, dragging = false; // hold the narration while dragging
+      return (t, done) => {
+        if (!dragging) { was = !audio.paused; dragging = true; audio.pause(); }
+        seek(t, false);
+        if (done) { dragging = false; if (was) seek(t, true); }
+      }; })(),
+  });
+
+  function setSpeed(r) {
+    audio.playbackRate = r;
+    audio.preservesPitch = true; // faster, not higher
+    $('speedBtn').textContent = `${r}×`;
+    try { localStorage.setItem(SPEED_KEY, String(r)); } catch {}
+  }
+  let savedSpeed = 1;
+  try { savedSpeed = Number(localStorage.getItem(SPEED_KEY)) || 1; } catch {}
+  setSpeed(SPEEDS.includes(savedSpeed) ? savedSpeed : 1);
+  $('speedBtn').addEventListener('click', () => setSpeed(SPEEDS[(SPEEDS.indexOf(audio.playbackRate) + 1) % SPEEDS.length]));
+
+  // The scene menu, from the controls (pausing the reading) and on the start screen.
+  let menuResume = false;
+  function openMenu() {
+    menuResume = !audio.paused;
+    audio.pause();
+    const here = sceneAt(audio.currentTime);
+    $('sceneList').querySelectorAll('button').forEach((b, i) => b.classList.toggle('here', scenes[i] === here));
+    $('sceneMenu').hidden = false;
+  }
+  function closeMenu(resume = menuResume) {
+    $('sceneMenu').hidden = true;
+    if (resume && mode === 'watch' && !atEnd()) play(audio);
+  }
+  function goToScene(s) {
+    closeMenu(false);
+    endDismissed = false;
+    if (mode !== 'watch') setMode('watch');
+    if (!$('intro').hidden) begin(s.start); else seek(s.start, true);
+  }
+  scenes.forEach((s) => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.innerHTML = `<span></span><span></span>`;
+    b.children[0].textContent = s.def.title;
+    b.children[1].textContent = clock(s.start);
+    b.addEventListener('click', () => goToScene(s));
+    li.append(b);
+    $('sceneList').append(li);
+    const ib = document.createElement('button');
+    ib.textContent = s.def.title;
+    ib.addEventListener('click', () => goToScene(s));
+    $('introScenes').append(ib);
+  });
+  $('scenesBtn').addEventListener('click', () => ($('sceneMenu').hidden ? openMenu() : closeMenu()));
+  $('sceneClose').addEventListener('click', () => closeMenu());
+
   const saved = place.load();
   if (saved?.t > 5 && saved.t < cue.end - 2) {
     $('continue').hidden = false;
@@ -142,7 +211,14 @@ async function main() {
     if (!$('intro').hidden) return;
     if (e.code === 'Tab') { e.preventDefault(); setMode(mode === 'watch' ? 'explore' : 'watch'); }
     if (e.code === 'KeyE' && mode === 'explore') { const h = explorer.facing(active.hotspots); h ? openCard(h) : closeCard(); }
-    if (e.code === 'Escape') closeCard();
+    if (e.code === 'Escape') { closeCard(); if (!$('sceneMenu').hidden) closeMenu(); }
+    if (e.code === 'KeyM') $('scenesBtn').click();
+    if (e.code === 'KeyS' && mode === 'watch') $('speedBtn').click();
+    if ((e.code === 'ArrowLeft' || e.code === 'ArrowRight') && mode === 'watch' && $('sceneMenu').hidden) {
+      e.preventDefault();
+      const to = skip(e.shiftKey ? sceneStarts : sentences, audio.currentTime, e.code === 'ArrowLeft' ? -1 : 1, e.shiftKey ? 3 : 1.5);
+      if (to !== null) { endDismissed = false; seek(to); }
+    }
     if (e.code === 'KeyL') $('layoutBtn').click();
     if (e.code === 'Space' && mode === 'watch' && $('endCard').hidden) { e.preventDefault(); $('playBtn').click(); }
   });
@@ -226,6 +302,7 @@ async function main() {
 
     lightUp(t);
     page.update(t);
+    timeline.update(t);
     const turns = turnsAt(t);
     $('turn').style.opacity = turns.turn;
     $('dark').style.opacity = turns.dark;
