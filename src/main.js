@@ -14,6 +14,7 @@ import { pigeon } from './props5.js';
 import { footman, duchess, cook, pig } from './props6.js';
 import { hatter, marchHare } from './props7.js';
 import { card } from './props8.js';
+import { gryphon, mockTurtle } from './props9.js';
 import { mouseUp, mouseWalk, dodoStand, duckStand, loryStand, eagletStand, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
 
 const $ = (id) => document.getElementById(id);
@@ -156,10 +157,13 @@ async function main() {
     // Chapter VIII placeholders: the cards (props8.js). The suits stay ink (owner, 2026-10-10).
     ...Object.fromEntries([['two', 2], ['five', 5], ['seven', 7]].map(([name, rank]) => [name, new Puppet(Object.fromEntries(
       ['stand', 'paint', 'bow', 'kneel', 'run'].map((p) => [p, drawn(card({ suit: 'spades', rank }, p), 0.28)])), 0.28)])),
-    queen: new Puppet(Object.fromEntries(['stand', 'point', 'flush', 'stamp'].map((p) => [p, drawn(card({ suit: 'hearts', rank: 'queen' }, p), 0.32)])), 0.32),
+    queen: new Puppet(Object.fromEntries(['stand', 'point', 'flush', 'stamp', 'folded'].map((p) => [p, drawn(card({ suit: 'hearts', rank: 'queen' }, p), 0.32)])), 0.32),
     king: new Puppet({ stand: drawn(card({ suit: 'hearts', rank: 'king' }, 'stand'), 0.32) }, 0.32),
     knave: new Puppet({ carry: drawn(card({ suit: 'hearts', rank: 'knave' }, 'carry'), 0.3), stand: drawn(card({ suit: 'hearts', rank: 'knave' }, 'stand'), 0.3) }, 0.3),
     executioner: new Puppet({ axe: drawn(card({ suit: 'spades', rank: 'executioner' }, 'axe'), 0.32) }, 0.32),
+    // Chapter IX placeholders (props9.js).
+    gryphon: new Puppet(Object.fromEntries(['asleep', 'sit', 'walk', 'paws', 'hide'].map((p) => [p, drawn(gryphon(p), p === 'asleep' ? 0.5 : 0.36)])), 0.36),
+    mockTurtle: new Puppet(Object.fromEntries(['sit', 'sob', 'count', 'hide', 'walk'].map((p) => [p, drawn(mockTurtle(p), 0.3)])), 0.3),
     puppy: new Puppet({ stand: drawn(puppy('stand'), 0.75), sit: drawn(puppy('sit'), 0.8) }, 0.75),
   };
   Object.values(cast).forEach((p) => scene.add(p.root));

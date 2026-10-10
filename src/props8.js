@@ -42,7 +42,7 @@ function crown(g, x, y, w) {
 
 // A card person: "oblong and flat, with their hands and feet at the corners", a small head
 // on top. who: { suit, rank (number) | 'all' (ornamented all over) | 'king' | 'queen' | 'knave' |
-// 'executioner' }. pose: stand, walk, paint, bow, kneel, point, flush, stamp, carry, axe, run.
+// 'executioner' }. pose: stand, walk, paint, bow, kneel, point, flush, stamp, folded, carry, axe, run.
 export function card(who, pose = 'stand') {
   const { c, g } = canvas(300, 460);
   const B = { x: 70, y: 130, w: 160, h: 240 }; // the card body
@@ -80,6 +80,7 @@ export function card(who, pose = 'stand') {
     point: [[[B.x, B.y + 10], [B.x - 70, B.y - 30]], [[B.x + B.w, B.y + 10], [B.x + B.w + 25, B.y + 80], [B.x + B.w, B.y + 120]]],
     flush: [[[B.x, B.y + 10], [B.x - 70, B.y - 30]], [[B.x + B.w, B.y + 10], [B.x + B.w + 25, B.y + 80], [B.x + B.w, B.y + 120]]],
     stamp: [[[B.x, B.y + 10], [B.x - 40, B.y - 50]], [[B.x + B.w, B.y + 10], [B.x + B.w + 40, B.y - 50]]],
+    folded: [[[B.x, B.y + 10], [B.x + 30, B.y + 60], [B.x + B.w - 20, B.y + 50]], [[B.x + B.w, B.y + 10], [B.x + B.w - 30, B.y + 70], [B.x + 20, B.y + 64]]],
     carry: [[[B.x, B.y + 10], [B.x - 40, B.y + 60], [B.x - 60, B.y + 50]], [[B.x + B.w, B.y + 10], [B.x + B.w + 20, B.y + 90]]],
     axe: [[[B.x, B.y + 10], [B.x - 30, B.y + 80]], [[B.x + B.w, B.y + 10], [B.x + B.w + 30, B.y + 80]]],
     run: [[[B.x, B.y + 10], [B.x - 50, B.y - 30]], [[B.x + B.w, B.y + 10], [B.x + B.w + 50, B.y - 20]]],
@@ -111,7 +112,7 @@ export function card(who, pose = 'stand') {
   if (who.rank === 'king') { const beard = new Path2D(); beard.moveTo(hx - 34, hy + 10); beard.quadraticCurveTo(hx - 30, hy + 70, hx + 10, hy + 40); beard.lineTo(hx + 20, hy + 20); beard.closePath(); fillPaper(g, beard); flicks(g, beard, { count: 60, len: 8, seed: 1651 }); outline(g, beard, 2); }
   if (who.rank === 'knave') { const cap = new Path2D(); cap.moveTo(hx - 40, hy - 26); cap.quadraticCurveTo(hx, hy - 70, hx + 34, hy - 24); cap.closePath(); panel(g, cap, 1652, 0.6, 4, 0.6); }
   if (who.rank === 'executioner') { const hood = new Path2D(); hood.moveTo(hx - 40, hy + 10); hood.lineTo(hx - 30, hy - 46); hood.quadraticCurveTo(hx, hy - 60, hx + 30, hy - 40); hood.lineTo(hx + 32, hy + 20); hood.closePath(); g.fillStyle = INK; g.fill(hood); dot(g, hx - 18, hy - 6, 5, PAPER); }
-  if (pose === 'flush' || pose === 'point' || pose === 'stamp') { /* the Queen's eyes glare */ line(g, 3, [[hx - 28, hy - 16], [hx - 10, hy - 12]]); }
+  if (pose === 'flush' || pose === 'point' || pose === 'stamp' || pose === 'folded') { /* the Queen's eyes glare */ line(g, 3, [[hx - 28, hy - 16], [hx - 10, hy - 12]]); }
   return c;
 }
 // A card lying flat on its face: only the back shows, "the same as the rest of the pack".

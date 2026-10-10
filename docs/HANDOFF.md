@@ -6,7 +6,7 @@ Updated: 2026-10-10 (end of session). For the next Claude Code session (or anyon
 
 ## Where the project stands
 - **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly). Unstaged chapters play on an engraved title page with the text in sync.
-- **Chapters I–VIII are staged** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
+- **Chapters I–IX are staged** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
 - **Art**: 8 of 257 AI images received (hall floor, lamp, curtain, little door, glass table, Alice walking A/B, Alice jumping), plus the earlier riverbank/shaft masters and Alice's model sheet. Everything else is a placeholder.
 
 | Chapter | Asset list | Staged | Scenes (`src/scenes/`) |
@@ -19,13 +19,15 @@ Updated: 2026-10-10 (end of session). For the next Claude Code session (or anyon
 | VI Pig and Pepper | CHAPTER_06_ASSETS.md | ✓ | `duchess.js`: `doorstep`, `kitchen`, `wood6` |
 | VII A Mad Tea-Party | CHAPTER_07_ASSETS.md | ✓ | `teaParty.js`: `teaParty`, `hallAgain`, `garden` |
 | VIII The Queen's Croquet-Ground | CHAPTER_08_ASSETS.md | ✓ | `croquet.js`: `roseTree`, `croquet` (set: `src/sets/croquet.js`) |
-| IX–XII | — | — | title pages |
+| IX The Mock Turtle's Story | CHAPTER_09_ASSETS.md | ✓ | `mockTurtle.js`: `duchessWalk`, `gryphon`, `mockTurtle` (set: `src/sets/seashore.js`) |
+| X The Lobster Quadrille | CHAPTER_10_ASSETS.md | — | |
+| XI–XII | — | — | title pages |
 
 ## Open decisions for the owner
 None. (Chapter VIII card suits: ink, owner 2026-10-10.)
 
 ## Next steps, in order
-1. Chapters IX–XII the same way (Chapter IX starts on the croquet-ground: reuse `src/sets/croquet.js`): asset list → master list → stage.
+1. Chapters X–XII the same way (Chapter X is on the seashore: reuse `src/sets/seashore.js`): asset list → master list → stage.
 2. **Drop in art as the owner sends it** (see "When art arrives"). The owner sends art in batches.
 3. Later, after the whole book (owner's decision): low-end hardware test, code signing, high-resolution Tenniel scans (NYPL/British Library; Victorian Web images are only 432 px tall).
 
@@ -70,8 +72,9 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 | `src/scenes/*.js` | One file per chapter (see the table). A scene: `start(cue)`, optional `parts(cue)` (named marks for the contents/timeline/Shift+arrows), `turn`, and `build()` → `{ T, bg, fog, bounds, hotspots, camera(t), actors(t), update?(t, cast) }`. `placeholder.js`: the title page |
 | `src/sets/hall.js` | The hall set, shared by Chapters I, II, III, VII |
 | `src/sets/croquet.js` | The Queen's garden: rose-tree, flower-pot, croquet-ground (Chapters VIII, IX) |
+| `src/sets/seashore.js` | The seashore: sand, sea, the Mock Turtle's rock and ledge (Chapters IX, X) |
 | `src/crowd.js` | Scene-only puppets ("extras": processions, crowds), posed in a scene's `update(t, cast, camera)` |
-| `src/props.js` … `props8.js` | Placeholder art drawn in code, per chapter (props.js = Chapter I and shared helpers: `vignette`, `shape`, `line`, `cat`, `SPOT` colours) |
+| `src/props.js` … `props9.js` | Placeholder art drawn in code, per chapter (props.js = Chapter I and shared helpers: `vignette`, `shape`, `line`, `cat`, `SPOT` colours) |
 | `src/puppet.js` | Paper-cutout puppets: poses swapped by name; `x z y scale tilt dir`, walking by distance (`walk_a`/`walk_b`), `idle`, `float` (swimmers); `handPoint()` and `carry(obj, puppet)` for held props |
 | `src/thoughts.js` | Thought vignettes (oval cards that pop open while the text speaks of them) |
 | `src/cues.js` | `at(word, n, after)` and `para(text)` |
