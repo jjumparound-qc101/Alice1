@@ -7,6 +7,8 @@ import { Explorer } from './explore.js';
 import { PerfMeter } from './perf.js';
 import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { CHAPTERS } from './chapters.js';
+import { texture } from './ink.js';
+import { mouseSwim, mouseLeap, duckSwim, dodoSwim, lorySwim, eagletSwim } from './props2.js';
 
 const $ = (id) => document.getElementById(id);
 const SAVE_KEY = 'alice.place.v2';
@@ -79,6 +81,8 @@ async function main() {
     c.wordsData = wordsList[i];
     c.cue = makeCues(c.wordsData);
     c.starts = c.scenes.map((def) => def.start(c.cue));
+    // Marks: each scene, and the named parts within it (for the contents, the timeline and Shift+arrows).
+    c.marks = c.scenes.flatMap((def, i) => [{ title: def.title, t: c.starts[i] }, ...(def.parts?.(c.cue) ?? [])]);
   });
   function build(c) {
     if (c.built) return c.built;
@@ -92,10 +96,12 @@ async function main() {
     const flat = words.paragraphs.flat();
     const sentences = sentenceStarts(words);
     const lastSentence = flat.filter((w) => w.s >= sentences[sentences.length - 1]).map((w) => w.t).join(' ');
-    c.built = { scenes, cue: c.cue, words, sentences, sceneStarts: scenes.map((s) => s.start), lastSentence };
+    c.built = { scenes, cue: c.cue, words, sentences, sceneStarts: c.marks.map((m) => m.t), lastSentence };
     return c.built;
   }
 
+  // A pose drawn in code: { tex, aspect, height, facesLeft }.
+  const drawn = (c, height) => ({ tex: texture(c), aspect: c.width / c.height, height, facesLeft: true });
   // Shared cast.
   const cast = {
     rabbit: new Puppet({ watch: { ...rabbitArt, facesLeft: true } }, 0.85),
@@ -108,6 +114,13 @@ async function main() {
       jump: { ...posed.jump, hand: [0.03, 0.37] },
     }, ALICE_H),
     sister: new Puppet({ read: { ...ai.sister_read, facesLeft: false, height: 1.05 } }, 1.05),
+    // Chapter II placeholders (props2.js), sized for a tiny Alice: swimmers show only what
+    // is above the water.
+    mouse: new Puppet({ swim: drawn(mouseSwim(), 0.05), leap: drawn(mouseLeap(), 0.09) }, 0.05),
+    duck: new Puppet({ swim: drawn(duckSwim(), 0.07) }, 0.07),
+    dodo: new Puppet({ swim: drawn(dodoSwim(), 0.11) }, 0.11),
+    lory: new Puppet({ swim: drawn(lorySwim(), 0.065) }, 0.065),
+    eaglet: new Puppet({ swim: drawn(eagletSwim(), 0.065) }, 0.065),
   };
   Object.values(cast).forEach((p) => scene.add(p.root));
 
@@ -147,7 +160,7 @@ async function main() {
     if (active) { active.group.visible = false; active = null; }
     page = new Page($('page'), ch.words, (t) => { audio.currentTime = t; if (mode === 'watch') play(audio); });
     page.setLayout(layout);
-    timeline.set(ch.cue.end + 0.9, ch.scenes.map((s) => ({ t: s.start, title: s.def.title })));
+    timeline.set(ch.cue.end + 0.9, c.marks);
     const next = CHAPTERS[c.n];
     $('endQuote').textContent = `“${ch.lastSentence.replace(/^[“"]|[”"]$/g, '')}”`;
     $('endTitle').textContent = `Chapter ${c.roman} complete`;
@@ -236,16 +249,16 @@ async function main() {
     h.append(hb);
     if (!c.narrated) h.insertAdjacentHTML('beforeend', ' <span class="later">(coming)</span>');
     $('contents').append(h);
-    if (!c.narrated || !c.starts || c.scenes.length < 2) continue;
+    if (!c.narrated || !c.marks || c.marks.length < 2) continue;
     const ol = document.createElement('ol');
-    c.scenes.forEach((def, i) => {
+    c.marks.forEach((m) => {
       const li = document.createElement('li');
       const b = document.createElement('button');
       b.innerHTML = '<span></span><span></span>';
-      b.children[0].textContent = def.title;
-      b.children[1].textContent = clock(c.starts[i]);
-      b.addEventListener('click', () => begin(c, c.starts[i]));
-      sceneButtons.push({ b, c, i });
+      b.children[0].textContent = m.title;
+      b.children[1].textContent = clock(m.t);
+      b.addEventListener('click', () => begin(c, m.t));
+      sceneButtons.push({ b, c, m });
       li.append(b);
       ol.append(li);
     });
@@ -255,8 +268,9 @@ async function main() {
   function openMenu() {
     menuResume = !audio.paused;
     audio.pause();
-    const here = ch && sceneAt(audio.currentTime);
-    sceneButtons.forEach(({ b, c, i }) => b.classList.toggle('here', c === chapter && ch.scenes[i] === here));
+    const t = audio.currentTime;
+    const here = chapter?.marks.reduce((cur, m) => (t >= m.t ? m : cur), chapter.marks[0]);
+    sceneButtons.forEach(({ b, m }) => b.classList.toggle('here', m === here));
     $('sceneMenu').hidden = false;
   }
   function closeMenu(resume = menuResume) {
@@ -272,7 +286,7 @@ async function main() {
   const savedCh = CHAPTERS.find((c) => c.n === saved?.chapter && c.narrated);
   const savedT = savedCh ? saved.times?.[savedCh.n] ?? 0 : 0;
   if (savedCh && (savedT > 5 || savedCh.n > 1) && savedT < savedCh.cue.end - 2) {
-    const sceneTitle = savedCh.scenes[savedCh.starts.reduce((k, s, i) => (savedT >= s ? i : k), 0)].title;
+    const sceneTitle = savedCh.marks.reduce((cur, m) => (savedT >= m.t ? m : cur), savedCh.marks[0]).title;
     $('continue').hidden = false;
     $('continue').textContent = `Continue (Chapter ${savedCh.roman}: ${sceneTitle}, ${clock(savedT)})`;
     $('continue').addEventListener('click', () => begin(savedCh, savedT));

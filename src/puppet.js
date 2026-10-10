@@ -31,6 +31,7 @@ export class Puppet {
   // state: { pose, x, z, visible, moving, dir (+1 right / -1 left), sink (0..1), phase,
   //          y (lift, metres), scale (1 = normal size), tilt (radians),
   //          dist (metres walked along the current leg, from track.js),
+  //          float (true: swimming; bobs on the water instead of walking or hopping),
   //          idle (seconds: standing-still life, a gentle rock and a bounce on the toes) }
   apply(s, camera) {
     this.root.visible = s.visible !== false;
@@ -40,7 +41,7 @@ export class Puppet {
     // speed or size. Without walk drawings, the standing pose bobs. (The composed running
     // poses are retired: their legs read wrongly in motion. Owner, 2026-10-10.)
     let pose = s.pose;
-    const walking = pose === 'stand' && s.moving;
+    const walking = pose === 'stand' && s.moving && !s.float;
     const steps = walking ? (s.dist !== undefined ? s.dist / (STEP * this.height * (s.scale ?? 1)) : s.phase) : 0;
     if (walking && this.poses.walk_a) pose = Math.floor(steps) % 2 ? (this.poses.walk_b ? 'walk_b' : 'stand') : 'walk_a';
     if (pose !== this.pose) {
@@ -50,10 +51,11 @@ export class Puppet {
     }
     const flat = this.poses[pose];
     // A walk rises a little mid-step; anything else that moves (the Rabbit) hops.
-    const hop = !s.moving ? 0 : walking
+    const hop = s.float ? Math.sin((s.phase ?? 0) * Math.PI * 2) * 0.03 * this.height
+      : !s.moving ? 0 : walking
       ? Math.sin((steps % 1) * Math.PI) * 0.01 * this.height
       : Math.abs(Math.sin(s.phase * Math.PI * 2)) * 0.12 * this.height;
-    let rock = !s.moving ? 0 : walking ? Math.sin(steps * Math.PI) * 0.02 : Math.sin(s.phase * Math.PI * 2) * 0.06;
+    let rock = s.float ? Math.sin((s.phase ?? 0) * Math.PI) * 0.04 : !s.moving ? 0 : walking ? Math.sin(steps * Math.PI) * 0.02 : Math.sin(s.phase * Math.PI * 2) * 0.06;
     let bounce = 0;
     if (s.idle !== undefined && !s.moving) {
       rock = Math.sin(s.idle * 2.1) * 0.05; // about ±3°
@@ -82,4 +84,13 @@ export class Puppet {
     this.root.updateMatrixWorld(true);
     return flat.localToWorld(out.set((u - 0.5) * w, (1 - v) * h, 0.03));
   }
+}
+
+// Things a figure carries sit at the hand drawn in its current pose, in front of its card,
+// turned with it toward the camera. `drop` lowers a bottom-anchored prop into the grip.
+const held = new THREE.Vector3();
+export function carry(obj, puppet, { drop = 0, tilt = 0 } = {}) {
+  puppet.handPoint(held);
+  obj.position.set(held.x, held.y - drop * puppet.root.scale.y, held.z);
+  obj.rotation.set(0, puppet.root.rotation.y, tilt);
 }

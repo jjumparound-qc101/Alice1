@@ -2,7 +2,7 @@
 Updated: 2026-10-10. For the next Claude Code session (or anyone) picking up the work.
 
 ## The project in one paragraph
-*Alice's Adventures in Wonderland* as an interactive novel for Steam (a "Library of Living Books" title). The book's text is shown in sync with the LibriVox full-cast reading, staged as a 2.5D Victorian toy theater: flat engraving-style cutouts in layered 3D sets, with a moving camera (Watch mode) and free walking with a 90° look arc (Explore mode). Black-and-white ink, except things the text gives a colour (docs/COLOR.md). Engine: three.js + Vite, wrapped in Electron for desktop and Steam (Gate A: docs/GATE_A.md). Chapter I plays start to finish as a rough cut.
+*Alice's Adventures in Wonderland* as an interactive novel for Steam (a "Library of Living Books" title). The book's text is shown in sync with the LibriVox full-cast reading, staged as a 2.5D Victorian toy theater: flat engraving-style cutouts in layered 3D sets, with a moving camera (Watch mode) and free walking with a 90° look arc (Explore mode). Black-and-white ink, except things the text gives a colour (docs/COLOR.md). Engine: three.js + Vite, wrapped in Electron for desktop and Steam (Gate A: docs/GATE_A.md). Chapters I and II play start to finish as rough cuts (docs/CHAPTER_01_ROUGHCUT.md, CHAPTER_02_ROUGHCUT.md); every narrated chapter is readable from the contents.
 
 ## The owner
 Works on Windows, with VS Code and GitHub; not a programmer. They prefer brief, kind, factual replies with honest pushback, and decisions put to them with a recommendation. They generate the AI art in ChatGPT and upload it; you write the prompts (docs/ART_PROMPTS.md). They test the web link and the Windows build from GitHub Actions.
@@ -19,7 +19,9 @@ Works on Windows, with VS Code and GitHub; not a programmer. They prefer brief, 
 |---|---|
 | `src/main.js` | Book engine: loads shared art, opens a chapter (builds its sets on first open, points narration, text, timeline and end card at it), picks the active scene by narration time, scene turns, Watch/Explore, saves the place per chapter (localStorage), contents menu, text layouts, chapter end |
 | `src/chapters.js` | The twelve chapters: titles, which are narrated (`NARRATED`) and which are staged (`STAGED`); unstaged chapters play on `scenes/placeholder.js` (their title page) |
-| `src/scenes/*.js` | `riverbank`, `shaft` (the fall), `passage`, `hall`. Each has `start(cue)` and `build()`, which returns `{ T, bg, fog, bounds, hotspots, camera(t), actors(t), update?(t) }` |
+| `src/scenes/*.js` | Chapter I: `riverbank`, `shaft` (the fall), `passage`, `hall`. Chapter II: `pool`. `placeholder` (title page for unstaged chapters). Each has `start(cue)`, optional `parts(cue)` (named marks), and `build()`, which returns `{ T, bg, fog, bounds, hotspots, camera(t), actors(t), update?(t, cast) }` |
+| `src/sets/hall.js` | The hall set, shared by Chapters I and II |
+| `src/props2.js` | Chapter II placeholders drawn in code (Mouse, birds, gloves, fan, water, vignettes) |
 | `src/cues.js` | `at(word, n, after)`: time of the n-th occurrence of a word. **Count occurrences carefully**: "box" #1 is "box her own ears"; "telescope" vs "telescopes". Prefer an `after` anchor |
 | `src/track.js` | `smooth`, `path`, `route` (waypoints), `cameraTrack` (eased keys) |
 | `src/puppet.js` | Paper-cutout puppets: whole-figure poses swapped by name. Supports `y`, `scale`, `tilt`, `sink`. Alternates `run_a`/`run_b` while a standing figure moves |

@@ -74,7 +74,7 @@ def little_door():
                      # The leaf's outline as fractions of its own box (u right, v down), to clip
                      # the garden seen through the open door to the same arch.
                      "arch": [[round((x - lbox[0]) / (lbox[2] - lbox[0]), 4), round((y - lbox[1]) / (lbox[3] - lbox[1]), 4)]
-                              for x, y in INNER[::2]]}}
+                              for x, y in INNER[::2] + [INNER[-1]]]}}
 
 
 def main():

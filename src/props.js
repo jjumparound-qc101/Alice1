@@ -8,6 +8,7 @@ export const SPOT = {
   goldLight: '#ffe27a',
   redHot: '#f0381a',  // "a red-hot poker"
   redGlow: '#ff9a3c', // its glowing tip
+  brown: '#9a6232',   // the terrier's "long curly brown hair" (Chapter II, a thought)
 };
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;
@@ -185,7 +186,7 @@ export function eatMeCake() {
 
 // Thought vignettes: things Alice imagines, drawn in an oval frame with a line of the
 // text beneath the top edge. `draw(g)` inks the picture inside the oval (512 × 360).
-function vignette(caption, draw) {
+export function vignette(caption, draw) {
   const { c, g } = canvas(512, 360);
   const v = new Path2D(); v.ellipse(256, 180, 246, 170, 0, 0, Math.PI * 2);
   fillPaper(g, v); outline(g, v, 4);
@@ -196,11 +197,11 @@ function vignette(caption, draw) {
   g.fillStyle = INK; g.font = FONT(22, true); g.textAlign = 'center'; g.fillText(caption, 256, 40);
   return c;
 }
-const line = (g, w, pts) => { g.lineWidth = w; g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.stroke(); };
-const shape = (g, p, seed, opts = {}) => { fillPaper(g, p); shadeEdge(g, p, { size: 120, dx: -0.15, dy: -0.1, angle: 0.9, gap: 4, seed, ...opts }); outline(g, p, 3); };
+export const line = (g, w, pts) => { g.lineWidth = w; g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.stroke(); };
+export const shape = (g, p, seed, opts = {}) => { fillPaper(g, p); shadeEdge(g, p, { size: 120, dx: -0.15, dy: -0.1, angle: 0.9, gap: 4, seed, ...opts }); outline(g, p, 3); };
 
 // A cat in profile, sitting: the head, ears, back and tail in a few strokes.
-function cat(g, x, y, s, seed) {
+export function cat(g, x, y, s, seed) {
   const body = new Path2D();
   body.moveTo(x, y); body.bezierCurveTo(x - 60 * s, y, x - 70 * s, y - 70 * s, x - 30 * s, y - 100 * s);
   body.lineTo(x - 28 * s, y - 130 * s); body.lineTo(x - 14 * s, y - 116 * s); body.lineTo(x + 2 * s, y - 132 * s); body.lineTo(x + 6 * s, y - 104 * s);

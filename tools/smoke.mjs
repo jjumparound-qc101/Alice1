@@ -60,6 +60,21 @@ const cam = await page.evaluate(() => {
   return { x: c.position.x, z: c.position.z, yawDeg: (c.rotation.y * 180) / Math.PI };
 });
 
+// Chapter II: open it from the contents' code path and check a few moments.
+await page.keyboard.press('Tab');
+await page.evaluate(() => window.__slice.begin(window.__slice.chapters[1], 0));
+await page.waitForFunction(() => window.__slice.ready && window.__slice.chapter?.n === 2);
+const ch2 = await page.evaluate(() => {
+  const T = window.__slice.scenes[0].T;
+  return [['50-ch2-growing', T.telescope + 1], ['51-ch2-crying', T.cry + 6], ['52-ch2-rabbit', T.please + 0.5],
+    ['53-ch2-fan', T.fanning + 3], ['54-ch2-shrunk', T.droppedFan + 2], ['55-ch2-swim', T.swam + 3], ['56-ch2-mouse', T.nearer + 8]];
+});
+for (const [name, t] of ch2) {
+  await page.evaluate((t) => { const a = window.__slice.audio; a.pause(); a.currentTime = t; }, t);
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `${out}/${name}.png` });
+}
+
 console.log(JSON.stringify({ cam, errors }, null, 1));
 await browser.close();
 if (errors.length) process.exit(1);

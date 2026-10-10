@@ -32,7 +32,8 @@ def body_ends(text):
     # The chapter body starts after the two heading lines ("CHAPTER II." and its title).
     paras = [p.strip() for p in re.split(r"\n\s*\n", text) if re.search(r"[A-Za-z]", p)]
     body = paras[1:] if paras[0].count("\n") >= 1 else paras[2:]
-    first, last = re.sub(r"\s+", " ", body[0]), re.sub(r"\s+", " ", body[-1])
+    # align.py looks these up in the raw text, so take them from within one line.
+    first, last = body[0].split("\n")[0].strip(), body[-1].split("\n")[-1].strip()
     return first[:24], last[-20:]
 
 
