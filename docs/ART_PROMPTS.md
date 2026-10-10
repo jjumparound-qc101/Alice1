@@ -107,3 +107,27 @@ Used in the same conversation after the first set. The results are in `source/ai
 - **Alice sitting:** "Same Alice, same style: sitting on the grass of a riverbank, legs tucked to one side, skirt spread around her, hands in her lap, looking bored. Side view facing right. White background, no ground."
 - **Sister reading:** "Alice's older sister, about 16, same 1860s style: a long full dress and a wide-brimmed straw hat, sitting on the grass with her back against a tree trunk (don't draw the tree), reading a small book. Seen from three-quarter behind, so the hat hides most of her face. White background."
 - **Alice torso:** "For the same Alice puppet: her torso alone (bodice, pinafore top and sash, no head, arms or skirt), front view and three-quarter view, same scale as the parts sheet. White background."
+
+## Alice poses for Chapter I (requested 2026-10-10)
+The parts sheets can't make a free-jointed puppet: they have no skirt between waist and hem. Running is composed from the turnaround plus the running legs (`tools/compose_poses.py`). The other poses need whole figures. Use the **same conversation** as the turnaround so she matches, and ask for each on a white background, full figure, same scale as the turnaround.
+
+```
+Same Alice, same style, full figure on white, same scale as the turnaround. Pose: FALLING slowly down a well — arms raised and spread, skirt and hair floating upward, feet together, calm and curious expression. Three-quarter view facing left.
+```
+```
+Same Alice, full figure on white: KNEELING on the floor, bent forward, one cheek close to the ground as if peering through a very small door at floor level. Side view facing right.
+```
+```
+Same Alice, full figure on white: REACHING UP with both arms, on tiptoe, trying to reach something just above her head. Three-quarter view facing left.
+```
+```
+Same Alice, full figure on white: standing, HOLDING A SMALL BOTTLE up in her right hand and reading its label, the other hand at her side. Three-quarter view facing left. (Don't draw a label on the bottle.)
+```
+```
+Same Alice, full figure on white: sitting on the floor CRYING, knees drawn up, face in her hands. Three-quarter view facing left.
+```
+```
+Same Alice, full figure on white: standing, EATING a small cake held in one hand, the other hand resting on top of her head as if feeling whether she is growing. Three-quarter view facing left.
+```
+
+Upload as `alice_fall.png`, `alice_kneel.png`, `alice_reach.png`, `alice_bottle.png`, `alice_cry.png`, `alice_eat.png`.

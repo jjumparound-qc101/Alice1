@@ -19,7 +19,7 @@ Status: The whole chapter plays start to finish (about 12 minutes). Riverbank ar
 Spot colours so far (docs/COLOR.md): the Rabbit's pink eyes, the golden key, the red-hot poker.
 
 ## Known gaps
-- **Alice's poses**: only standing and sitting exist. Falling, running, kneeling, climbing, drinking and crying all use one of those two. The swappable-part puppet (from the parts sheets and torso) is the next build step.
+- **Alice's poses**: standing, sitting and **running** (two stride drawings, alternating as she moves). Falling, kneeling, reaching/climbing, holding the bottle, crying and eating still use standing or sitting; prompts for those are in ART_PROMPTS.md.
 - **The Rabbit** is one pose (watch in hand), also used running away down the passage. Tenniel's back view (plate W-02-2) would suit the passage.
 - **Placeholder sets**: the passage, the hall, the little door and the garden view need master drawings. The marmalade jar, bottle, cake and poker vignette are drawn in code.
 - **Thought vignettes**: only the poker is staged. Dinah and the bats ("Do cats eat bats?") and the candle are not yet.

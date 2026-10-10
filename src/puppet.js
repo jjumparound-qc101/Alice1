@@ -17,6 +17,7 @@ export class Puppet {
       const flat = paperFlat(p.tex, h * p.aspect, h);
       flat.visible = false;
       flat.userData.facesLeft = p.facesLeft;
+      flat.userData.offsetX = p.offsetX ?? 0; // shifts a pose so its body lines up with the others
       this.root.add(flat);
       this.poses[name] = flat;
     }
@@ -28,13 +29,17 @@ export class Puppet {
   apply(s, camera) {
     this.root.visible = s.visible !== false;
     if (!this.root.visible) return;
-    if (s.pose !== this.pose) {
+    // Running: while a standing figure moves, alternate its two stride drawings.
+    let pose = s.pose;
+    const striding = pose === 'stand' && s.moving && this.poses.run_a && this.poses.run_b;
+    if (striding) pose = Math.floor(s.phase * 2) % 2 ? 'run_b' : 'run_a';
+    if (pose !== this.pose) {
       if (this.pose) this.poses[this.pose].visible = false;
-      this.poses[s.pose].visible = true;
-      this.pose = s.pose;
+      this.poses[pose].visible = true;
+      this.pose = pose;
     }
-    const flat = this.poses[s.pose];
-    const hop = s.moving ? Math.abs(Math.sin(s.phase * Math.PI * 2)) * 0.12 * this.height : 0;
+    const flat = this.poses[pose];
+    const hop = s.moving ? Math.abs(Math.sin(s.phase * Math.PI * 2)) * (striding ? 0.04 : 0.12) * this.height : 0;
     const rock = s.moving ? Math.sin(s.phase * Math.PI * 2) * 0.06 : 0;
     const scale = s.scale ?? 1;
     this.root.scale.setScalar(scale);
@@ -43,6 +48,7 @@ export class Puppet {
     // Mirror so the figure faces its direction of travel.
     const facingLeft = (s.dir ?? -1) < 0;
     flat.scale.x = facingLeft === flat.userData.facesLeft ? 1 : -1;
+    flat.position.x = flat.userData.offsetX * flat.scale.x;
     // Turn toward the camera, within limits.
     const toCam = Math.atan2(camera.position.x - s.x, camera.position.z - s.z);
     this.root.rotation.y = THREE.MathUtils.clamp(toCam, -MAX_TURN, MAX_TURN);

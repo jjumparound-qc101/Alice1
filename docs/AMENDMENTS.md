@@ -2,6 +2,14 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-10: Alice's poses are whole figures, not a jointed puppet
+Status: In effect; owner may revisit.
+
+Adjusts item 3 of the hybrid art-source entry ("characters are built as cutout puppets with swappable parts"). The AI parts sheets don't include the skirt between waist and hem, so a free-jointed puppet would show a gap or a too-short skirt. Instead, poses are whole figures:
+- composed from the AI drawings where possible (running = turnaround + running legs, `tools/compose_poses.py`), and
+- otherwise generated as whole figures in the same ChatGPT conversation (prompts in [ART_PROMPTS.md](ART_PROMPTS.md)).
+The game swaps poses by name and alternates stride drawings while a figure moves. AI makes whole poses cheap, so this costs less than jointing parts and looks better.
+
 ## 2026-10-10: Gate A: three.js chosen
 Status: Confirmed by the owner.
 

@@ -35,12 +35,20 @@ async function main() {
 
   // Interim AI master drawings (PROVENANCE.md).
   const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar'];
-  const [words, shaftMeta, rabbitArt, ...aiArt] = await Promise.all([
+  const [words, shaftMeta, poseMeta, rabbitArt, ...aiArt] = await Promise.all([
     fetch('data/ch01_words.json').then((r) => r.json()),
     fetch('art/ai/shaft_strip.json').then((r) => r.json()),
+    fetch('art/ai/poses/poses.json').then((r) => r.json()),
     loadTexture('art/rabbit_w01-1.png'),
     ...AI_ART.map((n) => loadTexture(`art/ai/${n}.webp`)),
   ]);
+  // Composed poses (tools/compose_poses.py), sized and lined up to match the standing Alice.
+  const ALICE_H = 1.25;
+  const posed = Object.fromEntries(await Promise.all(Object.entries(poseMeta.poses).map(async ([name, m]) => {
+    const art = await loadTexture(`art/ai/poses/${name}.webp`);
+    const k = ALICE_H / poseMeta.base.h; // metres per pixel
+    return [name, { ...art, facesLeft: true, height: m.h * k, offsetX: (m.w / 2 - m.bodyX) * k }];
+  })));
   const ai = Object.fromEntries(AI_ART.map((n, i) => [n, aiArt[i]]));
   // Lettering on the proscenium and props is drawn to canvas, so the fonts must be loaded first.
   if (document.fonts) await Promise.all([document.fonts.load('600 64px "IM Fell English"'), document.fonts.load('italic 40px "IM Fell English"')]);
@@ -61,7 +69,8 @@ async function main() {
     alice: new Puppet({
       sit: { ...ai.alice_sit, facesLeft: false, height: 0.85 },
       stand: { ...ai.alice_stand, facesLeft: true },
-    }, 1.25),
+      ...posed,
+    }, ALICE_H),
     sister: new Puppet({ read: { ...ai.sister_read, facesLeft: false, height: 1.05 } }, 1.05),
   };
   Object.values(cast).forEach((p) => scene.add(p.root));
