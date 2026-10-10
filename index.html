@@ -3,22 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Alice Riverbank Slice</title>
+  <title>Alice Chapter One</title>
   <link rel="icon" href="data:," />
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body data-mode="watch" data-text="bottom">
   <canvas id="stage"></canvas>
-  <audio id="narration" src="audio/ch01_slice.mp3" preload="auto"></audio>
+  <audio id="narration" src="audio/ch01.mp3" preload="auto"></audio>
 
+  <div id="turn"></div>
   <div id="fade"></div>
 
   <section id="intro">
     <h1>Alice’s Adventures in Wonderland</h1>
     <p class="sub">Chapter I · Down the Rabbit-Hole</p>
-    <p class="note">Vertical slice: the riverbank. Narration is the LibriVox full-cast reading.<br />
-      The White Rabbit is Tenniel’s engraving; Alice, her sister and the set are placeholders.</p>
-    <button id="begin">Begin</button>
+    <p class="note">Chapter I, rough cut. Narration is the LibriVox full-cast reading.<br />
+      The White Rabbit is Tenniel’s engraving; the riverbank and Alice are interim AI drawings; the fall, passage and hall are placeholders.</p>
+    <div class="start">
+      <button id="continue" hidden>Continue</button>
+      <button id="begin">Begin</button>
+    </div>
   </section>
 
   <article id="page" aria-live="polite"></article>
@@ -40,8 +44,8 @@
   </aside>
 
   <section id="endCard" hidden>
-    <p>“…never once considering how in the world she was to get out again.”</p>
-    <p class="sub">End of the riverbank slice</p>
+    <p>“So she set to work, and very soon finished off the cake.”</p>
+    <p class="sub">End of Chapter I</p>
   </section>
 
   <script type="module" src="/src/main.js"></script>

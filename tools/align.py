@@ -38,6 +38,7 @@ def main():
     i = book.index(a.start)
     j = book.index(a.end, i) + len(a.end)
     paragraphs = [re.sub(r"\s+", " ", p).strip() for p in re.split(r"\n\s*\n", book[i:j]) if p.strip()]
+    paragraphs = [p for p in paragraphs if norm(p)]  # drop "* * *" section-break lines
 
     # Display words, each split into alignment sub-tokens (hyphens and dashes split words).
     display = []  # (paragraph index, text, [subtoken indices])

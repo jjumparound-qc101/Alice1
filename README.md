@@ -2,8 +2,8 @@
 
 A Library of Living Books title: the book's text and a full-cast narration, staged as a 2.5D Victorian toy theater with Tenniel's engravings.
 
-## Current state: riverbank vertical slice
-This covers Chapter I from the opening line to "…how in the world she was to get out again." See [docs/SLICE_01_RIVERBANK.md](docs/SLICE_01_RIVERBANK.md) for what it tests and what it found.
+## Current state: Chapter I rough cut
+The whole of Chapter I plays, in four scenes: the riverbank, the fall, the passage and the hall. See [docs/CHAPTER_01_ROUGHCUT.md](docs/CHAPTER_01_ROUGHCUT.md). The earlier riverbank slice is described in [docs/SLICE_01_RIVERBANK.md](docs/SLICE_01_RIVERBANK.md).
 
 ```sh
 npm install
@@ -19,7 +19,7 @@ Controls:
 ## Layout
 | Path | What |
 |---|---|
-| `src/` | three.js app: the set (`stage.js`), puppets (`puppet.js`), staging timeline (`timeline.js`), book page (`narration.js`), Explore mode (`explore.js`), placeholder art (`art.js`, `ink.js`) |
+| `src/` | three.js app: chapter engine (`main.js`), scenes (`scenes/`), cue words (`cues.js`), staging helpers (`track.js`), riverbank set (`stage.js`), puppets (`puppet.js`), book page (`narration.js`), Explore mode (`explore.js`), placeholder art (`art.js`, `props.js`, `ink.js`) |
 | `public/` | Shipped assets: the Rabbit cutout, the narration clip, the aligned word timings |
 | `source/` | Inputs the assets are built from: the plate scan, its mask, the book text, raw speech-to-text timings |
 | `tools/` | `cutout.py` (engraving → cutout), `transcribe.py` and `align.py` (narration → word timings), `smoke.mjs` (headless check) |
@@ -33,9 +33,9 @@ The Python tools need Pillow, NumPy and SciPy (`cutout.py`), or faster-whisper (
 ```sh
 # Narration: download Chapter I from the LibriVox recording (see PROVENANCE.md), then
 python3 tools/transcribe.py ch01.mp3 source/audio/ch01_whisper_words.json
-ffmpeg -ss 14.0 -to 111.4 -i ch01.mp3 -ac 1 -b:a 96k -af "afade=t=out:st=96.6:d=0.8" public/audio/ch01_slice.mp3
+ffmpeg -ss 14.0 -to 733.9 -i ch01.mp3 -ac 1 -b:a 96k -af "afade=t=out:st=718.9:d=1" public/audio/ch01.mp3
 python3 tools/align.py source/text/ch01.txt source/audio/ch01_whisper_words.json \
-  --from "Alice was beginning" --to "get out again." --offset 14.0 --out public/data/ch01_slice_words.json
+  --from "Alice was beginning" --to "finished off the cake." --offset 14.0 --out public/data/ch01_words.json
 
 # Rabbit cutout
 python3 tools/cutout.py source/plates/tenniel_w01-1_white_rabbit_victorianweb.jpg public/art/rabbit_w01-1.png \

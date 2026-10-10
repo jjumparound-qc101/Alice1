@@ -25,7 +25,7 @@ await win.evaluate(() => { location.hash = 'fps'; });
 await win.waitForTimeout(5000);
 const live = await win.evaluate(() => ({ t: window.__slice.audio.currentTime, paused: window.__slice.audio.paused, perf: window.__slice.perf.stats }));
 
-const T = await win.evaluate(() => window.__slice.tl.T);
+const T = await win.evaluate(() => window.__slice.scenes[0].T);
 for (const [name, t] of [['wide', 1], ['watch', T.watch + 2.5], ['pop', T.pop + 0.2]]) {
   await win.evaluate((t) => { const a = window.__slice.audio; a.pause(); a.currentTime = t; }, t);
   await win.waitForTimeout(400);

@@ -31,6 +31,10 @@ button:hover { background: var(--ink); color: var(--paper); }
 .note { color: var(--faint); max-width: 34em; line-height: 1.5; margin: 0 0 1.6em; }
 
 #fade { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 3; }
+#turn { position: fixed; inset: 0; background: var(--paper); opacity: 0; pointer-events: none; z-index: 1; }
+.start { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+button:disabled { opacity: 0.4; cursor: default; }
+button:disabled:hover { background: var(--paper); color: var(--ink); }
 
 #page {
   position: fixed; left: 50%; bottom: 64px; transform: translateX(-50%);

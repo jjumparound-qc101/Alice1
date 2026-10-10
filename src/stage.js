@@ -37,10 +37,8 @@ function tiled(t, repeatX) {
   return t;
 }
 
+// Builds the riverbank set into `scene` (a THREE.Group owned by the riverbank scene).
 export function buildStage(scene, ai = {}) {
-  scene.background = new THREE.Color(PAPER);
-  scene.fog = new THREE.Fog(PAPER, 9, 34);
-
   // The floor stops at the proscenium, like a real stage.
   const ground = texture(art.groundTile(), { repeat: [14, 6] });
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 17.2), new THREE.MeshBasicMaterial({ map: ground }));

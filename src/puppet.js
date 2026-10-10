@@ -23,7 +23,8 @@ export class Puppet {
     this.pose = null;
   }
 
-  // state: { pose, x, z, visible, moving, dir (+1 right / -1 left), sink (0..1), phase }
+  // state: { pose, x, z, visible, moving, dir (+1 right / -1 left), sink (0..1), phase,
+  //          y (lift, metres), scale (1 = normal size), tilt (radians) }
   apply(s, camera) {
     this.root.visible = s.visible !== false;
     if (!this.root.visible) return;
@@ -35,8 +36,10 @@ export class Puppet {
     const flat = this.poses[s.pose];
     const hop = s.moving ? Math.abs(Math.sin(s.phase * Math.PI * 2)) * 0.12 * this.height : 0;
     const rock = s.moving ? Math.sin(s.phase * Math.PI * 2) * 0.06 : 0;
-    this.root.position.set(s.x, hop - (s.sink ?? 0) * this.height * 1.1, s.z);
-    flat.rotation.z = rock;
+    const scale = s.scale ?? 1;
+    this.root.scale.setScalar(scale);
+    this.root.position.set(s.x, (s.y ?? 0) + hop * scale - (s.sink ?? 0) * this.height * scale * 1.1, s.z);
+    flat.rotation.z = rock + (s.tilt ?? 0);
     // Mirror so the figure faces its direction of travel.
     const facingLeft = (s.dir ?? -1) < 0;
     flat.scale.x = facingLeft === flat.userData.facesLeft ? 1 : -1;
