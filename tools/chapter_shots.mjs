@@ -1,3 +1,4 @@
+// Screenshots of one chapter: node tools/chapter_shots.mjs URL OUTDIR CHAPTER [t1,t2,...] (default: 30 even steps).
 import { chromium } from 'playwright-core';
 const [url, out, chArg, tsArg] = process.argv.slice(2);
 const n = Number(chArg);
