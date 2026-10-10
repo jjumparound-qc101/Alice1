@@ -11,6 +11,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. They prefer brief, 
 - **Repo**: `jjumparound-qc101/Alice1`, branch `claude/literary-game-experience-1de414`. Commit and push there. No PR has been asked for.
 - **Playable web link** (private artifact, updated on each milestone): https://claude.ai/artifact/Run3pVwccFBgcP6AHgktXj. To republish: `npx vite build --base ./ --outDir <scratch>/dist`, strip `<html>/<head>/<body>` from `dist/index.html` into a page file, publish it with `root` = dist and the changed asset files in `files`. Remove old hashed JS bundles with `null`.
 - **Windows build**: every push runs `.github/workflows/desktop.yml`. The owner downloads the "Alice-windows-x64" artifact from the latest Actions run. It includes `steam_appid.txt` = 480 (Valve's Spacewar test app) for Steam testing.
+- **Art to generate**: docs/ASSETS_MASTER.md, every prompt for every chapter in one checklist (owner, 2026-10-10). Process for each chapter: write `docs/CHAPTER_NN_ASSETS.md` and its section in `docs/ART_PROMPTS.md`, then run `python3 tools/assets_master.py`. Run it again whenever art arrives (it ticks what's in `source/ai/`).
 - **Decisions**: docs/AMENDMENTS.md (newest first). **Colours**: docs/COLOR.md. **Asset sources and AI disclosure**: PROVENANCE.md, which must be updated for every asset.
 - **Chapter I status and gaps**: docs/CHAPTER_01_ROUGHCUT.md.
 

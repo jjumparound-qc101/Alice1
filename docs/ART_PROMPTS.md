@@ -295,7 +295,7 @@ Background and sources: [CHAPTER_03_ASSETS.md](CHAPTER_03_ASSETS.md). Same conve
 28. `vignette_knot.png`: "A long mouse's tail tied in a knot."
 29. `vignette_dinah_birds.png`: "A cat (Dinah) crouching, watching a little bird."
 
-### (B only, if the bank is staged outdoors)
+### Not needed: the bank is on the hall floor (owner chose A). Kept for reference only
 - 3B-1 `bank_rushes.png` (landscape, tiles left to right): "The edge of a pool: rushes, reeds and wet earth, seen from very low down, as by a creature a few inches tall. Edge to edge; left and right edges must join."
 - 3B-2 `bank_grass.png` (landscape, tiles): "Grass and weeds seen from very low down, after Tenniel's grass in plate 4.4. Edge to edge, tiling left to right."
 - 3B-3 `bank_backdrop.png` (landscape): "A dark wall of foliage and shadow, as behind the animals in plate 3.1. Fill the image."
@@ -398,7 +398,7 @@ Background and sources: [CHAPTER_05_ASSETS.md](CHAPTER_05_ASSETS.md). Same conve
 - `vignette_chrysalis.png`: "A chrysalis hanging from a twig, and beside it a butterfly just come out."
 - `vignette_eggs.png`: "A nest with three eggs in it."
 
-### Only if not using Tenniel's Father William plates
+### Not needed: Tenniel's Father William plates are used (owner). Kept for reference only
 18. `fw_head.png` (attach 5.2): "An old man standing on his head, a young man watching, after this plate."
 19. `fw_somersault.png` (attach 5.3): "A fat old man turning a back-somersault in at a door."
 20. `fw_goose.png` (attach 5.4): "An old man at table finishing a whole goose, bones and beak."
