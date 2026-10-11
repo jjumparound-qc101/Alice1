@@ -155,7 +155,7 @@ async function chapterShots(n, pick) {
   for (const [name, t] of list) {
     await page.evaluate((t) => { const a = window.__slice.audio; a.pause(); a.currentTime = t; }, t);
     await page.waitForTimeout(500);
-    await page.screenshot({ path: `${out}/${name}.png` });
+    await page.screenshot({ path: `${out}/${name}.png`, timeout: 120000 }); // a chapter's first frame uploads all its textures
   }
 }
 await chapterShots(8, () => {
@@ -172,6 +172,11 @@ await chapterShots(10, () => {
   const [Q] = window.__slice.chapter.built.scenes.map((s) => s.T);
   return [['D0-ch10-thump', Q.shaking + 1], ['D1-ch10-caper', Q.bound + 0.4], ['D2-ch10-dance', Q.solemnly + 20], ['D3-ch10-lobster', Q.lobster + 2],
     ['D4-ch10-soup', Q.soup + 5], ['D5-ch10-run', Q.hand + 3]];
+});
+await chapterShots(11, () => {
+  const [C] = window.__slice.chapter.built.scenes.map((s) => s.T);
+  return [['E0-ch11-judge', C.judge + 1], ['E1-ch11-jury', C.juryBox + 2], ['E2-ch11-herald', C.unrolled + 2], ['E3-ch11-hatter-pale', C.pale + 1],
+    ['E4-ch11-grow', C.larger + 15], ['E5-ch11-bag', C.bag + 3], ['E6-ch11-cook', C.cook + 6], ['E7-ch11-alice', C.alice + 0.5]];
 });
 
 console.log(JSON.stringify({ cam, errors }, null, 1));

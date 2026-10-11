@@ -1,17 +1,17 @@
 // Placeholder art for the court (Chapters XI and XII), drawn in code until the AI drawings
 // arrive (docs/CHAPTER_11_ASSETS.md, CHAPTER_12_ASSETS.md). Figures stand on the bottom edge
 // of their image and face left. Colours: the Hatter "turned pale" (a pale face, briefly);
-// the card suits stay ink (owner, 2026-10-10).
+// the card people are coloured like real cards (owner, 2026-10-11).
 import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from './ink.js';
 import { SPOT, vignette, line, shape } from './props.js';
-import { suit } from './props8.js';
+import { suit, suitColour } from './props8.js';
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;
 const ellipse = (x, y, rx, ry, rot = 0) => { const p = new Path2D(); p.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); return p; };
 const rect = (x, y, w, h) => { const p = new Path2D(); p.rect(x, y, w, h); return p; };
 const dot = (g, x, y, r, c = INK) => { g.fillStyle = c; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); };
 const panel = (g, p, seed, angle = Math.PI / 2, gap = 5, alpha = 0.7) => { fillPaper(g, p); hatch(g, p, { angle, gap, seed, alpha }); outline(g, p, 3); };
-export const PALE_FACE = '#dfe5e8'; // "turned pale": the face drained to a cold paper-white
+export const PALE_FACE = SPOT.paleFace; // "turned pale": the face drained to a cold paper-white
 
 // The back wall of the court: panelling, a canopy of hearts over the throne, high windows.
 export function courtWall(w = 3000, h = 1000) {
@@ -77,7 +77,7 @@ export function crowdGallery(w = 2400, h = 500, seed = 2251) {
     const y0 = 150 + row * 110, s = 0.7 + row * 0.15;
     for (let k = 0; k < 26; k++) {
       const x = 40 + k * 92 + (row % 2) * 46 + ((k * 37 + row * 11) % 20), kind = kinds[(k + row * 2) % kinds.length];
-      if (kind === 'card') { const b = rect(x - 26 * s, y0 - 10 * s, 52 * s, 80 * s); fillPaper(g, b); outline(g, b, 2); g.fillStyle = INK; g.fill(suit(['hearts', 'spades', 'clubs', 'diamonds'][k % 4], x, y0 + 30 * s, 12 * s)); const hd = ellipse(x, y0 - 30 * s, 18 * s, 20 * s); fillPaper(g, hd); outline(g, hd, 2); dot(g, x - 6 * s, y0 - 32 * s, 2.5); }
+      if (kind === 'card') { const b = rect(x - 26 * s, y0 - 10 * s, 52 * s, 80 * s); fillPaper(g, b); outline(g, b, 2); const su = ['hearts', 'spades', 'clubs', 'diamonds'][k % 4]; g.fillStyle = suitColour(su); g.fill(suit(su, x, y0 + 30 * s, 12 * s)); const hd = ellipse(x, y0 - 30 * s, 18 * s, 20 * s); fillPaper(g, hd); outline(g, hd, 2); dot(g, x - 6 * s, y0 - 32 * s, 2.5); }
       else if (kind === 'bird') { const b = ellipse(x, y0 + 20 * s, 26 * s, 34 * s); shape(g, b, seed + k + row * 30, { size: 40 }); const hd = ellipse(x - 10 * s, y0 - 22 * s, 16 * s, 14 * s); fillPaper(g, hd); outline(g, hd, 2); const bk = new Path2D(); bk.moveTo(x - 24 * s, y0 - 24 * s); bk.lineTo(x - 40 * s, y0 - 18 * s); bk.lineTo(x - 24 * s, y0 - 16 * s); bk.closePath(); g.fillStyle = INK; g.fill(bk); }
       else { const b = ellipse(x, y0 + 20 * s, 30 * s, 36 * s); fillPaper(g, b); flicks(g, b, { count: 50, len: 6, seed: seed + k + row * 50 }); outline(g, b, 2); const hd = ellipse(x, y0 - 20 * s, 20 * s, 18 * s); fillPaper(g, hd); outline(g, hd, 2); for (const d of [-1, 1]) { const ear = ellipse(x + d * 14 * s, y0 - 38 * s, 6 * s, 10 * s); fillPaper(g, ear); outline(g, ear, 1.5); } dot(g, x - 7 * s, y0 - 22 * s, 2.5); dot(g, x + 7 * s, y0 - 22 * s, 2.5); }
     }

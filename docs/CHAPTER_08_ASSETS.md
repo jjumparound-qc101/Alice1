@@ -1,6 +1,6 @@
 # Chapter VIII Asset List: "The Queen's Croquet-Ground"
 Date: 2026-10-10
-Status: Confirmed (card suits: ink). Plates checked against web-resolution images from Victorian Web on 2026-10-10. The prompts are in [ART_PROMPTS.md](ART_PROMPTS.md), "Chapter VIII asset list", and are added to [ASSETS_MASTER.md](ASSETS_MASTER.md). Same method as before: the Alice model sheet attached for every Alice drawing; Tenniel plates as references, and cut out directly for figures other than Alice (from high-resolution scans).
+Status: Confirmed (card suits: red and black, owner 2026-10-11). Plates checked against web-resolution images from Victorian Web on 2026-10-10. The prompts are in [ART_PROMPTS.md](ART_PROMPTS.md), "Chapter VIII asset list", and are added to [ASSETS_MASTER.md](ASSETS_MASTER.md). Same method as before: the Alice model sheet attached for every Alice drawing; Tenniel plates as references, and cut out directly for figures other than Alice (from high-resolution scans).
 
 ## The chapter in places
 1. **The garden entrance**: a large rose-tree of white roses, three card-gardeners painting them red; the great procession arrives; a large flower-pot.
@@ -23,7 +23,7 @@ Both are parts of one garden, the "beautiful garden" Alice reached at the end of
 | The Queen's face | crimson, briefly | "The Queen turned crimson with fury" | 3 (a flush, then back to ink) |
 | The White Rabbit | paper-white, pink eyes | as before | 1, 8 |
 
-**The card suits: ink (owner decision, 2026-10-10).** The text says the courtiers are "ornamented all over with diamonds" and the children "with hearts", but never says *red*. By the colour rule they stay ink, like Tenniel's prints. So the painted red roses and the crimson cushion are the only red on the croquet-ground and stand out. (The alternative, red hearts and diamonds as on real playing cards, was not taken.)
+**The card suits (owner decision, 2026-10-11, replacing "ink").** The card people are coloured like real playing cards: red hearts and diamonds, black clubs and spades, on the pips and suit signs. Ranks are shown by period pip layouts (no corner numbers, as on English cards of 1865). One pack of 52, each card person a different card; see AMENDMENTS.md for the full list.
 
 ## Alice: 6 poses (whole figures, model sheet attached)
 | ID | Beat | Source | Base |

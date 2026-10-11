@@ -6,7 +6,7 @@ Updated: 2026-10-10 (end of session 2: Chapters VIII–X staged). For the next C
 
 ## Where the project stands
 - **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly). Unstaged chapters play on an engraved title page with the text in sync.
-- **Chapters I–X are staged** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
+- **Chapters I–XI are staged** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
 - **Art**: 13 of 324 AI images received and in the game (hall floor, lamp, curtain, little door, glass table, Alice walking A/B, Alice jumping; the golden key, DRINK ME bottle, EAT ME cake, glass box and fan via `tools/small_props.py`), plus the earlier riverbank/shaft masters and Alice's model sheet. Everything else is a placeholder.
 
 | Chapter | Asset list | Staged | Scenes (`src/scenes/`) |
@@ -21,17 +21,16 @@ Updated: 2026-10-10 (end of session 2: Chapters VIII–X staged). For the next C
 | VIII The Queen's Croquet-Ground | CHAPTER_08_ASSETS.md | ✓ | `croquet.js`: `roseTree`, `croquet` (set: `src/sets/croquet.js`) |
 | IX The Mock Turtle's Story | CHAPTER_09_ASSETS.md | ✓ | `mockTurtle.js`: `duchessWalk`, `gryphon`, `mockTurtle` (set: `src/sets/seashore.js`) |
 | X The Lobster Quadrille | CHAPTER_10_ASSETS.md | ✓ | `quadrille.js`: `quadrille` (seashore set) |
-| XI Who Stole the Tarts? | CHAPTER_11_ASSETS.md | — (started, see below) | title page |
+| XI Who Stole the Tarts? | CHAPTER_11_ASSETS.md | ✓ | `court.js`: `trial` (set: `src/sets/court.js`) |
 | XII Alice's Evidence | — | — | title page |
 
 ## Open decisions for the owner
-None. (Chapter VIII card suits: ink, owner 2026-10-10.)
+None.
 
 ## Next steps, in order
-1. **Stage Chapter XI.** Its asset list is written and in the master list. Started: `src/props11.js` (court wall, throne, jury-box, tarts table, witness box, crowd gallery, trumpet, scroll, slate, canvas bag, shoe, the standing Hatter with teacup/pale/bite/tremble/knee/run poses, two vignettes); it is not imported anywhere yet. Still to do: `src/sets/court.js` (shared with XII: back wall at z≈-2.2, throne on a dais, Knave in chains between soldiers, tarts table in the middle, jury-box with twelve small creature flats from props3/props4/props8 and slates, witness stand, crowd gallery, door), card poses for the King as judge (wig, spectacles, arms folded, and a pale face for XII) and the Queen (spectacles, purple face for XII) in `props8.js` `card()`, the Hatter's standing poses added to `cast.hatter` in main.js, `src/scenes/court.js`, register, shots, smoke. Alice grows during XI (from `FOOT` at "larger", about 283 s, to roughly half size by the end).
-2. **Chapter XII**: asset list → master list → stage. The court again (tipping over the jury-box, Bill head downwards, the verses, "Sentence first", Alice at full size, the pack flying up), then the riverbank (reuse the Chapter I riverbank set and the sister) and the sister's dream. Colours: the King's face pale, the Queen's purple (rule 3).
-3. **Drop in art as the owner sends it** (see "When art arrives"). The owner sends art in batches.
-4. Later, after the whole book (owner's decision): low-end hardware test, code signing, high-resolution Tenniel scans (NYPL/British Library; Victorian Web images are only 432 px tall).
+1. **Chapter XII**: asset list → master list → stage. The court again (`src/sets/court.js`: `buildCourt` returns the jurors with their home positions, so they can be tipped out and put back; the King has `judgePale`, the Queen `purple`) (tipping over the jury-box, Bill head downwards, the verses, "Sentence first", Alice at full size, the pack flying up), then the riverbank (reuse the Chapter I riverbank set and the sister) and the sister's dream. Colours: the King's face pale, the Queen's purple (rule 3).
+2. **Drop in art as the owner sends it** (see "When art arrives"). The owner sends art in batches.
+3. Later, after the whole book (owner's decision): low-end hardware test, code signing, high-resolution Tenniel scans (NYPL/British Library; Victorian Web images are only 432 px tall).
 
 ## How a chapter is done (the owner's process)
 1. Read the chapter (`source/text/chNN.txt`) and its Tenniel plates (Victorian Web `…/tenniel/alice/N.M.html`; download the `.jpg` to look).
@@ -59,7 +58,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 - **Art to generate**: `docs/ASSETS_MASTER.md`. **Why each asset**: `docs/CHAPTER_NN_ASSETS.md`. **Decisions**: `docs/AMENDMENTS.md` (newest first). **Colours**: `docs/COLOR.md`. **Asset sources and AI disclosure**: `PROVENANCE.md`.
 
 ## Owner decisions so far (details in AMENDMENTS.md / COLOR.md)
-- Chapter VIII card suits (hearts, diamonds) stay ink.
+- Card people: coloured like real cards (red hearts and diamonds, black clubs and spades), period pip layouts with no corner numbers, one pack of 52 with each card person unique (`SOLDIERS`, `COURTIERS`, `CHILDREN`, `GUESTS`, `OFFICERS` in props8.js). Replaces the earlier "ink" decision.
 - Text layouts are a reader setting; spot colours only where the text names a colour; spot colours richer, with a slight glow.
 - Alice's poses are whole figures (no jointed puppet); the composed running poses are retired; one walk cycle for all movement.
 - Alice's model sheet is the turnaround. Tenniel plates are references for Alice, cut out directly only for other figures.
@@ -76,6 +75,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 | `src/sets/hall.js` | The hall set, shared by Chapters I, II, III, VII |
 | `src/sets/croquet.js` | The Queen's garden: rose-tree, flower-pot, croquet-ground (Chapters VIII, IX) |
 | `src/sets/seashore.js` | The seashore: sand, sea, the Mock Turtle's rock and ledge (Chapters IX, X) |
+| `src/sets/court.js` | The court: throne, Knave, tarts, jury-box and jurors, witness stand, crowds, door (Chapters XI, XII) |
 | `src/crowd.js` | Scene-only puppets ("extras": processions, crowds), posed in a scene's `update(t, cast, camera)` |
 | `src/props.js` … `props11.js` | Placeholder art drawn in code, per chapter (props.js = Chapter I and shared helpers: `vignette`, `shape`, `line`, `cat`, `SPOT` colours) |
 | `src/puppet.js` | Paper-cutout puppets: poses swapped by name; `x z y scale tilt dir`, walking by distance (`walk_a`/`walk_b`), `idle`, `float` (swimmers); `handPoint()` and `carry(obj, puppet)` for held props |

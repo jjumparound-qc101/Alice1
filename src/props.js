@@ -19,7 +19,10 @@ export const SPOT = {
   soup: '#6f9a2e',    // "Beautiful Soup, so rich and green" (Chapter X, the song and its vignette)
   grey: '#7f7f7a',    // "his grey locks" (Chapter V, the poem: text strip)
   pale: '#8c9aa6',    // "turn not pale" (Chapter X, the song: text strip)
-  crimson: '#a3123a', // "a crimson velvet cushion"; the Queen "turned crimson with fury"
+  crimson: '#a3123a',
+  suitRed: '#c3302a',  // the red of the hearts and diamonds on the card people (owner, 2026-10-11)
+  paleFace: '#dfe5e8', // "turned pale" (the Hatter, Chapter XI; the King, Chapter XII): a face drained cold
+  purple: '#6b2a86',  // the Queen "turning purple" (Chapter XII) // "a crimson velvet cushion"; the Queen "turned crimson with fury"
 };
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;

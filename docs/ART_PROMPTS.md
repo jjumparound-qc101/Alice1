@@ -509,7 +509,9 @@ Priority if time is short: 8, 12, 15, 18, 1, 9, 17, 14, 19, 20, 16, then the res
 ---
 
 ## Chapter VIII asset list (2026-10-10): "The Queen's Croquet-Ground"
-Background and sources: [CHAPTER_08_ASSETS.md](CHAPTER_08_ASSETS.md). Same conversation, same rules. Attach the Alice model sheet with every Alice prompt and Tenniel 1.2 with the Rabbit. The game adds the colours (red roses, crimson cushion); draw everything in ink.
+Background and sources: [CHAPTER_08_ASSETS.md](CHAPTER_08_ASSETS.md). Same conversation, same rules. Attach the Alice model sheet with every Alice prompt and Tenniel 1.2 with the Rabbit. The game adds the colours of the roses and the cushion; draw them in ink.
+
+**Every card person (Chapters VIII–XII), add:** "The card's suit signs are printed as on an English playing card of the 1860s: red hearts and diamonds, black clubs and spades, the pips in the standard layout for its rank (lower-half pips upside down), and no numbers or letters in the corners. Everything else in black ink." Name the exact card in each prompt (e.g. "the Five of Spades").
 
 **References to download first:** 8.1 (painting the roses) https://victorianweb.org/art/illustration/tenniel/alice/8.1.html · 8.2 ("Off with her head!") …/8.2.html · 8.3 (the flamingo) …/8.3.html · 8.4 (the Cat's head) …/8.4.html
 

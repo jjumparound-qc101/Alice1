@@ -15,6 +15,7 @@ import { footman, duchess, cook, pig } from './props6.js';
 import { hatter, marchHare } from './props7.js';
 import { card } from './props8.js';
 import { gryphon, mockTurtle } from './props9.js';
+import { hatterStand } from './props11.js';
 import { mouseUp, mouseWalk, dodoStand, duckStand, loryStand, eagletStand, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
 
 const $ = (id) => document.getElementById(id);
@@ -153,14 +154,25 @@ async function main() {
     cook: new Puppet({ stir: drawn(cook('stir'), 0.3), throw: drawn(cook('throw'), 0.3) }, 0.3),
     pig: new Puppet({ trot: drawn(pig(), 0.07) }, 0.07),
     // Chapter VII placeholders (seated, waist up).
-    hatter: new Puppet({ stare: drawn(hatter('stare'), 0.42), riddle: drawn(hatter('riddle'), 0.42), watch: drawn(hatter('watch'), 0.42) }, 0.42),
+    hatter: new Puppet({ stare: drawn(hatter('stare'), 0.42), riddle: drawn(hatter('riddle'), 0.42), watch: drawn(hatter('watch'), 0.42),
+      // Chapter XI: standing as a witness (props11.js).
+      ...Object.fromEntries(['cup', 'pale', 'bite', 'tremble', 'knee', 'run'].map((p) => [p, drawn(hatterStand(p), 0.36)])) }, 0.42),
     hare: new Puppet({ sit: drawn(marchHare('sit'), 0.4), dip: drawn(marchHare('dip'), 0.4) }, 0.4),
-    // Chapter VIII placeholders: the cards (props8.js). The suits stay ink (owner, 2026-10-10).
+    // Chapter VIII placeholders: the cards (props8.js), coloured like real cards (owner, 2026-10-11).
     ...Object.fromEntries([['two', 2], ['five', 5], ['seven', 7]].map(([name, rank]) => [name, new Puppet(Object.fromEntries(
       ['stand', 'paint', 'bow', 'kneel', 'run'].map((p) => [p, drawn(card({ suit: 'spades', rank }, p), 0.28)])), 0.28)])),
-    queen: new Puppet(Object.fromEntries(['stand', 'point', 'flush', 'stamp', 'folded'].map((p) => [p, drawn(card({ suit: 'hearts', rank: 'queen' }, p), 0.32)])), 0.32),
-    king: new Puppet({ stand: drawn(card({ suit: 'hearts', rank: 'king' }, 'stand'), 0.32) }, 0.32),
-    knave: new Puppet({ carry: drawn(card({ suit: 'hearts', rank: 'knave' }, 'carry'), 0.3), stand: drawn(card({ suit: 'hearts', rank: 'knave' }, 'stand'), 0.3) }, 0.3),
+    queen: new Puppet(Object.fromEntries([...['stand', 'point', 'flush', 'stamp', 'folded'].map((p) => [p, drawn(card({ suit: 'hearts', rank: 'queen' }, p), 0.32)]),
+      ['specs', drawn(card({ suit: 'hearts', rank: 'queen', specs: true }, 'stand'), 0.32)], ['purple', drawn(card({ suit: 'hearts', rank: 'queen', face: 'purple' }, 'point'), 0.32)]]), 0.32),
+    // The King: as judge in Chapters XI and XII, his crown over his wig; spectacles; arms folded; pale.
+    king: new Puppet({
+      stand: drawn(card({ suit: 'hearts', rank: 'king' }, 'stand'), 0.32),
+      judge: drawn(card({ suit: 'hearts', rank: 'king', wig: true }, 'stand'), 0.32),
+      judgeSpecs: drawn(card({ suit: 'hearts', rank: 'king', wig: true, specs: true }, 'stand'), 0.32),
+      judgeFold: drawn(card({ suit: 'hearts', rank: 'king', wig: true }, 'folded'), 0.32),
+      judgePoint: drawn(card({ suit: 'hearts', rank: 'king', wig: true }, 'point'), 0.32),
+      judgePale: drawn(card({ suit: 'hearts', rank: 'king', wig: true, face: 'pale' }, 'stand'), 0.32),
+    }, 0.32),
+    knave: new Puppet({ carry: drawn(card({ suit: 'hearts', rank: 'knave' }, 'carry'), 0.3), stand: drawn(card({ suit: 'hearts', rank: 'knave' }, 'stand'), 0.3), chains: drawn(card({ suit: 'hearts', rank: 'knave', chains: true }, 'stand'), 0.3) }, 0.3),
     executioner: new Puppet({ axe: drawn(card({ suit: 'spades', rank: 'executioner' }, 'axe'), 0.32) }, 0.32),
     // Chapter IX placeholders (props9.js).
     gryphon: new Puppet(Object.fromEntries(['asleep', 'sit', 'walk', 'paws', 'hide'].map((p) => [p, drawn(gryphon(p), p === 'asleep' ? 0.5 : 0.36)])), 0.36),

@@ -10,7 +10,7 @@ Status: Plays start to finish (13 minutes) in two scenes (`src/scenes/croquet.js
 
 Thought vignette: tulip-roots instead of onions.
 
-Colour (docs/COLOR.md): the roses (white, painted red), the crimson cushion, the Queen's crimson flush. The card suits are ink (owner, 2026-10-10).
+Colour (docs/COLOR.md): the roses (white, painted red), the crimson cushion, the Queen's crimson flush. The card people are coloured like real cards: red hearts and diamonds, black clubs and spades, period pip layouts with no numbers; each is a different card of one pack (owner, 2026-10-11).
 
 ## Scale
 Alice stays "about a foot high" from the end of Chapter VII; the cards are about her height and the garden is built around them.

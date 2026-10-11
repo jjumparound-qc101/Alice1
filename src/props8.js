@@ -1,8 +1,8 @@
 // Placeholder art for Chapter VIII, "The Queen's Croquet-Ground", drawn in code until the
 // AI drawings arrive (docs/CHAPTER_08_ASSETS.md). Figures stand on the bottom edge of their
 // image and face left. Colours (docs/COLOR.md): the roses are white, being painted red; the
-// cushion under the King's crown is crimson; the Queen's face flushes crimson. The card suits
-// stay ink (owner, 2026-10-10).
+// cushion under the King's crown is crimson; the Queen's face flushes crimson. The card people
+// are coloured like real cards: red hearts and diamonds, black clubs and spades (owner, 2026-10-11).
 import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from './ink.js';
 import { SPOT, vignette, line, shape } from './props.js';
 import { cheshire } from './props6.js';
@@ -25,14 +25,34 @@ export function suit(kind, x, y, r) {
 }
 // Pips laid out on a card face (x0, y0, w, h): the rank's count in two columns, or
 // "ornamented all over" (count 0) for the courtiers and children.
+// The colour of a suit, as printed: red hearts and diamonds, black clubs and spades (owner, 2026-10-11).
+export const suitColour = (kind) => (kind === 'hearts' || kind === 'diamonds' ? SPOT.suitRed : INK);
+// The pips of a card of Carroll's day: English packs of 1865 had no corner numbers, so the rank
+// is read by counting the pips in their standard layout (owner, 2026-10-11). Pips in the lower
+// half are printed upside down, as on real cards. Positions are fractions of the card face.
+const L = 0.27, C = 0.5, R = 0.73, T = 0.16, B = 0.84;
+const CORNERS = [[L, T], [R, T], [L, B], [R, B]];
+const SIDES = [[L, 0.5], [R, 0.5]];
+const NINE = [[L, T], [R, T], [L, 0.39], [R, 0.39], [L, 0.61], [R, 0.61], [L, B], [R, B]];
+export const PIP_LAYOUT = {
+  1: [[C, 0.5]],
+  2: [[C, T], [C, B]],
+  3: [[C, T], [C, 0.5], [C, B]],
+  4: CORNERS,
+  5: [...CORNERS, [C, 0.5]],
+  6: [...CORNERS, ...SIDES],
+  7: [...CORNERS, ...SIDES, [C, 0.33]],
+  8: [...CORNERS, ...SIDES, [C, 0.33], [C, 0.67]],
+  9: [...NINE, [C, 0.5]],
+  10: [...NINE, [C, 0.28], [C, 0.72]],
+};
 function pips(g, kind, x0, y0, w, h, count) {
-  g.fillStyle = INK;
-  if (!count) { for (let y = y0 + 22; y < y0 + h - 10; y += 40) for (let x = x0 + 22 + ((y / 40) % 2) * 20; x < x0 + w - 10; x += 40) g.fill(suit(kind, x, y, 11)); return; }
-  const cols = count < 4 ? [x0 + w / 2] : [x0 + w * 0.3, x0 + w * 0.7];
-  const rows = Math.ceil(count / cols.length);
-  let k = 0;
-  for (let r = 0; r < rows; r++) for (const x of cols) { if (k++ >= count) break; g.fill(suit(kind, x, y0 + h * (r + 0.5) / rows, 18)); }
-  g.font = FONT(26); g.textAlign = 'left'; g.fillText(String(count), x0 + 8, y0 + 28);
+  g.fillStyle = suitColour(kind);
+  const r = count === 1 ? 34 : 17; // the ace has one large pip
+  for (const [u, v] of PIP_LAYOUT[count]) {
+    g.save(); g.translate(x0 + u * w, y0 + v * h); if (v > 0.5) g.rotate(Math.PI);
+    g.fill(suit(kind, 0, 0, r)); g.restore();
+  }
 }
 // A crown, at (x, y) its bottom centre, w wide.
 function crown(g, x, y, w) {
@@ -41,8 +61,9 @@ function crown(g, x, y, w) {
 }
 
 // A card person: "oblong and flat, with their hands and feet at the corners", a small head
-// on top. who: { suit, rank (number) | 'all' (ornamented all over) | 'king' | 'queen' | 'knave' |
-// 'executioner' }. pose: stand, walk, paint, bow, kneel, point, flush, stamp, folded, carry, axe, run.
+// on top. who: { suit, rank (1-10, the pips) | 'king' | 'queen' | 'knave' |
+// 'executioner' }, plus optional wig (the King as judge), specs, chains (the Knave on trial) and
+// face ('pale' | 'purple', Chapter XII). pose: stand, walk, paint, bow, kneel, point, flush, stamp, folded, carry, axe, run.
 export function card(who, pose = 'stand') {
   const { c, g } = canvas(300, 460);
   const B = { x: 70, y: 130, w: 160, h: 240 }; // the card body
@@ -62,7 +83,7 @@ export function card(who, pose = 'stand') {
   const body = rect(B.x, B.y, B.w, B.h);
   fillPaper(g, body);
   const kind = who.suit;
-  if (typeof who.rank === 'number' || who.rank === 'all') pips(g, kind, B.x, B.y, B.w, B.h, who.rank === 'all' ? 0 : who.rank);
+  if (typeof who.rank === 'number') pips(g, kind, B.x, B.y, B.w, B.h, who.rank);
   else {
     const robe = new Path2D(); robe.moveTo(B.x + 20, B.y); robe.lineTo(B.x + 5, B.y + B.h); robe.lineTo(B.x + B.w - 5, B.y + B.h); robe.lineTo(B.x + B.w - 20, B.y); robe.closePath();
     hatch(g, robe, { angle: who.rank === 'executioner' ? 0.3 : Math.PI / 2, gap: who.rank === 'executioner' ? 3 : 6, seed: 1611 + B.y, alpha: who.rank === 'executioner' ? 0.9 : 0.45 });
@@ -70,7 +91,7 @@ export function card(who, pose = 'stand') {
       const ermine = rect(B.x + 8, B.y + B.h - 34, B.w - 16, 26); fillPaper(g, ermine); outline(g, ermine, 2);
       for (let x = B.x + 20; x < B.x + B.w - 10; x += 22) dot(g, x, B.y + B.h - 21, 3);
       g.fillStyle = PAPER; const s = suit(kind, B.x + B.w / 2, B.y + 70, 26); g.fill(s); g.lineWidth = 3; g.stroke(s);
-      g.fillStyle = INK; g.fill(suit(kind, B.x + B.w / 2, B.y + 70, 16));
+      g.fillStyle = suitColour(kind); g.fill(suit(kind, B.x + B.w / 2, B.y + 70, 16));
     }
   }
   outline(g, body, 4);
@@ -103,7 +124,10 @@ export function card(who, pose = 'stand') {
   // The head, a little to the left (facing left).
   const hx = 150, hy = 82;
   const head = ellipse(hx - 4, hy, 34, 40);
-  if (pose === 'flush') { g.fillStyle = SPOT.crimson; g.fill(head); hatch(g, head, { angle: 0.5, gap: 5, seed: 1641, alpha: 0.35 }); outline(g, head, 3); } // "turned crimson with fury"
+  // The judge's great wig, behind the head and down to the shoulders.
+  if (who.wig) for (const s of [-1, 1]) for (let k = 0; k < 4; k++) { const curl = ellipse(hx - 4 + s * 40, hy - 20 + k * 24, 16, 14); fillPaper(g, curl); g.lineWidth = 2; g.beginPath(); g.arc(hx - 4 + s * 40, hy - 20 + k * 24, 7, 0, Math.PI * 1.5); g.stroke(); outline(g, curl, 2.5); }
+  const faceColour = pose === 'flush' ? SPOT.crimson : who.face === 'pale' ? SPOT.paleFace : who.face === 'purple' ? SPOT.purple : null;
+  if (faceColour) { g.fillStyle = faceColour; g.fill(head); if (who.face !== 'pale') hatch(g, head, { angle: 0.5, gap: 5, seed: 1641, alpha: 0.35 }); outline(g, head, 3); } // "turned crimson with fury", "turned pale", "turning purple"
   else { fillPaper(g, head); shadeEdge(g, head, { size: 60, dx: 0.2, dy: 0, angle: 0.5, gap: 4, seed: 1642 }); outline(g, head, 3); }
   dot(g, hx - 18, hy - 6, 4); line(g, 3, [[hx - 32, hy + 2], [hx - 40, hy + 12], [hx - 30, hy + 14]]);
   if (pose === 'point' || pose === 'flush' || pose === 'stamp') { const m = ellipse(hx - 20, hy + 22, 9, 7); g.fillStyle = INK; g.fill(m); } // shouting
@@ -113,6 +137,8 @@ export function card(who, pose = 'stand') {
   if (who.rank === 'knave') { const cap = new Path2D(); cap.moveTo(hx - 40, hy - 26); cap.quadraticCurveTo(hx, hy - 70, hx + 34, hy - 24); cap.closePath(); panel(g, cap, 1652, 0.6, 4, 0.6); }
   if (who.rank === 'executioner') { const hood = new Path2D(); hood.moveTo(hx - 40, hy + 10); hood.lineTo(hx - 30, hy - 46); hood.quadraticCurveTo(hx, hy - 60, hx + 30, hy - 40); hood.lineTo(hx + 32, hy + 20); hood.closePath(); g.fillStyle = INK; g.fill(hood); dot(g, hx - 18, hy - 6, 5, PAPER); }
   if (pose === 'flush' || pose === 'point' || pose === 'stamp' || pose === 'folded') { /* the Queen's eyes glare */ line(g, 3, [[hx - 28, hy - 16], [hx - 10, hy - 12]]); }
+  if (who.specs) { for (const x of [hx - 30, hx - 8]) { g.lineWidth = 2.5; g.beginPath(); g.arc(x, hy - 6, 10, 0, Math.PI * 2); g.stroke(); } line(g, 2, [[hx - 20, hy - 7], [hx - 18, hy - 7]]); }
+  if (who.chains) { g.lineWidth = 3; for (let k = 0; k < 9; k++) { g.beginPath(); g.ellipse(B.x + 8 + k * 18, B.y + 120 + Math.sin(k) * 4, 9, 6, 0, 0, Math.PI * 2); g.stroke(); } for (const x of [B.x - 22, B.x + B.w + 22]) { const cuff = rect(x - 12, B.y + 92, 24, 14); g.fillStyle = INK; g.fill(cuff); } }
   return c;
 }
 // A card lying flat on its face: only the back shows, "the same as the rest of the pack".
@@ -262,7 +288,18 @@ export function catHead(stage = 2) {
   return c;
 }
 // The King and Queen's guests: a King or Queen of another suit, small and plain.
-export const GUESTS = [{ suit: 'spades', rank: 'king' }, { suit: 'clubs', rank: 'queen' }, { suit: 'diamonds', rank: 'king' }, { suit: 'spades', rank: 'queen' }];
+// The pack (owner, 2026-10-11): one pack of 52, each card person unique. From the text: ten
+// soldiers "carrying clubs" (ace to ten of clubs), ten courtiers "ornamented all over with
+// diamonds" (ace to ten of diamonds), ten royal children "ornamented with hearts" (ace to ten
+// of hearts), the guests "mostly Kings and Queens", the Knave, King and Queen of Hearts. The
+// gardeners Two, Five and Seven are spades after Tenniel; the other spades fill the blind areas
+// (the executioner, the officers of the court).
+export const SOLDIERS = Array.from({ length: 10 }, (_, i) => ({ suit: 'clubs', rank: i + 1 }));
+export const COURTIERS = Array.from({ length: 10 }, (_, i) => ({ suit: 'diamonds', rank: i + 1 }));
+export const CHILDREN = Array.from({ length: 10 }, (_, i) => ({ suit: 'hearts', rank: i + 1 }));
+export const GUESTS = [{ suit: 'clubs', rank: 'king' }, { suit: 'clubs', rank: 'queen' }, { suit: 'diamonds', rank: 'king' }, { suit: 'diamonds', rank: 'queen' },
+  { suit: 'spades', rank: 'king' }, { suit: 'spades', rank: 'queen' }, { suit: 'spades', rank: 'knave' }];
+export const OFFICERS = [{ suit: 'spades', rank: 3 }, { suit: 'spades', rank: 4 }];   // "the officers of the court" (Chapter XI)
 
 // --- Thought vignettes ------------------------------------------------------------
 // "it was for bringing the cook tulip-roots instead of onions"

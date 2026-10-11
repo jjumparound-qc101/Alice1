@@ -9,7 +9,7 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
-import { card, cardArch, GUESTS } from '../props8.js';
+import { card, cardArch, GUESTS, COURTIERS, CHILDREN } from '../props8.js';
 import { sunnyBank, tempersVignette, pigsFlyVignette, seaSchoolVignette, mastersVignette } from '../props9.js';
 import { buildCroquet, FOOT, CROQ, FTREE } from '../sets/croquet.js';
 import { buildSeashore, ROCK, LEDGE_AT } from '../sets/seashore.js';
@@ -51,7 +51,7 @@ export const duchessWalk = {
     const ARCHES = [[1.3, -0.6], [2.4, -1.2], [3.1, -0.3], [4.0, -1.1], [4.6, 0.1], [3.0, -1.6]];
     const archTex = texture(cardArch());
     const arches = ARCHES.map(([x, z]) => { const a = paperFlat(archTex, 0.18, 0.18); a.position.set(x, 0, z); group.add(a); return a; });
-    const players = [{ suit: 'diamonds', rank: 'all' }, { suit: 'hearts', rank: 'all' }, ...GUESTS, { suit: 'diamonds', rank: 'all' }];
+    const players = [...GUESTS, COURTIERS[2], CHILDREN[3]];
     const crowd = extras(group, players.map((who) => {
       const h = who.rank === 'king' || who.rank === 'queen' ? COURT_H : who.suit === 'hearts' ? CHILD_H : CARD_H;
       return { poses: { stand: cardPose(who, 'stand', h) }, height: h };

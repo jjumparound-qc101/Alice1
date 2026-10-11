@@ -36,7 +36,7 @@ Rich and bright, with a slight glow (owner, Notes 1.0 #14): the colour lies over
 | VIII | Roses: white, being painted red | white → red | 1 |
 | VIII | The cushion under the King's crown | crimson | 1 |
 | VIII | The Queen's face | crimson | 3 |
-| VIII | The card suits (hearts, diamonds) | none: ink | Owner, 2026-10-10: the text never says red, so the suits stay ink like Tenniel's prints |
+| VIII–XII | The card suits | red hearts and diamonds, black clubs and spades | Owner, 2026-10-11 (replaces the 2026-10-10 "ink" decision): the card people are coloured as real playing cards, on their pips and suit signs only |
 | X | "turn not pale" (song) | pale | 6 |
 | X | "baked me too brown" (poem) | brown | 6 |
 | X | "Beautiful Soup, so rich and green" (song) | green | 6 |

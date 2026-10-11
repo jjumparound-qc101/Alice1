@@ -9,7 +9,7 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
-import { card, cardBack, cardArch, flamingo, hedgehog, catHead, CAT_HEAD_PX, GUESTS, tulipVignette } from '../props8.js';
+import { card, cardBack, cardArch, flamingo, hedgehog, catHead, CAT_HEAD_PX, SOLDIERS, COURTIERS, CHILDREN, GUESTS, tulipVignette } from '../props8.js';
 import { buildCroquet, FOOT, ROSE, POT, CROQ, FTREE } from '../sets/croquet.js';
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
@@ -26,9 +26,9 @@ const ROWS = [
   ...[0, 1, 2, 3, 4].map((k) => [k * 0.2, LANE, 'soldier']),
   ...[0, 1, 2, 3, 4].map((k) => [1.1 + k * 0.2, LANE, 'courtier']),
   ...[0, 1, 2, 3, 4].map((k) => [2.2 + k * 0.18, LANE, 'child']),
-  [3.2, LANE, 'guest'], [3.45, [LANE[1]], 'guest'],
+  [3.2, LANE, 'guest'], [3.4, LANE, 'guest'], [3.6, LANE, 'guest'], [3.8, [LANE[1]], 'guest'],
 ];
-const OFF = { rabbit: 3.45, knave: 3.8, queen: 4.1, king: 4.25 };
+const OFF = { rabbit: 3.8, knave: 4.05, queen: 4.35, king: 4.5 };
 
 // --- 1. The rose-tree and the procession -------------------------------------------------
 export const roseTree = {
@@ -80,12 +80,12 @@ export const roseTree = {
     };
     // The extras of the procession: soldiers (clubs), courtiers (diamonds), children (hearts), guests.
     const list = [], places = [];
-    let soldier = 0, guest = 0;
+    const next = { soldier: 0, courtier: 0, child: 0, guest: 0 };
+    const deck = { soldier: SOLDIERS, courtier: COURTIERS, child: CHILDREN, guest: GUESTS };
     for (const [off, zs, kind] of ROWS) for (const z of zs) {
-      if (kind === 'soldier') { const who = { suit: 'clubs', rank: ++soldier }; list.push({ poses: { stand: cardPose(who, 'stand', CARD_H) }, height: CARD_H }); }
-      if (kind === 'courtier') list.push({ poses: { stand: cardPose({ suit: 'diamonds', rank: 'all' }, 'stand', CARD_H) }, height: CARD_H });
-      if (kind === 'child') list.push({ poses: { stand: cardPose({ suit: 'hearts', rank: 'all' }, 'stand', CHILD_H) }, height: CHILD_H });
-      if (kind === 'guest') { const who = GUESTS[guest++]; list.push({ poses: { stand: cardPose(who, 'stand', COURT_H) }, height: COURT_H }); }
+      const who = deck[kind][next[kind]++];                      // each card person is a different card of the pack
+      const h = kind === 'child' ? CHILD_H : kind === 'guest' ? COURT_H : CARD_H;
+      list.push({ poses: { stand: cardPose(who, 'stand', h) }, height: h });
       places.push({ off, z, kind, i: list.length - 1 });
     }
     const crowd = extras(group, list);
@@ -254,7 +254,7 @@ export const croquetGame = {
     const heads = [0, 1, 2].map((s) => { const h = paperFlat(texture(catHead(s)), CW, CH, { anchor: 'center', edge: false }); h.position.set(CAT.x, CAT.y, CAT.z); group.add(h); return h; });
     heads.forEach((h) => { h.userData.front.material.transparent = true; h.userData.front.material.alphaTest = 0.01; });
     // The other players, quarrelling and fighting for the hedgehogs; at the end, a crowd round the Cat.
-    const players = [{ suit: 'diamonds', rank: 'all' }, { suit: 'hearts', rank: 'all' }, ...GUESTS, { suit: 'diamonds', rank: 'all' }, { suit: 'clubs', rank: 4 }];
+    const players = [...GUESTS, COURTIERS[2], CHILDREN[3]];       // the guests play, and a courtier and a child
     const crowd = extras(group, players.map((who) => {
       const h = who.rank === 'king' || who.rank === 'queen' ? COURT_H : who.suit === 'hearts' ? CHILD_H : CARD_H;
       return { poses: { stand: cardPose(who, 'stand', h) }, height: h };

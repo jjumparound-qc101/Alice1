@@ -2,8 +2,15 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-11: The card people are coloured like real cards, one pack of 52
+Status: Confirmed by the owner. Replaces "Chapter VIII card suits stay ink" below.
+
+- **Colour.** Hearts and diamonds are red, clubs and spades black, on the pips and suit signs (the bodies, heads and limbs stay ink). Court cards carry their suit sign in its colour.
+- **Period styling.** English packs of 1865 had no corner numbers, so the rank is read by counting the pips, laid out as on a real card (lower-half pips upside down; the ace one large pip). No numerals.
+- **One pack.** The text speaks only of "a pack of cards" and "the whole pack", and its counts fit one pack of 52: ten soldiers "carrying clubs" (ace to ten of clubs), ten courtiers "ornamented all over with diamonds" (ace to ten of diamonds), ten royal children "ornamented with hearts" (ace to ten of hearts), the guests "mostly Kings and Queens" (the Kings and Queens of clubs, diamonds and spades, and the Knave of Spades), and the Knave, King and Queen of Hearts. The gardeners Two, Five and Seven are spades, after Tenniel (the text gives no suit). Each card person is a different card. The blind areas use the spare spades: the executioner, and the officers of the court in Chapter XI (Three and Four of Spades). The Knaves of Clubs and Diamonds and the rest of the spades are free for later scenes.
+
 ## 2026-10-10: Chapter VIII card suits stay ink
-Status: Confirmed by the owner.
+Status: Replaced by the owner on 2026-10-11 (see above).
 
 The text says the courtiers are "ornamented all over with diamonds" and the royal children "with hearts", but never says red. By the colour rule (docs/COLOR.md) the suits stay ink, like Tenniel's prints, so the painted red roses and the crimson cushion are the only red on the croquet-ground.
 

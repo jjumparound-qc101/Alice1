@@ -18,7 +18,7 @@ Status: Draft for the owner. Plates checked against web-resolution images from V
 |---|---|---|---|
 | The Hatter's face | pale, briefly | "the Hatter, who turned pale and fidgeted" | 3 (a flush to pale, then back to ink) |
 | The White Rabbit | paper-white, pink eyes | as before | 1, 8 |
-The cards' suits stay ink (owner, 2026-10-10).
+The cards' suits are red and black, as on real cards (owner, 2026-10-11).
 
 ## Alice: 5 poses (whole figures, model sheet attached)
 | ID | Beat | Source | Base |
