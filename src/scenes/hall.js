@@ -80,7 +80,9 @@ export const hall = {
       const crying = t >= T.sat && t < T.scold;
       let y = 0;
       if (t >= T.legs && t < T.sat) y = Math.abs(Math.sin((t - T.legs) * 1.6)) * 0.12; // climbs the leg, slips back
-      return { ...s, pose: kneeling || crying ? 'sit' : 'stand', scale, y, moving: s.moving || (y > 0.01 && !crying) };
+      const eating = t >= T.ate && t < T.finished;   // the cake drawn in her hand, the other on her head
+      const pose = kneeling ? 'kneel' : crying ? 'cry' : eating && !s.moving ? 'eat' : 'stand';
+      return { ...s, pose, dir: kneeling ? 1 : s.dir, scale, y, moving: s.moving || (y > 0.01 && !crying) };
     }
 
     const rest = (obj, x, y, z) => { obj.position.set(x, y, z); obj.rotation.set(0, 0, 0); };
@@ -103,7 +105,7 @@ export const hall = {
       // Under the table: the little glass box and the cake.
       box.visible = cake.visible = t >= T.box - 0.5;
       box.position.set(TABLE.x - 0.05, 0, TABLE.z + 0.25);
-      if (t >= T.ate && t < T.finished) carry(cake, cast.alice, { drop: 0.04 });
+      if (t >= T.ate && t < T.finished) { carry(cake, cast.alice, { drop: 0.04 }); cake.visible = a.pose !== 'eat'; }
       else rest(cake, TABLE.x - 0.065, 0.012, TABLE.z + 0.245); // inside the box: just behind its card, seen through the glass
       if (t >= T.finished) cake.visible = false;
     }

@@ -8,7 +8,6 @@ import { PerfMeter } from './perf.js';
 import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { CHAPTERS } from './chapters.js';
 import { texture } from './ink.js';
-import { mouseSwim, mouseLeap, duckSwim, dodoSwim, lorySwim, eagletSwim } from './props2.js';
 import { lizard, guineaPig, puppy, caterpillar } from './props4.js';
 import { pigeon } from './props5.js';
 import { footman, duchess, cook, pig } from './props6.js';
@@ -16,7 +15,7 @@ import { hatter, marchHare } from './props7.js';
 import { card } from './props8.js';
 import { gryphon, mockTurtle } from './props9.js';
 import { hatterStand } from './props11.js';
-import { mouseUp, mouseWalk, dodoStand, duckStand, loryStand, eagletStand, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
+import { mouseUp, mouseWalk, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
 
 const $ = (id) => document.getElementById(id);
 const SAVE_KEY = 'alice.place.v2';
@@ -66,7 +65,12 @@ async function main() {
   // Interim AI master drawings (PROVENANCE.md), shared by every chapter.
   const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar',
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
-    'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan']; // tools/small_props.py
+    'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
+    // Chapter II (tools/ch2_art.py): the Rabbit, the Mouse, the birds, props, the pool and the thoughts.
+    ...['rabbit2_trot', 'rabbit2_start', 'rabbit2_away', 'mouse_swim', 'mouse_leap', 'mouse_bristle', 'mouse_away',
+      'duck_swim', 'duck_stand', 'dodo_swim', 'dodo_stand', 'lory_swim', 'lory_stand', 'eaglet_swim', 'eaglet_stand',
+      'kid_gloves', 'splash', 'pool_water', 'pool_rim'].map((n) => `ch2/${n}`),
+    ...['foot_parcel', 'ada_mabel', 'crocodile', 'seaside', 'walrus', 'dinah_fire', 'terrier'].map((n) => `vignettes/${n}`)];
   const narrated = CHAPTERS.filter((c) => c.narrated);
   const [wordsList, shaftMeta, hallMeta, poseMeta, rabbitArt, ...aiArt] = await Promise.all([
     Promise.all(narrated.map((c) => fetch(c.words).then((r) => r.json()))),
@@ -116,9 +120,17 @@ async function main() {
 
   // A pose drawn in code: { tex, aspect, height, facesLeft }.
   const drawn = (c, height) => ({ tex: texture(c), aspect: c.width / c.height, height, facesLeft: true });
+  // A pose from an AI drawing in `ai`.
+  const art = (name, height, facesLeft = true) => ({ ...ai[name], height, facesLeft });
   // Shared cast.
   const cast = {
-    rabbit: new Puppet({ watch: { ...rabbitArt, facesLeft: true } }, 0.85),
+    rabbit: new Puppet({
+      watch: { ...rabbitArt, facesLeft: true },
+      // Chapter II: "splendidly dressed", gloves and fan in his paws; starting; scurrying away.
+      trot: { ...ai['ch2/rabbit2_trot'], facesLeft: true, height: 0.95 },
+      start: { ...ai['ch2/rabbit2_start'], facesLeft: false, height: 1.0 },
+      away: { ...ai['ch2/rabbit2_away'], facesLeft: true, height: 0.9 },
+    }, 0.85),
     alice: new Puppet({
       sit: { ...ai.alice_sit, facesLeft: false, height: 0.85, hand: [0.65, 0.7] },
       stand: { ...ai.alice_stand, facesLeft: true, hand: [0.55, 0.57] },
@@ -130,11 +142,15 @@ async function main() {
     sister: new Puppet({ read: { ...ai.sister_read, facesLeft: false, height: 1.05 } }, 1.05),
     // Chapter II placeholders (props2.js), sized for a tiny Alice: swimmers show only what
     // is above the water.
-    mouse: new Puppet({ swim: drawn(mouseSwim(), 0.05), leap: drawn(mouseLeap(), 0.09), up: drawn(mouseUp(), 0.09), walk: drawn(mouseWalk(), 0.04) }, 0.05),
-    duck: new Puppet({ swim: drawn(duckSwim(), 0.07), up: drawn(duckStand(), 0.1) }, 0.07),
-    dodo: new Puppet({ swim: drawn(dodoSwim(), 0.11), up: drawn(dodoStand(), 0.2) }, 0.11),
-    lory: new Puppet({ swim: drawn(lorySwim(), 0.065), up: drawn(loryStand(), 0.1) }, 0.065),
-    eaglet: new Puppet({ swim: drawn(eagletSwim(), 0.065), up: drawn(eagletStand(), 0.1) }, 0.065),
+    // The Mouse and the birds (AI drawings, tools/ch2_art.py; drawn facing right). The Mouse
+    // standing and walking on the shore (Chapter III) are still placeholders.
+    mouse: new Puppet({ swim: art('ch2/mouse_swim', 0.05, false), leap: art('ch2/mouse_leap', 0.13, false),
+      bristle: art('ch2/mouse_bristle', 0.07), away: art('ch2/mouse_away', 0.06, false),
+      up: drawn(mouseUp(), 0.09), walk: drawn(mouseWalk(), 0.04) }, 0.05),
+    duck: new Puppet({ swim: art('ch2/duck_swim', 0.06, false), up: art('ch2/duck_stand', 0.11, false) }, 0.07),
+    dodo: new Puppet({ swim: art('ch2/dodo_swim', 0.09, false), up: art('ch2/dodo_stand', 0.2, false) }, 0.11),
+    lory: new Puppet({ swim: art('ch2/lory_swim', 0.06, false), up: art('ch2/lory_stand', 0.1, false) }, 0.065),
+    eaglet: new Puppet({ swim: art('ch2/eaglet_swim', 0.06, false), up: art('ch2/eaglet_stand', 0.11, false) }, 0.065),
     // Chapter III placeholders (props3.js).
     owl: new Puppet({ up: drawn(owlStand(), 0.09) }, 0.09),
     magpie: new Puppet({ up: drawn(magpieStand(), 0.1) }, 0.1),

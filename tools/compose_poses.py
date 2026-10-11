@@ -47,6 +47,20 @@ DRAWN = {
     "cry_giant": {"src": "source/ai/alice2_cry_giant.webp", "h": 490, "bodyX": None},
     # Drawn facing right, lying along the floor: mirrored so she faces left like the others.
     "lie": {"src": "source/ai/alice2_lie.webp", "h": 235, "bodyX": None, "mirror": True},
+    "fan": {"src": "source/ai/alice2_fan.webp", "h": 661, "bodyX": None},
+    "recite": {"src": "source/ai/alice2_recite.webp", "h": 508, "bodyX": None},
+    "glove": {"src": "source/ai/alice2_glove.webp", "h": 671, "bodyX": None},
+    "drop_fan": {"src": "source/ai/alice2_drop_fan.webp", "h": 610, "bodyX": None},
+    "kneel_back": {"src": "source/ai/alice2_kneel_back.webp", "h": 507, "bodyX": None},
+    "slip": {"src": "source/ai/alice2_slip.webp", "h": 576, "bodyX": None},
+    # Swimming: drawn down to the water line, reaching to the right: mirrored.
+    "swim": {"src": "source/ai/alice2_swim.webp", "h": 192, "bodyX": None, "mirror": True},
+    "swim_talk": {"src": "source/ai/alice2_swim_talk.webp", "h": 201, "bodyX": None, "mirror": True},
+    # Chapter I.
+    "fall": {"src": "source/ai/alice_fall.webp", "h": 698, "bodyX": None},
+    "kneel": {"src": "source/ai/alice_kneel.webp", "h": 332, "bodyX": None, "mirror": True},
+    "cry": {"src": "source/ai/alice_cry.webp", "h": 485, "bodyX": None},
+    "eat": {"src": "source/ai/alice_eat.webp", "h": 753, "bodyX": None},
 }
 
 

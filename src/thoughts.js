@@ -4,10 +4,10 @@ import { paperFlat } from './stage.js';
 import { texture } from './ink.js';
 import { smooth } from './track.js';
 
-// list: [{ t0, t1, art (a canvas from props.js) }]. Returns update(t, pos, size).
+// list: [{ t0, t1, art (a canvas from props.js, or an AI drawing's texture) }]. Returns update(t, pos, size).
 export function thoughts(group, list) {
   const cards = list.map(({ t0, t1, art }) => {
-    const card = paperFlat(texture(art), 1.0, 0.7, { anchor: 'center' });
+    const card = paperFlat(art.isTexture ? art : texture(art), 1.0, 0.7, { anchor: 'center' });
     card.visible = false;
     group.add(card);
     return { t0, t1, card };

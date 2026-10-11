@@ -2,15 +2,13 @@
 // Alice grows until her head strikes the roof, cries a pool of tears, frightens the
 // White Rabbit into dropping his gloves and fan, wonders who she is, shrinks again, slips
 // into her own tears, and swims with the Mouse until the birds and animals arrive.
-// Characters and props not yet drawn are placeholders from props2.js.
+// The art is the AI drawings (tools/compose_poses.py for Alice, tools/ch2_art.py for the
+// rest); tears are still drawn in code (props2.js).
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture } from '../ink.js';
 import { buildHall, TABLE, DOOR, KEY, H } from '../sets/hall.js';
-import {
-  kidGloves, tear, water, footParcelVignette, adaMabelVignette, crocodileVignette,
-  seasideVignette, walrusVignette, dinahFireVignette, terrierVignette,
-} from '../props2.js';
+import { tear } from '../props2.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
@@ -60,7 +58,8 @@ export const pool = {
     const KEY_ON_TABLE = [TABLE.x + 0.12, TABLE.top + 0.015 + KEY.h / 2, TABLE.z + 0.08];
 
     // The pool of tears: engraved water lines, spreading as she cries and rising to four inches.
-    const waterTex = texture(water(), { repeat: [1, 1] });
+    const waterTex = ai['ch2/pool_water'].tex;
+    waterTex.wrapS = waterTex.wrapT = THREE.RepeatWrapping;
     const pond = new THREE.Mesh(new THREE.CircleGeometry(1, 72), new THREE.MeshBasicMaterial({ map: waterTex }));
     pond.rotation.x = -Math.PI / 2;
     group.add(pond);
@@ -75,18 +74,37 @@ export const pool = {
     });
 
     // The Rabbit's white kid gloves and large fan, which Alice picks up.
-    const gloves = paperFlat(texture(kidGloves()), 0.1, 0.06, { anchor: 'center' });
+    const gloves = paperFlat(ai['ch2/kid_gloves'].tex, 0.07, 0.07 / ai['ch2/kid_gloves'].aspect, { anchor: 'center' });
     const fanProp = paperFlat(ai['props/fan'].tex, 0.2, 0.2 / ai['props/fan'].aspect, { anchor: 'center' }); // AI drawing (tools/small_props.py)
     group.add(gloves, fanProp);
+    const splash = paperFlat(ai['ch2/splash'].tex, 0.22, 0.22 / ai['ch2/splash'].aspect, { edge: false });
+    // The pool's far shore, seen from water level by tiny Alice: the stones of the floor's
+    // edge rising like cliffs (the band of stones from the shore drawing; the hall itself
+    // stands behind). Laid round the far half of the pool, alternately mirrored so the
+    // stones' tops meet.
+    const rimTex = ai['ch2/pool_rim'].tex, RIM_H = 0.12, RIM_W = RIM_H * ai['ch2/pool_rim'].aspect;
+    const shore = new THREE.Group();
+    const RIM_N = 14;
+    for (let i = 0; i < RIM_N; i++) {
+      const a = Math.PI * (1.04 + 0.92 * (i + 0.5) / RIM_N);          // round the back of the pool
+      const piece = paperFlat(rimTex, RIM_W, RIM_H, { edge: false });
+      piece.position.set(POOL.x + Math.cos(a) * POOL.rx * 1.0, WATER_Y - 0.02, POOL.z + Math.sin(a) * POOL.rz * 1.0);
+      // Face the pool's centre; mirrored every other piece.
+      piece.lookAt(POOL.x, WATER_Y - 0.02, POOL.z);
+      if (i % 2) piece.scale.x = -1;
+      shore.add(piece);
+    }
+    group.add(splash, shore);
 
+    const V = (n) => ai[`vignettes/${n}`].tex;
     const think = thoughts(group, [
-      { t0: at('right') - 1, t1: at('dear', 1) + 1, art: footParcelVignette() },  // "Alice's Right Foot, Esq."
-      { t0: T.ada - 0.5, t1: T.puzzling + 1, art: adaMabelVignette() },
-      { t0: T.crocodile - 1, t1: T.notRight, art: crocodileVignette() },
-      { t0: T.bathing - 1.5, t1: T.poolOfTears - 0.5, art: seasideVignette() },
-      { t0: T.walrus - 0.8, t1: T.mouse - 0.3, art: walrusVignette() },
-      { t0: T.purring - 1, t1: T.purring + 13, art: dinahFireVignette() },
-      { t0: T.terrier - 1, t1: T.offended - 3, art: terrierVignette() },
+      { t0: at('right') - 1, t1: at('dear', 1) + 1, art: V('foot_parcel') },  // "Alice's Right Foot, Esq."
+      { t0: T.ada - 0.5, t1: T.puzzling + 1, art: V('ada_mabel') },
+      { t0: T.crocodile - 1, t1: T.notRight, art: V('crocodile') },
+      { t0: T.bathing - 1.5, t1: T.poolOfTears - 0.5, art: V('seaside') },
+      { t0: T.walrus - 0.8, t1: T.mouse - 0.3, art: V('walrus') },
+      { t0: T.purring - 1, t1: T.purring + 13, art: V('dinah_fire') },
+      { t0: T.terrier - 1, t1: T.offended - 3, art: V('terrier') },
     ]);
 
     // --- Alice -----------------------------------------------------------------
@@ -135,21 +153,41 @@ export const pool = {
       [T.end + 1, { x: 0.9, z: -0.5, dir: -1 }],                   // "Alice led the way … to the shore"
     ], { phase: t * 0.8 });
 
+    // Her drawn poses, by the text. (Whole figures, tools/compose_poses.py.)
+    const talking = (t) => (t >= T.mouse - 1 && t < T.away) || (t >= T.turned + 7 && t < T.ledTheWay - 3);
+    function posed(t) {
+      if (t >= 1.5 && t < T.feet - 1) return 'longneck';                 // "opening out like the largest telescope"
+      if (t >= T.feet - 1 && t < T.struck - 0.3) return 'feet';           // "Good-bye, feet!"
+      if (t >= T.struck - 0.3 && t < T.hurried) return 'stoop';           // her head against the roof
+      if (t >= T.lying && t < T.sat - 1) return 'lie';                     // "lying down on one side, to look through"
+      if (t >= T.sat + 1 && t < T.please - 1) return 'cry_giant';          // "began to cry again"
+      if (t >= T.please - 1 && t < T.skurried + 1.5) return 'kneel_back';  // "If you please, sir—"
+      if (t >= T.skurried + 1.5 && t < T.took - 1.2) return 'cry_giant';
+      if (t >= T.took + 1.2 && t < T.lap) return 'fan';                    // "fanning herself all the time"
+      if (t >= T.lap && t < T.hands - 0.5) return 'recite';                // "crossed her hands on her lap"
+      if (t >= T.hands - 0.5 && t < T.table - 0.5) return 'glove';         // "one of the Rabbit's little white kid gloves"
+      if (t >= T.droppedFan - 0.2 && t < T.droppedFan + 1.2) return 'drop_fan'; // "she dropped it hastily"
+      if (t >= T.slipped && t < T.splash) return 'slip';                   // "her foot slipped"
+      return 'stand';
+    }
+    // Poses drawn taller or lower than her standing figure: the long neck keeps her height
+    // (her body smaller); stooping, her head stays against the roof.
+    const POSE_K = { longneck: 708 / 950, stoop: 708 / 625 * 0.98 };
+
     function alice(t) {
       const scale = scaleAt(t);
       if (t >= T.splash) {
         const s = swim(t);
-        const sink = 0.7 * 1.25 * scale; // her head and shoulders above the water
         const fall = 1 - smooth((t - T.splash) / 0.5);
-        return { ...s, pose: 'stand', scale, float: true, moving: s.moving, y: WATER_Y - sink + fall * 0.12 };
+        // Drawn down to the water line: the bottom of the picture sits at the surface.
+        return { ...s, pose: talking(t) ? 'swim_talk' : 'swim', scale, float: true, moving: s.moving, y: WATER_Y - 0.004 * scale + fall * 0.12 };
       }
       const s = walk(t);
-      const sitting = (t >= T.lying && t < T.took - 1.2) || (t >= T.lap && t < T.hands - 0.5);
-      const dir = sitting ? (t < T.took ? 1 : -1) : s.dir;
+      const pose = s.moving ? 'stand' : posed(t);
+      const dir = pose === 'lie' || pose === 'kneel_back' ? 1 : pose === 'cry_giant' || pose === 'recite' ? -1 : s.dir;
       // Slipping: a little stumble forward at the pool's edge.
       const slip = t >= T.slipped ? smooth((t - T.slipped) / (T.splash - T.slipped)) : 0;
-      return { ...s, dir, pose: sitting ? 'sit' : 'stand', scale, tilt: sitting && t < T.took ? -0.15 : slip * 0.6,
-        y: -slip * 0.1, z: s.z + slip * 0.3 };
+      return { ...s, dir, pose, scale: scale * (POSE_K[pose] ?? 1), tilt: slip * 0.25, y: -slip * 0.1, z: s.z + slip * 0.3 };
     }
 
     // --- The White Rabbit: back "splendidly dressed", gloves in one paw, fan in the other ---
@@ -162,10 +200,13 @@ export const pool = {
         [T.near, STOP],
         [T.skurried, STOP],
         [T.skurried + 2.6, { x: -6.2, z: 0.6, dir: -1 }],            // "skurried away into the darkness"
-      ], { pose: 'watch', phase: t * (t > T.skurried ? 4 : 2.4) });
+      ], { phase: t * (t > T.skurried ? 4 : 2.4) });
       const jump = t >= T.started && t < T.started + 0.8 ? Math.sin(((t - T.started) / 0.8) * Math.PI) * 0.3 : 0; // "started violently"
-      return { ...s, dir: t > T.skurried ? -1 : s.moving ? 1 : -1, y: jump };
+      // Trotting in, gloves and fan drawn in his paws; starting, as they fly; scurrying away.
+      const pose = t >= T.skurried ? 'away' : t >= T.started ? 'start' : 'trot';
+      return { ...s, pose, dir: t > T.skurried ? -1 : s.moving ? 1 : -1, y: jump };
     }
+    const DROP = T.started + 0.7; // the gloves and fan, drawn flying in his starting pose, land
     const dropAt = (() => { const r = route(T.dropped, [[T.near, STOP]]); return { x: r.x + 0.08, z: r.z + 0.05 }; })();
 
     function update(t, cast) {
@@ -185,7 +226,7 @@ export const pool = {
 
       // Tears while she cries, and the splash.
       const crying = (t >= T.cry && t < T.pattering + 1) || (t >= T.burst && t < T.hands);
-      const face = { x: a.x + 0.06 * scale * (a.dir ?? 1), y: (a.y ?? 0) + (a.pose === 'sit' ? 0.66 : 1.05) * scale, z: a.z + 0.03 };
+      const face = { x: a.x + 0.06 * scale * (a.dir ?? 1), y: (a.y ?? 0) + ({ cry_giant: 0.66, recite: 0.7, lie: 0.2, kneel_back: 0.8 }[a.pose] ?? 1.05) * scale, z: a.z + 0.03 };
       drops.forEach((d, i) => {
         if (crying) {
           const ph = ((t * 1.2 + i / drops.length) % 1);
@@ -202,29 +243,39 @@ export const pool = {
 
       // The gloves and fan: in the Rabbit's paws, dropped, then taken up by Alice. She
       // fans herself as she talks, until she drops the fan "just in time".
-      const r = rabbit(t);
-      if (t < T.dropped && r.visible !== false) {
-        carry(gloves, cast.rabbit, { drop: -0.02 });
-        carry(fanProp, cast.rabbit, { drop: 0.04 });
-        gloves.visible = fanProp.visible = true;
+      // While the Rabbit holds them, and as they fly when he starts, they are drawn with him.
+      const p = a.pose;
+      if (t < DROP) {
+        gloves.visible = fanProp.visible = false;
       } else if (t < T.took + 0.6) {
-        gloves.visible = fanProp.visible = t >= T.dropped;
-        const fall = smooth((t - T.dropped) / 0.4);
+        gloves.visible = fanProp.visible = true;
+        const fall = smooth((t - DROP) / 0.4);
         gloves.position.set(dropAt.x, lerp(0.45, 0.035, fall), dropAt.z); gloves.rotation.set(-1.2 * fall, 0, 0);
         fanProp.position.set(dropAt.x + 0.12, lerp(0.4, 0.045, fall), dropAt.z + 0.06); fanProp.rotation.set(-1.2 * fall, 0, 0.4);
-      } else if (t < T.droppedFan) {
-        gloves.visible = t < T.hands; // one glove goes on her hand; the other is out of sight
-        carry(gloves, cast.alice, { drop: 0.06 * scale });
-        carry(fanProp, cast.alice, { tilt: t > T.fanning ? Math.sin(t * 7) * 0.35 : 0 });
-        fanProp.scale.setScalar(1);
-        gloves.visible = gloves.visible && fanProp.visible;
-        fanProp.visible = true;
+      } else if (t < T.droppedFan - 0.2) {
+        // In her hands; her fanning, reciting and glove poses draw them (or set them aside).
+        const drawnIn = p === 'fan' || p === 'recite' || p === 'glove';
+        gloves.visible = !drawnIn && t < T.hands;
+        fanProp.visible = !drawnIn;
+        if (gloves.visible) carry(gloves, cast.alice, { drop: 0.06 * scale });
+        if (fanProp.visible) { carry(fanProp, cast.alice); fanProp.scale.setScalar(1); }
       } else {
         gloves.visible = false;
-        const fall = smooth((t - T.droppedFan) / 0.5);
-        fanProp.visible = t < T.splash;
+        // Drawn falling from her hand in the dropping pose, then on the floor.
+        const fall = smooth((t - T.droppedFan - 1.2) / 0.3);
+        fanProp.visible = p !== 'drop_fan' && t < T.splash;
         fanProp.position.set(MEASURE.x + 0.15, lerp(0.15, 0.045, fall), MEASURE.z + 0.1); fanProp.rotation.set(-1.2 * fall, 0, 0.4);
       }
+
+      // The splash as she falls in.
+      const sp = (t - T.splash) / 1.2;
+      splash.visible = sp > -0.05 && sp < 1;
+      if (splash.visible) {
+        const k = Math.max(0, sp);
+        splash.position.set(IN_POOL.x, WATER_Y, IN_POOL.z + 0.02);
+        splash.scale.setScalar((0.4 + smooth(k / 0.3) * 0.6) * (1 - 0.6 * smooth((k - 0.6) / 0.4)));
+      }
+      shore.visible = t >= T.splash;
 
       // Her thoughts, beside her head but under the roof; small and low once she is swimming.
       const big = scale > 1;
@@ -252,7 +303,9 @@ export const pool = {
       const leaping = t >= T.leap && t < T.leap + 2.2;                // "a sudden leap out of the water … quiver all over"
       const hop = leaping ? Math.sin(Math.min(1, (t - T.leap) / 0.9) * Math.PI) * 0.12 : 0;
       const quiver = (leaping && t > T.leap + 0.9) || (t >= T.bristling && t < T.bristling + 6) ? Math.sin(t * 60) * 0.06 : 0;
-      return { ...s, pose: leaping ? 'leap' : 'swim', float: !leaping, moving: s.moving, y: WATER_Y - 0.004 + hop, tilt: quiver };
+      const pose = leaping ? 'leap' : t >= T.bristling && t < T.bristling + 6 ? 'bristle'   // "bristling all over"
+        : t >= T.away && t < T.away + 4.5 ? 'away' : 'swim';                                    // "swimming away from her"
+      return { ...s, pose, float: !leaping, moving: s.moving, y: WATER_Y - 0.004 + hop, tilt: quiver };
     }
     const BIRDS = {
       duck: [{ x: 5.7, z: -1.3 }, { x: 4.7, z: -1.15 }, { x: 1.4, z: -0.9 }],

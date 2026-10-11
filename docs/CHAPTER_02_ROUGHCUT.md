@@ -20,10 +20,14 @@ Status: Plays start to finish (11 minutes) in the Chapter I hall, with placehold
 | The seaside, the walrus, the Mouse, Dinah, the terrier | Thought vignettes; the Mouse swims up, leaps in fright, bristles, swims away and back |
 | "a Duck and a Dodo, a Lory and an Eaglet … swam to the shore" | The birds swim in; everyone swims to the shore |
 
-## Placeholders still in use
-The Mouse and the four birds (swimming), the white kid gloves, the fan, tears and splash drops, the water surface, and the seven thought vignettes are drawn in code (`src/props2.js`). Alice has no lying, crying, fanning or swimming poses yet: she uses standing and sitting, and swims as her standing figure sunk to the chin.
+## Art (2026-10-11: all 36 Chapter II images in)
+Every Chapter II asset is now the AI drawing: Alice's 13 poses (`tools/compose_poses.py`), the Rabbit's three, the Mouse's four, the four birds swimming (and standing, for Chapter III), the gloves, the splash, the pool's water, the stones of the far shore and the seven thoughts (`tools/ch2_art.py`). Only the falling tears are still drawn in code (`src/props2.js`).
+- The shore drawing's doors and table leg are dropped: only its band of stones is used, laid round the far side of the pool, because the 3D hall stands behind.
+- The Rabbit's gloves and fan are drawn in his trotting and starting poses; the separate props appear when they land. Likewise Alice's fanning, reciting, glove and dropping poses draw the fan and gloves.
+- Spare versions (not used): `source/ai/fan_v2.webp`, `alice_jump_v2.webp`.
 
 ## Known gaps
 - The key goes from her hand back to the table off-camera while she cries (the text only says it "was lying on the glass table as before").
-- The Mouse's "quite pale" face isn't shown yet (needs the Mouse art).
+- The Mouse's "quite pale" face isn't shown (no pose for it).
+- The water texture is busy right at water level; it may want a lighter tint after a look on a real screen.
 - No Explore-mode hotspots for the Rabbit's things or the swimmers.

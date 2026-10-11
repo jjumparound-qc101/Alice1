@@ -69,7 +69,9 @@ export const shaft = {
       const enter = smooth((t - T.dipped) / 2.5);
       const sway = Math.sin(t * 0.7) * 0.12;
       return {
-        visible: t > T.dipped - 0.2, pose: 'stand', dir: 1,
+        visible: t > T.dipped - 0.2, dir: 1,
+        // Floating down, arms up (drawn); standing while she holds the jar at her hand.
+        pose: t >= T.jar - 1 && t < T.putBack + 1 ? 'stand' : 'fall',
         x: Math.sin(t * 0.31) * 0.15, z: -1.0, // close to the wall, so the jar in her hand looks the size it did on the shelf
         y: lerp(5, 0.15, enter) + Math.sin(t * 0.9) * 0.05,
         tilt: sway,
