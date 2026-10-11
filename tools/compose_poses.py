@@ -40,6 +40,13 @@ DRAWN = {
     # below. Interim until the full-size original is sent. Drawn facing right: mirrored.
     "walk_b": {"src": "source/ai/alice_walk_b_screenshot.png", "h": 620, "bodyX": 193, "mirror": True,
                "screenshot": {"fade_from": 430, "blank": [(0, 468, 58, 515), (336, 470, 382, 515)]}},
+    # Chapter II (matched by eye against the standing Alice: dress, hands and head size).
+    "feet": {"src": "source/ai/alice2_feet.webp", "h": 695, "bodyX": None},
+    "longneck": {"src": "source/ai/alice2_longneck.webp", "h": 950, "bodyX": None},
+    "stoop": {"src": "source/ai/alice2_stoop.webp", "h": 625, "bodyX": None},
+    "cry_giant": {"src": "source/ai/alice2_cry_giant.webp", "h": 490, "bodyX": None},
+    # Drawn facing right, lying along the floor: mirrored so she faces left like the others.
+    "lie": {"src": "source/ai/alice2_lie.webp", "h": 235, "bodyX": None, "mirror": True},
 }
 
 
