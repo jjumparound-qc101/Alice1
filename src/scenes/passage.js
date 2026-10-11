@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
-import { earth, leafHeap } from '../props.js';
+import { earth } from '../props.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
 
 const LEN = 22, HALF_W = 1.4, H = 2.6, CORNER_Z = -17;
@@ -13,7 +13,7 @@ export const passage = {
   title: 'The long passage',
   start: (cue) => cue.at('thump') - 0.6,
 
-  build({ group, cue }) {
+  build({ group, ai, cue }) {
     const at = cue.at;
     const start = passage.start(cue);
     const T = {
@@ -41,9 +41,17 @@ export const passage = {
     const glow = new THREE.Mesh(new THREE.PlaneGeometry(1.2, H), new THREE.MeshBasicMaterial({ color: PAPER }));
     glow.rotation.y = -Math.PI / 2; glow.position.set(HALF_W + 3, H / 2, CORNER_Z); group.add(glow);
 
-    const heap = paperFlat(texture(leafHeap()), 2.4, 0.9);
+    // The heap of sticks and dry leaves, and Alice landing on it with the leaves flying (both
+    // AI drawings, tools/ch1_art.py). The landing drawing has its own heap, so it stands in
+    // for the heap and Alice from "thump!" until she jumps up.
+    const HEAP_W = 1.6; // sized to Alice in the landing drawing
+    const heap = paperFlat(ai['ch1/leaf_heap'].tex, HEAP_W, HEAP_W / ai['ch1/leaf_heap'].aspect);
     heap.position.set(0, 0, -0.6);
-    group.add(heap);
+    const LAND_W = HEAP_W * 0.95;
+    const landing = paperFlat(ai['ch1/alice_land'].tex, LAND_W, LAND_W / ai['ch1/alice_land'].aspect);
+    landing.position.set(0, 0, -0.55);
+    group.add(heap, landing);
+    const landed = (t) => t >= T.thump && t < T.jumped;
 
     const AT_HEAP = { x: 0, z: -0.45 };
     const CORNER = { x: 0.2, z: CORNER_Z + 0.6 };
@@ -52,7 +60,7 @@ export const passage = {
     function alice(t) {
       if (t < T.jumped) { // lands on the heap of sticks and dry leaves
         const drop = smooth((t - (T.thump - 0.6)) / 0.6);
-        return { pose: 'sit', ...AT_HEAP, dir: 1, y: lerp(2.5, 0.35, drop) };
+        return { pose: 'fall', ...AT_HEAP, dir: 1, y: lerp(2.5, 0.35, drop), visible: !landed(t) };
       }
       const s = route(t, [
         [T.jumped, { x: -0.55, z: -1.2, dir: 1 }],
@@ -89,6 +97,7 @@ export const passage = {
       bounds: { minX: -HALF_W + 0.4, maxX: HALF_W - 0.4, minZ: CORNER_Z + 1, maxZ: 1.5 },
       hotspots: [{ pos: new THREE.Vector3(0, 0.4, -0.6), title: 'A heap of sticks and dry leaves', text: 'down she came upon a heap of sticks and dry leaves, and the fall was over.' }],
       camera,
+      update(t) { landing.visible = landed(t); heap.visible = !landing.visible; },
       actors: (t) => ({ alice: alice(t), rabbit: rabbit(t) }),
     };
   },

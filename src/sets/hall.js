@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { paperFlat, halo } from '../stage.js';
 import { texture, canvas, INK } from '../ink.js';
-import { SPOT, hallWall, earth, garden } from '../props.js';
+import { SPOT, hallWall, earth } from '../props.js';
 
 export const HALL_W = 12, HALL_D = 6, H = 3.2;
 export const TABLE = { x: 0.4, z: -1.1, top: 0.92, r: 0.42 };
@@ -96,7 +96,7 @@ export function buildHall({ group, ai, hallMeta }) {
   view.g.beginPath();
   L.arch.forEach(([u, v], i) => view.g[i ? 'lineTo' : 'moveTo'](u * view.c.width, v * view.c.height));
   view.g.clip();
-  view.g.drawImage(garden(), 0, 0, view.c.width, view.c.height);
+  view.g.drawImage(ai['ch1/garden'].tex.image, 0, 0, view.c.width, view.c.height); // the AI drawing (tools/ch1_art.py)
   const gardenView = paperFlat(texture(view.c), DOOR.w, DOOR.h, { edge: false });
   gardenView.position.set(DOOR.x, 0, DOOR.z - 0.005); group.add(gardenView);
   const hinge = new THREE.Group();
