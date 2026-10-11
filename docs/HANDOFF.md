@@ -1,13 +1,15 @@
 # Handoff: read this first
-Updated: 2026-10-10 (end of session 2: Chapters VIII–X staged). For the next Claude Code session (or anyone) picking up the work.
+Updated: 2026-10-11 (end of session 2: Chapters VIII–XII staged, the whole book staged; card people; phones; Explore). For the next Claude Code session (or anyone) picking up the work.
 
 ## The project in one paragraph
 *Alice's Adventures in Wonderland* as an interactive novel for Steam (a "Library of Living Books" title). The book's text is shown in sync with the LibriVox full-cast reading, staged as a 2.5D Victorian toy theater: flat engraving-style cutouts in layered 3D sets, with a moving camera (Watch mode) and free walking with a 150° look arc (Explore mode). Black-and-white ink, except things the text gives a colour (docs/COLOR.md). Engine: three.js + Vite, wrapped in Electron for desktop and Steam (Gate A: docs/GATE_A.md).
 
 ## Where the project stands
-- **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly). Unstaged chapters play on an engraved title page with the text in sync.
+- **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly).
 - **The whole book is staged (Chapters I–XII)** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
-- **Art**: 13 of 324 AI images received and in the game (hall floor, lamp, curtain, little door, glass table, Alice walking A/B, Alice jumping; the golden key, DRINK ME bottle, EAT ME cake, glass box and fan via `tools/small_props.py`), plus the earlier riverbank/shaft masters and Alice's model sheet. Everything else is a placeholder.
+- **The asset master list is final** for the owner to generate from (owner, 2026-10-11): `docs/ASSETS_MASTER.md`, 344 prompts, chapter by chapter. The owner works through it chapter by chapter and will send patch notes after a few rounds.
+- **Phones and tablets** are supported (book layout upright, picture-first sideways, touch controls), and **Explore** has a 150° look arc and a walking stick on touch screens.
+- **Art**: 13 of 344 AI images received and in the game (hall floor, lamp, curtain, little door, glass table, Alice walking A/B, Alice jumping; the golden key, DRINK ME bottle, EAT ME cake, glass box and fan via `tools/small_props.py`), plus the earlier riverbank/shaft masters and Alice's model sheet. Everything else is a placeholder.
 
 | Chapter | Asset list | Staged | Scenes (`src/scenes/`) |
 |---|---|---|---|
@@ -28,7 +30,7 @@ Updated: 2026-10-10 (end of session 2: Chapters VIII–X staged). For the next C
 - **Remind the owner** (asked 2026-10-11) when Chapter XI art begins: the Tenniel frontispiece (the trial) is needed as the reference for the court prompts and isn't on Victorian Web. The owner downloads it from a scan of the 1865/66 edition, or adds commons.wikimedia.org to the network allowlist so Claude can fetch it.
 
 ## Next steps, in order
-1. **Drop in art as the owner sends it** (see "When art arrives"). The owner sends art in batches.
+1. **Drop in art as the owner sends it** (see "When art arrives"). The owner sends art in batches, chapter by chapter. Expect **patch notes** from the owner after a few rounds: work through them.
 2. Polish each chapter as its art arrives (each CHAPTER_NN_ROUGHCUT.md lists its gaps).
 3. Later (owner's decision; the whole book is now staged): low-end hardware test, code signing, high-resolution Tenniel scans (NYPL/British Library; Victorian Web images are only 432 px tall).
 
@@ -60,6 +62,8 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 - **Art to generate**: `docs/ASSETS_MASTER.md`. **Why each asset**: `docs/CHAPTER_NN_ASSETS.md`. **Decisions**: `docs/AMENDMENTS.md` (newest first). **Colours**: `docs/COLOR.md`. **Asset sources and AI disclosure**: `PROVENANCE.md`.
 
 ## Owner decisions so far (details in AMENDMENTS.md / COLOR.md)
+- AI art for the rest of the book: numbered card people with blank faces (game prints pips), court cards and court hearts with solid black suit signs (game recolours), 'Direct' Tenniel figures generated as AI now, the executioner is the Ace of Spades. The court's hearts (canopy, throne, herald's banner) are red.
+- Phones: portrait = picture band on top, text below; landscape = two-line strip, folded controls that hide while reading. Explore: 150° look arc, 25° up/down; touch stick.
 - Card people: coloured like real cards (red hearts and diamonds, black clubs and spades), period pip layouts with no corner numbers, one pack of 52 with each card person unique (`SOLDIERS`, `COURTIERS`, `CHILDREN`, `GUESTS`, `OFFICERS` in props8.js). Replaces the earlier "ink" decision.
 - Text layouts are a reader setting; spot colours only where the text names a colour; spot colours richer, with a slight glow.
 - Alice's poses are whole figures (no jointed puppet); the composed running poses are retired; one walk cycle for all movement.
@@ -72,20 +76,22 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 | File | What |
 |---|---|
 | `src/main.js` | Book engine: loads shared art, the cast of puppets (`cast`), opens a chapter (builds its sets on first open; points narration, text, timeline and end card at it), picks the active scene by narration time, scene turns (`paper`/`dark`), Watch/Explore, saves the place per chapter, contents menu, text layouts, speed, chapter end |
-| `src/chapters.js` | The twelve chapters: `NARRATED`, `STAGED` |
+| `src/chapters.js` | The twelve chapters: `NARRATED`, `STAGED`, `TINTS` (colour words in poems and songs) |
 | `src/scenes/*.js` | One file per chapter (see the table). A scene: `start(cue)`, optional `parts(cue)` (named marks for the contents/timeline/Shift+arrows), `turn`, and `build()` → `{ T, bg, fog, bounds, hotspots, camera(t), actors(t), update?(t, cast) }`. `placeholder.js`: the title page |
 | `src/sets/hall.js` | The hall set, shared by Chapters I, II, III, VII |
 | `src/sets/croquet.js` | The Queen's garden: rose-tree, flower-pot, croquet-ground (Chapters VIII, IX) |
 | `src/sets/seashore.js` | The seashore: sand, sea, the Mock Turtle's rock and ledge (Chapters IX, X) |
 | `src/sets/court.js` | The court: throne, Knave, tarts, jury-box and jurors, witness stand, crowds, door (Chapters XI, XII) |
 | `src/crowd.js` | Scene-only puppets ("extras": processions, crowds), posed in a scene's `update(t, cast, camera)` |
-| `src/props.js` … `props11.js` | Placeholder art drawn in code, per chapter (props.js = Chapter I and shared helpers: `vignette`, `shape`, `line`, `cat`, `SPOT` colours) |
+| `src/props.js` … `props12.js` | Placeholder art drawn in code, per chapter (props.js = Chapter I and shared helpers: `vignette`, `shape`, `line`, `cat`, `SPOT` colours) |
 | `src/puppet.js` | Paper-cutout puppets: poses swapped by name; `x z y scale tilt dir`, walking by distance (`walk_a`/`walk_b`), `idle`, `float` (swimmers); `handPoint()` and `carry(obj, puppet)` for held props |
 | `src/thoughts.js` | Thought vignettes (oval cards that pop open while the text speaks of them) |
 | `src/cues.js` | `at(word, n, after)` and `para(text)` |
 | `src/track.js` | `smooth`, `lerp`, `path`, `route` (waypoints; reports `dist` walked), `hop`, `cameraTrack` |
 | `src/stage.js`, `art.js`, `ink.js` | Riverbank set, `paperFlat()`, `halo()`; engraving helpers (`hatch`, `flicks`, `shadeEdge`…) |
-| `src/navigate.js`, `narration.js`, `explore.js`, `perf.js` | Timeline and skips; the book page; Explore mode; F3 readout |
+| `src/navigate.js`, `narration.js`, `explore.js`, `perf.js` | Timeline and skips; the book page (with `TINTS`); Explore mode (keys, drag, tap-to-walk, hold-to-walk, `stick`); F3 readout |
+| `src/sets/panorama.js` | Side scenery (sky, treeline) for outdoor sets, so the 150° look never finds an edge |
+| `index.html`, `src/style.css` | Page and controls; phone forms (`body[data-form]`), the More panel, the walking stick |
 | `electron/` | Desktop wrapper (Steam via steamworks.js) |
 | `godot/` | Gate A comparison only; not maintained |
 
@@ -116,3 +122,5 @@ A wrong count throws "cue word not found" when the chapter opens; the scene's ca
 - Giant Alice (Chapters II, IV) is a scaled standing/sitting figure until the giant poses arrive.
 - At tiny scale the hall floor's cracks look very large.
 - Chapter I leftovers from Notes 1.0: the leaf heap (note 4), the garden behind the little door (note 8), the Rabbit's hop (note 6) wait on their art.
+- The flying pack, the dream figures and the procession are extras that slide; drawn poses will improve them.
+- Mobile was checked in the test browser only (it imitates touch); the owner is trying it on a real phone.
