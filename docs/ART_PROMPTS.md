@@ -667,3 +667,38 @@ Background and sources: [CHAPTER_11_ASSETS.md](CHAPTER_11_ASSETS.md). Same conve
 27. `vignette_slates.png`: "Several slates with 'stupid things!' written on them, one spelt wrong."
 
 Priority if time is short: 5, 9, 10, 8, 16, 20, 21, 22, 23, 12, 7, 11, then the rest.
+
+## Chapter XII asset list (2026-10-11): "Alice's Evidence"
+Background and sources: [CHAPTER_12_ASSETS.md](CHAPTER_12_ASSETS.md). Same conversation, same rules. Attach the Alice model sheet with every Alice prompt and Tenniel 1.2 with the Rabbit. Card people: add the playing-card line from the Chapter VIII section. Draw faces in ink; the game adds the King's pale and the Queen's purple.
+
+**References to download first:** 12.1 (the jury-box upset) https://victorianweb.org/art/illustration/tenniel/alice/12.1.html · 12.2 (the King as judge) …/12.2.html · 12.3 (the pack of cards) …/12.3.html
+
+### Alice (whole figures on white, three-quarter view facing left unless stated)
+1. `alice12_jump_up.png` (attach 12.1): "Same Alice in Tenniel's pose from this plate: jumping up in a hurry, her skirt sweeping something over. Our Alice. Leave out the jury-box."
+2. `alice12_pick_up.png`: "Same Alice, full figure: bending down to pick up small creatures and put them back in a box."
+3. `alice12_defiant.png`: "Same Alice, full figure: standing tall, chin up, defiant: 'Who cares for you?'"
+4. `alice12_cards.png` (attach 12.3): "Same Alice in Tenniel's pose from this plate: beating off playing cards flying at her, half frightened, half angry. Leave out the cards."
+5. `alice12_lap.png`: "Same Alice lying on a grassy bank, asleep, her head resting in someone's lap (leave the other figure out). Side view."
+6. `alice12_run_home.png`: "Same Alice running off happily, seen from behind at three-quarters."
+
+### Characters (attach the plate named)
+7. `jurors_sprawl.png` (12.1): "The jurors from this plate (a lizard, birds and small beasts) sprawling as if tipped out of a box, on white."
+8. `bill_upside_down.png`: "Bill the Lizard stuck head downwards, his tail waving in the air; a second image sitting with his mouth open, gazing upward."
+9. `king_judge_notebook.png` (12.2): "The King of Hearts as judge (crown over his wig) from this plate, writing in a note-book; a second image spreading a paper on his knee and looking at it with one eye."
+10. `queen_inkstand.png`: "The Queen of Hearts in a fury, throwing an inkstand."
+11. `knave_chains_sad.png` (12.2): "The Knave of Hearts from this plate, in chains, shaking his head sadly."
+12. `rabbit_spectacles.png`: "The White Rabbit (Tenniel's) in spectacles reading a paper of verses."
+13. `pack_flying.png` (12.3, fill edge to edge, transparent-friendly white): "Playing cards flying up into the air and swirling down, as in this plate: faces and backs, many angles. On white."
+14. `sister_lap.png`: "Alice's elder sister (as in our riverbank drawing) sitting on the bank, someone's head in her lap (leave them out), gently brushing away dead leaves. Then a second image: alone, leaning her head on her hand, eyes closed, dreaming."
+
+### Sets and props
+15. `jury_box_tipped.png`: "The jury-box (as in our court drawing) tipped over on its side. White background."
+16. `court_papers.png`: "Separate on white: a small note-book; a folded paper of verses; an old-fashioned inkstand with a quill."
+17. `dead_leaves.png`: "A few dead leaves fluttering down, separate on white."
+
+### Thought vignettes (oval, engraved, white background)
+18. `vignette_goldfish.png`: "A glass globe of goldfish tipped over, the fish flopping on a carpet."
+19. `vignette_country_sounds.png`: "Sheep with bells, a shepherd boy calling, a busy farm-yard, cattle lowing in the distance."
+20. `vignette_grown_alice.png`: "A young woman telling a story to a circle of little children."
+
+Priority if time is short: 4, 1, 13, 5, 14, 9, 7, 8, 3, then the rest.

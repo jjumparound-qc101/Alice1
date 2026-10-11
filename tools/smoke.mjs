@@ -178,6 +178,11 @@ await chapterShots(11, () => {
   return [['E0-ch11-judge', C.judge + 1], ['E1-ch11-jury', C.juryBox + 2], ['E2-ch11-herald', C.unrolled + 2], ['E3-ch11-hatter-pale', C.pale + 1],
     ['E4-ch11-grow', C.larger + 15], ['E5-ch11-bag', C.bag + 3], ['E6-ch11-cook', C.cook + 6], ['E7-ch11-alice', C.alice + 0.5]];
 });
+await chapterShots(12, () => {
+  const [E, W] = window.__slice.chapter.built.scenes.map((s) => s.T);
+  return [['F0-ch12-tipped', E.tipped + 1.5], ['F1-ch12-bill', E.downwards + 1], ['F2-ch12-pale', E.pale + 1], ['F3-ch12-purple', E.purple + 1],
+    ['F4-ch12-pack', E.scream], ['F5-ch12-lap', W.lap + 1], ['F6-ch12-dream', W.turtle + 2], ['F7-ch12-end', window.__slice.chapter.cue.end - 1]];
+});
 
 console.log(JSON.stringify({ cam, errors }, null, 1));
 await browser.close();
