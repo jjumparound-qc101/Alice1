@@ -116,6 +116,8 @@ export function card(who, pose = 'stand') {
     for (const x of [B.x - 100, B.x - 20]) { const tassel = ellipse(x, B.y + 52, 5, 9); g.fillStyle = SPOT.crimson; g.fill(tassel); outline(g, tassel, 1.5); }
     crown(g, B.x - 60, B.y + 32, 50);
   }
+  // The executioner is the Ace of Spades (owner, 2026-10-11): one large spade on his robe.
+  if (who.rank === 'executioner') { g.fillStyle = PAPER; g.fill(suit('spades', B.x + B.w / 2, B.y + 120, 44)); g.fillStyle = INK; g.fill(suit('spades', B.x + B.w / 2, B.y + 120, 36)); }
   if (pose === 'axe' || who.rank === 'executioner') {
     line(g, 8, [[B.x - 30, B.y + 80], [B.x - 10, B.y - 110]]);
     const blade = new Path2D(); blade.moveTo(B.x - 14, B.y - 100); blade.quadraticCurveTo(B.x - 80, B.y - 110, B.x - 70, B.y - 40); blade.lineTo(B.x - 18, B.y - 60); blade.closePath();
@@ -293,7 +295,7 @@ export function catHead(stage = 2) {
 // diamonds" (ace to ten of diamonds), ten royal children "ornamented with hearts" (ace to ten
 // of hearts), the guests "mostly Kings and Queens", the Knave, King and Queen of Hearts. The
 // gardeners Two, Five and Seven are spades after Tenniel; the other spades fill the blind areas
-// (the executioner, the officers of the court).
+// (the executioner is the Ace of Spades; the officers of the court the Three and Four).
 export const SOLDIERS = Array.from({ length: 10 }, (_, i) => ({ suit: 'clubs', rank: i + 1 }));
 export const COURTIERS = Array.from({ length: 10 }, (_, i) => ({ suit: 'diamonds', rank: i + 1 }));
 export const CHILDREN = Array.from({ length: 10 }, (_, i) => ({ suit: 'hearts', rank: i + 1 }));

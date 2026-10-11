@@ -2,12 +2,20 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-11: How the AI art is made for the rest of the book
+Status: Confirmed by the owner.
+
+- **Numbered card people** (soldiers, courtiers, children, gardeners, officers) are generated as card bodies with a **plain white face**; the game prints each card's pips in the period layout and colour. A handful of bodies covers the whole pack, and the pip counts are always right.
+- **Colour in AI art:** suit signs on court cards and the court's decorative hearts are drawn as **solid black shapes**; the processing tool turns hearts and diamonds red. The style block's "no colour" rule stays for every image.
+- **Tenniel figures** marked "Direct (cut out from a high-resolution scan)" are **generated as AI now**, from the plate as reference, so the whole list can be made at once and matches in style. Cut-outs from scans are an optional upgrade later.
+- **The executioner** is the Ace of Spades (the text doesn't say; in English packs the Ace of Spades was the large ornate card).
+
 ## 2026-10-11: The card people are coloured like real cards, one pack of 52
 Status: Confirmed by the owner. Replaces "Chapter VIII card suits stay ink" below.
 
-- **Colour.** Hearts and diamonds are red, clubs and spades black, on the pips and suit signs (the bodies, heads and limbs stay ink). Court cards carry their suit sign in its colour.
+- **Colour.** Hearts and diamonds are red, clubs and spades black, on the pips and suit signs (the bodies, heads and limbs stay ink). Court cards carry their suit sign in its colour. The hearts that decorate the court (the canopy over the throne, the throne itself, the herald's banner) are red too.
 - **Period styling.** English packs of 1865 had no corner numbers, so the rank is read by counting the pips, laid out as on a real card (lower-half pips upside down; the ace one large pip). No numerals.
-- **One pack.** The text speaks only of "a pack of cards" and "the whole pack", and its counts fit one pack of 52: ten soldiers "carrying clubs" (ace to ten of clubs), ten courtiers "ornamented all over with diamonds" (ace to ten of diamonds), ten royal children "ornamented with hearts" (ace to ten of hearts), the guests "mostly Kings and Queens" (the Kings and Queens of clubs, diamonds and spades, and the Knave of Spades), and the Knave, King and Queen of Hearts. The gardeners Two, Five and Seven are spades, after Tenniel (the text gives no suit). Each card person is a different card. The blind areas use the spare spades: the executioner, and the officers of the court in Chapter XI (Three and Four of Spades). The Knaves of Clubs and Diamonds and the rest of the spades are free for later scenes.
+- **One pack.** The text speaks only of "a pack of cards" and "the whole pack", and its counts fit one pack of 52: ten soldiers "carrying clubs" (ace to ten of clubs), ten courtiers "ornamented all over with diamonds" (ace to ten of diamonds), ten royal children "ornamented with hearts" (ace to ten of hearts), the guests "mostly Kings and Queens" (the Kings and Queens of clubs, diamonds and spades, and the Knave of Spades), and the Knave, King and Queen of Hearts. The gardeners Two, Five and Seven are spades, after Tenniel (the text gives no suit). Each card person is a different card. The blind areas use the spare spades: the executioner (the Ace of Spades), and the officers of the court in Chapter XI (Three and Four of Spades). The Knaves of Clubs and Diamonds and the rest of the spades are free for later scenes.
 
 ## 2026-10-10: Chapter VIII card suits stay ink
 Status: Replaced by the owner on 2026-10-11 (see above).

@@ -42,6 +42,8 @@ None.
 7. Write `docs/CHAPTER_NN_ROUGHCUT.md`, update this handoff's table, commit, push, republish the web link.
 
 ## When art arrives
+- **Card people** (owner, 2026-10-11): numbered cards arrive as bodies with a plain white face; print each card's pips on them in code (reuse `PIP_LAYOUT` and `suitColour` in props8.js, mapped onto the drawn face). Court cards and the court's hearts arrive with solid black suit signs: recolour the solid black heart and diamond shapes red when processing (a new step for `tools/whitecut.py` or a small tool), leaving clubs and spades black.
+- **'Direct' Tenniel figures** are being generated as AI from the plates (owner, 2026-10-11); scans are an optional upgrade.
 - Uploads that arrive mid-turn aren't saved; ask the owner to resend as a normal message. Screenshots are low quality: ask for the downloaded original.
 - Save the original to `source/ai/<name given in the prompt>.webp|png`. Process it: `tools/whitecut.py` (cut out from white, paper-tint; `--clear x,y;…` clears enclosed gaps; `--opaque` for full-frame art), `tools/compose_poses.py` (Alice whole-figure poses, scaled to the model sheet; `DRAWN` list), `tools/hall_props.py` (an example of a set-piece pipeline), `tools/small_props.py` (small props: key, bottle, cake, glass box, fan; gold colouring, see-through glass). Output to `public/art/ai/…`.
 - Wire it into the scene in place of the placeholder; screenshot and look.

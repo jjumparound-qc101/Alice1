@@ -50,7 +50,7 @@ All the cards are "oblong and flat, with their hands and feet at the corners". T
 | K8-01 | The King of Hearts | **Direct** or Adapt | W-08-2, W-08-4 |
 | Q8-01 | The Queen of Hearts pointing, "Off with her head!" | **Direct** or Adapt | W-08-2 |
 | Q8-02 | The Queen stamping about, shouting | New | — |
-| EX8-01 | The executioner, with his axe | **Direct** or Adapt | W-08-4 |
+| EX8-01 | The executioner, with his axe: the Ace of Spades (owner, 2026-10-11; the text doesn't say) | **Direct** or Adapt | W-08-4 |
 | GU8-01 | Guests: two or three Kings and Queens of other suits | New | — |
 
 ## Other characters

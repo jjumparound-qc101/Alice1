@@ -1,7 +1,8 @@
 // Placeholder art for the court (Chapters XI and XII), drawn in code until the AI drawings
 // arrive (docs/CHAPTER_11_ASSETS.md, CHAPTER_12_ASSETS.md). Figures stand on the bottom edge
 // of their image and face left. Colours: the Hatter "turned pale" (a pale face, briefly);
-// the card people are coloured like real cards (owner, 2026-10-11).
+// the card people are coloured like real cards, and so are the court's hearts: the canopy,
+// the throne and the herald's banner (owner, 2026-10-11).
 import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from './ink.js';
 import { SPOT, vignette, line, shape } from './props.js';
 import { suit, suitColour } from './props8.js';
@@ -28,7 +29,7 @@ export function courtWall(w = 3000, h = 1000) {
   const cx = w / 2;
   const can = new Path2D(); can.moveTo(cx - 420, 120); can.lineTo(cx + 420, 120); can.lineTo(cx + 380, 330); for (let k = 0; k <= 8; k++) can.quadraticCurveTo(cx + 380 - k * 95 - 47, 380, cx + 380 - (k + 1) * 95, 330); can.closePath();
   fillPaper(g, can); outline(g, can, 4);
-  g.fillStyle = INK; for (let k = 0; k < 9; k++) g.fill(suit('hearts', cx - 360 + k * 90, 220, 22));
+  g.fillStyle = suitColour('hearts'); for (let k = 0; k < 9; k++) g.fill(suit('hearts', cx - 360 + k * 90, 220, 22));
   for (const s of [-1, 1]) { const curtain = new Path2D(); curtain.moveTo(cx + s * 380, 330); curtain.quadraticCurveTo(cx + s * 470, 600, cx + s * 400, h - 300); curtain.lineTo(cx + s * 330, h - 300); curtain.quadraticCurveTo(cx + s * 400, 600, cx + s * 330, 330); curtain.closePath(); panel(g, curtain, 2203 + s, Math.PI / 2, 5, 0.6); }
   grain(g, 0.03, 2204);
   return c;
@@ -39,7 +40,7 @@ export function throne() {
   const dais = rect(20, 520, 760, 80); fillPaper(g, dais); hatch(g, dais, { angle: 0.1, gap: 6, seed: 2211, alpha: 0.5 }); outline(g, dais, 3);
   const back = new Path2D(); back.moveTo(110, 520); back.lineTo(110, 120); back.quadraticCurveTo(400, 0, 690, 120); back.lineTo(690, 520); back.closePath();
   fillPaper(g, back); hatch(g, back, { angle: Math.PI / 2, gap: 7, seed: 2212, alpha: 0.35 }); outline(g, back, 4);
-  g.fillStyle = INK; for (const x of [250, 400, 550]) g.fill(suit('hearts', x, 120, 26));
+  g.fillStyle = suitColour('hearts'); for (const x of [250, 400, 550]) g.fill(suit('hearts', x, 120, 26));
   for (const x of [60, 690]) { const arm = rect(x, 360, 50, 160); panel(g, arm, 2213 + x, 0.3, 5, 0.6); }
   const seat = rect(110, 400, 580, 50); panel(g, seat, 2215, 0.1, 6, 0.4);
   return c;
@@ -89,7 +90,7 @@ export function crowdGallery(w = 2400, h = 500, seed = 2251) {
 export function trumpet() {
   const { c, g } = canvas(300, 120);
   line(g, 7, [[10, 40], [220, 40]]); const bell = new Path2D(); bell.moveTo(210, 40); bell.lineTo(290, 8); bell.lineTo(290, 72); bell.closePath(); fillPaper(g, bell); hatch(g, bell, { gap: 4, seed: 2261, alpha: 0.4 }); outline(g, bell, 3);
-  const banner = rect(80, 46, 90, 60); fillPaper(g, banner); outline(g, banner, 2); g.fillStyle = INK; g.fill(suit('hearts', 125, 76, 16));
+  const banner = rect(80, 46, 90, 60); fillPaper(g, banner); outline(g, banner, 2); g.fillStyle = suitColour('hearts'); g.fill(suit('hearts', 125, 76, 16));
   return c;
 }
 export function scroll(open = false) {
