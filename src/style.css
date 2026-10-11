@@ -54,6 +54,8 @@ button:disabled:hover { background: var(--paper); color: var(--ink); }
 #page .w.said { color: var(--ink); }
 #page .w.now { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
 #page .w.tint.said, #page .w.tint.now { color: var(--tint); } /* colour words in poems and songs (COLOR.md rule 6) */
+/* Words the recording leaves out: always faint, never marked as spoken (explained in Contents). */
+#page .w.skip, #page .w.skip.said { color: var(--faint); opacity: 0.6; }
 body[data-mode="explore"] #page { display: none; }
 
 /* Text layouts (L key or the Text button). */
@@ -114,6 +116,12 @@ body[data-mode="explore"] #timeline { display: none; }
 #sceneMenu li button { width: 100%; display: flex; justify-content: space-between; gap: 1em; }
 #sceneMenu li button.here { background: var(--ink); color: var(--paper); }
 #sceneMenu .keys { color: var(--faint); font-size: 0.95rem; }
+#aboutSkipped { margin: 0 0 0.8em; }
+#aboutSkipped summary { display: inline-block; cursor: pointer; border: 1.5px solid var(--ink); padding: 0.15em 0.8em; font-size: 0.95rem; list-style: none; }
+#aboutSkipped summary::-webkit-details-marker { display: none; }
+#aboutSkipped summary:hover, #aboutSkipped[open] summary { background: var(--ink); color: var(--paper); }
+#aboutSkipped p { text-align: left; font-size: 0.95rem; margin: 0.6em 0 0; }
+#aboutSkipped .w.skip { color: var(--faint); opacity: 0.6; }
 
 #card {
   position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 4;

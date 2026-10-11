@@ -44,6 +44,7 @@ export class Page {
         const s = document.createElement('span');
         s.textContent = w.t;
         s.className = 'w';
+        if (w.x) { s.classList.add('skip'); s.title = 'Not read aloud in this recording'; } // tools/forced_align.py
         const tint = tintOf(w);
         if (tint) { s.classList.add('tint'); s.style.setProperty('--tint', tint); }
         s.addEventListener('click', () => onSeek(w.s));
@@ -67,7 +68,7 @@ export class Page {
     for (let k = 0; k < this.chunks.length; k++) if (this.chunks[k].words[0].s <= t + 0.05) c = k;
     const words = this.chunks[c].words;
     let w = -1;
-    words.forEach((x, i) => { if (x.s <= t) w = i; });
+    words.forEach((x, i) => { if (x.s <= t && !x.x) w = i; }); // the mark passes over words not read aloud
     if (c === this.cur.c && w === this.cur.w) return;
     if (c !== this.cur.c) {
       const p = this.chunks[c].p;
