@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import * as art from './art.js';
 import { texture, PAPER } from './ink.js';
+import { panorama } from './sets/panorama.js';
 
 const EDGE = new THREE.Color('#8b8272'); // the cut paper edge seen behind each flat
 
@@ -101,6 +102,13 @@ export function buildStage(scene, ai = {}) {
   })), PW, PH);
   pros.position.set(0, 0, 2.2);
   scene.add(pros);
+  // Beside the proscenium, out of the Watch shots: more ground and the side scenery, for the
+  // wider Explore look arc (owner, 2026-10-11).
+  for (const s of [-1, 1]) {
+    const side = new THREE.Mesh(new THREE.PlaneGeometry(14, 10), new THREE.MeshBasicMaterial({ map: ground }));
+    side.rotation.x = -Math.PI / 2; side.position.set(s * 13, 0, 7.2); scene.add(side);
+  }
+  if (ai.sky && ai.treeline) panorama(scene, ai, { x: 13, z0: -12, z1: 12 });
 
   return {
     holePos,

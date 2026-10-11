@@ -1,10 +1,10 @@
-// Explore mode: walk the floor of the diorama with a limited look arc,
+// Explore mode: walk the floor of the diorama with a limited look arc (150°, owner 2026-10-11),
 // so the flat edges of the set never come into view.
 import * as THREE from 'three';
 
 const EYE = 1.35;
-const YAW_LIMIT = THREE.MathUtils.degToRad(45);   // ±45° = the 90° arc
-const PITCH_LIMIT = THREE.MathUtils.degToRad(14);
+const YAW_LIMIT = THREE.MathUtils.degToRad(75);   // ±75° = a 150° arc
+const PITCH_LIMIT = THREE.MathUtils.degToRad(25);
 const SPEED = 1.6; // m/s
 
 export class Explorer {
@@ -18,6 +18,7 @@ export class Explorer {
     this.drag = null;
     this.target = null;   // a spot on the floor to walk to (a tap)
     this.holding = false; // walking forward while a finger is held down
+    this.stick = { x: 0, y: 0 }; // the on-screen joystick (touch): x right, y forward, each -1..1
     addEventListener('keydown', (e) => { if (this.active) { this.keys.add(e.code); this.target = null; } });
     addEventListener('keyup', (e) => this.keys.delete(e.code));
     // Drag to look (mouse or finger). On a touch screen, a tap walks to that spot on the floor
@@ -74,13 +75,14 @@ export class Explorer {
   exit() {
     this.active = false;
     this.keys.clear();
-    this.target = null; this.holding = false;
+    this.target = null; this.holding = false; this.stick = { x: 0, y: 0 };
   }
 
   update(dt) {
     const k = this.keys;
-    const fwd = (k.has('KeyW') || k.has('ArrowUp') || this.holding ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') ? 1 : 0);
-    const side = (k.has('KeyD') ? 1 : 0) - (k.has('KeyA') ? 1 : 0);
+    const fwd = THREE.MathUtils.clamp((k.has('KeyW') || k.has('ArrowUp') || this.holding ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') ? 1 : 0) + this.stick.y, -1, 1);
+    const side = THREE.MathUtils.clamp((k.has('KeyD') ? 1 : 0) - (k.has('KeyA') ? 1 : 0) + this.stick.x, -1, 1);
+    if (this.stick.x || this.stick.y) this.target = null;
     const turn = (k.has('ArrowLeft') ? 1 : 0) - (k.has('ArrowRight') ? 1 : 0);
     if (turn) this.look(turn * 1.4 * dt, 0);
     const p = this.camera.position, b = this.bounds;

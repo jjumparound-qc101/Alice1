@@ -2,13 +2,20 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-11: Explore: a wider look, and a walking stick on touch screens
+Status: Confirmed by the owner.
+
+- **Look arc widened** from 90° to 150° (75° each side of straight ahead) and from 14° to 25° up and down. Replaces the "90° look arc" of the original direction.
+- So that no set's edge shows: outdoor sets get side scenery (sky and a far treeline on both sides, `src/sets/panorama.js`), the riverbank more ground beside the proscenium, the seashore more sand, the garden wall is three times as long, and the court has a ceiling. Every explorable scene was checked at the new limits (`tools/explore_edges.mjs`).
+- **Touch:** an on-screen stick (bottom left) walks forward, back and sideways; drag to look and tap the ground to walk there still work.
+
 ## 2026-10-11: Phones and tablets
 Status: Confirmed by the owner ("go ahead with all of it").
 
 - **Portrait phones** read like an illustrated book: the picture in a band at the top (about 4:3, at most 58% of the screen), the running paragraph below it. The text-layout choice doesn't apply there.
 - **Landscape phones:** picture first. A two-line text strip low on the left; Play and "More" on the right (the other buttons fold into the More panel); the controls and timeline fade away after a few seconds of reading and come back on a touch. The picture is lifted a little above the strip.
 - **Every screen keeps the width of view the shots were framed for** (45° on 16:9): narrow or tall pictures show more above and below rather than cutting off the sides.
-- **Touch:** tap the picture to show the controls, tap again to play or pause; swipe the picture or the text for the next or previous sentence. In Explore: drag to look, tap the ground to walk there, hold a finger down to walk forward, tap a hotspot's label to inspect it; the play button reads "Back to the story".
+- **Touch:** tap the picture to show the controls, tap again to play or pause; swipe the picture or the text for the next or previous sentence. In Explore: drag to look, tap the ground to walk there, hold a finger down to walk forward (and, since the entry above, the walking stick), tap a hotspot's label to inspect it; the play button reads "Back to the story".
 - **Phone basics:** room for notches and rounded corners, finger-sized buttons, a lower render resolution on touch screens.
 
 ## 2026-10-11: How the AI art is made for the rest of the book

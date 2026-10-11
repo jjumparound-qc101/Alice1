@@ -2,7 +2,7 @@
 Updated: 2026-10-10 (end of session 2: Chapters VIII–X staged). For the next Claude Code session (or anyone) picking up the work.
 
 ## The project in one paragraph
-*Alice's Adventures in Wonderland* as an interactive novel for Steam (a "Library of Living Books" title). The book's text is shown in sync with the LibriVox full-cast reading, staged as a 2.5D Victorian toy theater: flat engraving-style cutouts in layered 3D sets, with a moving camera (Watch mode) and free walking with a 90° look arc (Explore mode). Black-and-white ink, except things the text gives a colour (docs/COLOR.md). Engine: three.js + Vite, wrapped in Electron for desktop and Steam (Gate A: docs/GATE_A.md).
+*Alice's Adventures in Wonderland* as an interactive novel for Steam (a "Library of Living Books" title). The book's text is shown in sync with the LibriVox full-cast reading, staged as a 2.5D Victorian toy theater: flat engraving-style cutouts in layered 3D sets, with a moving camera (Watch mode) and free walking with a 150° look arc (Explore mode). Black-and-white ink, except things the text gives a colour (docs/COLOR.md). Engine: three.js + Vite, wrapped in Electron for desktop and Steam (Gate A: docs/GATE_A.md).
 
 ## Where the project stands
 - **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly). Unstaged chapters play on an engraved title page with the text in sync.
@@ -89,7 +89,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 | `electron/` | Desktop wrapper (Steam via steamworks.js) |
 | `godot/` | Gate A comparison only; not maintained |
 
-**Tools**: `mobile_shots.mjs` (phone and tablet screenshots), `narration.py` (prepare a chapter's narration: text, alignment, trimmed audio), `transcribe.py`, `align.py`, `assets_master.py`, `whitecut.py`, `cutout.py` (Tenniel scans, spot colour), `compose_poses.py`, `hall_props.py`, `shaft_strip.py`, `smoke.mjs` (all chapters; fails on console errors), `chapter_shots.mjs` (screenshots of one chapter), `walk_report.mjs` (Alice's steps per second; keep under ~4), `electron_smoke.mjs`.
+**Tools**: `mobile_shots.mjs` (phone and tablet screenshots), `explore_edges.mjs` (every explorable scene at the edges of its walkable area, looking to the limits of the 150° arc: run it after changing a set), `narration.py` (prepare a chapter's narration: text, alignment, trimmed audio), `transcribe.py`, `align.py`, `assets_master.py`, `whitecut.py`, `cutout.py` (Tenniel scans, spot colour), `compose_poses.py`, `hall_props.py`, `shaft_strip.py`, `smoke.mjs` (all chapters; fails on console errors), `chapter_shots.mjs` (screenshots of one chapter), `walk_report.mjs` (Alice's steps per second; keep under ~4), `electron_smoke.mjs`.
 
 ## Text-strip colours
 Colour words in poems and songs (COLOR.md rule 6) are coloured in the text strip once spoken: `TINTS` in `src/chapters.js` ([word, occurrence, colour]), drawn by `src/narration.js`. Set so far: Chapter II "golden", V "grey", X "pale", "brown", "green".

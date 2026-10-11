@@ -16,6 +16,7 @@ import {
   thistle, buttercup, mushroom, caterpillar, stick, dinahNurseVignette, bookVignette,
 } from '../props4.js';
 import { thoughts } from '../thoughts.js';
+import { panorama } from '../sets/panorama.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
 
@@ -32,6 +33,7 @@ export function outdoors(group, ai, { groundRepeat = 14 } = {}) {
   sky.position.set(0, -0.5, -14); group.add(sky);
   const far = paperFlat(tiled(ai.treeline.tex, 34 / (3.2 * ai.treeline.aspect)), 34, 3.2, { edge: false });
   far.position.set(0, 0, -12); group.add(far);
+  panorama(group, ai);
 }
 
 // --- 1. The lane -------------------------------------------------------------------------

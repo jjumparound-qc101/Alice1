@@ -4,7 +4,7 @@
 // crowd behind the gallery rails, and the door the witnesses come in by.
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
-import { texture } from '../ink.js';
+import { texture, canvas, hatch, INK, PAPER } from '../ink.js';
 import { flagstones } from '../props.js';
 import { dodoStand, duckStand, loryStand, eagletStand, owlStand, magpieStand, canaryStand, mouseUp, crabStand } from '../props3.js';
 import { lizard, guineaPig } from '../props4.js';
@@ -26,6 +26,15 @@ export const FRONT = { x: 0.95, z: 0.4 };                                  // Al
 const JURORS = [dodoStand, duckStand, loryStand, () => lizard('stand'), eagletStand, owlStand, magpieStand, canaryStand, mouseUp, () => crabStand(), () => hedgehog('crawl'), () => guineaPig()];
 export const BILL = 3;
 
+// The ceiling: plain boards between beams, lightly hatched.
+function beams() {
+  const { c, g } = canvas(512, 512);
+  g.fillStyle = PAPER; g.fillRect(0, 0, 512, 512);
+  const all = new Path2D(); all.rect(0, 0, 512, 512); hatch(g, all, { angle: 0, gap: 9, width: 0.7, seed: 2501, alpha: 0.35 });
+  g.fillStyle = INK; for (const y of [0, 256]) g.fillRect(0, y, 512, 22);
+  return c;
+}
+
 export function buildCourt({ group }) {
   const plain = (map) => new THREE.MeshBasicMaterial({ map });
   const wallTex = texture(courtWall());
@@ -38,6 +47,9 @@ export function buildCourt({ group }) {
   }
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(COURT.w, COURT.d + 2), plain(texture(flagstones(), { repeat: [8, 9] })));
   floor.rotation.x = -Math.PI / 2; floor.position.z = COURT.back + COURT.d / 2 + 1; group.add(floor);
+  // A ceiling, so looking up in Explore finds the court's roof rather than open paper.
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(COURT.w, COURT.d + 2), plain(texture(beams(), { repeat: [4, 3] })));
+  ceil.rotation.x = Math.PI / 2; ceil.position.set(0, COURT.h, COURT.back + COURT.d / 2 + 1); group.add(ceil);
   // The door the witnesses come in by, in the right-hand wall.
   const door = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.62), new THREE.MeshBasicMaterial({ color: '#2a251d' }));
   door.rotation.y = -Math.PI / 2; door.position.set(COURT.w / 2 - 0.005, 0.31, DOOR.z); group.add(door);

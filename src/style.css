@@ -182,3 +182,10 @@ body[data-form="landscape"] #controls button { padding: 0.2em 0.8em; }
 body[data-form="landscape"] #prompt { bottom: calc(60px + env(safe-area-inset-bottom)); }
 body.chrome-hidden #controls, body.chrome-hidden #timeline { opacity: 0; pointer-events: none; }
 body.chrome-hidden[data-form="landscape"] #page { bottom: calc(10px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: min(44rem, calc(100% - 32px)); }
+
+/* The walking stick for Explore on touch screens (bottom left). */
+#stick { display: none; position: fixed; left: calc(24px + env(safe-area-inset-left)); bottom: calc(28px + env(safe-area-inset-bottom));
+  width: 120px; height: 120px; border-radius: 50%; border: 1.5px solid var(--ink); background: rgba(239, 233, 218, 0.55); z-index: 3; touch-action: none; }
+#stick .knob { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%;
+  background: var(--paper); border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 rgba(23, 20, 15, 0.25); }
+@media (pointer: coarse) { body[data-mode="explore"] #stick { display: block; } }

@@ -52,8 +52,10 @@
     <button id="sceneClose">Close</button>
   </aside>
 
-  <p id="hint"><span class="key-hint">Explore: W A S D to walk · drag or ← → to look · E to inspect · Tab to return</span><span class="touch-hint">Drag to look · tap the ground to walk there · hold to walk forward</span></p>
+  <p id="hint"><span class="key-hint">Explore: W A S D to walk · drag or ← → to look · E to inspect · Tab to return</span><span class="touch-hint">Drag to look · the stick to walk · or tap the ground to walk there</span></p>
   <p id="prompt" hidden></p>
+  <!-- Explore on touch screens: push to walk forward, back or sideways. -->
+  <div id="stick" aria-label="Walk"><div class="knob"></div></div>
 
   <aside id="card" hidden>
     <h2 id="cardTitle"></h2>

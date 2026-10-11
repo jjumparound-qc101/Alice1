@@ -17,7 +17,9 @@ export const FTREE = { x: 5.2, z: -1.6, h: 1.6 };            // the tree the fla
 // Builds the garden into `group`. Returns paint(n): show the first n roses red.
 export function buildCroquet({ group, ai }) {
   outdoors(group, ai, { groundRepeat: 40 });
-  const wall = paperFlat(texture(gardenWall()), 11, 11 * 700 / 4096); wall.position.set(1.2, 0, -3.6); group.add(wall);
+  // Long enough that its ends stay out of sight from anywhere on the ground (the Explore look arc is 150°).
+  const wallTex = texture(gardenWall());
+  for (const dx of [-11, 0, 11]) { const wall = paperFlat(wallTex, 11, 11 * 700 / 4096, { edge: false }); wall.position.set(1.2 + dx, 0, -3.6); group.add(wall); }
   for (const [x, z, h, s] of [[-4.2, -2.2, 3.0, 1], [-3.2, -0.2, 2.6, -1], [FTREE.x, FTREE.z, FTREE.h, -1], [6.4, -0.6, 2.8, 1]]) {
     const t = paperFlat(ai.tree.tex, h * ai.tree.aspect, h); t.position.set(x, 0, z); t.scale.x = s; group.add(t);
   }

@@ -394,6 +394,24 @@ async function main() {
     $('moreBtn').setAttribute('aria-expanded', String(open));
   });
   $('more').addEventListener('click', (e) => { if (e.target.closest('button') && e.target.id !== 'speedBtn') document.body.classList.remove('more-open'); });
+  // The walking stick (Explore, touch): the knob's offset from the centre steers.
+  {
+    const stick = $('stick'), knob = stick.querySelector('.knob'), R = 44;
+    let id = null;
+    const move = (e) => {
+      const r = stick.getBoundingClientRect();
+      let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+      const d = Math.hypot(dx, dy); if (d > R) { dx *= R / d; dy *= R / d; }
+      knob.style.transform = `translate(${dx}px, ${dy}px)`;
+      const dead = (v) => (Math.abs(v) < 0.15 ? 0 : v);
+      explorer.stick = { x: dead(dx / R), y: dead(-dy / R) };
+    };
+    const end = () => { id = null; knob.style.transform = ''; explorer.stick = { x: 0, y: 0 }; };
+    stick.addEventListener('pointerdown', (e) => { e.stopPropagation(); id = e.pointerId; try { stick.setPointerCapture(id); } catch {} move(e); });
+    stick.addEventListener('pointermove', (e) => { if (e.pointerId === id) move(e); });
+    stick.addEventListener('pointerup', end);
+    stick.addEventListener('pointercancel', end);
+  }
   // Inspect a hotspot by tapping its label (the E key on a keyboard).
   $('prompt').addEventListener('click', () => { const h = mode === 'explore' && explorer.facing(active.hotspots); if (h) openCard(h); });
   // Landscape phones: the controls and timeline fade away while the story plays, and come back
@@ -552,7 +570,7 @@ async function main() {
   // so checks can read its scenes before Begin is pressed.
   build(CHAPTERS[0]);
   window.__slice = {
-    audio, setMode, setLayout, camera, perf, chapters: CHAPTERS, begin,
+    audio, setMode, setLayout, camera, perf, chapters: CHAPTERS, begin, explorer,
     get chapter() { return chapter; },
     get scenes() { return (ch ?? CHAPTERS[0].built).scenes; },
     get cue() { return (ch ?? CHAPTERS[0].built).cue; },

@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture } from '../ink.js';
+import { panorama } from './panorama.js';
 import { seaTile, sandTile, rockLedge, ROCK_PX, LEDGE } from '../props9.js';
 
 export const ROCK = { x: 0.4, z: -0.7, w: 0.45, h: 0.45 * ROCK_PX.h / ROCK_PX.w };
@@ -11,10 +12,11 @@ export const LEDGE_AT = { x: ROCK.x + (LEDGE.u - 0.5) * ROCK.w + 0.06, y: (1 - L
 export const SHORE_Z = -3;   // where the sand meets the sea
 export function buildSeashore({ group, ai }) {
   const flat = (tex, w, d, z, y = 0) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshBasicMaterial({ map: tex })); m.rotation.x = -Math.PI / 2; m.position.set(0, y, z); group.add(m); };
-  flat(texture(sandTile(), { repeat: [40, 12] }), 40, 12, SHORE_Z + 6);               // the sand, from the shore forward
+  flat(texture(sandTile(), { repeat: [40, 24] }), 40, 24, SHORE_Z + 12);              // the sand, from the shore forward
   flat(texture(seaTile(), { repeat: [60, 30] }), 40, 20, SHORE_Z - 10, -0.002);        // the sea, out to the fog
   const sky = paperFlat(ai.sky.tex, 44, 44 / ai.sky.aspect, { edge: false, opaque: true });
   sky.position.set(0, -1.2, -16); group.add(sky);
+  panorama(group, ai, { x: 16, z0: -16, z1: 20, trees: false });
   const rock = paperFlat(texture(rockLedge()), ROCK.w, ROCK.h); rock.position.set(ROCK.x, 0, ROCK.z); group.add(rock);
   // A few smaller rocks along the shore.
   const small = texture(rockLedge());
