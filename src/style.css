@@ -73,7 +73,9 @@ body[data-text="side"] #page .para[hidden] { display: none; }
   body[data-text="side"] #page { left: 16px; right: 16px; width: auto; top: auto; max-height: 30vh; }
 }
 
-#controls { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 2; }
+#controls { position: fixed; bottom: calc(30px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 2; transition: opacity 0.4s; }
+#more { display: contents; }
+#moreBtn { display: none; }
 
 #hint, #prompt {
   position: fixed; left: 50%; transform: translateX(-50%); margin: 0; z-index: 2;
@@ -84,7 +86,7 @@ body[data-mode="explore"] #hint { display: block; }
 #prompt { bottom: 84px; font-style: italic; }
 
 /* The timeline: the chapter's length, with a mark at each scene. Click or drag to seek. */
-#timeline { position: fixed; left: 16px; right: 16px; bottom: 4px; height: 20px; z-index: 2; cursor: pointer; touch-action: none; }
+#timeline { position: fixed; left: calc(16px + env(safe-area-inset-left)); right: calc(16px + env(safe-area-inset-right)); bottom: calc(4px + env(safe-area-inset-bottom)); transition: opacity 0.4s; height: 20px; z-index: 2; cursor: pointer; touch-action: none; }
 #timeline .track { position: absolute; left: 0; right: 0; top: 9px; height: 3px; background: var(--faint); transition: top 0.15s, height 0.15s; }
 #timeline:hover .track, #timeline.drag .track { top: 7px; height: 7px; }
 #timeline .fill { height: 100%; width: 0; background: var(--ink); }
@@ -128,3 +130,55 @@ body[data-mode="explore"] #timeline { display: none; }
   background: rgba(23, 20, 15, 0.8); color: var(--paper); padding: 0.4em 0.6em;
   font: 12px/1.4 ui-monospace, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums;
 }
+
+/* Hints for keyboard or touch, whichever the reader has. */
+.touch-hint { display: none; }
+@media (pointer: coarse) {
+  .touch-hint { display: inline; }
+  .key-hint { display: none; }
+  button { min-height: 44px; min-width: 44px; }
+  #timeline { height: 32px; }
+  #timeline .track { top: 15px; }
+  #timeline.drag .track { top: 12px; height: 9px; }
+  #prompt { cursor: pointer; }
+}
+
+/* --- Phones ------------------------------------------------------------------------------
+   main.js sets body[data-form] from the window: 'portrait' (a tall phone: the picture in a
+   band at the top, the text below it, like an illustrated book), 'landscape' (a short screen:
+   the picture first, a two-line text strip, the controls folded and hidden while reading),
+   or 'wide' (computers and tablets: as before). */
+body[data-form="portrait"] #moreBtn, body[data-form="landscape"] #moreBtn { display: inline-block; }
+body[data-form="portrait"] #more, body[data-form="landscape"] #more {
+  display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  flex-direction: column; gap: 6px; padding: 8px; background: var(--paper); border: 1.5px solid var(--ink);
+  box-shadow: 4px 4px 0 rgba(23, 20, 15, 0.2); min-width: 12rem;
+}
+body.more-open #more { display: flex !important; }
+body.more-open #moreBtn { background: var(--ink); color: var(--paper); }
+body[data-form] #layoutBtn[hidden] { display: none; }
+
+/* Portrait: picture band on top (height set by main.js as --pic-h), text below. */
+body[data-form="portrait"] #stage { top: env(safe-area-inset-top); bottom: auto; height: var(--pic-h, 50vh); }
+body[data-form="portrait"][data-mode="watch"] #page {
+  top: calc(env(safe-area-inset-top) + var(--pic-h, 50vh) + 10px); bottom: calc(96px + env(safe-area-inset-bottom));
+  left: calc(14px + env(safe-area-inset-left)); right: calc(14px + env(safe-area-inset-right)); width: auto; transform: none;
+  max-height: none; background: transparent; border: none; box-shadow: none; padding: 0.2rem 0.4rem;
+  font-size: 1.15rem; line-height: 1.55;
+}
+body[data-form="portrait"] #controls { bottom: calc(40px + env(safe-area-inset-bottom)); }
+body[data-form="portrait"] #prompt { bottom: calc(100px + env(safe-area-inset-bottom)); }
+
+/* Landscape phone: a two-line strip low down, controls hidden while reading. */
+body[data-form="landscape"] #page {
+  bottom: calc(38px + env(safe-area-inset-bottom)); transition: bottom 0.4s; max-height: 3.3em; padding: 0.2rem 0.9rem;
+  font-size: 1rem; line-height: 1.5; left: calc(16px + env(safe-area-inset-left)); transform: none;
+  width: min(44rem, calc(100% - 200px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+}
+body[data-form="landscape"][data-text="top"] #page { top: calc(8px + env(safe-area-inset-top)); bottom: auto; }
+body[data-form="landscape"] #controls { bottom: calc(38px + env(safe-area-inset-bottom)); left: auto; right: calc(16px + env(safe-area-inset-right)); transform: none; }
+body[data-form="landscape"] #more { left: auto; right: 0; transform: none; }
+body[data-form="landscape"] #controls button { padding: 0.2em 0.8em; }
+body[data-form="landscape"] #prompt { bottom: calc(60px + env(safe-area-inset-bottom)); }
+body.chrome-hidden #controls, body.chrome-hidden #timeline { opacity: 0; pointer-events: none; }
+body.chrome-hidden[data-form="landscape"] #page { bottom: calc(10px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: min(44rem, calc(100% - 32px)); }

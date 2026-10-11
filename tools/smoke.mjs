@@ -184,6 +184,24 @@ await chapterShots(12, () => {
     ['F4-ch12-pack', E.scream], ['F5-ch12-lap', W.lap + 1], ['F6-ch12-dream', W.turtle + 2], ['F7-ch12-end', window.__slice.chapter.cue.end - 1]];
 });
 
+// Phones: a portrait and a landscape page, a moment from the first and last chapters each
+// (tools/mobile_shots.mjs covers more devices and moments).
+for (const [name, vp] of [['portrait', { width: 390, height: 844 }], ['landscape', { width: 844, height: 390 }]]) {
+  const m = await browser.newPage({ viewport: vp, isMobile: true, hasTouch: true });
+  m.on('console', (x) => x.type() === 'error' && errors.push(x.text()));
+  m.on('pageerror', (e) => errors.push(String(e)));
+  await m.goto(url);
+  await m.waitForFunction(() => window.__slice, null, { timeout: 120000 });
+  for (const [n, t] of [[1, 40], [12, 640]]) {
+    await m.evaluate((n) => window.__slice.begin(window.__slice.chapters[n - 1], 0), n);
+    await m.waitForFunction((n) => window.__slice.ready && window.__slice.chapter?.n === n, n, { timeout: 120000 });
+    await m.evaluate((t) => { const a = window.__slice.audio; a.pause(); a.currentTime = t; }, t);
+    await m.waitForTimeout(600);
+    await m.screenshot({ path: `${out}/M-${name}-ch${n}.png`, timeout: 120000 });
+  }
+  await m.close();
+}
+
 console.log(JSON.stringify({ cam, errors }, null, 1));
 await browser.close();
 if (errors.length) process.exit(1);

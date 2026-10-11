@@ -89,7 +89,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 | `electron/` | Desktop wrapper (Steam via steamworks.js) |
 | `godot/` | Gate A comparison only; not maintained |
 
-**Tools**: `narration.py` (prepare a chapter's narration: text, alignment, trimmed audio), `transcribe.py`, `align.py`, `assets_master.py`, `whitecut.py`, `cutout.py` (Tenniel scans, spot colour), `compose_poses.py`, `hall_props.py`, `shaft_strip.py`, `smoke.mjs` (all chapters; fails on console errors), `chapter_shots.mjs` (screenshots of one chapter), `walk_report.mjs` (Alice's steps per second; keep under ~4), `electron_smoke.mjs`.
+**Tools**: `mobile_shots.mjs` (phone and tablet screenshots), `narration.py` (prepare a chapter's narration: text, alignment, trimmed audio), `transcribe.py`, `align.py`, `assets_master.py`, `whitecut.py`, `cutout.py` (Tenniel scans, spot colour), `compose_poses.py`, `hall_props.py`, `shaft_strip.py`, `smoke.mjs` (all chapters; fails on console errors), `chapter_shots.mjs` (screenshots of one chapter), `walk_report.mjs` (Alice's steps per second; keep under ~4), `electron_smoke.mjs`.
 
 ## Text-strip colours
 Colour words in poems and songs (COLOR.md rule 6) are coloured in the text strip once spoken: `TINTS` in `src/chapters.js` ([word, occurrence, colour]), drawn by `src/narration.js`. Set so far: Chapter II "golden", V "grey", X "pale", "brown", "green".
@@ -100,6 +100,7 @@ Staging is keyed to words, not seconds. `at('word', n, after)`: the n-th occurre
 A wrong count throws "cue word not found" when the chapter opens; the scene's camera keys or actions will be wrong silently if the count is off but the word exists.
 
 ## Running and checking
+- **Phones:** `node tools/mobile_shots.mjs URL OUTDIR [chapter:time,…]` screenshots small and large phones (both orientations) and a tablet; the smoke test also shoots one portrait and one landscape page. Forms are set by `resize()` in main.js (`body[data-form]`: portrait, landscape, wide) and styled at the end of style.css.
 - `npm install`, then `npm run dev` (port 5173). In this container start it with `run_in_background` and a long timeout; it stops after its time limit.
 - Headless Chromium needs `--use-gl=angle --use-angle=swiftshader` (in the tools). A "Failed to fetch" on the first load right after editing a file is Vite reloading, not a bug; rerun.
 - **Always look at the screenshots.** Contact sheets of 4 per row work well.

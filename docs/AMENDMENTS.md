@@ -2,6 +2,15 @@
 
 Changes to the original spec, newest first. Each entry has a date, a status (Proposed, Confirmed or Rejected), the change, and the reason.
 
+## 2026-10-11: Phones and tablets
+Status: Confirmed by the owner ("go ahead with all of it").
+
+- **Portrait phones** read like an illustrated book: the picture in a band at the top (about 4:3, at most 58% of the screen), the running paragraph below it. The text-layout choice doesn't apply there.
+- **Landscape phones:** picture first. A two-line text strip low on the left; Play and "More" on the right (the other buttons fold into the More panel); the controls and timeline fade away after a few seconds of reading and come back on a touch. The picture is lifted a little above the strip.
+- **Every screen keeps the width of view the shots were framed for** (45° on 16:9): narrow or tall pictures show more above and below rather than cutting off the sides.
+- **Touch:** tap the picture to show the controls, tap again to play or pause; swipe the picture or the text for the next or previous sentence. In Explore: drag to look, tap the ground to walk there, hold a finger down to walk forward, tap a hotspot's label to inspect it; the play button reads "Back to the story".
+- **Phone basics:** room for notches and rounded corners, finger-sized buttons, a lower render resolution on touch screens.
+
 ## 2026-10-11: How the AI art is made for the rest of the book
 Status: Confirmed by the owner.
 

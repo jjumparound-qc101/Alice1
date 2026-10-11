@@ -16,15 +16,42 @@ export class Explorer {
     this.keys = new Set();
     this.active = false;
     this.drag = null;
-    addEventListener('keydown', (e) => { if (this.active) this.keys.add(e.code); });
+    this.target = null;   // a spot on the floor to walk to (a tap)
+    this.holding = false; // walking forward while a finger is held down
+    addEventListener('keydown', (e) => { if (this.active) { this.keys.add(e.code); this.target = null; } });
     addEventListener('keyup', (e) => this.keys.delete(e.code));
-    dom.addEventListener('pointerdown', (e) => { if (this.active) this.drag = { x: e.clientX, y: e.clientY }; });
-    addEventListener('pointerup', () => (this.drag = null));
+    // Drag to look (mouse or finger). On a touch screen, a tap walks to that spot on the floor
+    // and a finger held still walks forward until it lifts.
+    dom.addEventListener('pointerdown', (e) => {
+      if (!this.active) return;
+      this.drag = { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t0: performance.now(), moved: false, touch: e.pointerType !== 'mouse' };
+      clearTimeout(this.holdTimer);
+      if (this.drag.touch) this.holdTimer = setTimeout(() => { if (this.drag && !this.drag.moved) { this.holding = true; this.target = null; } }, 350);
+    });
+    addEventListener('pointerup', (e) => {
+      const d = this.drag;
+      clearTimeout(this.holdTimer);
+      if (this.active && d && d.touch && !d.moved && !this.holding && performance.now() - d.t0 < 350) this.walkTo(e.clientX, e.clientY, dom);
+      this.drag = null; this.holding = false;
+    });
     addEventListener('pointermove', (e) => {
       if (!this.active || !this.drag) return;
+      if (Math.hypot(e.clientX - this.drag.x0, e.clientY - this.drag.y0) > 12) this.drag.moved = true;
+      if (!this.drag.moved) return;
       this.look((e.clientX - this.drag.x) * -0.004, (e.clientY - this.drag.y) * -0.004);
-      this.drag = { x: e.clientX, y: e.clientY };
+      this.drag.x = e.clientX; this.drag.y = e.clientY;
     });
+  }
+
+  // Walk toward the point on the floor under a tap (if the tap is on the floor, within bounds).
+  walkTo(cx, cy, dom) {
+    const r = dom.getBoundingClientRect();
+    const ndc = new THREE.Vector2(((cx - r.left) / r.width) * 2 - 1, -((cy - r.top) / r.height) * 2 + 1);
+    const ray = new THREE.Raycaster(); ray.setFromCamera(ndc, this.camera);
+    const hit = ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), new THREE.Vector3());
+    if (!hit) return;
+    const b = this.bounds;
+    this.target = { x: THREE.MathUtils.clamp(hit.x, b.minX, b.maxX), z: THREE.MathUtils.clamp(hit.z, b.minZ, b.maxZ) };
   }
 
   look(dYaw, dPitch) {
@@ -47,11 +74,12 @@ export class Explorer {
   exit() {
     this.active = false;
     this.keys.clear();
+    this.target = null; this.holding = false;
   }
 
   update(dt) {
     const k = this.keys;
-    const fwd = (k.has('KeyW') || k.has('ArrowUp') ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') ? 1 : 0);
+    const fwd = (k.has('KeyW') || k.has('ArrowUp') || this.holding ? 1 : 0) - (k.has('KeyS') || k.has('ArrowDown') ? 1 : 0);
     const side = (k.has('KeyD') ? 1 : 0) - (k.has('KeyA') ? 1 : 0);
     const turn = (k.has('ArrowLeft') ? 1 : 0) - (k.has('ArrowRight') ? 1 : 0);
     if (turn) this.look(turn * 1.4 * dt, 0);
@@ -59,6 +87,11 @@ export class Explorer {
     const sin = Math.sin(this.yaw), cos = Math.cos(this.yaw);
     p.x += (-sin * fwd + cos * side) * SPEED * dt;
     p.z += (-cos * fwd - sin * side) * SPEED * dt;
+    if (this.target) {
+      const dx = this.target.x - p.x, dz = this.target.z - p.z, d = Math.hypot(dx, dz);
+      if (d < 0.05) this.target = null;
+      else { const s = Math.min(d, SPEED * dt); p.x += (dx / d) * s; p.z += (dz / d) * s; }
+    }
     p.x = THREE.MathUtils.clamp(p.x, b.minX, b.maxX);
     p.z = THREE.MathUtils.clamp(p.z, b.minZ, b.maxZ);
     p.y = EYE;

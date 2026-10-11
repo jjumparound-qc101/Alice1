@@ -55,7 +55,9 @@ const clock = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStar
 
 async function main() {
   const renderer = new THREE.WebGLRenderer({ canvas: $('stage'), antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  // Touch screens (phones, tablets) render at a lower resolution, to stay smooth and cool.
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, coarse ? 1.5 : 2));
   renderer.localClippingEnabled = true; // the Cheshire Cat fades from the tail (Chapter VI)
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog('#efe9da', 9, 34);
@@ -192,10 +194,12 @@ async function main() {
   let active = null;
   const LAYOUTS = ['bottom', 'top', 'side'];
   let layout = 'bottom';
+  // On a phone held upright the text always sits below the picture, as a page of running text.
+  const shownLayout = () => (document.body.dataset.form === 'portrait' ? 'side' : layout);
   function setLayout(l) {
     layout = l;
-    document.body.dataset.text = l;
-    page?.setLayout(l);
+    document.body.dataset.text = shownLayout();
+    page?.setLayout(shownLayout());
     $('layoutBtn').textContent = `Text: ${l[0].toUpperCase()}${l.slice(1)}`;
     resize();
   }
@@ -216,7 +220,7 @@ async function main() {
     ch = build(c);
     if (active) { active.group.visible = false; active = null; }
     page = new Page($('page'), ch.words, (t) => { audio.currentTime = t; if (mode === 'watch') play(audio); }, c.tints);
-    page.setLayout(layout);
+    page.setLayout(shownLayout());
     timeline.set(ch.cue.end + 0.9, c.marks);
     const next = CHAPTERS[c.n];
     $('endQuote').textContent = `“${ch.lastSentence.replace(/^[“"]|[”"]$/g, '')}”`;
@@ -240,6 +244,7 @@ async function main() {
     mode = m;
     document.body.dataset.mode = m;
     $('modeBtn').textContent = m === 'watch' ? 'Explore' : 'Back to the story';
+    $('playBtn').textContent = m === 'explore' && document.body.dataset.form !== 'wide' ? 'Back to the story' : audio.paused ? 'Play' : 'Pause';
     if (m === 'explore') { audio.pause(); explorer.bounds = active.bounds; explorer.enter(); }
     else { explorer.exit(); closeCard(); if (atEnd()) endDismissed = false; else play(audio); }
     resize();
@@ -262,6 +267,7 @@ async function main() {
     audio.currentTime = t;
     play(audio);
     started = true;
+    wake(); // show the controls at first, even on a phone
   }
   let started = false; // a chapter is open and positioned (for automated checks)
   // Moving through the chapter: scrubber, skip keys, reading speed and the contents.
@@ -350,16 +356,18 @@ async function main() {
   }
   $('begin').addEventListener('click', () => begin(CHAPTERS[0], 0));
   $('modeBtn').addEventListener('click', () => setMode(mode === 'watch' ? 'explore' : 'watch'));
-  $('playBtn').addEventListener('click', () => (audio.paused ? play(audio) : audio.pause()));
+  // In Explore the play button reads "Back to the story" (on phones the Explore button is in the More panel).
+  const phoneForm = () => document.body.dataset.form !== 'wide';
+  $('playBtn').addEventListener('click', () => (mode === 'explore' && phoneForm() ? setMode('watch') : audio.paused ? play(audio) : audio.pause()));
   $('restartBtn').addEventListener('click', () => { endDismissed = false; audio.currentTime = 0; if (mode === 'watch') play(audio); });
   $('cardClose').addEventListener('click', closeCard);
   $('endExplore').addEventListener('click', () => { endDismissed = true; setMode('explore'); });
   $('endReplay').addEventListener('click', () => { endDismissed = false; audio.currentTime = 0; play(audio); });
   $('endNext').addEventListener('click', () => { const next = CHAPTERS[chapter.n]; if (next?.narrated) begin(next, 0); });
   $('layoutBtn').addEventListener('click', () => setLayout(LAYOUTS[(LAYOUTS.indexOf(layout) + 1) % LAYOUTS.length]));
-  audio.addEventListener('play', () => ($('playBtn').textContent = 'Pause'));
+  audio.addEventListener('play', () => { if (mode === 'watch') $('playBtn').textContent = 'Pause'; });
   const savePlace = () => { if (chapter && !switching) place.save(chapter.n, audio.currentTime); };
-  audio.addEventListener('pause', () => { $('playBtn').textContent = 'Play'; savePlace(); });
+  audio.addEventListener('pause', () => { if (mode === 'watch') $('playBtn').textContent = 'Play'; savePlace(); });
   addEventListener('pagehide', savePlace);
   setInterval(() => { if (!audio.paused) savePlace(); }, 3000);
   addEventListener('keydown', (e) => {
@@ -379,13 +387,81 @@ async function main() {
     if (e.code === 'Space' && mode === 'watch' && $('endCard').hidden) { e.preventDefault(); $('playBtn').click(); }
   });
 
+  // --- Touch and small screens --------------------------------------------------------------
+  // "More": on phones the secondary buttons fold into a panel.
+  $('moreBtn').addEventListener('click', () => {
+    const open = document.body.classList.toggle('more-open');
+    $('moreBtn').setAttribute('aria-expanded', String(open));
+  });
+  $('more').addEventListener('click', (e) => { if (e.target.closest('button') && e.target.id !== 'speedBtn') document.body.classList.remove('more-open'); });
+  // Inspect a hotspot by tapping its label (the E key on a keyboard).
+  $('prompt').addEventListener('click', () => { const h = mode === 'explore' && explorer.facing(active.hotspots); if (h) openCard(h); });
+  // Landscape phones: the controls and timeline fade away while the story plays, and come back
+  // on any touch (the first tap only brings them back).
+  let lastTouch = performance.now();
+  const chromeShown = () => !document.body.classList.contains('chrome-hidden');
+  function wake() { lastTouch = performance.now(); document.body.classList.remove('chrome-hidden'); }
+  setInterval(() => {
+    const hide = document.body.dataset.form === 'landscape' && mode === 'watch' && ch && !audio.paused && $('sceneMenu').hidden
+      && !document.body.classList.contains('more-open') && performance.now() - lastTouch > 4000;
+    if (hide) document.body.classList.add('chrome-hidden');
+  }, 500);
+  addEventListener('keydown', wake);
+  // In the story: a tap on the picture shows the controls (or, when they're showing on a touch
+  // screen, plays or pauses); a swipe across the picture or the text moves a sentence on or back.
+  let swipe = null, swiped = false;
+  const startSwipe = (e) => { swipe = { x: e.clientX, y: e.clientY, t: performance.now(), shown: chromeShown() }; swiped = false; };
+  function endSwipe(e, onPicture) {
+    if (!swipe || !ch || mode !== 'watch') { swipe = null; return; }
+    const dx = e.clientX - swipe.x, dy = e.clientY - swipe.y, quick = performance.now() - swipe.t < 600, wasShown = swipe.shown;
+    swipe = null;
+    if (quick && Math.abs(dx) > 50 && Math.abs(dy) < 40) {
+      swiped = true;
+      const to = skip(ch.sentences, audio.currentTime, dx < 0 ? 1 : -1, 1.5);
+      if (to !== null) { endDismissed = false; seek(to); }
+      return;
+    }
+    if (onPicture && Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+      wake();
+      if (document.body.classList.contains('more-open')) { document.body.classList.remove('more-open'); return; }
+      if (coarse && wasShown && $('endCard').hidden) $('playBtn').click();
+    }
+  }
+  renderer.domElement.addEventListener('pointerdown', (e) => { if (mode === 'watch') startSwipe(e); wake(); });
+  renderer.domElement.addEventListener('pointerup', (e) => endSwipe(e, true));
+  $('page').addEventListener('pointerdown', (e) => { startSwipe(e); wake(); });
+  $('page').addEventListener('pointerup', (e) => endSwipe(e, false));
+  $('page').addEventListener('click', (e) => { if (swiped) { e.stopPropagation(); swiped = false; } }, true); // a swipe isn't a tap on a word
+  addEventListener('pointerdown', (e) => { if (!e.target.closest('#controls')) wake(); });
+
   // Shift the picture away from the text so shots stay framed whatever the layout.
+  // The window's form: 'portrait' (a phone held upright: the picture in a band at the top, the
+  // text below), 'landscape' (a short screen: picture first, a two-line strip, controls folded
+  // away), or 'wide' (computers, tablets). See style.css.
+  const HFOV = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(22.5)) * 16 / 9); // a 45° shot on a 16:9 screen
   function resize() {
-    const w = innerWidth, h = innerHeight;
+    const W = innerWidth, H = innerHeight;
+    const form = H > W && W < 900 ? 'portrait' : H < 520 ? 'landscape' : 'wide';
+    if (document.body.dataset.form !== form) {
+      document.body.dataset.form = form;
+      document.body.dataset.text = shownLayout();
+      page?.setLayout(shownLayout());
+      $('layoutBtn').hidden = form === 'portrait';
+      document.body.classList.remove('more-open');
+    }
+    // Portrait: the picture is a 4:3-ish band, never more than 58% of the screen.
+    const w = W, h = form === 'portrait' ? Math.round(Math.min(W * 0.8, H * 0.58)) : H;
+    document.body.style.setProperty('--pic-h', `${h}px`);
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    if (mode === 'watch' && layout === 'top') camera.setViewOffset(w, h, 0, -0.2 * h, w, h);
-    else if (mode === 'watch' && layout === 'side' && w > 700) camera.setViewOffset(w, h, 0.17 * w, 0.1 * h, w, h);
+    // Keep at least the width of view the shots were framed for (45° on 16:9), so a narrow or
+    // tall picture shows more above and below instead of cutting off the sides.
+    const minV = 2 * Math.atan(Math.tan(HFOV / 2) / camera.aspect);
+    camera.fov = THREE.MathUtils.clamp(THREE.MathUtils.radToDeg(minV), 45, 72);
+    const l = shownLayout();
+    if (mode === 'watch' && form === 'landscape' && l === 'bottom') camera.setViewOffset(w, h, 0, 0.14 * h, w, h); // lift the picture above the strip
+    else if (mode === 'watch' && form !== 'portrait' && l === 'top') camera.setViewOffset(w, h, 0, -0.2 * h, w, h);
+    else if (mode === 'watch' && form === 'wide' && l === 'side' && w > 700) camera.setViewOffset(w, h, 0.17 * w, 0.1 * h, w, h);
     else camera.clearViewOffset();
     camera.updateProjectionMatrix();
   }
@@ -450,7 +526,7 @@ async function main() {
       explorer.update(dt);
       const h = explorer.facing(active.hotspots);
       $('prompt').hidden = !h || shown === h;
-      if (h) $('prompt').textContent = `E: ${h.title}`;
+      if (h) $('prompt').textContent = `${coarse ? 'Tap' : 'E'}: ${h.title}`;
     }
 
     const actors = active.actors(t);

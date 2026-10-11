@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Alice in Wonderland</title>
   <link rel="icon" href="data:," />
   <link rel="stylesheet" href="/src/style.css" />
@@ -30,11 +30,15 @@
 
   <nav id="controls">
     <button id="playBtn">Play</button>
-    <button id="restartBtn">Restart</button>
-    <button id="modeBtn">Explore</button>
-    <button id="layoutBtn">Text: Bottom</button>
-    <button id="speedBtn" title="Reading speed (S)">1×</button>
-    <button id="scenesBtn" title="Contents: chapters and scenes (M)">Contents</button>
+    <!-- On phones these fold into the "More" panel. -->
+    <div id="more">
+      <button id="restartBtn">Restart</button>
+      <button id="modeBtn">Explore</button>
+      <button id="layoutBtn">Text: Bottom</button>
+      <button id="speedBtn" title="Reading speed (S)">1×</button>
+      <button id="scenesBtn" title="Contents: chapters and scenes (M)">Contents</button>
+    </div>
+    <button id="moreBtn" aria-expanded="false">More</button>
   </nav>
 
   <div id="timeline" title="Click or drag to move through the chapter">
@@ -44,11 +48,11 @@
   <aside id="sceneMenu" hidden>
     <h2>Contents</h2>
     <div id="contents"></div>
-    <p class="keys">← → a sentence back or on · Shift+← → a scene · S speed · M this menu</p>
+    <p class="keys"><span class="key-hint">← → a sentence back or on · Shift+← → a scene · S speed · M this menu</span><span class="touch-hint">Swipe the text left or right: a sentence on or back · tap the picture to show the controls</span></p>
     <button id="sceneClose">Close</button>
   </aside>
 
-  <p id="hint">Explore: W A S D to walk · drag or ← → to look · E to inspect · Tab to return</p>
+  <p id="hint"><span class="key-hint">Explore: W A S D to walk · drag or ← → to look · E to inspect · Tab to return</span><span class="touch-hint">Drag to look · tap the ground to walk there · hold to walk forward</span></p>
   <p id="prompt" hidden></p>
 
   <aside id="card" hidden>
