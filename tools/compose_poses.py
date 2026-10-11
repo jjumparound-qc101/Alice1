@@ -61,6 +61,13 @@ DRAWN = {
     "kneel": {"src": "source/ai/alice_kneel.webp", "h": 332, "bodyX": None, "mirror": True},
     "cry": {"src": "source/ai/alice_cry.webp", "h": 485, "bodyX": None},
     "eat": {"src": "source/ai/alice_eat.webp", "h": 753, "bodyX": None},
+    "hold": {"src": "source/ai/alice_hold.webp", "h": 700, "bodyX": None},
+    # Chapter III.
+    "wet": {"src": "source/ai/alice3_wet.webp", "h": 700, "bodyX": None},
+    "ring": {"src": "source/ai/alice3_ring.webp", "h": 500, "bodyX": None},
+    "argue": {"src": "source/ai/alice3_argue.webp", "h": 700, "bodyX": None},
+    "comfits": {"src": "source/ai/alice3_comfits.webp", "h": 700, "bodyX": None},
+    "bow": {"src": "source/ai/alice3_bow.webp", "h": 625, "bodyX": None},
 }
 
 

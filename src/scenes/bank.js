@@ -142,9 +142,17 @@ export const bank = {
           [RACE.end, racing('alice', RACE.end, 0)], [RACE.end + 3, ALICE_RACE_END], [T.ringAgain, ALICE_RACE_END], [T.ringAgain + 2, slot(90)],
         ]);
       const sitting = (t >= T.ring && t < T.wet + 4) || (t >= T.ringAgain + 2 && t < T.please) || t >= T.cry - 1;
-      const bow = t >= T.bowed && t < T.bowed + 1.6 ? Math.sin(((t - T.bowed) / 1.6) * Math.PI) * 0.35 : 0;
       const dir = sitting ? -1 : s.moving ? s.dir : t >= T.please ? -1 : 1;
-      return { ...s, dir, pose: sitting ? 'sit' : 'stand', scale: TINY, tilt: -bow * dir };
+      // Her drawn poses (tools/compose_poses.py), by the text.
+      let pose = 'stand';
+      if (t >= T.cry - 1) pose = 'cry';                                         // "began to cry again"
+      else if (sitting) pose = 'ring';                                          // sitting in the ring
+      else if (s.moving) pose = 'stand';
+      else if (t < T.sit) pose = 'wet';                                         // "dripping wet, cross, and uncomfortable"
+      else if (t >= T.alice - 0.5 && t < T.alice + 4) pose = 'argue';           // "What is a Caucus-race?"
+      else if (t >= T.comfits - 0.3 && t < T.herself) pose = 'comfits';         // the comfits handed round as prizes
+      else if (t >= T.bowed - 0.5 && t < T.bowed + 2) pose = 'bow';             // "she simply bowed"
+      return { ...s, dir, pose, scale: TINY };
     }
 
     function mouse(t) {
@@ -186,7 +194,7 @@ export const bank = {
       course.visible = t >= T.course;
       course.geometry.setDrawRange(0, Math.floor(97 * Math.min(1, (t - T.course) / 6)));
       // The comfits come out of her pocket and go round; the thimble goes to the Dodo and back.
-      box.visible = t >= T.comfits && t < T.herself;
+      box.visible = t >= T.comfits && t < T.herself && alice(t).pose !== 'comfits'; // drawn in her pose
       if (box.visible) carry(box, cast.alice);
       thim.visible = t >= T.thimble && t < T.ringAgain;
       if (thim.visible) carry(thim, t >= T.handOver + 1 && t < T.bowed + 0.6 ? cast.dodo : cast.alice);

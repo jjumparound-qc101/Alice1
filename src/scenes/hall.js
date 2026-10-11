@@ -81,7 +81,9 @@ export const hall = {
       let y = 0;
       if (t >= T.legs && t < T.sat) y = Math.abs(Math.sin((t - T.legs) * 1.6)) * 0.12; // climbs the leg, slips back
       const eating = t >= T.ate && t < T.finished;   // the cake drawn in her hand, the other on her head
-      const pose = kneeling ? 'kneel' : crying ? 'cry' : eating && !s.moving ? 'eat' : 'stand';
+      // Holding the key, or the bottle, up to look at it while she stands still.
+      const holding = !s.moving && ((t >= T.key && t < T.tryKey) || (t >= T.bottle + 1 && t < T.drunk));
+      const pose = kneeling ? 'kneel' : crying ? 'cry' : eating && !s.moving ? 'eat' : holding ? 'hold' : 'stand';
       return { ...s, pose, dir: kneeling ? 1 : s.dir, scale, y, moving: s.moving || (y > 0.01 && !crying) };
     }
 
