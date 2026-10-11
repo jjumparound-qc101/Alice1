@@ -25,7 +25,7 @@ Updated: 2026-10-10 (end of session 2: Chapters VIII–X staged). For the next C
 | XII Alice's Evidence | CHAPTER_12_ASSETS.md | ✓ | `evidence.js`: `evidence`, `waking` (court and riverbank sets) |
 
 ## Open decisions for the owner
-None.
+- **Remind the owner** (asked 2026-10-11) when Chapter XI art begins: the Tenniel frontispiece (the trial) is needed as the reference for the court prompts and isn't on Victorian Web. The owner downloads it from a scan of the 1865/66 edition, or adds commons.wikimedia.org to the network allowlist so Claude can fetch it.
 
 ## Next steps, in order
 1. **Drop in art as the owner sends it** (see "When art arrives"). The owner sends art in batches.
