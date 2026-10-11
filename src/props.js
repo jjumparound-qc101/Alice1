@@ -61,6 +61,7 @@ export function leafHeap() {
 }
 
 // The hall's long wall, panelled, with a row of locked doors.
+// doors: how many doors to draw in; 0 for a bare wall (the hall now hangs the AI door drawings on it).
 export function hallWall(doors = 7) {
   const W = 2600, H = 700;
   const { c, g } = canvas(W, H);
@@ -69,7 +70,7 @@ export function hallWall(doors = 7) {
   hatch(g, wall, { angle: Math.PI / 2, gap: 9, width: 0.8, seed: 51, alpha: 0.45 });
   const dado = new Path2D(); dado.rect(0, H - 130, W, 130);
   fillPaper(g, dado); hatch(g, dado, { angle: 0.8, gap: 5, seed: 52, alpha: 0.7 }); outline(g, dado, 2);
-  const step = W / doors;
+  const step = W / Math.max(doors, 1);
   for (let i = 0; i < doors; i++) {
     const x = step * i + step * 0.22, w = step * 0.56, top = 90;
     const d = new Path2D();

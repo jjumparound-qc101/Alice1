@@ -24,13 +24,28 @@ export const KEY = { w: 0.12, h: 0.048 }; // "a tiny golden key" (the AI drawing
 // and the curtain.
 export function buildHall({ group, ai, hallMeta }) {
   const plain = (map) => new THREE.MeshBasicMaterial({ map });
-  const back = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, H), plain(texture(hallWall(7))));
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, H), plain(texture(hallWall(0))));
   back.position.set(0, H / 2, -3); group.add(back);
-  const sideTex = texture(hallWall(3));
+  const sideTex = texture(hallWall(0));
   for (const s of [-1, 1]) {
     const side = new THREE.Mesh(new THREE.PlaneGeometry(HALL_D, H), plain(sideTex));
     side.rotation.y = -s * Math.PI / 2; side.position.set(s * HALL_W / 2, H / 2, 0); group.add(side);
   }
+  // "doors all round the hall, but they were all locked": the little door's drawing, frame
+  // and leaf, at the old doors' height (owner, 2026-10-11), a little narrower so they fit
+  // round the walls. The back wall leaves room for the little door behind its curtain.
+  const L = hallMeta.door.leaf;
+  const BIG_H = 2.79, BIG_W = BIG_H * ai['hall/door_frame'].aspect * 0.85;
+  const bigDoor = (x, z, rotY) => {
+    const d = new THREE.Group();
+    d.add(paperFlat(ai['hall/door_frame'].tex, BIG_W, BIG_H, { edge: false }));
+    const leaf = paperFlat(ai['hall/door_leaf'].tex, BIG_W * (L.x1 - L.x0), BIG_H * (1 - L.top), { edge: false });
+    leaf.position.set(((L.x0 + L.x1) / 2 - 0.5) * BIG_W, 0, -0.002);
+    d.add(leaf);
+    d.position.set(x, 0, z); d.rotation.y = rotY; group.add(d);
+  };
+  for (const x of [-4.9, -3.1, -1.3, 0.5, 4.6]) bigDoor(x, -2.99, 0);
+  for (const s of [-1, 1]) for (const z of [-1.9, 0, 1.9]) bigDoor(s * (HALL_W / 2 - 0.01), z, -s * Math.PI / 2);
   const floorTex = ai['hall/floor'].tex;
   floorTex.wrapS = floorTex.wrapT = THREE.RepeatWrapping;
   floorTex.repeat.set(HALL_W / 2.4, HALL_D / 2.4); // one drawing is about 2.4 m of floor
@@ -74,7 +89,6 @@ export function buildHall({ group, ai, hallMeta }) {
 
   // Behind the curtain: the little door in its frame, and the garden seen through it,
   // clipped to the door's arch. The frame stays on the wall; the leaf swings on its hinges.
-  const L = hallMeta.door.leaf;
   const frameW = DOOR.w / (L.x1 - L.x0), frameH = DOOR.h / (1 - L.top);
   const frame = paperFlat(ai['hall/door_frame'].tex, frameW, frameH, { edge: false });
   frame.position.set(DOOR.x + (0.5 - (L.x0 + L.x1) / 2) * frameW, 0, DOOR.z + 0.004); group.add(frame);
