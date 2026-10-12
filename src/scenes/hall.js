@@ -35,11 +35,11 @@ export const hall = {
     // The AI drawings (tools/small_props.py): the bottle, the open glass box with the cake in it.
     const flat = (name, w) => paperFlat(ai[name].tex, w, w / ai[name].aspect);
     const bottle = flat('props/bottle', 0.13);
-    // "a little glass box"; Alice is ten inches high here. See-through, so no shadow card
-    // behind it (that showed as a second box).
-    const box = paperFlat(ai['props/box'].tex, 0.15, 0.15 / ai['props/box'].aspect, { edge: false });
-    // "a very small cake": near the size drawn in her hand in the eating pose (there already bitten).
-    const cake = paperFlat(ai['props/cake'].tex, 0.024, 0.024 / ai['props/cake'].aspect, { edge: false }); // no shadow card: it showed as a second cake
+    // "a little glass box", just big enough for the cake; Alice is ten inches high here.
+    // See-through, so no shadow cards behind it or the cake (they showed as second copies).
+    const BOX_W = 0.08, CAKE_W = 0.038; // the cake as drawn in her hand in the eating pose
+    const box = paperFlat(ai['props/box'].tex, BOX_W, BOX_W / ai['props/box'].aspect, { edge: false });
+    const cake = paperFlat(ai['props/cake'].tex, CAKE_W, CAKE_W / ai['props/cake'].aspect, { edge: false });
     group.add(bottle, box, cake);
 
     // "the simple rules their friends had taught them", and later the candle going out.
@@ -89,7 +89,8 @@ export const hall = {
       // "she found she could not possibly reach it": up on tiptoe under the table, before climbing a leg.
       const reaching = !s.moving && t >= T.forgotten + 6.5 && t < T.legs;
       const pose = reaching ? 'reach' : kneeling ? 'kneel' : crying ? 'cry' : eating && !s.moving ? 'eat' : holding ? 'hold' : 'stand';
-      return { ...s, pose, dir: kneeling ? 1 : s.dir, scale, y, moving: s.moving || (y > 0.01 && !crying) };
+      return { ...s, pose, dir: kneeling ? 1 : pose === 'eat' ? -1 : s.dir, scale, y, // eating: as drawn, so EAT ME reads the right way round
+        moving: s.moving || (y > 0.01 && !crying) };
     }
 
     const rest = (obj, x, y, z) => { obj.position.set(x, y, z); obj.rotation.set(0, 0, 0); };
@@ -113,7 +114,7 @@ export const hall = {
       box.visible = cake.visible = t >= T.box - 0.5;
       box.position.set(TABLE.x - 0.05, 0, TABLE.z + 0.25);
       if (t >= T.ate && t < T.finished) { carry(cake, cast.alice, { drop: 0.01 }); cake.visible = a.pose !== 'eat'; }
-      else rest(cake, TABLE.x - 0.09, 0.06, TABLE.z + 0.245); // on the box's glass floor (above its feet): just behind its card, seen through the glass
+      else rest(cake, TABLE.x - 0.058, 0.026, TABLE.z + 0.245); // on the box's glass floor (above its feet): just behind its card, seen through the glass
       if (t >= T.finished) cake.visible = false;
     }
 

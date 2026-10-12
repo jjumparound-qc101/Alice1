@@ -141,6 +141,7 @@ async function main() {
       walk_a: { ...posed.walk_a, hand: [0.04, 0.5] },
       walk_b: { ...posed.walk_b, hand: [0.03, 0.5] },
       jump: { ...posed.jump, hand: [0.03, 0.37] },
+      fall: { ...posed.fall, hand: [0.93, 0.34] },        // the marmalade jar, in her raised hand (Chapter I)
       hold: { ...posed.hold, hand: [0.05, 0.17] },        // the key or bottle held up (Chapter I)
       comfits: { ...posed.comfits, hand: [0.11, 0.45] },
       bow: { ...posed.bow, hand: [0.38, 0.51] },          // takes the thimble (Chapter III)

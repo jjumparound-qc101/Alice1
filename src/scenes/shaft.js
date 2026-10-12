@@ -70,21 +70,22 @@ export const shaft = {
       const sway = Math.sin(t * 0.7) * 0.12;
       return {
         visible: t > T.dipped - 0.2, dir: 1,
-        // Floating down, arms up (drawn); standing while she holds the jar at her hand.
-        pose: t >= T.jar - 1 && t < T.putBack + 1 ? 'stand' : 'fall',
+        // Floating down, arms up (drawn) the whole way; the jar goes in her raised right hand.
+        pose: 'fall',
         x: Math.sin(t * 0.31) * 0.15, z: -1.0, // close to the wall, so the jar in her hand looks the size it did on the shelf
         y: lerp(5, 0.15, enter) + Math.sin(t * 0.9) * 0.05,
         tilt: sway,
       };
     }
 
-    function update(t) {
+    function update(t, cast) {
       // Walls scroll upward as she falls.
       strip.offset.y = offsetAtTake - (FALL * (t - T.jar)) / tileH;
       sideTex.offset.y = -(FALL * t) / (WALL_H / 3);
       // The jar: on a shelf rising toward her, in her hand, then put back on a shelf.
       // On its shelf, rising toward her; into her hand; then into a cupboard as she passes.
-      const held = { x: HAND.x, y: HAND.y + Math.sin(t * 0.9) * 0.05, z: HAND.z };
+      const held = cast.alice.handPoint(new THREE.Vector3());
+      held.y += J.h * px * 0.3; // her fingers round the lower part of the jar
       let p;
       if (t < T.jar) p = { ...SHELF, y: wallY(t, HAND.y, T.jar) };
       else if (t < T.putBack) {

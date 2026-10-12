@@ -61,8 +61,7 @@ DRAWN = {
     # The closer redo (cheek near the floor, peering): source/ai/alice_kneel.webp is the spare.
     "kneel": {"src": "source/ai/alice_kneel_v2.webp", "h": 390, "bodyX": None, "mirror": True},
     "cry": {"src": "source/ai/alice_cry.webp", "h": 485, "bodyX": None},
-    # Drawn fuller-skirted and more front-on than the standing Alice: matched by dress and height.
-    "eat": {"src": "source/ai/alice_eat.webp", "h": 705, "bodyX": None},
+    "eat": {"src": "source/ai/alice_eat_v2.webp", "h": 720, "bodyX": None},  # second version; alice_eat.webp is the spare
     "hold": {"src": "source/ai/alice_hold.webp", "h": 700, "bodyX": None},
     # Chapter III.
     "wet": {"src": "source/ai/alice3_wet.webp", "h": 700, "bodyX": None},
