@@ -43,7 +43,14 @@ export const hall = {
     const BOX_AT = { x: TABLE.x + 0.1, z: TABLE.z + 0.43 };
     const box = paperFlat(ai['props/box'].tex, BOX_W, BOX_W / ai['props/box'].aspect, { edge: false });
     const cake = paperFlat(ai['props/cake'].tex, CAKE_W, CAKE_W / ai['props/cake'].aspect, { edge: false });
-    group.add(bottle, box, cake);
+    // The box is one flat drawing, so the cake can't sit "inside" it and stay readable behind
+    // its near corner post. Instead the cake stands in the wide left-hand glass panel (no post
+    // crosses it), and a faint copy of the box is laid over it as the front glass: the cake
+    // reads as behind glass, and EAT ME stays fully legible.
+    const glassFront = paperFlat(ai['props/box'].tex, BOX_W, BOX_W / ai['props/box'].aspect, { edge: false });
+    const gm = glassFront.userData.front.material;
+    gm.opacity = 0.28; gm.alphaTest = 0.02; gm.depthWrite = false;
+    group.add(bottle, box, cake, glassFront);
 
     // "the simple rules their friends had taught them", and later the candle going out.
     const think = thoughts(group, [
@@ -114,10 +121,11 @@ export const hall = {
       // Her thoughts, above and beside her head, sized to her.
       think(t, { x: a.x - 0.2 * a.scale, y: (a.y ?? 0) + 1.75 * a.scale, z: a.z + 0.15 }, Math.max(a.scale, 0.35));
       // Under the table: the little glass box and the cake.
-      box.visible = cake.visible = t >= T.box - 0.5;
+      box.visible = cake.visible = glassFront.visible = t >= T.box - 0.5;
       box.position.set(BOX_AT.x, 0, BOX_AT.z);
+      glassFront.position.set(BOX_AT.x, 0, BOX_AT.z + 0.016);
       if (t >= T.ate && t < T.finished) { carry(cake, cast.alice, { drop: 0.01 }); cake.visible = a.pose !== 'eat'; }
-      else rest(cake, BOX_AT.x - 0.002, 0.018, BOX_AT.z - 0.03); // at the centre of the box's glass floor, as if the box were solid: behind the near corner post, at half its depth // on the box's glass floor (above its feet): just behind its card, seen through the glass
+      else rest(cake, BOX_AT.x - 0.016, 0.014, BOX_AT.z + 0.008); // in the left glass panel, between the box and its front glass
       if (t >= T.finished) cake.visible = false;
     }
 
@@ -148,7 +156,7 @@ export const hall = {
       { t: T.forgotten + 9.5, dur: 2, pos: [TABLE.x + 0.35, 0.14, TABLE.z + 0.45], look: [TABLE.x, 1.0, TABLE.z] }, // the key, through the glass
       { t: T.sat, dur: 2, pos: [TABLE.x + 0.5, 0.25, TABLE.z + 0.7], look: [BY_LEG.x, 0.1, BY_LEG.z] },
       { t: T.box - 1, dur: 3, pos: [TABLE.x + 0.3, 0.2, TABLE.z + 1.05], look: [TABLE.x + 0.05, 0.08, TABLE.z + 0.43] }, // EAT ME
-      { t: T.currants - 3.6, dur: 1.2, pos: [BOX_AT.x + 0.075, 0.05, BOX_AT.z + 0.12], look: [BOX_AT.x - 0.002, 0.016, BOX_AT.z - 0.025] }, // close: "EAT ME" in currants
+      { t: T.currants - 3.6, dur: 1.2, pos: [BOX_AT.x - 0.016, 0.045, BOX_AT.z + 0.15], look: [BOX_AT.x - 0.012, 0.03, BOX_AT.z] }, // close: "EAT ME" in currants
       { t: T.currants + 1.5, dur: 1.5, pos: [TABLE.x + 0.3, 0.2, TABLE.z + 1.05], look: [TABLE.x + 0.05, 0.08, TABLE.z + 0.43] },
       { t: T.finished - 3, dur: 4, pos: [TABLE.x + 0.6, 0.45, TABLE.z + 1.5], look: [TABLE.x, 0.15, TABLE.z + 0.3] },
     ]);
