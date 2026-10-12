@@ -30,12 +30,21 @@ export const passage = {
     const ceil = new THREE.Mesh(floor.geometry, mat(wallTex, '#5e574c'));
     ceil.rotation.x = Math.PI / 2; ceil.position.set(1.5, H, -LEN / 2 + 2); group.add(ceil);
     // Left wall runs the full length; the right wall stops at the corner, where the passage turns right.
-    const left = new THREE.Mesh(new THREE.PlaneGeometry(LEN, H), mat(wallTex));
+    // The walls: packed earth, roots, timber props (AI drawing, tools/walls.py), one drawing to
+    // every 3.9 m (its own proportions at the passage's height). The ceiling stays plain earth.
+    const earthWall = (len) => {
+      const t = ai['walls/passage'].tex.clone();
+      t.wrapS = THREE.RepeatWrapping;
+      t.repeat.set(len / (H * ai['walls/passage'].aspect), 1);
+      t.needsUpdate = true;
+      return t;
+    };
+    const left = new THREE.Mesh(new THREE.PlaneGeometry(LEN, H), mat(earthWall(LEN), '#c9c0b0'));
     left.rotation.y = Math.PI / 2; left.position.set(-HALF_W, H / 2, -LEN / 2 + 2); group.add(left);
     const rightLen = 2 - CORNER_Z - 1;
-    const right = new THREE.Mesh(new THREE.PlaneGeometry(rightLen, H), mat(wallTex));
+    const right = new THREE.Mesh(new THREE.PlaneGeometry(rightLen, H), mat(earthWall(rightLen), '#c9c0b0'));
     right.rotation.y = -Math.PI / 2; right.position.set(HALF_W, H / 2, 2 - rightLen / 2); group.add(right);
-    const end = new THREE.Mesh(new THREE.PlaneGeometry(HALF_W * 2 + 6, H), mat(wallTex));
+    const end = new THREE.Mesh(new THREE.PlaneGeometry(HALF_W * 2 + 6, H), mat(earthWall(HALF_W * 2 + 6), '#c9c0b0'));
     end.position.set(1.5, H / 2, -LEN + 2); group.add(end);
     // Light from round the corner.
     const glow = new THREE.Mesh(new THREE.PlaneGeometry(1.2, H), new THREE.MeshBasicMaterial({ color: PAPER }));

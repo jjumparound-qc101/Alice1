@@ -39,10 +39,14 @@ export const shaft = {
     back.position.set(0, 1, -1.6);
     group.add(back);
 
-    // Side walls: dark earth.
-    const sideTex = texture(earth(3, 0.85), { repeat: [1, 3] });
+    // Side walls: earth, roots, a shelf or a map now and then (AI drawing, tools/walls.py),
+    // repeating top to bottom and scrolling up with the back wall.
+    const sideTex = ai['walls/shaft_side'].tex;
+    sideTex.wrapS = sideTex.wrapT = THREE.RepeatWrapping;
+    const SIDE_TILE = 4 / ai['walls/shaft_side'].aspect; // one drawing spans the wall's 4 m width
+    sideTex.repeat.set(1, WALL_H / SIDE_TILE);
     for (const s of [-1, 1]) {
-      const side = new THREE.Mesh(new THREE.PlaneGeometry(4, WALL_H), new THREE.MeshBasicMaterial({ map: sideTex, color: '#6d6558', side: THREE.DoubleSide }));
+      const side = new THREE.Mesh(new THREE.PlaneGeometry(4, WALL_H), new THREE.MeshBasicMaterial({ map: sideTex, color: '#b8b0a2', side: THREE.DoubleSide }));
       side.rotation.y = s * Math.PI / 2;
       side.position.set(s * WALL_W / 2, 1, 0.4);
       group.add(side);
@@ -81,7 +85,7 @@ export const shaft = {
     function update(t, cast) {
       // Walls scroll upward as she falls.
       strip.offset.y = offsetAtTake - (FALL * (t - T.jar)) / tileH;
-      sideTex.offset.y = -(FALL * t) / (WALL_H / 3);
+      sideTex.offset.y = -(FALL * t) / SIDE_TILE;
       // The jar: on a shelf rising toward her, in her hand, then put back on a shelf.
       // On its shelf, rising toward her; into her hand; then into a cupboard as she passes.
       const held = cast.alice.handPoint(new THREE.Vector3());

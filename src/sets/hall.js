@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { paperFlat, halo } from '../stage.js';
 import { texture, canvas, INK } from '../ink.js';
-import { SPOT, hallWall, earth } from '../props.js';
+import { SPOT, earth } from '../props.js';
 
 export const HALL_W = 12, HALL_D = 6, H = 3.2;
 export const TABLE = { x: 0.4, z: -1.1, top: 0.92, r: 0.42 };
@@ -24,9 +24,18 @@ export const KEY = { w: 0.12, h: 0.048 }; // "a tiny golden key" (the AI drawing
 // and the curtain.
 export function buildHall({ group, ai, hallMeta }) {
   const plain = (map) => new THREE.MeshBasicMaterial({ map });
-  const back = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, H), plain(texture(hallWall(0))));
+  // The walls: plaster over a panelled wainscot (AI drawing, tools/walls.py), one drawing to
+  // every 3 m; the doors are hung on them below.
+  const wallTex = (len) => {
+    const t = ai['walls/hall'].tex.clone();
+    t.wrapS = THREE.RepeatWrapping;
+    t.repeat.set(len / 3, 1);
+    t.needsUpdate = true;
+    return t;
+  };
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, H), plain(wallTex(HALL_W)));
   back.position.set(0, H / 2, -3); group.add(back);
-  const sideTex = texture(hallWall(0));
+  const sideTex = wallTex(HALL_D);
   for (const s of [-1, 1]) {
     const side = new THREE.Mesh(new THREE.PlaneGeometry(HALL_D, H), plain(sideTex));
     side.rotation.y = -s * Math.PI / 2; side.position.set(s * HALL_W / 2, H / 2, 0); group.add(side);

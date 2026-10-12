@@ -66,7 +66,8 @@ async function main() {
   const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar',
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
-    'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', // tools/ch1_art.py
+    'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away',
+    'walls/shaft_side', 'walls/passage', 'walls/hall', // tools/walls.py // tools/ch1_art.py
     // Chapter II (tools/ch2_art.py): the Rabbit, the Mouse, the birds, props, the pool and the thoughts.
     ...['rabbit2_trot', 'rabbit2_start', 'rabbit2_away', 'mouse_swim', 'mouse_leap', 'mouse_bristle', 'mouse_away',
       'duck_swim', 'duck_stand', 'dodo_swim', 'dodo_stand', 'lory_swim', 'lory_stand', 'eaglet_swim', 'eaglet_stand',
@@ -141,7 +142,7 @@ async function main() {
       walk_a: { ...posed.walk_a, hand: [0.04, 0.5] },
       walk_b: { ...posed.walk_b, hand: [0.03, 0.5] },
       jump: { ...posed.jump, hand: [0.03, 0.37] },
-      fall: { ...posed.fall, hand: [0.93, 0.34] },        // the marmalade jar, in her raised hand (Chapter I)
+      fall: { ...posed.fall, hand: [0.06, 0.06] },        // the marmalade jar, in her raised left hand (Chapter I)
       hold: { ...posed.hold, hand: [0.05, 0.17] },        // the key or bottle held up (Chapter I)
       comfits: { ...posed.comfits, hand: [0.11, 0.45] },
       bow: { ...posed.bow, hand: [0.38, 0.51] },          // takes the thimble (Chapter III)

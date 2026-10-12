@@ -37,7 +37,9 @@ export const hall = {
     const bottle = flat('props/bottle', 0.13);
     // "a little glass box", just big enough for the cake; Alice is ten inches high here.
     // See-through, so no shadow cards behind it or the cake (they showed as second copies).
-    const BOX_W = 0.08, CAKE_W = 0.038; // the cake as drawn in her hand in the eating pose
+    const BOX_W = 0.09, CAKE_W = 0.042; // the cake as drawn in her hand in the eating pose (4 cm)
+    // Beside where she stands to eat, at her depth, so the cake reads at the same size in the box and in her hand.
+    const BOX_AT = { x: TABLE.x + 0.1, z: TABLE.z + 0.43 };
     const box = paperFlat(ai['props/box'].tex, BOX_W, BOX_W / ai['props/box'].aspect, { edge: false });
     const cake = paperFlat(ai['props/cake'].tex, CAKE_W, CAKE_W / ai['props/cake'].aspect, { edge: false });
     group.add(bottle, box, cake);
@@ -112,9 +114,9 @@ export const hall = {
       think(t, { x: a.x - 0.2 * a.scale, y: (a.y ?? 0) + 1.75 * a.scale, z: a.z + 0.15 }, Math.max(a.scale, 0.35));
       // Under the table: the little glass box and the cake.
       box.visible = cake.visible = t >= T.box - 0.5;
-      box.position.set(TABLE.x - 0.05, 0, TABLE.z + 0.25);
+      box.position.set(BOX_AT.x, 0, BOX_AT.z);
       if (t >= T.ate && t < T.finished) { carry(cake, cast.alice, { drop: 0.01 }); cake.visible = a.pose !== 'eat'; }
-      else rest(cake, TABLE.x - 0.058, 0.026, TABLE.z + 0.245); // on the box's glass floor (above its feet): just behind its card, seen through the glass
+      else rest(cake, BOX_AT.x - 0.009, 0.029, BOX_AT.z - 0.005); // on the box's glass floor (above its feet): just behind its card, seen through the glass
       if (t >= T.finished) cake.visible = false;
     }
 
@@ -142,7 +144,7 @@ export const hall = {
       { t: T.forgotten + 6.2, dur: 1, pos: [TABLE.x + 0.15, 0.12, TABLE.z + 1.1], look: [TABLE.x + 0.12, 0.02, TABLE.z + 0.3] }, // on tiptoe, reaching up
       { t: T.forgotten + 9.5, dur: 2, pos: [TABLE.x + 0.35, 0.14, TABLE.z + 0.45], look: [TABLE.x, 1.0, TABLE.z] }, // the key, through the glass
       { t: T.sat, dur: 2, pos: [TABLE.x + 0.5, 0.25, TABLE.z + 0.7], look: [BY_LEG.x, 0.1, BY_LEG.z] },
-      { t: T.box - 1, dur: 3, pos: [TABLE.x + 0.35, 0.22, TABLE.z + 1.0], look: [TABLE.x - 0.05, 0.07, TABLE.z + 0.25] }, // EAT ME
+      { t: T.box - 1, dur: 3, pos: [TABLE.x + 0.3, 0.2, TABLE.z + 1.05], look: [TABLE.x + 0.05, 0.08, TABLE.z + 0.43] }, // EAT ME
       { t: T.finished - 3, dur: 4, pos: [TABLE.x + 0.6, 0.45, TABLE.z + 1.5], look: [TABLE.x, 0.15, TABLE.z + 0.3] },
     ]);
 
