@@ -2,8 +2,6 @@
 // Alice drifts down the middle of the shaft; the walls scroll upward past her.
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
-import { texture } from '../ink.js';
-import { earth, dinahVignette, catsBatsVignette } from '../props.js';
 import { thoughts } from '../thoughts.js';
 import { smooth, lerp, cameraTrack } from '../track.js';
 
@@ -25,8 +23,8 @@ export const shaft = {
     };
     // "Dinah'll miss me very much to-night", and "Do cats eat bats?"
     const think = thoughts(group, [
-      { t0: T.dinah - 0.5, t1: T.cats - 0.4, art: dinahVignette() },
-      { t0: T.cats - 0.4, t1: T.batsEatCats + 2, art: catsBatsVignette() },
+      { t0: T.dinah - 0.5, t1: T.cats - 0.4, art: ai['vignettes/dinah'].tex },     // AI drawings (tools/ch1_art.py)
+      { t0: T.cats - 0.4, t1: T.batsEatCats + 2, art: ai['vignettes/bats'].tex },
     ]);
 
     // Back wall: the shelves, maps and cupboards from the AI master drawings.

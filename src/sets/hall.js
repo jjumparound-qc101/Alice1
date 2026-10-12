@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { paperFlat, halo } from '../stage.js';
 import { texture, canvas, INK } from '../ink.js';
-import { SPOT, earth } from '../props.js';
+import { SPOT } from '../props.js';
 
 export const HALL_W = 12, HALL_D = 6, H = 3.2;
 export const TABLE = { x: 0.4, z: -1.1, top: 0.92, r: 0.42 };
@@ -60,7 +60,11 @@ export function buildHall({ group, ai, hallMeta }) {
   floorTex.repeat.set(HALL_W / 2.4, HALL_D / 2.4); // one drawing is about 2.4 m of floor
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, HALL_D), plain(floorTex));
   floor.rotation.x = -Math.PI / 2; group.add(floor);
-  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, HALL_D), plain(texture(earth(13, 0.5), { repeat: [4, 2] })));
+  // The ceiling: plaster between dark beams (AI drawing, tools/walls.py), one drawing to every 3 m.
+  const ceilTex = ai['walls/hall_ceiling'].tex;
+  ceilTex.wrapS = ceilTex.wrapT = THREE.RepeatWrapping;
+  ceilTex.repeat.set(HALL_W / 3, HALL_D / 3);
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, HALL_D), plain(ceilTex));
   ceil.rotation.x = Math.PI / 2; ceil.position.y = H; group.add(ceil);
   // "lit up by a row of lamps hanging from the roof"
   const LAMP_H = 1.1;

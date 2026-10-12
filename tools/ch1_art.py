@@ -43,6 +43,11 @@ def main():
         img = shrink(whitecut(src).convert("RGBA"))
         img.save(f"{OUT}/{n}.webp", quality=90, method=6)
         print(f"{OUT}/{n}.webp: {img.size[0]}x{img.size[1]}")
+    # Thought vignettes (the same oval card treatment as Chapter II's).
+    sys.path.insert(0, "tools")
+    import ch2_art
+    for n in ("dinah", "bats"):
+        ch2_art.vignette(f"vignette_{n}", n)
     # The garden inside the passage's far arch (source pixels, 1024x1536), paper-tinted.
     g = Image.open("source/ai/garden_through_door.png").convert("L").crop((392, 292, 806, 1080))
     rgb = (np.asarray(g, np.float32)[..., None] / 255.0 * PAPER).astype(np.uint8)

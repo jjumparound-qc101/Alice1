@@ -32,6 +32,7 @@ def main():
     tint(Image.open("source/ai/passage_wall.webp")).save(f"{OUT}/passage.webp", quality=88, method=6)
     tint(Image.open("source/ai/passage_floor.webp")).save(f"{OUT}/passage_floor.webp", quality=88, method=6)
     tint(Image.open("source/ai/passage_ceiling.webp")).save(f"{OUT}/passage_ceiling.webp", quality=88, method=6)
+    tint(Image.open("source/ai/hall_ceiling.webp")).save(f"{OUT}/hall_ceiling.webp", quality=88, method=6)
     hall = tint(Image.open("source/ai/hall_wall.webp"))
     W, H = hall.size
     total = round(W * HALL_H / HALL_TILE_W)          # pixels for the full wall height
@@ -46,7 +47,7 @@ def main():
         flip = not flip
     out.paste(hall, (0, total - H))
     out.save(f"{OUT}/hall.webp", quality=88, method=6)
-    for n in ("shaft_side", "passage", "passage_floor", "passage_ceiling", "hall"):
+    for n in ("shaft_side", "passage", "passage_floor", "passage_ceiling", "hall_ceiling", "hall"):
         print(f"{OUT}/{n}.webp", Image.open(f"{OUT}/{n}.webp").size)
 
 
