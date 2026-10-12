@@ -83,7 +83,9 @@ export const hall = {
       const eating = t >= T.ate && t < T.finished;   // the cake drawn in her hand, the other on her head
       // Holding the key, or the bottle, up to look at it while she stands still.
       const holding = !s.moving && ((t >= T.key && t < T.tryKey) || (t >= T.bottle + 1 && t < T.drunk));
-      const pose = kneeling ? 'kneel' : crying ? 'cry' : eating && !s.moving ? 'eat' : holding ? 'hold' : 'stand';
+      // "she found she could not possibly reach it": up on tiptoe under the table, before climbing a leg.
+      const reaching = !s.moving && t >= T.forgotten + 6.5 && t < T.legs;
+      const pose = reaching ? 'reach' : kneeling ? 'kneel' : crying ? 'cry' : eating && !s.moving ? 'eat' : holding ? 'hold' : 'stand';
       return { ...s, pose, dir: kneeling ? 1 : s.dir, scale, y, moving: s.moving || (y > 0.01 && !crying) };
     }
 
@@ -133,7 +135,8 @@ export const hall = {
       { t: T.telescope + 3, dur: 3, pos: [0.6, 0.28, -0.2], look: [AT_TABLE.x, 0.15, AT_TABLE.z] },
       { t: T.decided - 1.5, dur: 7, pos: [DOOR.x - 1.3, 0.3, -1.2], look: [DOOR.x, 0.15, DOOR.z] },
       { t: T.forgotten, dur: 2.5, pos: [1.3, 0.4, 0.4], look: [1.3, 0.1, -1.7] }, // facing her as she goes back (a cutout must be seen from the front) to the table
-      { t: T.forgotten + 6.5, dur: 2, pos: [TABLE.x + 0.35, 0.14, TABLE.z + 0.45], look: [TABLE.x, 1.0, TABLE.z] }, // the key, through the glass
+      { t: T.forgotten + 6.2, dur: 1, pos: [TABLE.x + 0.15, 0.12, TABLE.z + 1.1], look: [TABLE.x + 0.12, 0.02, TABLE.z + 0.3] }, // on tiptoe, reaching up
+      { t: T.forgotten + 9.5, dur: 2, pos: [TABLE.x + 0.35, 0.14, TABLE.z + 0.45], look: [TABLE.x, 1.0, TABLE.z] }, // the key, through the glass
       { t: T.sat, dur: 2, pos: [TABLE.x + 0.5, 0.25, TABLE.z + 0.7], look: [BY_LEG.x, 0.1, BY_LEG.z] },
       { t: T.box - 1, dur: 3, pos: [TABLE.x + 0.35, 0.22, TABLE.z + 1.0], look: [TABLE.x - 0.05, 0.07, TABLE.z + 0.25] }, // EAT ME
       { t: T.finished - 3, dur: 4, pos: [TABLE.x + 0.6, 0.45, TABLE.z + 1.5], look: [TABLE.x, 0.15, TABLE.z + 0.3] },

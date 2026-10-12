@@ -145,13 +145,15 @@ export const bank = {
       const dir = sitting ? -1 : s.moving ? s.dir : t >= T.please ? -1 : 1;
       // Her drawn poses (tools/compose_poses.py), by the text.
       let pose = 'stand';
-      if (t >= T.cry - 1) pose = 'cry';                                         // "began to cry again"
+      if (t >= T.cry - 1) pose = 'alone';                                       // "began to cry again"
       else if (sitting) pose = 'ring';                                          // sitting in the ring
       else if (s.moving) pose = 'stand';
       else if (t < T.sit) pose = 'wet';                                         // "dripping wet, cross, and uncomfortable"
       else if (t >= T.alice - 0.5 && t < T.alice + 4) pose = 'argue';           // "What is a Caucus-race?"
       else if (t >= T.comfits - 0.3 && t < T.herself) pose = 'comfits';         // the comfits handed round as prizes
       else if (t >= T.bowed - 0.5 && t < T.bowed + 2) pose = 'bow';             // "she simply bowed"
+      else if (t >= T.please - 0.5 && t < T.please + 4) pose = 'call';          // "Please come back and finish your story!"
+      else if (t >= T.pity - 0.5 && t < T.bird) pose = 'wonder';                // "What a pity it wouldn't stay!" … Dinah
       return { ...s, dir, pose, scale: TINY };
     }
 
