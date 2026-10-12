@@ -27,6 +27,7 @@ export const hall = {
       poison: at('poison', 2), notMarked: at('poison', 3), candle: at('candle', 1), blownOut: at('candle', 3), ventured: at('ventured'),
       drunk: at('finished', 1), telescope: at('telescope', 1, at('ventured')), decided: at('decided'), forgotten: at('forgotten', 2),
       legs: at('legs'), sat: at('sat'), scold: cue.para('“Come, there’s no use'), box: at('box', 2), // #1 is "box her own ears"
+      label: at('label'), currants: at('currants'),
       ate: cue.para('She ate a little bit'), finished: at('finished', 2),
     };
 
@@ -116,7 +117,7 @@ export const hall = {
       box.visible = cake.visible = t >= T.box - 0.5;
       box.position.set(BOX_AT.x, 0, BOX_AT.z);
       if (t >= T.ate && t < T.finished) { carry(cake, cast.alice, { drop: 0.01 }); cake.visible = a.pose !== 'eat'; }
-      else rest(cake, BOX_AT.x - 0.009, 0.029, BOX_AT.z - 0.005); // on the box's glass floor (above its feet): just behind its card, seen through the glass
+      else rest(cake, BOX_AT.x - 0.018, 0.013, BOX_AT.z - 0.005); // in the left face's glass, between its corner posts // on the box's glass floor (above its feet): just behind its card, seen through the glass
       if (t >= T.finished) cake.visible = false;
     }
 
@@ -135,6 +136,8 @@ export const hall = {
       { t: T.waiting, dur: 4, pos: [1.7, 1.2, 0.6], look: [TABLE.x + 0.3, 0.9, TABLE.z] },
       { t: T.bottle - 1, dur: 2, pos: [1.3, 1.1, -0.2], look: [TABLE.x - 0.2, 0.95, TABLE.z] }, // DRINK ME
       { t: T.bottle + 2, dur: 3, pos: [0.9, 1.0, 0.75], look: [AT_TABLE.x + 0.05, 0.72, AT_TABLE.z] }, // the bottle in her hand
+      { t: T.label - 0.8, dur: 1.2, pos: [AT_TABLE.x + 0.3, 1.02, AT_TABLE.z + 0.45], look: [AT_TABLE.x + 0.25, 1.0, AT_TABLE.z] }, // close: "DRINK ME" on the label
+      { t: T.label + 6, dur: 1.5, pos: [0.9, 1.0, 0.75], look: [AT_TABLE.x + 0.05, 0.72, AT_TABLE.z] },
       { t: T.poker - 2, dur: 2, pos: [1.6, 1.6, 1.4], look: [AT_TABLE.x, 1.5, AT_TABLE.z] }, // the poker
       { t: T.notMarked - 0.5, dur: 2, pos: [1.6, 1.1, 0.5], look: [AT_TABLE.x, 0.85, AT_TABLE.z] },
       { t: T.telescope - 1, dur: 3, pos: [0.9, 0.6, 0.3], look: [AT_TABLE.x, 0.35, AT_TABLE.z] }, // shutting up like a telescope
@@ -145,6 +148,8 @@ export const hall = {
       { t: T.forgotten + 9.5, dur: 2, pos: [TABLE.x + 0.35, 0.14, TABLE.z + 0.45], look: [TABLE.x, 1.0, TABLE.z] }, // the key, through the glass
       { t: T.sat, dur: 2, pos: [TABLE.x + 0.5, 0.25, TABLE.z + 0.7], look: [BY_LEG.x, 0.1, BY_LEG.z] },
       { t: T.box - 1, dur: 3, pos: [TABLE.x + 0.3, 0.2, TABLE.z + 1.05], look: [TABLE.x + 0.05, 0.08, TABLE.z + 0.43] }, // EAT ME
+      { t: T.currants - 3.6, dur: 1.2, pos: [BOX_AT.x - 0.018, 0.034, BOX_AT.z + 0.15], look: [BOX_AT.x - 0.018, 0.01, BOX_AT.z] }, // close: "EAT ME" in currants
+      { t: T.currants + 1.5, dur: 1.5, pos: [TABLE.x + 0.3, 0.2, TABLE.z + 1.05], look: [TABLE.x + 0.05, 0.08, TABLE.z + 0.43] },
       { t: T.finished - 3, dur: 4, pos: [TABLE.x + 0.6, 0.45, TABLE.z + 1.5], look: [TABLE.x, 0.15, TABLE.z + 0.3] },
     ]);
 
