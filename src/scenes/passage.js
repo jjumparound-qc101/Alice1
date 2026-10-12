@@ -2,8 +2,7 @@
 // where "the Rabbit was no longer to be seen".
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
-import { texture, PAPER } from '../ink.js';
-import { earth } from '../props.js';
+import { PAPER } from '../ink.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
 
 const LEN = 22, HALF_W = 1.4, H = 2.6, CORNER_Z = -17;
@@ -21,17 +20,24 @@ export const passage = {
       corner: at('corner', 1), turned: at('corner', 2), hall: at('hall', 1),
     };
 
-    const wallTex = texture(earth(7, 0.75), { repeat: [LEN / 3, 1] });
-    const floorTex = texture(earth(9, 0.35), { repeat: [1.5, LEN / 3] });
     const mat = (map, color = '#9a9080') => new THREE.MeshBasicMaterial({ map, color, side: THREE.DoubleSide });
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(HALF_W * 2 + 6, LEN), mat(floorTex, '#b9b0a0'));
+    // Floor and ceiling: AI drawings (tools/walls.py), one drawing to every 2.2 m, repeating both ways.
+    const tiled = (name, w, d) => {
+      const t = ai[name].tex.clone();
+      t.wrapS = t.wrapT = THREE.RepeatWrapping;
+      t.repeat.set(w / 2.2, d / 2.2);
+      t.needsUpdate = true;
+      return t;
+    };
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(HALF_W * 2 + 6, LEN), mat(tiled('walls/passage_floor', HALF_W * 2 + 6, LEN), '#c9c0b0'));
     floor.rotation.x = -Math.PI / 2; floor.position.set(1.5, 0, -LEN / 2 + 2);
     group.add(floor);
-    const ceil = new THREE.Mesh(floor.geometry, mat(wallTex, '#5e574c'));
+    const ceil = new THREE.Mesh(floor.geometry, mat(tiled('walls/passage_ceiling', HALF_W * 2 + 6, LEN), '#a59c8c'));
+    ceil.material.side = THREE.FrontSide; // seen from below only: the opening shot looks down through it as she lands
     ceil.rotation.x = Math.PI / 2; ceil.position.set(1.5, H, -LEN / 2 + 2); group.add(ceil);
     // Left wall runs the full length; the right wall stops at the corner, where the passage turns right.
     // The walls: packed earth, roots, timber props (AI drawing, tools/walls.py), one drawing to
-    // every 3.9 m (its own proportions at the passage's height). The ceiling stays plain earth.
+    // every 3.9 m (its own proportions at the passage's height). 
     const earthWall = (len) => {
       const t = ai['walls/passage'].tex.clone();
       t.wrapS = THREE.RepeatWrapping;

@@ -67,7 +67,7 @@ async function main() {
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away',
-    'walls/shaft_side', 'walls/passage', 'walls/hall', // tools/walls.py // tools/ch1_art.py
+    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', // tools/walls.py // tools/ch1_art.py
     // Chapter II (tools/ch2_art.py): the Rabbit, the Mouse, the birds, props, the pool and the thoughts.
     ...['rabbit2_trot', 'rabbit2_start', 'rabbit2_away', 'mouse_swim', 'mouse_leap', 'mouse_bristle', 'mouse_away',
       'duck_swim', 'duck_stand', 'dodo_swim', 'dodo_stand', 'lory_swim', 'lory_stand', 'eaglet_swim', 'eaglet_stand',

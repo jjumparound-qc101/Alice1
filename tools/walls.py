@@ -2,6 +2,7 @@
 
 - shaft_side_wall -> walls/shaft_side.webp (repeats top to bottom; the shaft's side walls)
 - passage_wall    -> walls/passage.webp    (repeats left to right; the landing and the long passage)
+- passage_floor, passage_ceiling -> walls/passage_floor.webp, passage_ceiling.webp (repeat both ways)
 - hall_wall       -> walls/hall.webp       (repeats left to right; behind the hall's doors). The
   drawing's wainscot fills nearly half its height, but the hall is 3.2 m high with knee-high
   panelling, so the drawing goes at the bottom and the plaster above is extended upward with
@@ -29,6 +30,8 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     tint(Image.open("source/ai/shaft_side_wall.webp")).save(f"{OUT}/shaft_side.webp", quality=88, method=6)
     tint(Image.open("source/ai/passage_wall.webp")).save(f"{OUT}/passage.webp", quality=88, method=6)
+    tint(Image.open("source/ai/passage_floor.webp")).save(f"{OUT}/passage_floor.webp", quality=88, method=6)
+    tint(Image.open("source/ai/passage_ceiling.webp")).save(f"{OUT}/passage_ceiling.webp", quality=88, method=6)
     hall = tint(Image.open("source/ai/hall_wall.webp"))
     W, H = hall.size
     total = round(W * HALL_H / HALL_TILE_W)          # pixels for the full wall height
@@ -43,7 +46,7 @@ def main():
         flip = not flip
     out.paste(hall, (0, total - H))
     out.save(f"{OUT}/hall.webp", quality=88, method=6)
-    for n in ("shaft_side", "passage", "hall"):
+    for n in ("shaft_side", "passage", "passage_floor", "passage_ceiling", "hall"):
         print(f"{OUT}/{n}.webp", Image.open(f"{OUT}/{n}.webp").size)
 
 
