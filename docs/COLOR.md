@@ -19,7 +19,7 @@ Rich and bright, with a slight glow (owner, Notes 1.0 #14): the colour lies over
 |---|---|---|---|
 | White Rabbit's eyes | pink | "a White Rabbit with pink eyes ran close by her" | Every scene with the Rabbit |
 | The little key | gold | "a tiny golden key" | The hall, and later chapters |
-| Marmalade jar | none: the jar is empty | "labelled 'ORANGE MARMALADE', but to her great disappointment it was empty" | The fall |
+| Marmalade jar | orange label and a thin orange smear in the bottom; clear, see-through glass (owner, 2026-10-12, replaces "none") | "labelled 'ORANGE MARMALADE', but to her great disappointment it was empty" | The fall (`tools/jar_colour.py`) |
 | Red-hot poker | red (glowing) | "a red-hot poker will burn you if you hold it too long" | Thought vignette, "Drink me" scene |
 
 ## Rest of the book (for planning)

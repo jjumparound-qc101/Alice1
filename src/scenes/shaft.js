@@ -56,7 +56,8 @@ export const shaft = {
     // the jar on the shelf and the jar in her hand are one sprite: same image, same size.
     const px = WALL_W / shaftMeta.width; // metres per strip pixel
     const J = shaftMeta.jar;
-    const jar = paperFlat(ai.jar.tex, J.w * px, J.h * px, { anchor: 'center' });
+    // Coloured: orange label, clear glass, a smear left in the bottom (tools/jar_colour.py; COLOR.md).
+    const jar = paperFlat(ai.jar_orange.tex, J.w * px, J.h * px, { anchor: 'center' });
     group.add(jar);
     const SHELF = { x: (J.cx / shaftMeta.width - 0.5) * WALL_W, z: -1.58 };
     const HAND = { x: 0.32, y: 0.55, z: -0.95 };
