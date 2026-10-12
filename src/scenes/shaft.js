@@ -61,7 +61,12 @@ export const shaft = {
     group.add(jar);
     const SHELF = { x: (J.cx / shaftMeta.width - 0.5) * WALL_W, z: -1.58 };
     const HAND = { x: 0.32, y: 0.55, z: -0.95 };
-    const CUPBOARD = { x: -0.75, z: -1.58 };
+    // The open cupboard on the left of the wall drawing (strip pixels; the next time it comes
+    // round, one strip height below the jar's shelf): she puts the jar inside it as she passes.
+    const CUP = { px: 300, py: 765 + shaftMeta.height };
+    const CUPBOARD = { x: (CUP.px / shaftMeta.width - 0.5) * WALL_W, z: -1.56 };
+    const cupY = (t) => HAND.y + (J.cy - CUP.py) * px + FALL * (t - T.jar);   // rises with the wall
+    const T_PUT = T.jar + ((CUP.py - J.cy) * px) / FALL;                       // when it reaches her hand
 
     // Scroll the wall so the jar's shelf reaches her hand at the moment she takes it.
     const wallBottom = 1 - WALL_H / 2;
@@ -93,13 +98,13 @@ export const shaft = {
       held.y += J.h * px * 0.3; // her fingers round the lower part of the jar
       let p;
       if (t < T.jar) p = { ...SHELF, y: wallY(t, HAND.y, T.jar) };
-      else if (t < T.putBack) {
+      else if (t < T_PUT - 0.8) {
         const k = smooth((t - T.jar) / 0.8);
         const from = { ...SHELF, y: wallY(t, HAND.y, T.jar) };
         p = { x: lerp(from.x, held.x, k), y: lerp(from.y, held.y, k), z: lerp(from.z, held.z, k) };
       } else {
-        const k = smooth((t - T.putBack) / 0.8);
-        const to = { ...CUPBOARD, y: wallY(t, HAND.y, T.putBack) };
+        const k = smooth((t - (T_PUT - 0.8)) / 0.8);
+        const to = { ...CUPBOARD, y: cupY(t) };
         p = { x: lerp(held.x, to.x, k), y: lerp(held.y, to.y, k), z: lerp(held.z, to.z, k) };
       }
       jar.position.set(p.x, p.y, p.z);
@@ -111,7 +116,8 @@ export const shaft = {
       { t: start, dur: 0, pos: [0, 2.2, 2.4], look: [0, 3.5, -1.5] },          // looking up the dark tunnel
       { t: T.dipped, dur: 3, pos: [0, 1.1, 2.4], look: [0, 0.7, -1.2] },       // she falls into view
       { t: T.jar - 3, dur: 3, pos: [0.4, 0.9, 1.3], look: [0, 0.6, -1.2] },    // the jar
-      { t: T.putBack + 3, dur: 6, pos: [0, 1.2, 2.6], look: [0, 0.7, -1.2] },
+      { t: T_PUT - 1.5, dur: 2, pos: [-0.3, 0.9, 1.4], look: [-0.45, 0.6, -1.4] },  // into the cupboard
+      { t: T_PUT + 3, dur: 6, pos: [0, 1.2, 2.6], look: [0, 0.7, -1.2] },
       { t: T.thump - 4, dur: 4, pos: [0, 0.4, 2.0], look: [0, -1.5, -1] },     // looking down as the ground comes
     ]);
 
