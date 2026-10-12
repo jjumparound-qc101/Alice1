@@ -224,15 +224,20 @@ export const pool = {
       waterTex.repeat.set((POOL.rx * k * 2) / 0.7, (POOL.rz * k * 2) / 0.7);
       waterTex.offset.set(t * 0.01, 0);
 
-      // Tears while she cries, and the splash.
+      // Tears while she cries, falling from under her eyes as drawn in each pose (the eye
+      // she isn't covering), and the splash drops.
       const crying = (t >= T.cry && t < T.pattering + 1) || (t >= T.burst && t < T.hands);
-      const face = { x: a.x + 0.06 * scale * (a.dir ?? 1), y: (a.y ?? 0) + ({ cry_giant: 0.66, recite: 0.7, lie: 0.2, kneel_back: 0.8 }[a.pose] ?? 1.05) * scale, z: a.z + 0.03 };
+      const EYES = { cry_giant: [[0.56, 0.235]], recite: [[0.43, 0.175], [0.5, 0.172]], kneel_back: [[0.72, 0.16], [0.78, 0.16]],
+        glove: [[0.45, 0.165], [0.52, 0.165]], stand: [[0.5, 0.14], [0.58, 0.14]] };
+      const eyes = (EYES[a.pose] ?? EYES.stand).map(([u, v]) => cast.alice.point(u, v + 0.012, new THREE.Vector3()));
       drops.forEach((d, i) => {
         if (crying) {
           const ph = ((t * 1.2 + i / drops.length) % 1);
+          const eye = eyes[i % eyes.length];
           d.visible = true;
           d.scale.setScalar(0.035 * scale);
-          d.position.set(face.x + ((i % 3) - 1) * 0.03 * scale, lerp(face.y, WATER_Y, ph * ph), face.z);
+          // Down the cheek first, then falling to the floor.
+          d.position.set(eye.x, lerp(eye.y, WATER_Y, ph * ph), eye.z + 0.01);
         } else if (t >= T.splash && t < T.splash + 1) {
           const ph = (t - T.splash), ang = (i / drops.length) * Math.PI * 2;
           d.visible = true;

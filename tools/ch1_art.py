@@ -3,6 +3,7 @@
 - leaf_heap: cut out from white, paper-tinted (the heap of sticks and dry leaves).
 - alice_land: Alice landing on the heap, with the leaves drawn (the drawing includes its own
   heap and flying leaves, so the game shows it in place of the heap at the landing).
+- rabbit_sheet: the White Rabbit standing with his watch, trotting, and from behind (Chapter I).
 - rabbit_run_away: the White Rabbit seen from behind, running off down the passage.
 - garden_through_door: drawn looking along the little passage; only the garden seen inside
   the far arch is kept (the game draws its own little door and clips the view to its arch).
@@ -36,11 +37,37 @@ def whitecut(path, *args):
     return img
 
 
+# "a White Rabbit with pink eyes" (COLOR.md): the eye of each sheet figure (x, y, radius in the
+# cut-out image), its iris tinted the same pink as the Tenniel Rabbit's.
+EYES = {"rabbit_watch": (140, 225, 12), "rabbit_trot": (95, 228, 12), "rabbit_back": (214, 216, 8)}
+PINK = np.array([0xF2, 0x55, 0x8F], np.float32)
+
+
+def pink_eye(img, eye):
+    a = np.asarray(img, np.float32).copy()
+    x, y, r = eye
+    yy, xx = np.mgrid[:a.shape[0], :a.shape[1]]
+    near = np.clip(1 - (np.hypot(xx - x, yy - y) - r * 0.6) / (r * 0.4), 0, 1)[..., None]
+    tone = a[..., :3].mean(2, keepdims=True) / PAPER.mean()
+    # The dark iris goes pink (keeping its shading); the paper and the pupil's highlight stay.
+    k = near * np.clip((0.8 - tone) / 0.45, 0, 1) * 0.9
+    a[..., :3] = a[..., :3] * (1 - k) + PINK * np.clip(tone + 0.6, 0, 1) * k
+    return Image.fromarray(a.astype(np.uint8), "RGBA")
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     for n in ("leaf_heap", "alice_land", "rabbit_run_away"):
         src = next(f"source/ai/{n}.{e}" for e in ("png", "webp") if os.path.exists(f"source/ai/{n}.{e}"))
         img = shrink(whitecut(src).convert("RGBA"))
+        img.save(f"{OUT}/{n}.webp", quality=90, method=6)
+        print(f"{OUT}/{n}.webp: {img.size[0]}x{img.size[1]}")
+    # The White Rabbit sheet (three figures: watch, trotting, from behind), split and cut out.
+    for n, (x0, x1) in {"rabbit_watch": (20, 376), "rabbit_trot": (384, 748), "rabbit_back": (781, 1105)}.items():
+        with tempfile.TemporaryDirectory() as d:
+            Image.open("source/ai/rabbit_sheet.webp").convert("RGB").crop((x0, 175, x1, 1135)).save(f"{d}/c.png")
+            img = shrink(whitecut(f"{d}/c.png").convert("RGBA"))
+        img = pink_eye(img, EYES[n])
         img.save(f"{OUT}/{n}.webp", quality=90, method=6)
         print(f"{OUT}/{n}.webp: {img.size[0]}x{img.size[1]}")
     # Thought vignettes (the same oval card treatment as Chapter II's).

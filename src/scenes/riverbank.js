@@ -31,7 +31,7 @@ export const riverbank = {
 
     function rabbit(t) {
       const enter = T.rabbit - 0.4;
-      if (t < enter) return { visible: false, pose: 'watch', x: -9, z: -1.6 };
+      if (t < enter) return { visible: false, pose: 'watch1', x: -9, z: -1.6 };
       let s;
       if (t < T.ranClose + 1.4) s = path(t, enter, T.ranClose + 1.4, { x: -8, z: -1.5 }, MID);
       else if (t < T.hurried) s = { ...MID, moving: false, dir: -1, idle: t }; // looking at his watch
@@ -39,7 +39,7 @@ export const riverbank = {
       else if (t < T.pop - 1.4) s = { ...NEAR_HEDGE, moving: false, dir: fidget(t), idle: t };
       else if (t < T.pop - 0.2) s = path(t, T.pop - 1.4, T.pop - 0.2, NEAR_HEDGE, MOUTH);
       else s = hop(t, T.pop - 0.2, MOUTH, INSIDE, { dur: 0.5, peak: 0.25 }); // "pop down a large rabbit-hole"
-      return { pose: 'watch', phase: t * 2.6, ...s };
+      return { phase: t * 2.6, ...s, pose: s.moving ? 'trot1' : 'watch1' }; // the Chapter I sheet
     }
 
     function alice(t) {
@@ -57,8 +57,8 @@ export const riverbank = {
     const camera = cameraTrack([
       { t: 0, dur: 0, pos: [0, 2.1, 9.2], look: [0, 1.4, -3] },
       { t: T.alice, dur: 6, pos: [-1.5, 1.15, 0.3], look: [-2.75, 0.45, -2.35] },
-      { t: T.book - 1, dur: 3, pos: [-3.05, 1.0, -0.8], look: [-3.3, 0.45, -2.6] },
-      { t: T.so, dur: 8, pos: [-1.1, 1.35, 1.0], look: [-2.5, 0.5, -2.4] },
+      { t: T.book - 1, dur: 3, pos: [-3.0, 1.05, 0.15], look: [-3.0, 0.5, -2.6] },   // her sister in the middle, Alice beside her, both whole
+      { t: T.so, dur: 8, pos: [-1.7, 1.3, 1.4], look: [-2.6, 0.5, -2.35] },
       { t: T.rabbit - 2.5, dur: 2.5, pos: [-0.6, 1.25, 1.2], look: [-2.6, 0.4, -2.0] },
       { t: T.ranClose + 0.4, dur: 2.5, pos: [-0.7, 1.15, 0.6], look: [-0.4, 0.35, -2.0] },
       { t: T.watch - 0.5, dur: 2.5, pos: [0.1, 0.85, -0.45], look: [0.35, 0.45, -1.75] },

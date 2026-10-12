@@ -79,8 +79,14 @@ export class Puppet {
   // so a carried prop follows the drawing through mirroring, tilt, turn and scale.
   handPoint(out = new THREE.Vector3()) {
     const flat = this.poses[this.pose];
+    return this.point(...(flat?.userData.hand ?? [0.5, 0.55]), out);
+  }
+
+  // World position of a point drawn in the current pose ([u, v] as fractions of the image
+  // from its top left), just in front of the card: e.g. her eyes, for tears.
+  point(u, v, out = new THREE.Vector3()) {
+    const flat = this.poses[this.pose];
     if (!flat) return out.copy(this.root.position); // not shown yet
-    const [u, v] = flat.userData.hand ?? [0.5, 0.55];
     const [w, h] = flat?.userData.size ?? [0, this.height];
     this.root.updateMatrixWorld(true);
     return flat.localToWorld(out.set((u - 0.5) * w, (1 - v) * h, 0.03));

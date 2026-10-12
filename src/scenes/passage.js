@@ -98,7 +98,7 @@ export const passage = {
       ], { pose: 'watch', phase: t * 2.8 });
       // Hurrying away down the passage, seen from behind (drawn), until he turns the corner.
       const away = s.moving && t < T.corner;
-      return { ...s, pose: away ? 'runAway' : 'watch', visible: t < T.corner + 1.8 };
+      return { ...s, pose: away ? 'runAway' : s.moving ? 'trot1' : 'watch1', visible: t < T.corner + 1.8 };
     }
 
     const camera = cameraTrack([
