@@ -73,8 +73,15 @@ def main():
     # Thought vignettes (the same oval card treatment as Chapter II's).
     sys.path.insert(0, "tools")
     import ch2_art
-    for n in ("dinah", "bats"):
+    for n in ("dinah", "bats", "stairs"):
         ch2_art.vignette(f"vignette_{n}", n)
+    # The globe drawing has its caption printed under the oval: crop it off first.
+    with tempfile.TemporaryDirectory() as d:
+        Image.open("source/ai/vignette_globe.webp").crop((0, 0, 1254, 1100)).save(f"{d}/vignette_globe.png")
+        own = ch2_art.src
+        ch2_art.src = lambda name: f"{d}/{name}.png" if name == "vignette_globe" else own(name)
+        ch2_art.vignette("vignette_globe", "globe")
+        ch2_art.src = own
     # The garden inside the passage's far arch (source pixels, 1024x1536), paper-tinted.
     g = Image.open("source/ai/garden_through_door.png").convert("L").crop((392, 292, 806, 1080))
     rgb = (np.asarray(g, np.float32)[..., None] / 255.0 * PAPER).astype(np.uint8)

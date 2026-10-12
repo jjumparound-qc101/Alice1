@@ -69,7 +69,8 @@ DRAWN = {
     "argue": {"src": "source/ai/alice3_argue.webp", "h": 700, "bodyX": None},
     "comfits": {"src": "source/ai/alice3_comfits.webp", "h": 700, "bodyX": None},
     "bow": {"src": "source/ai/alice3_bow.webp", "h": 625, "bodyX": None},
-    "call": {"src": "source/ai/alice3_call.webp", "h": 680, "bodyX": None},
+    "call": {"src": "source/ai/alice3_call_v2.webp", "h": 690,  # second version (arm out, calling); alice3_call is the spare
+             "bodyX": None},
     "alone": {"src": "source/ai/alice3_alone.webp", "h": 500, "bodyX": None},
     "wonder": {"src": "source/ai/alice3_wonder.webp", "h": 700, "bodyX": None, "mirror": True},
     # Chapter I: on tiptoe, arms up (taller than standing: arms above her head).

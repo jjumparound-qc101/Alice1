@@ -23,6 +23,8 @@ export const shaft = {
     };
     // "Dinah'll miss me very much to-night", and "Do cats eat bats?"
     const think = thoughts(group, [
+      { t0: at('brave') - 1.5, t1: at('true') + 1, art: ai['vignettes/stairs'].tex },          // "How brave they'll all think me at home!"
+      { t0: at('thousand') - 1.5, t1: at('longitude', 2) + 2, art: ai['vignettes/globe'].tex }, // "four thousand miles down … Latitude or Longitude"
       { t0: T.dinah - 0.5, t1: T.cats - 0.4, art: ai['vignettes/dinah'].tex },     // AI drawings (tools/ch1_art.py)
       { t0: T.cats - 0.4, t1: T.batsEatCats + 2, art: ai['vignettes/bats'].tex },
     ]);
