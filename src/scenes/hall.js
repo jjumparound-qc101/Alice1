@@ -35,8 +35,11 @@ export const hall = {
     // The AI drawings (tools/small_props.py): the bottle, the open glass box with the cake in it.
     const flat = (name, w) => paperFlat(ai[name].tex, w, w / ai[name].aspect);
     const bottle = flat('props/bottle', 0.13);
-    const box = flat('props/box', 0.15);   // "a little glass box"; Alice is ten inches high here
-    const cake = flat('props/cake', 0.065);
+    // "a little glass box"; Alice is ten inches high here. See-through, so no shadow card
+    // behind it (that showed as a second box).
+    const box = paperFlat(ai['props/box'].tex, 0.15, 0.15 / ai['props/box'].aspect, { edge: false });
+    // "a very small cake": near the size drawn in her hand in the eating pose (there already bitten).
+    const cake = paperFlat(ai['props/cake'].tex, 0.024, 0.024 / ai['props/cake'].aspect, { edge: false }); // no shadow card: it showed as a second cake
     group.add(bottle, box, cake);
 
     // "the simple rules their friends had taught them", and later the candle going out.
@@ -109,8 +112,8 @@ export const hall = {
       // Under the table: the little glass box and the cake.
       box.visible = cake.visible = t >= T.box - 0.5;
       box.position.set(TABLE.x - 0.05, 0, TABLE.z + 0.25);
-      if (t >= T.ate && t < T.finished) { carry(cake, cast.alice, { drop: 0.04 }); cake.visible = a.pose !== 'eat'; }
-      else rest(cake, TABLE.x - 0.065, 0.012, TABLE.z + 0.245); // inside the box: just behind its card, seen through the glass
+      if (t >= T.ate && t < T.finished) { carry(cake, cast.alice, { drop: 0.01 }); cake.visible = a.pose !== 'eat'; }
+      else rest(cake, TABLE.x - 0.09, 0.06, TABLE.z + 0.245); // on the box's glass floor (above its feet): just behind its card, seen through the glass
       if (t >= T.finished) cake.visible = false;
     }
 
