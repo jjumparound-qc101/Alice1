@@ -73,14 +73,14 @@ Use the **same ChatGPT conversation** as the turnaround and the earlier pieces s
 - [ ] **27.** `vignette_poker.png`: "A fire grate with a poker resting in the coals, its tip glowing hot." *(the game colours the tip red)*
 - [ ] **28.** `vignette_knife.png`: "A child's hand with a small cut on one finger, a kitchen knife lying beside it." *(note 10; ink only)*
 - [ ] **29.** `vignette_poison.png`: "A small dark bottle with a label marked 'POISON'." *(note 10)*
-- [ ] **30.** `vignette_dinah.png`: "A cat (Dinah) lapping from a saucer of milk."
-- [ ] **31.** `vignette_bats.png`: "A cat looking up at bats flying in the dusk."
+- [ ] **30.** `vignette_dinah.png`: "Dinah, the same striped tabby cat as in the attached picture (attach `vignette_dinah_fire`), lapping from a saucer of milk."
+- [ ] **31.** `vignette_bats.png`: "Dinah, the same striped tabby cat as in the attached picture (attach `vignette_dinah_fire`), looking up at bats flying in the dusk."
 - [ ] **32.** `vignette_candle.png`: "A candle flame going out, a thin curl of smoke."
 - [ ] **37.** `vignette_stairs.png`: "Alice's family at home, a father, mother and two older sisters in Victorian dress, gathered at the foot of a staircase, gazing up in admiration at a little girl tumbling down the stairs, quite unhurt; a tall house behind them." *(Chapter I, the fall: "How brave they'll all think me at home!")*
 - [ ] **38.** `vignette_globe.png`: "A schoolroom globe on its stand, cut open like an orange to show a dotted line running from the surface straight down to the centre of the earth, marked '4000 miles', with the lines of latitude and longitude drawn over it." *(the fall: "four thousand miles down … Latitude or Longitude")*
 - [ ] **39.** `vignette_antipodes.png`: "A little girl in a pinafore popping out of the ground upside down at the far side of the earth, curtseying to a surprised Victorian lady with a parasol who walks with her head pointing downward; a signpost beside them, its board blank." *(the fall: "the people that walk with their heads downward … is this New Zealand or Australia?")*
-- [ ] **40.** `vignette_dinah_down.png`: "A cat (Dinah) floating down a dark well beside a falling little girl, reaching a paw toward a bat flying past; no mice anywhere." *(the fall: "I wish you were down here with me! There are no mice in the air … but you might catch a bat")*
-- [ ] **41.** `vignette_dream.png`: "A dreamy, softly drawn oval: a little girl walking hand in hand with her cat (Dinah), who walks upright on its hind legs; the girl is earnestly asking it something." *(the fall: "dreaming that she was walking hand in hand with Dinah … did you ever eat a bat?")*
+- [ ] **40.** `vignette_dinah_down.png`: "Dinah, the same striped tabby cat as in the attached picture (attach `vignette_dinah_fire`), floating down a dark well beside a falling little girl, reaching a paw toward a bat flying past; no mice anywhere." *(the fall: "I wish you were down here with me! There are no mice in the air … but you might catch a bat")*
+- [ ] **41.** `vignette_dream.png`: "A dreamy, softly drawn oval: a little girl walking hand in hand with her cat Dinah, the same striped tabby cat as in the attached picture (attach `vignette_dinah_fire`), who walks upright on its hind legs; the girl is earnestly asking it something." *(the fall: "dreaming that she was walking hand in hand with Dinah … did you ever eat a bat?")*
 
 ### Chapter end
 - [ ] **33.** `chapter1_end.png`: "A small decorative tailpiece vignette for the end of a chapter: the White Rabbit's pocket watch lying on a curl of ribbon among a few leaves." *(note 9)*
@@ -200,7 +200,7 @@ Background and sources: [CHAPTER_03_ASSETS.md](CHAPTER_03_ASSETS.md). Same conve
 ### Thought vignettes (oval vignette, engraved, white background)
 - [ ] **27.** `vignette_shakespeare.png`: "William Shakespeare, head and shoulders, one finger pressed to his forehead in thought, as in the old pictures of him."
 - [ ] **28.** `vignette_knot.png`: "A long mouse's tail tied in a knot."
-- [ ] **29.** `vignette_dinah_birds.png`: "A cat (Dinah) crouching, watching a little bird."
+- [ ] **29.** `vignette_dinah_birds.png`: "Dinah, the same striped tabby cat as in the attached picture (attach `vignette_dinah_fire`), crouching, watching a little bird."
 
 ---
 
@@ -254,7 +254,7 @@ Background and sources: [CHAPTER_04_ASSETS.md](CHAPTER_04_ASSETS.md). Same conve
 - [ ] **36.** `mushroom.png`: "A large mushroom, seen from the side, as tall as a small child would be if she were three inches high: the cap's edge just above eye level. White background."
 
 ### Thought vignettes (oval, engraved, white background)
-- [ ] **37.** `vignette_dinah_nurse.png`: "A cat (Dinah) sitting up like a nurse, ordering a little girl to get ready for her walk."
+- [ ] **37.** `vignette_dinah_nurse.png`: "Dinah, the same striped tabby cat as in the attached picture (attach `vignette_dinah_fire`), sitting up like a nurse, ordering a little girl to get ready for her walk."
 - [ ] **38.** `vignette_book.png`: "A book with 'ALICE' on its cover, and a grown-up young woman at a desk writing it."
 
 Priority if time is short: 4, 25, 26, 5, 13, 18, 20, 33, 34, 36, 8, 3, 16, 19, 11, 12, then the rest.
