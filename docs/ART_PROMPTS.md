@@ -177,6 +177,11 @@ Use the **same ChatGPT conversation** as the turnaround and the earlier pieces s
 30. `vignette_dinah.png`: "A cat (Dinah) lapping from a saucer of milk."
 31. `vignette_bats.png`: "A cat looking up at bats flying in the dusk."
 32. `vignette_candle.png`: "A candle flame going out, a thin curl of smoke."
+37. `vignette_stairs.png`: "Alice's family at home, a father, mother and two older sisters in Victorian dress, gathered at the foot of a staircase, gazing up in admiration at a little girl tumbling down the stairs, quite unhurt; a tall house behind them." *(Chapter I, the fall: "How brave they'll all think me at home!")*
+38. `vignette_globe.png`: "A schoolroom globe on its stand, cut open like an orange to show a dotted line running from the surface straight down to the centre of the earth, marked '4000 miles', with the lines of latitude and longitude drawn over it." *(the fall: "four thousand miles down … Latitude or Longitude")*
+39. `vignette_antipodes.png`: "A little girl in a pinafore popping out of the ground upside down at the far side of the earth, curtseying to a surprised Victorian lady with a parasol who walks with her head pointing downward; a signpost beside them, its board blank." *(the fall: "the people that walk with their heads downward … is this New Zealand or Australia?")*
+40. `vignette_dinah_down.png`: "A cat (Dinah) floating down a dark well beside a falling little girl, reaching a paw toward a bat flying past; no mice anywhere." *(the fall: "I wish you were down here with me! There are no mice in the air … but you might catch a bat")*
+41. `vignette_dream.png`: "A dreamy, softly drawn oval: a little girl walking hand in hand with her cat (Dinah), who walks upright on its hind legs; the girl is earnestly asking it something." *(the fall: "dreaming that she was walking hand in hand with Dinah … did you ever eat a bat?")*
 
 ### Chapter end
 33. `chapter1_end.png`: "A small decorative tailpiece vignette for the end of a chapter: the White Rabbit's pocket watch lying on a curl of ribbon among a few leaves." *(note 9)*
