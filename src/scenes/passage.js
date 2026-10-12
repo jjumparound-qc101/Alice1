@@ -81,7 +81,9 @@ export const passage = {
         [T.corner, { x: 0.1, z: CORNER_Z + 1 }],
         [T.corner + 1.8, ROUND],
       ], { pose: 'watch', phase: t * 2.8 });
-      return { ...s, visible: t < T.corner + 1.8 };
+      // Hurrying away down the passage, seen from behind (drawn), until he turns the corner.
+      const away = s.moving && t < T.corner;
+      return { ...s, pose: away ? 'runAway' : 'watch', visible: t < T.corner + 1.8 };
     }
 
     const camera = cameraTrack([
@@ -93,7 +95,7 @@ export const passage = {
     ]);
 
     return {
-      T, bg: '#1a1712', fog: [4, 16],
+      T, bg: '#1a1712', fog: [5, 26], // the Rabbit stays "still in sight" far down the passage
       bounds: { minX: -HALF_W + 0.4, maxX: HALF_W - 0.4, minZ: CORNER_Z + 1, maxZ: 1.5 },
       hotspots: [{ pos: new THREE.Vector3(0, 0.4, -0.6), title: 'A heap of sticks and dry leaves', text: 'down she came upon a heap of sticks and dry leaves, and the fall was over.' }],
       camera,

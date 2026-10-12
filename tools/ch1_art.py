@@ -3,6 +3,7 @@
 - leaf_heap: cut out from white, paper-tinted (the heap of sticks and dry leaves).
 - alice_land: Alice landing on the heap, with the leaves drawn (the drawing includes its own
   heap and flying leaves, so the game shows it in place of the heap at the landing).
+- rabbit_run_away: the White Rabbit seen from behind, running off down the passage.
 - garden_through_door: drawn looking along the little passage; only the garden seen inside
   the far arch is kept (the game draws its own little door and clips the view to its arch).
 
@@ -37,8 +38,9 @@ def whitecut(path, *args):
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    for n in ("leaf_heap", "alice_land"):
-        img = shrink(whitecut(f"source/ai/{n}.png").convert("RGBA"))
+    for n in ("leaf_heap", "alice_land", "rabbit_run_away"):
+        src = next(f"source/ai/{n}.{e}" for e in ("png", "webp") if os.path.exists(f"source/ai/{n}.{e}"))
+        img = shrink(whitecut(src).convert("RGBA"))
         img.save(f"{OUT}/{n}.webp", quality=90, method=6)
         print(f"{OUT}/{n}.webp: {img.size[0]}x{img.size[1]}")
     # The garden inside the passage's far arch (source pixels, 1024x1536), paper-tinted.
