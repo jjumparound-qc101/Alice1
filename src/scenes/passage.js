@@ -59,7 +59,7 @@ export const passage = {
     // The heap of sticks and dry leaves, and Alice landing on it with the leaves flying (both
     // AI drawings, tools/ch1_art.py). The landing drawing has its own heap, so it stands in
     // for the heap and Alice from "thump!" until she jumps up.
-    const HEAP_W = 1.6; // sized to Alice in the landing drawing
+    const HEAP_W = 1.05; // sized so Alice in the landing drawing matches her standing figure
     const heap = paperFlat(ai['ch1/leaf_heap'].tex, HEAP_W, HEAP_W / ai['ch1/leaf_heap'].aspect);
     heap.position.set(0, 0, -0.6);
     const LAND_W = HEAP_W * 0.95;

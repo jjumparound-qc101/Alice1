@@ -63,7 +63,10 @@ export const hall = {
     // --- Alice -----------------------------------------------------------------
     const AT_TABLE = { x: TABLE.x - 0.6, z: TABLE.z + 0.2 };
     const AT_DOOR = { x: DOOR.x - 0.55, z: DOOR.z + 0.45 };
-    const BY_LEG = { x: TABLE.x + 0.12, z: TABLE.z + 0.3 };
+    // At the foot of the table leg nearest the camera (the second of the three, src/sets/hall.js),
+    // just in front of it: she tries to climb this leg.
+    const LEG_FOOT = { x: TABLE.x + Math.cos((2 * Math.PI) / 3 + 0.3) * TABLE.r * 0.72 * 1.4, z: TABLE.z + Math.sin((2 * Math.PI) / 3 + 0.3) * TABLE.r * 0.72 * 1.4 };
+    const BY_LEG = { x: LEG_FOOT.x + 0.05, z: LEG_FOOT.z + 0.05 };
     const scaleAt = (t) => lerp(1, 0.2, smooth((t - T.telescope) / 3.6)); // "now only ten inches high"
 
     const walk = (t) => route(t, [
@@ -92,15 +95,22 @@ export const hall = {
       const kneeling = t >= T.knelt && t < T.waiting;
       const crying = t >= T.sat && t < T.scold;
       let y = 0;
-      if (t >= T.legs && t < T.sat) y = Math.abs(Math.sin((t - T.legs) * 1.6)) * 0.12; // climbs the leg, slips back
+      // "she tried her best to climb up one of the legs of the table, but it was too slippery":
+      // up the leg (pressed against it) and sliding back down.
+      let climb = 0;
+      if (t >= T.legs && t < T.sat) { climb = Math.abs(Math.sin((t - T.legs) * 1.6)); y = climb * 0.14; }
       const eating = t >= T.ate && t < T.finished;   // the cake drawn in her hand, the other on her head
       // Holding the key, or the bottle, up to look at it while she stands still.
       const holding = !s.moving && ((t >= T.key && t < T.tryKey) || (t >= T.bottle + 1 && t < T.drunk));
       // "she found she could not possibly reach it": up on tiptoe under the table, before climbing a leg.
       const reaching = !s.moving && t >= T.forgotten + 6.5 && t < T.legs;
-      const pose = reaching ? 'reach' : kneeling ? 'kneel' : crying ? 'cry' : eating && !s.moving ? 'eat' : holding ? 'hold' : 'stand';
+      const climbing = t >= T.legs && t < T.sat;
+      const pose = reaching || climbing ? 'reach' : kneeling ? 'kneel' : crying ? 'cry' : eating && !s.moving ? 'eat' : holding ? 'hold' : 'stand';
+      // Climbing, she follows the leg as it leans in toward the table top.
+      const lean = climbing ? y / TABLE.top : 0;
       return { ...s, pose, dir: kneeling ? 1 : pose === 'eat' ? -1 : s.dir, scale, y, // eating: as drawn, so EAT ME reads the right way round
-        moving: s.moving || (y > 0.01 && !crying) };
+        x: s.x + (TABLE.x - LEG_FOOT.x) * 0.3 * lean, z: s.z + (TABLE.z - LEG_FOOT.z) * 0.3 * lean,
+        moving: s.moving && !climbing };
     }
 
     const rest = (obj, x, y, z) => { obj.position.set(x, y, z); obj.rotation.set(0, 0, 0); };
@@ -152,9 +162,10 @@ export const hall = {
       { t: T.telescope + 3, dur: 3, pos: [0.6, 0.28, -0.2], look: [AT_TABLE.x, 0.15, AT_TABLE.z] },
       { t: T.decided - 1.5, dur: 7, pos: [DOOR.x - 1.3, 0.3, -1.2], look: [DOOR.x, 0.15, DOOR.z] },
       { t: T.forgotten, dur: 2.5, pos: [1.3, 0.4, 0.4], look: [1.3, 0.1, -1.7] }, // facing her as she goes back (a cutout must be seen from the front) to the table
-      { t: T.forgotten + 6.2, dur: 1, pos: [TABLE.x + 0.15, 0.12, TABLE.z + 1.1], look: [TABLE.x + 0.12, 0.02, TABLE.z + 0.3] }, // on tiptoe, reaching up
+      { t: T.forgotten + 6.2, dur: 1, pos: [BY_LEG.x + 0.1, 0.14, BY_LEG.z + 0.8], look: [BY_LEG.x, 0.06, BY_LEG.z] }, // on tiptoe, reaching up
       { t: T.forgotten + 9.5, dur: 2, pos: [TABLE.x + 0.35, 0.14, TABLE.z + 0.45], look: [TABLE.x, 1.0, TABLE.z] }, // the key, through the glass
-      { t: T.sat, dur: 2, pos: [TABLE.x + 0.5, 0.25, TABLE.z + 0.7], look: [BY_LEG.x, 0.1, BY_LEG.z] },
+      { t: T.legs - 1, dur: 1.5, pos: [BY_LEG.x + 0.2, 0.2, BY_LEG.z + 0.75], look: [BY_LEG.x - 0.02, 0.15, BY_LEG.z - 0.05] }, // climbing the leg
+      { t: T.sat, dur: 2, pos: [BY_LEG.x + 0.35, 0.22, BY_LEG.z + 0.6], look: [BY_LEG.x, 0.08, BY_LEG.z] },
       { t: T.box - 1, dur: 3, pos: [TABLE.x + 0.3, 0.2, TABLE.z + 1.05], look: [TABLE.x + 0.05, 0.08, TABLE.z + 0.43] }, // EAT ME
       { t: T.currants - 3.6, dur: 1.2, pos: [BOX_AT.x - 0.016, 0.045, BOX_AT.z + 0.15], look: [BOX_AT.x - 0.012, 0.03, BOX_AT.z] }, // close: "EAT ME" in currants
       { t: T.currants + 1.5, dur: 1.5, pos: [TABLE.x + 0.3, 0.2, TABLE.z + 1.05], look: [TABLE.x + 0.05, 0.08, TABLE.z + 0.43] },
