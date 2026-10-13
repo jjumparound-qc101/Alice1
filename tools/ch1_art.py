@@ -19,7 +19,7 @@ import tempfile
 import numpy as np
 from PIL import Image
 
-from white_rabbit import whiten
+from white_rabbit import pink_eye, whiten
 
 OUT = "public/art/ai/ch1"
 PAPER = np.array([0xEF, 0xE9, 0xDA], np.float32)
@@ -42,21 +42,6 @@ def whitecut(path, *args):
 # "a White Rabbit with pink eyes" (COLOR.md): the eye of each sheet figure (x, y, radius in the
 # cut-out image), its iris tinted the same pink as the Tenniel Rabbit's.
 EYES = {"rabbit_watch": (140, 225, 12), "rabbit_trot": (95, 228, 12), "rabbit_back": (214, 216, 8)}
-PINK = np.array([0xF2, 0x55, 0x8F], np.float32)
-
-
-def pink_eye(img, eye):
-    a = np.asarray(img, np.float32).copy()
-    x, y, r = eye
-    yy, xx = np.mgrid[:a.shape[0], :a.shape[1]]
-    near = np.clip(1 - (np.hypot(xx - x, yy - y) - r * 0.6) / (r * 0.4), 0, 1)[..., None]
-    tone = a[..., :3].mean(2, keepdims=True) / PAPER.mean()
-    # The dark iris goes pink (keeping its shading); the paper and the pupil's highlight stay.
-    k = near * np.clip((0.8 - tone) / 0.45, 0, 1) * 0.9
-    a[..., :3] = a[..., :3] * (1 - k) + PINK * np.clip(tone + 0.6, 0, 1) * k
-    return Image.fromarray(a.astype(np.uint8), "RGBA")
-
-
 def main():
     os.makedirs(OUT, exist_ok=True)
     for n in ("leaf_heap", "alice_land", "rabbit_run_away"):  # (the Rabbit whitened below)

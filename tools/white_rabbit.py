@@ -14,6 +14,22 @@ from PIL import Image
 PAPER = np.array([0xEF, 0xE9, 0xDA], np.float32)
 
 
+PINK = np.array([0xF2, 0x55, 0x8F], np.float32)
+
+
+def pink_eye(img, eye):
+    """'a White Rabbit with pink eyes' (COLOR.md): tint the dark iris pink around eye = (x, y, r)
+    in image pixels, keeping its shading; the highlight and the white of the eye stay."""
+    a = np.asarray(img.convert("RGBA"), np.float32).copy()
+    x, y, r = eye
+    yy, xx = np.mgrid[:a.shape[0], :a.shape[1]]
+    near = np.clip(1 - (np.hypot(xx - x, yy - y) - r * 0.6) / (r * 0.4), 0, 1)[..., None]
+    tone = a[..., :3].mean(2, keepdims=True) / PAPER.mean()
+    k = near * np.clip((0.8 - tone) / 0.45, 0, 1) * 0.9
+    a[..., :3] = a[..., :3] * (1 - k) + PINK * np.clip(tone + 0.6, 0, 1) * k
+    return Image.fromarray(a.astype(np.uint8), "RGBA")
+
+
 def whiten(img):
     a = np.asarray(img.convert("RGBA"), np.float32).copy()
     a[..., :3] = np.clip(a[..., :3] * (255.0 / PAPER), 0, 255)

@@ -17,7 +17,7 @@ import tempfile
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
-from white_rabbit import whiten
+from white_rabbit import pink_eye, whiten
 
 SRC = "source/ai"
 OUT = "public/art/ai/ch2"
@@ -32,6 +32,7 @@ CUT = ["rabbit2_trot", "rabbit2_start", "rabbit2_away",
        "duck_swim", "duck_stand", "dodo_swim", "dodo_stand",
        "lory_swim", "lory_stand", "eaglet_swim", "eaglet_stand",
        "kid_gloves", "splash"]
+RABBIT_EYES = {"rabbit2_trot": (250, 237, 13), "rabbit2_start": (482, 244, 13)}
 OPAQUE = ["pool_water", "pool_shore"]
 # Vignettes: source name -> output name. Drawings that aren't ovals already are fitted
 # inside the oval (FIT) rather than cropped by it.
@@ -124,6 +125,8 @@ def main():
         args = ["--seal", "4", "--clear", "421,599"] if n == "mouse_bristle" else []
         img = shrink(whitecut(src(n), *args).convert("RGBA"))
         if n.startswith("rabbit"):
+            if n in RABBIT_EYES:  # in the 900 px high image (the back view shows no eye)
+                img = pink_eye(img, RABBIT_EYES[n])
             img = whiten(img)  # the White Rabbit is white, not paper (tools/white_rabbit.py)
         img.save(f"{OUT}/{n}.webp", quality=90, method=6)
         print(f"{OUT}/{n}.webp: {img.size[0]}x{img.size[1]}")
