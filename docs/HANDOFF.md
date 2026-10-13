@@ -1,5 +1,5 @@
 # Handoff: read this first
-Updated: 2026-10-11 (end of session 2: Chapters VIII–XII staged, the whole book staged; card people; phones; Explore). For the next Claude Code session (or anyone) picking up the work.
+Updated: 2026-10-13 (end of session 3: Chapters I–II art in, Chapter III's Alice and birds, the Caterpillar and Cheshire Cat generated directly by API; word timings re-aligned; thoughts and Alice kept in frame). For the next Claude Code session (or anyone) picking up the work.
 
 ## The project in one paragraph
 *Alice's Adventures in Wonderland* as an interactive novel for Steam (a "Library of Living Books" title). The book's text is shown in sync with the LibriVox full-cast reading, staged as a 2.5D Victorian toy theater: flat engraving-style cutouts in layered 3D sets, with a moving camera (Watch mode) and free walking with a 150° look arc (Explore mode). Black-and-white ink, except things the text gives a colour (docs/COLOR.md). Engine: three.js + Vite, wrapped in Electron for desktop and Steam (Gate A: docs/GATE_A.md).
@@ -7,9 +7,16 @@ Updated: 2026-10-11 (end of session 2: Chapters VIII–XII staged, the whole boo
 ## Where the project stands
 - **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly).
 - **The whole book is staged (Chapters I–XII)** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
-- **The asset master list is final** for the owner to generate from (owner, 2026-10-11): `docs/ASSETS_MASTER.md`, 344 prompts, chapter by chapter. The owner works through it chapter by chapter and will send patch notes after a few rounds.
+- **The asset master list** (`docs/ASSETS_MASTER.md`, rebuilt by `tools/assets_master.py`, never edited by hand): 97 of 371 images received. Chapter I's list also records art made outside it (### Already in the game).
 - **Phones and tablets** are supported (book layout upright, picture-first sideways, touch controls), and **Explore** has a 150° look arc and a walking stick on touch screens.
-- **Art**: 13 of 344 AI images received and in the game (hall floor, lamp, curtain, little door, glass table, Alice walking A/B, Alice jumping; the golden key, DRINK ME bottle, EAT ME cake, glass box and fan via `tools/small_props.py`), plus the earlier riverbank/shaft masters and Alice's model sheet. Everything else is a placeholder.
+- **Art in the game** (all logged in PROVENANCE.md):
+  - **Chapter I**: nearly complete. All of Alice's poses (falling, kneeling, crying, eating, holding, reaching, landing on the leaf heap), the White Rabbit (owner's sheet: watch, trot, from behind; white with pink eyes), every wall, floor and ceiling (hall, shaft sides, passage), the leaf heap, the garden through the little door, the coloured marmalade jar (orange label, empty glass), and thoughts (Dinah ×2, the stairs, the globe). Still placeholder: the poker/knife/poison/candle/histories/telescope/croquet thoughts (prompts 27–29, 32, 44–46), antipodes/Dinah-down/dream (39–41), the Rabbit's run_side/hop/idle_b (10, 12, 13), the chapter end (33).
+  - **Chapter II**: complete (all 36): Alice ×13, Rabbit ×3, Mouse ×4, the four birds swimming and standing, gloves, splash, pool water, shore stones, 7 thoughts.
+  - **Chapter III**: all 8 Alice poses and the four birds standing; the rest placeholder.
+  - **Chapter V**: the Caterpillar (blue), also at Chapter IV's end. **Chapter VI**: the Cheshire Cat in the wood (on his bough, the empty bough, the grin alone); the kitchen-hearth Cat (prompt 22) is still a placeholder.
+  - The rest of the book is placeholder art drawn in code.
+- **Alice's walk**: two matching steps from one drawing (`alice_walk_pair`), but both have the same leg forward, so the feet don't alternate. A four-frame cycle (prompt 43) failed in ChatGPT; try it by API with four separate images from the same reference.
+- **Narration timing**: every word re-timed against the audio (`tools/forced_align.py`, wav2vec2); 51 words the readers leave out are shown faint, explained under Contents → "Why are some words faint?".
 
 | Chapter | Asset list | Staged | Scenes (`src/scenes/`) |
 |---|---|---|---|
@@ -30,9 +37,11 @@ Updated: 2026-10-11 (end of session 2: Chapters VIII–XII staged, the whole boo
 - **Remind the owner** (asked 2026-10-11) when Chapter XI art begins: the Tenniel frontispiece (the trial) is needed as the reference for the court prompts and isn't on Victorian Web. The owner downloads it from a scan of the 1865/66 edition, or adds commons.wikimedia.org to the network allowlist so Claude can fetch it.
 
 ## Next steps, in order
-1. **Drop in art as the owner sends it** (see "When art arrives"). The owner sends art in batches, chapter by chapter. Expect **patch notes** from the owner after a few rounds: work through them.
-2. Polish each chapter as its art arrives (each CHAPTER_NN_ROUGHCUT.md lists its gaps).
-3. Later (owner's decision; the whole book is now staged): low-end hardware test, code signing, high-resolution Tenniel scans (NYPL/British Library; Victorian Web images are only 432 px tall).
+1. **Generate art by API** chapter by chapter (see "Generating art directly"), showing the owner each new character's first picture; or drop in art the owner sends (see "When art arrives"). Offered next: the kitchen-hearth Cheshire Cat (prompt VI-22, using `cheshire_bough` as reference), the Duchess, the Mock Turtle, the four-frame walk.
+2. **Re-direct each chapter's camera as its art arrives** (Alice in frame every 10–15 s; `tools/frame_report.mjs`). Worst: XI, VI, XII, III.
+3. Work through the owner's patch notes as they come.
+4. Regeneration list (owner: "later"): `alice3_wonder` (should look down at the tail), optional closer `alice3_ring` (from behind) and `alice3_bow` (facing right, taking the thimble).
+5. Later (owner's decision): low-end hardware test, code signing, high-resolution Tenniel scans.
 
 ## How a chapter is done (the owner's process)
 1. Read the chapter (`source/text/chNN.txt`) and its Tenniel plates (Victorian Web `…/tenniel/alice/N.M.html`; download the `.jpg` to look).
@@ -44,7 +53,7 @@ Updated: 2026-10-11 (end of session 2: Chapters VIII–XII staged, the whole boo
 7. Write `docs/CHAPTER_NN_ROUGHCUT.md`, update this handoff's table, commit, push, republish the web link.
 
 ## Generating art directly (owner, 2026-10-13)
-- `python3 tools/gen_image.py OUT "PROMPT" --ref FILE …`: OpenAI image API, default **gpt-image-2.5-sunburst** (owner, 2026-10-13: a quarter of the tokens of gpt-image-2; gpt-image-2 as fallback), streamed (the proxy drops requests silent for ~30 s), the style block from ART_PROMPTS.md put in front. About 6,000 image tokens a high-quality picture.
+- `python3 tools/gen_image.py OUT "PROMPT" --ref FILE …`: OpenAI image API, default **gpt-image-2.5-sunburst** (owner, 2026-10-13: a quarter of the tokens of gpt-image-2; gpt-image-2 as fallback), streamed (the proxy drops requests silent for ~30 s), the style block from ART_PROMPTS.md put in front. Tokens per high-quality picture: about 1,500 with gpt-image-2.5-sunburst, 5,600 with gpt-image-2. If the safety filter rejects a request (it once flagged a reference showing child Alice beside a smoking figure), crop the reference tighter and retry.
 - **References are cropped to the target only** (no other figures in the picture: cleaner results, and a plate with child Alice beside a smoking figure tripped the safety filter).
 - **Characters already in the project are referenced by their existing drawings** (e.g. the model sheet and walk pair for Alice, `rabbit_sheet` for the Rabbit, `caterpillar_sit` for the Caterpillar), with the Tenniel plate crop, so every new pose matches.
 - Show the owner each new character's first picture before putting it in the game.
@@ -52,6 +61,7 @@ Updated: 2026-10-11 (end of session 2: Chapters VIII–XII staged, the whole boo
 ## When art arrives
 - **Card people** (owner, 2026-10-11): numbered cards arrive as bodies with a plain white face; print each card's pips on them in code (reuse `PIP_LAYOUT` and `suitColour` in props8.js, mapped onto the drawn face). Court cards and the court's hearts arrive with solid black suit signs: recolour the solid black heart and diamond shapes red when processing (a new step for `tools/whitecut.py` or a small tool), leaving clubs and spades black.
 - **'Direct' Tenniel figures** are being generated as AI from the plates (owner, 2026-10-11); scans are an optional upgrade.
+- The owner may send many images and say "don't process yet": just save each to `source/ai/` under its prompt's name, commit and push, until told to process.
 - Uploads that arrive mid-turn aren't saved; ask the owner to resend as a normal message. Screenshots are low quality: ask for the downloaded original.
 - Save the original to `source/ai/<name given in the prompt>.webp|png`. Process it: `tools/whitecut.py` (cut out from white, paper-tint; `--clear x,y;…` clears enclosed gaps; `--opaque` for full-frame art), `tools/compose_poses.py` (Alice whole-figure poses, scaled to the model sheet; `DRAWN` list), `tools/hall_props.py` (an example of a set-piece pipeline), `tools/small_props.py` (small props: key, bottle, cake, glass box, fan; gold colouring, see-through glass). Output to `public/art/ai/…`.
 - Wire it into the scene in place of the placeholder; screenshot and look.
@@ -102,7 +112,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 | `electron/` | Desktop wrapper (Steam via steamworks.js) |
 | `godot/` | Gate A comparison only; not maintained |
 
-**Tools**: `forced_align.py` (re-times every chapter's words against the narration with a wav2vec2 model and marks words the readers leave out, `"x": 1`, shown faint and explained under Contents → "Why are some words faint?"; model files from huggingface.co/Xenova/wav2vec2-base-960h in `$W2V_DIR`; run it after `narration.py`), `ch1_art.py`, `ch2_art.py` (process those chapters' AI drawings), `mobile_shots.mjs` (phone and tablet screenshots), `explore_edges.mjs` (every explorable scene at the edges of its walkable area, looking to the limits of the 150° arc: run it after changing a set), `narration.py` (prepare a chapter's narration: text, alignment, trimmed audio), `transcribe.py`, `align.py`, `assets_master.py`, `whitecut.py`, `cutout.py` (Tenniel scans, spot colour), `compose_poses.py`, `hall_props.py`, `shaft_strip.py`, `smoke.mjs` (all chapters; fails on console errors), `chapter_shots.mjs` (screenshots of one chapter), `walk_report.mjs` (Alice's steps per second; keep under ~4), `electron_smoke.mjs`.
+**Tools**: `gen_image.py` (OpenAI images), `frame_report.mjs` (Alice out of the picture), `white_rabbit.py` (the Rabbit white, pink eyes), `jar_colour.py`, `walls.py` (walls, floors, ceilings), `ch5_art.py`, `ch6_art.py`, `forced_align.py` (re-times every chapter's words against the narration with a wav2vec2 model and marks words the readers leave out, `"x": 1`, shown faint and explained under Contents → "Why are some words faint?"; model files from huggingface.co/Xenova/wav2vec2-base-960h in `$W2V_DIR`; run it after `narration.py`), `ch1_art.py`, `ch2_art.py` (process those chapters' AI drawings), `mobile_shots.mjs` (phone and tablet screenshots), `explore_edges.mjs` (every explorable scene at the edges of its walkable area, looking to the limits of the 150° arc: run it after changing a set), `narration.py` (prepare a chapter's narration: text, alignment, trimmed audio), `transcribe.py`, `align.py`, `assets_master.py`, `whitecut.py`, `cutout.py` (Tenniel scans, spot colour), `compose_poses.py`, `hall_props.py`, `shaft_strip.py`, `smoke.mjs` (all chapters; fails on console errors), `chapter_shots.mjs` (screenshots of one chapter), `walk_report.mjs` (Alice's steps per second; keep under ~4), `electron_smoke.mjs`.
 
 ## Text-strip colours
 Colour words in poems and songs (COLOR.md rule 6) are coloured in the text strip once spoken: `TINTS` in `src/chapters.js` ([word, occurrence, colour]), drawn by `src/narration.js`. Set so far: Chapter II "golden", V "grey", X "pale", "brown", "green".
@@ -120,6 +130,8 @@ A wrong count throws "cue word not found" when the chapter opens; the scene's ca
 - Python tools: a scratch venv with `pillow scipy numpy` (`faster-whisper` for transcription; already done for every chapter, transcripts in `source/audio/`).
 
 ## Environment quirks (cloud container)
+- **OpenAI API**: the key is in the environment (`OPENAI_API_KEY`); api.openai.com is allowed. Requests must stream (the proxy cuts any request silent for ~30 s).
+- **GitHub pushes** were refused (403) for a few hours on 2026-10-12 although reads worked; it cleared by itself. If it happens, keep committing, send the owner a `git bundle` as a backup, and retry.
 - Network allowlist is set by the owner; allowed so far: github.com, raw.githubusercontent.com, gutenberg.org, victorianweb.org, librivox.org, archive.org and its download hosts, huggingface.co, `*.hf.co`. If a host is denied, name it and point the owner to the environment's network settings.
 - Files sent to the owner directly are limited to 30 MB; big builds go through GitHub Actions.
 
