@@ -332,7 +332,7 @@ export const pool = {
 
     // --- Camera ---------------------------------------------------------------
     const A0 = START, D = DOOR;
-    const camera = cameraTrack([
+    const track = cameraTrack([
       { t: 0, dur: 0, pos: [TABLE.x + 0.6, 0.45, TABLE.z + 1.5], look: [TABLE.x, 0.15, TABLE.z + 0.3] },
       { t: 1.5, dur: T.telescope, pos: [0.7, 1.5, 2.9], look: [A0.x, 1.9, A0.z] },          // "opening out like the largest telescope"
       { t: T.feet - 1, dur: 3, pos: [1.0, 0.35, 1.2], look: [A0.x, 0.1, A0.z] },            // "Good-bye, feet!"
@@ -375,7 +375,21 @@ export const pool = {
         { pos: new THREE.Vector3(TABLE.x, TABLE.top, TABLE.z), title: 'The glass table', text: 'the little golden key was lying on the glass table as before' },
         { pos: new THREE.Vector3(D.x, 0.3, D.z), title: 'The little door', text: 'alas! the little door was shut again' },
       ],
-      camera, update,
+      camera(t) {
+        // In the water the camera follows the swimmers, so Alice (and whoever is with her)
+        // stays in the picture: low over the water, on the near side, framing them all.
+        const base = track(t);
+        if (t < T.swam) return base;
+        const who = [alice(t), mouse(t), ...['duck', 'dodo', 'lory', 'eaglet'].map((n, i) => bird(n, t, i))].filter((s) => s.visible !== false);
+        let x0 = Infinity, x1 = -Infinity, cz = 0;
+        for (const s of who) { x0 = Math.min(x0, s.x); x1 = Math.max(x1, s.x); cz += s.z; }
+        cz /= who.length;
+        const cx = (x0 + x1) / 2, back = Math.max(0.28, (x1 - x0) * 0.8 + 0.12);
+        const follow = { pos: [cx, 0.135 + back * 0.05, cz + back], look: [cx, 0.11, cz] };
+        const k = smooth((t - T.swam) / 2);   // blend in from the shot after the splash
+        return { pos: base.pos.map((v, i) => lerp(v, follow.pos[i], k)), look: base.look.map((v, i) => lerp(v, follow.look[i], k)) };
+      },
+      update,
       actors: (t) => ({
         alice: alice(t), rabbit: rabbit(t), mouse: mouse(t),
         duck: bird('duck', t, 0), dodo: bird('dodo', t, 1), lory: bird('lory', t, 2), eaglet: bird('eaglet', t, 3),

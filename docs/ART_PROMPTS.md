@@ -173,12 +173,15 @@ Use the **same ChatGPT conversation** as the turnaround and the earlier pieces s
 26. `eat_me_cake.png`: "A very small round cake, the words 'EAT ME' marked on top in currants. White background."
 
 ### Thought vignettes (oval vignette, engraved, white background; shown above Alice's head)
-27. `vignette_poker.png`: "A fire grate with a poker resting in the coals, its tip glowing hot." *(the game colours the tip red)*
-28. `vignette_knife.png`: "A child's hand with a small cut on one finger, a kitchen knife lying beside it." *(note 10; ink only)*
-29. `vignette_poison.png`: "A small dark bottle with a label marked 'POISON'." *(note 10)*
+27. `vignette_poker.png`: "A child's hand reaching toward a red-hot poker resting in a glowing fire grate, a tiny wisp of smoke rising, as in an old moral picture-book warning." *(the hall: "a red-hot poker will burn you if you hold it too long"; the game colours the tip red)*
+28. `vignette_knife.png`: "A little girl in a pinafore looking ruefully at a small cut on her finger, a kitchen knife and a half-peeled apple on the table beside her." *(the hall: "if you cut your finger very deeply with a knife, it usually bleeds"; ink only)*
+29. `vignette_poison.png`: "A small dark glass bottle on a shelf with a paper label clearly lettered POISON and a skull and crossbones, a little girl stepping back from it wisely." *(the hall: "a bottle marked poison … is almost certain to disagree with you")*
 30. `vignette_dinah.png`: "Dinah, the same striped tabby cat as in the attached picture (attach `vignette_dinah_fire`), sitting alone on a parlour hearthrug at tea-time beside her saucer of milk, looking up wistfully at an empty little chair, a tea table with cups behind her." *(the fall: "Dinah'll miss me very much to-night … I hope they'll remember her saucer of milk at tea-time")*
 31. `vignette_bats.png`: "Dinah, the same striped tabby cat as in the attached picture (attach `vignette_dinah_fire`), sitting nose to nose with a small bat hanging upside down from a branch at dusk, the two of them eyeing each other doubtfully, as if each were wondering whether it might eat the other; a crescent moon behind." *(the fall: "Do cats eat bats? Do bats eat cats?")*
-32. `vignette_candle.png`: "A candle flame going out, a thin curl of smoke."
+32. `vignette_candle.png`: "A candle in a plain candlestick just blown out: no flame, only a thin curl of smoke rising from the wick, and the faint ghost of where the flame was." *(the hall: "going out altogether, like a candle … what the flame of a candle is like after the candle is blown out")*
+44. `vignette_histories.png`: "An open Victorian children's storybook of cautionary tales: on its pages, small engraved pictures of a naughty child running from a wild beast and another too close to a fire, under the heading 'Little Histories'." *(the hall: "nice little histories about children who had got burnt, and eaten up by wild beasts")*
+45. `vignette_telescope.png`: "A brass telescope being shut up, its sections sliding into one another, beside a little girl who is shrinking in the same way, drawn smaller and smaller in three steps." *(the hall: "I must be shutting up like a telescope")*
+46. `vignette_croquet.png`: "Two identical little girls in pinafores (the same girl twice) playing croquet against each other on a lawn; one is boxing her own ears for cheating." *(the hall: "trying to box her own ears for having cheated herself in a game of croquet she was playing against herself")*
 37. `vignette_stairs.png`: "Alice's family at home, a father, mother and two older sisters in Victorian dress, gathered at the foot of a staircase, gazing up in admiration at a little girl tumbling down the stairs, quite unhurt; a tall house behind them." *(Chapter I, the fall: "How brave they'll all think me at home!")*
 38. `vignette_globe.png`: "A schoolroom globe on its stand, cut open like an orange to show a dotted line running from the surface straight down to the centre of the earth, marked '4000 miles', with the lines of latitude and longitude drawn over it." *(the fall: "four thousand miles down … Latitude or Longitude")*
 39. `vignette_antipodes.png`: "A little girl in a pinafore popping out of the ground upside down at the far side of the earth, curtseying to a surprised Victorian lady with a parasol who walks with her head pointing downward; a signpost beside them, its board blank." *(the fall: "the people that walk with their heads downward … is this New Zealand or Australia?")*
@@ -191,6 +194,16 @@ Use the **same ChatGPT conversation** as the turnaround and the earlier pieces s
 Priority if time is short: 1, 9, 2, 12, 10, 11, 14, 21, 6, 16, 17, 18, 20, 19, then the rest.
 
 ---
+
+### Already in the game (made outside this list, or second versions; listed so the record is complete)
+47. `alice_turnaround.png`: "Alice's model sheet (front, three-quarter, side, back)." *(every Alice drawing matches it; the standing Alice is cut from it)*
+48. `alice_sitting.png`: "Alice sitting on the bank." *(Chapter I, the riverbank)*
+49. `sister_reading.png`: "Alice's sister reading under the tree." *(Chapter I, the riverbank and the waking)*
+50. `riverbank_sky.png`, `riverbank_treeline.png`, `riverbank_tree.png`, `riverbank_hedge.png`, `riverbank_grass.png`: "The riverbank set." *(Chapter I)*
+51. `shaft_wall_a.png`, `shaft_wall_b.png`: "The rabbit-hole's back wall: cupboards, shelves, maps and the ORANGE MARMALADE jar." *(Chapter I, the fall; the jar is coloured by the game)*
+52. `rabbit_sheet.png`: "The White Rabbit after Tenniel: with his watch, trotting, and from behind." *(Chapter I; the game makes him white with pink eyes)*
+53. `alice_walk_pair.png`: "Alice walking, two steps." *(every chapter; interim until the four-frame cycle, 43)*
+54. `alice_eat_v2.png`, `alice_kneel_v2.png`: "Second versions of 8 and 4, closer to the text." *(in use; the first versions are spares)*
 
 ## Chapter II asset list (2026-10-10): "The Pool of Tears"
 Background and sources: [CHAPTER_02_ASSETS.md](CHAPTER_02_ASSETS.md). Use the **same ChatGPT conversation** as all the Chapter I art, so Alice and the Rabbit stay the same. Same rules: Tenniel wood-engraving style, black ink on white, hatching only, no colour, no text unless asked, white background unless stated. Upload with the file names given.

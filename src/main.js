@@ -1,3 +1,4 @@
+import { keepThoughtsInView } from './thoughts.js';
 import * as THREE from 'three';
 import { Puppet } from './puppet.js';
 import { makeCues } from './cues.js';
@@ -577,6 +578,7 @@ async function main() {
     const actors = active.actors(t);
     for (const [name, puppet] of Object.entries(cast)) puppet.apply(actors[name] ?? { visible: false }, camera);
     active.update?.(t, cast, camera); // after the cast, so props can follow a puppet's hand
+    keepThoughtsInView(camera);
 
     lightUp(t);
     page.update(t);
@@ -597,7 +599,7 @@ async function main() {
   // so checks can read its scenes before Begin is pressed.
   build(CHAPTERS[0]);
   window.__slice = {
-    audio, setMode, setLayout, camera, perf, chapters: CHAPTERS, begin, explorer,
+    audio, setMode, setLayout, camera, perf, chapters: CHAPTERS, begin, explorer, cast,
     get chapter() { return chapter; },
     get scenes() { return (ch ?? CHAPTERS[0].built).scenes; },
     get cue() { return (ch ?? CHAPTERS[0].built).cue; },
