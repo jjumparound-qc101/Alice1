@@ -39,7 +39,8 @@ def main():
                "-F", f"model={a.model}", "--form-string", f"prompt={prompt}", "-F", f"size={a.size}",
                "-F", f"quality={a.quality}", "-F", "stream=true", "-F", "partial_images=1"]
         for r in a.ref:
-            cmd += ["-F", f"image[]=@{r}"]
+            kind = {"jpg": "jpeg"}.get(r.rsplit(".", 1)[-1].lower(), r.rsplit(".", 1)[-1].lower())
+            cmd += ["-F", f"image[]=@{r};type=image/{kind}"]  # curl doesn't know .webp
     else:
         body = json.dumps({"model": a.model, "prompt": prompt, "size": a.size, "quality": a.quality,
                            "stream": True, "partial_images": 1})
