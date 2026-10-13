@@ -43,6 +43,12 @@ Updated: 2026-10-11 (end of session 2: Chapters VIII–XII staged, the whole boo
 6. Check it: `node tools/chapter_shots.mjs http://localhost:5173/ <outdir> N [t1,t2,…]`, contact-sheet the images, **look at them**, fix, repeat. Add a few moments to `tools/smoke.mjs`; run it (all chapters, ~15 min, run in the background).
 7. Write `docs/CHAPTER_NN_ROUGHCUT.md`, update this handoff's table, commit, push, republish the web link.
 
+## Generating art directly (owner, 2026-10-13)
+- `python3 tools/gen_image.py OUT "PROMPT" --ref FILE …`: OpenAI image API, always **gpt-image-2 or newer**, streamed (the proxy drops requests silent for ~30 s), the style block from ART_PROMPTS.md put in front. About 6,000 image tokens a high-quality picture.
+- **References are cropped to the target only** (no other figures in the picture: cleaner results, and a plate with child Alice beside a smoking figure tripped the safety filter).
+- **Characters already in the project are referenced by their existing drawings** (e.g. the model sheet and walk pair for Alice, `rabbit_sheet` for the Rabbit, `caterpillar_sit` for the Caterpillar), with the Tenniel plate crop, so every new pose matches.
+- Show the owner each new character's first picture before putting it in the game.
+
 ## When art arrives
 - **Card people** (owner, 2026-10-11): numbered cards arrive as bodies with a plain white face; print each card's pips on them in code (reuse `PIP_LAYOUT` and `suitColour` in props8.js, mapped onto the drawn face). Court cards and the court's hearts arrive with solid black suit signs: recolour the solid black heart and diamond shapes red when processing (a new step for `tools/whitecut.py` or a small tool), leaving clubs and spades black.
 - **'Direct' Tenniel figures** are being generated as AI from the plates (owner, 2026-10-11); scans are an optional upgrade.
