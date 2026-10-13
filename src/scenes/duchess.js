@@ -10,7 +10,7 @@ import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { flagstones } from '../props.js';
 import { littleHouse } from '../props5.js';
-import { greatLetter, baby, kitchenWall, thrown, cheshire, CAT_PX, marchHareHouse, axisVignette, pigsVignette } from '../props6.js';
+import { greatLetter, baby, kitchenWall, thrown, marchHareHouse, axisVignette, pigsVignette } from '../props6.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
@@ -89,7 +89,7 @@ export const kitchen = {
     { title: 'A shower of saucepans', t: cue.at('fire-irons') - 6 },
     { title: 'The lullaby', t: cue.at('lullaby') - 2 },
   ],
-  build({ group, cue }) {
+  build({ group, ai, cue }) {
     const at = cue.at;
     const start = kitchen.start(cue);
     const T = { cat: at('cat', 1), pig: at('pig'), irons: at('fire-irons'), nose: at('nose', 2), axes: at('axes'), lullaby: at('lullaby'),
@@ -99,7 +99,8 @@ export const kitchen = {
     const back = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.h), plain(texture(kitchenWall()))); back.position.set(0, K.h / 2, K.z0); group.add(back);
     for (const s of [-1, 1]) { const side = new THREE.Mesh(new THREE.PlaneGeometry(K.z1 - K.z0, K.h), plain(texture(kitchenWall()))); side.rotation.y = -s * Math.PI / 2; side.position.set(s * K.w / 2, K.h / 2, 0); group.add(side); }
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.z1 - K.z0), plain(texture(flagstones(), { repeat: [4, 3] }))); floor.rotation.x = -Math.PI / 2; group.add(floor);
-    const catOnHearth = paperFlat(texture(cheshire()), 0.13, 0.13 * CAT_PX.h / CAT_PX.w); catOnHearth.position.set(0.42, 0, K.z0 + 0.12); group.add(catOnHearth);
+    // The Cat on the hearth: AI drawing (gpt-image-2.5-sunburst, from cheshire_bough), on his patch of hearthstone.
+    const catArt = ai['ch6/cheshire_hearth'], catOnHearth = paperFlat(catArt.tex, 0.13, 0.13 / catArt.aspect); catOnHearth.position.set(0.42, 0, K.z0 + 0.12); group.add(catOnHearth);
     const babyArt = [0, 1, 2].map((s) => texture(baby(s)));
     const babyCard = paperFlat(babyArt[0], 0.1, 0.083, { anchor: 'center' }); group.add(babyCard);
     const kinds = ['irons', 'saucepan', 'plate', 'plate', 'saucepan', 'plate', 'pan'];

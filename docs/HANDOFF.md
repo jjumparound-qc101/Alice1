@@ -7,15 +7,15 @@ Updated: 2026-10-13 (end of session 3: Chapters I–II art in, Chapter III's Ali
 ## Where the project stands
 - **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly).
 - **The whole book is staged (Chapters I–XII)** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
-- **The asset master list** (`docs/ASSETS_MASTER.md`, rebuilt by `tools/assets_master.py`, never edited by hand): 97 of 371 images received. Chapter I's list also records art made outside it (### Already in the game).
+- **The asset master list** (`docs/ASSETS_MASTER.md`, rebuilt by `tools/assets_master.py`, never edited by hand): 98 of 371 images received. Chapter I's list also records art made outside it (### Already in the game).
 - **Phones and tablets** are supported (book layout upright, picture-first sideways, touch controls), and **Explore** has a 150° look arc and a walking stick on touch screens.
 - **Art in the game** (all logged in PROVENANCE.md):
   - **Chapter I**: nearly complete. All of Alice's poses (falling, kneeling, crying, eating, holding, reaching, landing on the leaf heap), the White Rabbit (owner's sheet: watch, trot, from behind; white with pink eyes), every wall, floor and ceiling (hall, shaft sides, passage), the leaf heap, the garden through the little door, the coloured marmalade jar (orange label, empty glass), and thoughts (Dinah ×2, the stairs, the globe). Still placeholder: the poker/knife/poison/candle/histories/telescope/croquet thoughts (prompts 27–29, 32, 44–46), antipodes/Dinah-down/dream (39–41), the Rabbit's run_side/hop/idle_b (10, 12, 13), the chapter end (33).
   - **Chapter II**: complete (all 36): Alice ×13, Rabbit ×3, Mouse ×4, the four birds swimming and standing, gloves, splash, pool water, shore stones, 7 thoughts.
   - **Chapter III**: all 8 Alice poses and the four birds standing; the rest placeholder.
-  - **Chapter V**: the Caterpillar (blue), also at Chapter IV's end. **Chapter VI**: the Cheshire Cat in the wood (on his bough, the empty bough, the grin alone); the kitchen-hearth Cat (prompt 22) is still a placeholder.
+  - **Chapter V**: the Caterpillar (blue), also at Chapter IV's end. **Chapter VI**: the Cheshire Cat in the wood (on his bough, the empty bough, the grin alone); the Cat on the kitchen hearth (prompt 22, 2026-10-13; not yet checked in a screenshot, see Environment quirks).
   - The rest of the book is placeholder art drawn in code.
-- **Alice's walk**: two matching steps from one drawing (`alice_walk_pair`), but both have the same leg forward, so the feet don't alternate. A four-frame cycle (prompt 43) failed in ChatGPT; try it by API with four separate images from the same reference.
+- **Alice's walk**: two matching steps from one drawing (`alice_walk_pair`); keep it. **Do not generate the walk cycle** (owner, 2026-10-13: the owner will make it later; the API attempts got the arms and legs wrong).
 - **Narration timing**: every word re-timed against the audio (`tools/forced_align.py`, wav2vec2); 51 words the readers leave out are shown faint, explained under Contents → "Why are some words faint?".
 
 | Chapter | Asset list | Staged | Scenes (`src/scenes/`) |
@@ -37,7 +37,7 @@ Updated: 2026-10-13 (end of session 3: Chapters I–II art in, Chapter III's Ali
 - **Remind the owner** (asked 2026-10-11) when Chapter XI art begins: the Tenniel frontispiece (the trial) is needed as the reference for the court prompts and isn't on Victorian Web. The owner downloads it from a scan of the 1865/66 edition, or adds commons.wikimedia.org to the network allowlist so Claude can fetch it.
 
 ## Next steps, in order
-1. **Generate art by API** chapter by chapter (see "Generating art directly"), showing the owner each new character's first picture; or drop in art the owner sends (see "When art arrives"). Offered next: the kitchen-hearth Cheshire Cat (prompt VI-22, using `cheshire_bough` as reference), the Duchess, the Mock Turtle, the four-frame walk.
+1. **Generate art by API** chapter by chapter (see "Generating art directly"), showing the owner each new character's first picture; or drop in art the owner sends (see "When art arrives"). Offered next: the Duchess (plate 6.2), the Mock Turtle (plate 9.3).
 2. **Re-direct each chapter's camera as its art arrives** (Alice in frame every 10–15 s; `tools/frame_report.mjs`). Worst: XI, VI, XII, III.
 3. Work through the owner's patch notes as they come.
 4. Regeneration list (owner: "later"): `alice3_wonder` (should look down at the tail), optional closer `alice3_ring` (from behind) and `alice3_bow` (facing right, taking the thimble).
@@ -130,6 +130,7 @@ A wrong count throws "cue word not found" when the chapter opens; the scene's ca
 - Python tools: a scratch venv with `pillow scipy numpy` (`faster-whisper` for transcription; already done for every chapter, transcripts in `source/audio/`).
 
 ## Environment quirks (cloud container)
+- **Use the right environment.** On 2026-10-13 a session started in the owner's new environment "GPT and ElevenLabs", which allowed only the OpenAI and ElevenLabs APIs: victorianweb.org, pypi.org and registry.npmjs.org were refused, so plates couldn't be fetched, scipy couldn't be installed and the game couldn't run (no screenshots, no web link update). Earlier sessions ran in "Default" (trusted network). The owner was asked to give the GPT environment the same network access (see the list in the session's reply), or to start sessions in an environment that has both.
 - **OpenAI API**: the key is in the environment (`OPENAI_API_KEY`); api.openai.com is allowed. Requests must stream (the proxy cuts any request silent for ~30 s).
 - **GitHub pushes** were refused (403) for a few hours on 2026-10-12 although reads worked; it cleared by itself. If it happens, keep committing, send the owner a `git bundle` as a backup, and retry.
 - Network allowlist is set by the owner; allowed so far: github.com, raw.githubusercontent.com, gutenberg.org, victorianweb.org, librivox.org, archive.org and its download hosts, huggingface.co, `*.hf.co`. If a host is denied, name it and point the owner to the environment's network settings.
