@@ -34,12 +34,11 @@ POSES = {
 # her full height; matched by head size), and bodyX, the x in the scaled image that lines
 # up with the standing figure's centre (her belt is ~20 px left of that centre).
 DRAWN = {
-    "walk_a": {"src": "source/ai/alice_walk_a.webp", "h": 700, "bodyX": 185},
+    # The walk: one drawing of two matching steps (owner, 2026-10-13), split in two; bodyX is
+    # the apron's centre line. Replaces the earlier walk_a and the walk_b screenshot.
+    "walk_a": {"src": "source/ai/alice_walk_pair.webp", "crop": (100, 0, 740, 1024), "h": 700, "torso": 395},
     "jump": {"src": "source/ai/alice_jump.webp", "h": 751, "bodyX": 350},
-    # A phone screenshot (382x515): grey fade over the bottom and two buttons, removed
-    # below. Interim until the full-size original is sent. Drawn facing right: mirrored.
-    "walk_b": {"src": "source/ai/alice_walk_b_screenshot.png", "h": 620, "bodyX": 193, "mirror": True,
-               "screenshot": {"fade_from": 430, "blank": [(0, 468, 58, 515), (336, 470, 382, 515)]}},
+    "walk_b": {"src": "source/ai/alice_walk_pair.webp", "crop": (770, 0, 1410, 1024), "h": 700, "torso": 1057},
     # Chapter II (matched by eye against the standing Alice: dress, hands and head size).
     "feet": {"src": "source/ai/alice2_feet.webp", "h": 695, "bodyX": None},
     "longneck": {"src": "source/ai/alice2_longneck.webp", "h": 950, "bodyX": None},
@@ -99,7 +98,14 @@ def drawn(spec):
         if "screenshot" in spec:
             unscreenshot(src, spec["screenshot"], f"{d}/clean.png")
             src = f"{d}/clean.png"
-        subprocess.run([sys.executable, "tools/whitecut.py", src, f"{d}/cut.png"], check=True)
+        crop = ["--crop", ",".join(map(str, spec["crop"]))] if "crop" in spec else []
+        subprocess.run([sys.executable, "tools/whitecut.py", src, f"{d}/cut.png", *crop], check=True)
+        if "torso" in spec:  # where the body's centre line falls in the cut-out (cropped to the figure)
+            import numpy as np
+            g = np.asarray(Image.open(src).convert("L").crop(spec["crop"])) < 225
+            x0 = max(0, np.nonzero(g.any(0))[0].min() - 2) + spec["crop"][0]
+            h = Image.open(f"{d}/cut.png").height
+            spec["bodyX"] = (spec["torso"] - x0) * spec["h"] / h
         img = Image.open(f"{d}/cut.png").convert("RGBA")
         img.load()
     if spec.get("mirror"):

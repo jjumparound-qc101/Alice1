@@ -118,7 +118,7 @@ A wrong count throws "cue word not found" when the chapter opens; the scene's ca
 
 ## Known gaps (across chapters)
 - Almost every character and set is a placeholder; the rough-cut notes list each chapter's.
-- `walk_b` is from a phone screenshot (near profile); a full-size three-quarter redraw is wanted.
+- The walk is two matching steps from one drawing (`source/ai/alice_walk_pair.webp`, 2026-10-13); a four-frame cycle (#43) would be smoother but is optional.
 - Giant Alice (Chapters II, IV) is a scaled standing/sitting figure until the giant poses arrive.
 - At tiny scale the hall floor's cracks look very large.
 - Chapter I leftovers from Notes 1.0: the leaf heap (note 4), the garden behind the little door (note 8), the Rabbit's hop (note 6) wait on their art.

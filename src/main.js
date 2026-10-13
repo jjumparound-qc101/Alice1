@@ -142,8 +142,8 @@ async function main() {
       sit: { ...ai.alice_sit, facesLeft: false, height: 0.85, hand: [0.65, 0.7] },
       stand: { ...ai.alice_stand, facesLeft: true, hand: [0.55, 0.57] },
       ...posed,
-      walk_a: { ...posed.walk_a, hand: [0.04, 0.5] },
-      walk_b: { ...posed.walk_b, hand: [0.03, 0.5] },
+      walk_a: { ...posed.walk_a, hand: [0.03, 0.48] },
+      walk_b: { ...posed.walk_b, hand: [0.09, 0.45] },
       jump: { ...posed.jump, hand: [0.03, 0.37] },
       fall: { ...posed.fall, hand: [0.06, 0.06] },        // the marmalade jar, in her raised left hand (Chapter I)
       hold: { ...posed.hold, hand: [0.05, 0.17] },        // the key or bottle held up (Chapter I)
