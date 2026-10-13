@@ -19,6 +19,8 @@ import tempfile
 import numpy as np
 from PIL import Image
 
+from white_rabbit import whiten
+
 OUT = "public/art/ai/ch1"
 PAPER = np.array([0xEF, 0xE9, 0xDA], np.float32)
 MAX = 1200
@@ -57,9 +59,11 @@ def pink_eye(img, eye):
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    for n in ("leaf_heap", "alice_land", "rabbit_run_away"):
+    for n in ("leaf_heap", "alice_land", "rabbit_run_away"):  # (the Rabbit whitened below)
         src = next(f"source/ai/{n}.{e}" for e in ("png", "webp") if os.path.exists(f"source/ai/{n}.{e}"))
         img = shrink(whitecut(src).convert("RGBA"))
+        if n.startswith("rabbit"):
+            img = whiten(img)
         img.save(f"{OUT}/{n}.webp", quality=90, method=6)
         print(f"{OUT}/{n}.webp: {img.size[0]}x{img.size[1]}")
     # The White Rabbit sheet (three figures: watch, trotting, from behind), split and cut out.
@@ -67,7 +71,7 @@ def main():
         with tempfile.TemporaryDirectory() as d:
             Image.open("source/ai/rabbit_sheet.webp").convert("RGB").crop((x0, 175, x1, 1135)).save(f"{d}/c.png")
             img = shrink(whitecut(f"{d}/c.png").convert("RGBA"))
-        img = pink_eye(img, EYES[n])
+        img = whiten(pink_eye(img, EYES[n]))  # the White Rabbit is white, not paper
         img.save(f"{OUT}/{n}.webp", quality=90, method=6)
         print(f"{OUT}/{n}.webp: {img.size[0]}x{img.size[1]}")
     # Thought vignettes (the same oval card treatment as Chapter II's).

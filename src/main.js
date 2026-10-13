@@ -79,7 +79,7 @@ async function main() {
     fetch('art/ai/shaft_strip.json').then((r) => r.json()),
     fetch('art/ai/hall/hall.json').then((r) => r.json()),
     fetch('art/ai/poses/poses.json').then((r) => r.json()),
-    loadTexture('art/rabbit_w01-1.png'),
+    loadTexture('art/rabbit_w01-1_white.png'), // white, not paper (tools/white_rabbit.py)
     ...AI_ART.map((n) => loadTexture(`art/ai/${n}.webp`)),
   ]);
   // Whole-figure poses (tools/compose_poses.py), sized and lined up to match the standing Alice.

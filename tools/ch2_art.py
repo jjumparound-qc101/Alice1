@@ -17,6 +17,8 @@ import tempfile
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
+from white_rabbit import whiten
+
 SRC = "source/ai"
 OUT = "public/art/ai/ch2"
 VIG = "public/art/ai/vignettes"
@@ -121,6 +123,8 @@ def main():
         # whiskers and the paw.
         args = ["--seal", "4", "--clear", "421,599"] if n == "mouse_bristle" else []
         img = shrink(whitecut(src(n), *args).convert("RGBA"))
+        if n.startswith("rabbit"):
+            img = whiten(img)  # the White Rabbit is white, not paper (tools/white_rabbit.py)
         img.save(f"{OUT}/{n}.webp", quality=90, method=6)
         print(f"{OUT}/{n}.webp: {img.size[0]}x{img.size[1]}")
     for n in OPAQUE:

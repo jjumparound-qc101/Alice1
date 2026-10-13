@@ -9,7 +9,7 @@ The world is black-and-white ink, like Tenniel's engravings. **A thing has color
 5. **Labels that name contents count**, but only if the contents are there. The ORANGE MARMALADE jar is empty ("to her great disappointment it was empty"), so the jar and its label stay ink (owner decision, 2026-10-10).
 6. **Colors in poems and songs** at least color that word in the text strip (e.g. *green* in "Beautiful Soup, so rich and green"). They can be staged where it suits the scene.
 7. **Not colors:** "dark", "bright", "brightened", "goldfish" (the word only; no color is stated), "blacking" (a polish, not a stated color).
-8. **White is still white.** White things (the White Rabbit, white kid gloves, white roses) are paper-white. Being named white means they stay unshaded.
+8. **White is still white.** White things (the White Rabbit, white kid gloves, white roses) are paper-white. The White Rabbit is pure white, brighter than the paper, in every scene (owner, 2026-10-13; `tools/white_rabbit.py`). Being named white means they stay unshaded.
 
 ## How spot colour is drawn
 Rich and bright, with a slight glow (owner, Notes 1.0 #14): the colour lies over the ink instead of being multiplied into it, so lines still show. The key and the poker have a soft halo. Ink and paper are unchanged.
