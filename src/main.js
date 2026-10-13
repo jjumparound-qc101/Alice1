@@ -125,6 +125,33 @@ async function main() {
   const drawn = (c, height) => ({ tex: texture(c), aspect: c.width / c.height, height, facesLeft: true });
   // A pose from an AI drawing in `ai`.
   const art = (name, height, facesLeft = true) => ({ ...ai[name], height, facesLeft });
+  // Watch mode: if Alice is partly in the shot but cut by its edge (or hidden under the text
+  // strip), turn the camera just enough to take her in. Shots that leave her out altogether
+  // (close-ups, her point of view, other characters) are left alone. (Owner, 2026-10-13.)
+  const corner = new THREE.Vector3();
+  function keepAliceInFrame() {
+    const al = cast.alice, flat = al.poses[al.pose];
+    if (!al.root.visible || !flat) return;
+    camera.updateMatrixWorld();
+    const [w, h] = flat.userData.size;
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, inside = 0, n = 0;
+    for (const u of [0.15, 0.5, 0.85]) for (const v of [0.05, 0.5, 0.95]) {
+      flat.localToWorld(corner.set((u - 0.5) * w, v * h, 0)).project(camera);
+      if (corner.z > 1) return; // behind the camera
+      n++; if (Math.abs(corner.x) <= 1 && corner.y <= 1 && corner.y >= -0.4) inside++;
+      x0 = Math.min(x0, corner.x); x1 = Math.max(x1, corner.x); y0 = Math.min(y0, corner.y); y1 = Math.max(y1, corner.y);
+    }
+    if (inside === 0 || inside === n) return;
+    const M = 0.92, BOTTOM = -0.38;
+    let dx = 0, dy = 0;
+    if (x1 - x0 < 2 * M) dx = x1 > M ? x1 - M : x0 < -M ? x0 + M : 0;
+    if (y1 - y0 < M - BOTTOM) dy = y0 < BOTTOM ? y0 - BOTTOM : y1 > M ? y1 - M : 0;
+    const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const cap = 0.3;
+    camera.rotateY(-THREE.MathUtils.clamp(Math.atan(dx * tanV * camera.aspect), -cap, cap));
+    camera.rotateX(THREE.MathUtils.clamp(Math.atan(dy * tanV), -cap, cap));
+  }
+
   // Shared cast.
   const cast = {
     rabbit: new Puppet({
@@ -578,6 +605,7 @@ async function main() {
     const actors = active.actors(t);
     for (const [name, puppet] of Object.entries(cast)) puppet.apply(actors[name] ?? { visible: false }, camera);
     active.update?.(t, cast, camera); // after the cast, so props can follow a puppet's hand
+    if (mode === 'watch') keepAliceInFrame();
     keepThoughtsInView(camera);
 
     lightUp(t);
