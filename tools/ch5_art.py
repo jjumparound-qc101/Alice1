@@ -1,0 +1,62 @@
+"""Process Chapter V's AI drawings (source/ai/) for the game.
+
+- caterpillar_sit: the Caterpillar on his mushroom with his hookah (gpt-image-2, 2026-10-13).
+  The drawing's mushroom cap is cut away below his body (the scene has its own mushroom), and
+  the Caterpillar himself is coloured blue ("a large blue caterpillar", COLOR.md); the hookah
+  stays ink on paper.
+
+Usage: python3 tools/ch5_art.py   -> public/art/ai/ch5/*.webp
+Requires Pillow, NumPy and SciPy.
+"""
+import os
+import subprocess
+import sys
+import tempfile
+
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter
+
+OUT = "public/art/ai/ch5"
+BLUE = np.array([0x5B, 0x86, 0xC4], np.float32)  # SPOT.blue in src/props.js
+# Source pixels (1024x1536): keep everything above the line where his body meets the cap.
+KEEP = [(0, 0), (1024, 0), (1024, 955), (925, 955), (905, 975), (735, 975), (700, 1050), (600, 1085),
+        (420, 1095), (270, 1080), (200, 1010), (160, 960), (0, 960)]
+# His body and arms (the hookah to the right of it stays uncoloured).
+BODY = [(330, 120), (440, 40), (560, 120), (620, 330), (690, 560), (700, 760), (690, 960), (640, 1060),
+        (420, 1095), (260, 1075), (170, 980), (160, 820), (250, 600), (330, 400)]
+
+
+def mask(poly, size, blur=2):
+    m = Image.new("L", size, 0)
+    ImageDraw.Draw(m).polygon(poly, fill=255)
+    return np.asarray(m.filter(ImageFilter.GaussianBlur(blur)), np.float32) / 255.0
+
+
+def main():
+    os.makedirs(OUT, exist_ok=True)
+    with tempfile.TemporaryDirectory() as d:
+        subprocess.run([sys.executable, "tools/whitecut.py", "source/ai/caterpillar_sit.png", f"{d}/c.png",
+                        "--clear", "760,500;720,1000"],  # inside the hookah hose loop; beside his base
+                       check=True, stdout=subprocess.DEVNULL)
+        cut = Image.open(f"{d}/c.png").convert("RGBA")
+    # whitecut crops to the drawing: put it back on the full source canvas so the polygons line up.
+    src = Image.open("source/ai/caterpillar_sit.png").convert("L")
+    g = np.asarray(src) < 225
+    ys, xs = np.nonzero(g)
+    full = Image.new("RGBA", src.size, (0, 0, 0, 0))
+    full.paste(cut, (max(0, xs.min() - 2), max(0, ys.min() - 2)))
+    a = np.asarray(full, np.float32).copy()
+    a[..., 3] *= mask(KEEP, src.size, 1.5)
+    body = mask(BODY, src.size, 6)[..., None]
+    tone = a[..., :3].mean(2, keepdims=True) / 230.0
+    blue = BLUE * np.clip(tone, 0, 1) ** 0.9 + 255 * 0.12 * np.clip(tone, 0, 1)
+    a[..., :3] = a[..., :3] * (1 - body * 0.75) + np.clip(blue, 0, 255) * body * 0.75
+    img = Image.fromarray(a.astype(np.uint8), "RGBA")
+    img = img.crop(img.getbbox())
+    img.thumbnail((900, 900))
+    img.save(f"{OUT}/caterpillar_sit.webp", quality=90, method=6)
+    print(f"{OUT}/caterpillar_sit.webp: {img.size[0]}x{img.size[1]}")
+
+
+if __name__ == "__main__":
+    main()

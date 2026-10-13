@@ -13,7 +13,7 @@ import * as art from '../art.js';
 import { flagstones } from '../props.js';
 import {
   HOUSE_PX, houseFront, roomWall, windowTable, plainBottle, giantArm, cucumberFrames, ladder, barrow, pebble, littleCake,
-  thistle, buttercup, mushroom, caterpillar, stick, dinahNurseVignette, bookVignette,
+  thistle, buttercup, mushroom, stick, dinahNurseVignette, bookVignette,
 } from '../props4.js';
 import { thoughts } from '../thoughts.js';
 import { panorama } from '../sets/panorama.js';
@@ -357,7 +357,8 @@ export const wood = {
     const bc = paperFlat(texture(buttercup()), 0.14, 0.33); bc.position.set(BC.x, 0, BC.z); group.add(bc);
     const MU = { x: -1.65, z: -0.45 };
     const mu = paperFlat(texture(mushroom()), 0.17, 0.177); mu.position.set(MU.x, 0, MU.z); group.add(mu);
-    const cat = paperFlat(texture(caterpillar()), 0.07, 0.05); cat.position.set(MU.x + 0.01, 0.158, MU.z + 0.005); group.add(cat);
+    const C = ai['ch5/caterpillar_sit']; // the AI drawing (tools/ch5_art.py), as in Chapter V
+    const cat = paperFlat(C.tex, 0.1 * C.aspect, 0.1); cat.position.set(MU.x + 0.01, 0.132, MU.z + 0.005); group.add(cat);
     const st = paperFlat(texture(stick()), 0.1, 0.015, { anchor: 'center' }); group.add(st);
 
     function alice(t) {

@@ -22,7 +22,10 @@ export function paperFlat(tex, width, height, { anchor = 'bottom', edge = true, 
     const back = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
       map: tex, color: EDGE, transparent: !opaque, alphaTest: opaque ? 0 : 0.5, side: THREE.DoubleSide,
     }));
-    back.position.set(0.012, -0.012, -0.018);
+    // The card's edge: about 1 cm on a figure a metre or more tall, in proportion on smaller ones
+    // (a fixed offset showed as a dark double behind the tiny Caterpillar).
+    const k = Math.min(1, Math.max(width, height));
+    back.position.set(0.012 * k, -0.012 * k, -0.018 * k);
     group.add(back);
   }
   group.userData.front = front;

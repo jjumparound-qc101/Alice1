@@ -76,9 +76,9 @@ export const mushroomTalk = {
     }
     function cat(t) {
       const rear = t >= T.rearing - 0.5 && t < T.rearing + 4 ? smooth((t - T.rearing + 0.5) / 0.5) : 0; // "rearing itself upright"
-      if (t < T.crawled) return { pose: 'sit', x: MU.x + 0.01, z: MU.z + 0.005, y: MU.h - 0.02, dir: -1, scale: 1 + rear * 0.3, tilt: rear * -0.3 + (t >= T.yawned && t < T.yawned + 2 ? Math.sin(t * 20) * 0.05 : 0) };
+      if (t < T.crawled) return { pose: 'sit', x: MU.x + 0.01, z: MU.z + 0.005, y: MU.h - 0.045, dir: -1, scale: 1 + rear * 0.3, tilt: rear * -0.3 + (t >= T.yawned && t < T.yawned + 2 ? Math.sin(t * 20) * 0.05 : 0) };
       const k = smooth((t - T.crawled) / 5);
-      return { pose: 'sit', x: MU.x + 0.01 + k * 0.4, z: MU.z - k * 0.2, y: (MU.h - 0.02) * (1 - smooth((t - T.crawled) / 1.5)), dir: 1, visible: t < T.sight + 1 };
+      return { pose: 'sit', x: MU.x + 0.01 + k * 0.4, z: MU.z - k * 0.2, y: (MU.h - 0.045) * (1 - smooth((t - T.crawled) / 1.5)), dir: 1, visible: t < T.sight + 1 };
     }
     function update(t, cast) {
       const k = verses.findIndex((v, i) => t >= v - 0.3 && t < verses[i + 1] - 0.3);
