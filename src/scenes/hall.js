@@ -142,8 +142,8 @@ export const hall = {
     const camera = cameraTrack([
       { t: start, dur: 0, pos: [-4.4, 1.35, 2.6], look: [-1, 1.2, -3] },
       { t: T.lamps - 0.5, dur: 3, pos: [-2.4, 1.0, 2.6], look: [0, 2.3, -2] },        // the lamps
-      { t: T.doors, dur: 3, pos: [-3.2, 1.3, 1.2], look: [-3, 1.0, -3] },               // the locked doors
-      { t: T.doors + 5, dur: 7, pos: [1.6, 1.3, 1.5], look: [1.6, 0.9, -3] },
+      { t: T.doors, dur: 3, pos: [-3.6, 1.15, 0.7], look: [-3.9, 0.8, -2.6] },        // along the locked doors, with her               // the locked doors
+      { t: T.doors + 5, dur: 7, pos: [0.2, 1.2, 1.2], look: [0.5, 0.8, -2.6] },
       { t: T.table - 0.5, dur: 2.5, pos: [1.6, 1.25, 0.7], look: [TABLE.x, 0.85, TABLE.z] },
       { t: T.key - 1, dur: 2, pos: [1.25, 1.2, -0.3], look: [TABLE.x - 0.1, 0.92, TABLE.z] }, // the golden key
       { t: T.tryKey, dur: 3, pos: [-1.2, 1.3, 1.0], look: [-2.5, 1.0, -3] },
@@ -156,13 +156,13 @@ export const hall = {
       { t: T.bottle + 2, dur: 3, pos: [0.9, 1.0, 0.75], look: [AT_TABLE.x + 0.05, 0.72, AT_TABLE.z] }, // the bottle in her hand
       { t: T.label - 0.8, dur: 1.2, pos: [AT_TABLE.x + 0.3, 1.02, AT_TABLE.z + 0.45], look: [AT_TABLE.x + 0.25, 1.0, AT_TABLE.z] }, // close: "DRINK ME" on the label
       { t: T.label + 6, dur: 1.5, pos: [0.9, 1.0, 0.75], look: [AT_TABLE.x + 0.05, 0.72, AT_TABLE.z] },
-      { t: T.poker - 2, dur: 2, pos: [1.6, 1.6, 1.4], look: [AT_TABLE.x, 1.5, AT_TABLE.z] }, // the poker
+      { t: T.poker - 2, dur: 2, pos: [1.4, 1.35, 1.7], look: [AT_TABLE.x, 1.2, AT_TABLE.z] }, // the poker
       { t: T.notMarked - 0.5, dur: 2, pos: [1.6, 1.1, 0.5], look: [AT_TABLE.x, 0.85, AT_TABLE.z] },
       { t: T.telescope - 1, dur: 3, pos: [0.9, 0.6, 0.3], look: [AT_TABLE.x, 0.35, AT_TABLE.z] }, // shutting up like a telescope
       { t: T.telescope + 3, dur: 3, pos: [0.6, 0.28, -0.2], look: [AT_TABLE.x, 0.15, AT_TABLE.z] },
       { t: T.decided - 1.5, dur: 7, pos: [DOOR.x - 1.3, 0.3, -1.2], look: [DOOR.x, 0.15, DOOR.z] },
       { t: T.forgotten, dur: 2.5, pos: [1.3, 0.4, 0.4], look: [1.3, 0.1, -1.7] }, // facing her as she goes back (a cutout must be seen from the front) to the table
-      { t: T.forgotten + 6.2, dur: 1, pos: [BY_LEG.x + 0.1, 0.14, BY_LEG.z + 0.8], look: [BY_LEG.x, 0.06, BY_LEG.z] }, // on tiptoe, reaching up
+      { t: T.forgotten + 6.8, dur: 1, pos: [BY_LEG.x + 0.1, 0.14, BY_LEG.z + 0.8], look: [BY_LEG.x, 0.06, BY_LEG.z] }, // on tiptoe, reaching up
       { t: T.forgotten + 9.5, dur: 2, pos: [TABLE.x + 0.35, 0.14, TABLE.z + 0.45], look: [TABLE.x, 1.0, TABLE.z] }, // the key, through the glass
       { t: T.legs - 1, dur: 1.5, pos: [BY_LEG.x + 0.2, 0.2, BY_LEG.z + 0.75], look: [BY_LEG.x - 0.02, 0.15, BY_LEG.z - 0.05] }, // climbing the leg
       { t: T.sat, dur: 2, pos: [BY_LEG.x + 0.35, 0.22, BY_LEG.z + 0.6], look: [BY_LEG.x, 0.08, BY_LEG.z] },
