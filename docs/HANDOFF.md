@@ -44,7 +44,7 @@ Updated: 2026-10-11 (end of session 2: Chapters VIII–XII staged, the whole boo
 7. Write `docs/CHAPTER_NN_ROUGHCUT.md`, update this handoff's table, commit, push, republish the web link.
 
 ## Generating art directly (owner, 2026-10-13)
-- `python3 tools/gen_image.py OUT "PROMPT" --ref FILE …`: OpenAI image API, always **gpt-image-2 or newer**, streamed (the proxy drops requests silent for ~30 s), the style block from ART_PROMPTS.md put in front. About 6,000 image tokens a high-quality picture.
+- `python3 tools/gen_image.py OUT "PROMPT" --ref FILE …`: OpenAI image API, default **gpt-image-2.5-sunburst** (owner, 2026-10-13: a quarter of the tokens of gpt-image-2; gpt-image-2 as fallback), streamed (the proxy drops requests silent for ~30 s), the style block from ART_PROMPTS.md put in front. About 6,000 image tokens a high-quality picture.
 - **References are cropped to the target only** (no other figures in the picture: cleaner results, and a plate with child Alice beside a smoking figure tripped the safety filter).
 - **Characters already in the project are referenced by their existing drawings** (e.g. the model sheet and walk pair for Alice, `rabbit_sheet` for the Rabbit, `caterpillar_sit` for the Caterpillar), with the Tenniel plate crop, so every new pose matches.
 - Show the owner each new character's first picture before putting it in the game.

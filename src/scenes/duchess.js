@@ -10,7 +10,7 @@ import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { flagstones } from '../props.js';
 import { littleHouse } from '../props5.js';
-import { greatLetter, baby, kitchenWall, thrown, cheshire, CAT_PX, bough, marchHareHouse, axisVignette, pigsVignette } from '../props6.js';
+import { greatLetter, baby, kitchenWall, thrown, cheshire, CAT_PX, marchHareHouse, axisVignette, pigsVignette } from '../props6.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
@@ -176,19 +176,22 @@ export const wood6 = {
       vanished: at('vanished', 1), appeared: at('appeared'), vanished2: at('vanished', 2), again: at('cat', 1, at('hare', 2)) , slowly: at('slowly'),
       grinGone: at('grin', 4) + 1, hare: at('hare', 4), two: at('two', 1, at('hare', 4)) };
     outdoors(group, ai, { groundRepeat: 40 });
-    trees(group, ai, [[-1.2, -1.0, 3.4, 1], [1.4, -1.4, 3.2, -1], [-3.4, -1.3, 3.6, 1], [0.2, -3.2, 3.6, -1], [-2.4, -3.6, 3.4, 1]]);
+    trees(group, ai, [[-1.2, -1.0, 3.4, 1], [1.4, -1.4, 3.2, -1], [-4.1, -2.0, 3.6, 1], [0.2, -3.2, 3.6, -1], [-2.4, -3.6, 3.4, 1]]);
     const hare = paperFlat(texture(marchHareHouse()), 1.6, 1.4); hare.position.set(-5.2, 0, -4.2); group.add(hare);
     // The baby, carried; it changes as it grunts.
     const babyArt = [0, 1, 2].map((s) => texture(baby(s)));
     const babyCard = paperFlat(babyArt[0], 0.1, 0.083, { anchor: 'center' }); group.add(babyCard);
     // Two boughs with the Cat: the first, and the "branch of a tree" where it appears again.
-    const boughs = [{ x: -1.25, y: 0.42, z: -0.5 }, { x: -3.0, y: 0.48, z: -0.75 }].map((p) => {
-      const b = paperFlat(texture(bough()), 0.9, 0.22); b.position.set(p.x, p.y - 0.17, p.z); group.add(b); return p;
+    // AI drawings (tools/ch6_art.py), all on one canvas so they line up: the bough alone; the
+    // Cat on the bough; and the grin alone. The empty bough stays when the Cat vanishes.
+    const CW = 0.5, CH = CW / ai['ch6/cheshire_bough'].aspect;
+    const BOUGH_DROP = CH * 0.52; // the bough runs about half-way down the drawing
+    const boughs = [{ x: -1.25, y: 0.42, z: -0.5 }, { x: -2.75, y: 0.48, z: -0.2 }].map((p) => {
+      const b = paperFlat(ai['ch6/cheshire_bough_empty'].tex, CW, CH, { edge: false }); b.position.set(p.x, p.y - BOUGH_DROP, p.z); group.add(b); return p;
     });
     // The Cat, and its grin on a separate card in the same place, so the Cat can fade from
     // the tail while the grin stays. A clipping plane sweeps from the tail (right) to the head.
-    const CW = 0.16, CH = CW * CAT_PX.h / CAT_PX.w;
-    const catCard = paperFlat(texture(cheshire()), CW, CH), grinCard = paperFlat(texture(cheshire(true)), CW, CH, { edge: false });
+    const catCard = paperFlat(ai['ch6/cheshire_bough'].tex, CW, CH, { edge: false }), grinCard = paperFlat(ai['ch6/cheshire_grin'].tex, CW, CH, { edge: false });
     const clip = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 10);
     catCard.traverse((m) => { if (m.material) { m.material.clippingPlanes = [clip]; } });
     group.add(catCard, grinCard);
@@ -220,7 +223,7 @@ export const wood6 = {
       catCard.visible = shown && t < T.slowly + 4;
       grinCard.visible = shown && t < T.grinGone;
       const wave = (t >= T.paw1 && t < T.paw1 + 3) || (t >= T.paw2 && t < T.paw2 + 3) ? Math.sin(t * 6) * 0.08 : 0;
-      for (const card of [catCard, grinCard]) { card.position.set(b.x, b.y, b.z + 0.02); card.rotation.z = wave; }
+      for (const card of [catCard, grinCard]) { card.position.set(b.x, b.y - BOUGH_DROP, b.z + 0.004 + (card === grinCard ? 0.002 : 0)); card.rotation.z = wave * 0.3; }
       // "beginning with the end of the tail, and ending with the grin"
       const k = smooth((t - T.slowly) / 3.5);
       clip.constant = lerp(b.x + CW / 2 + 0.01, b.x - CW / 2 - 0.01, k);
@@ -230,6 +233,8 @@ export const wood6 = {
       think(t, { x: a.x - 0.18, y: 0.32, z: a.z }, 0.17);
     }
     const B0 = boughs[0], B1 = boughs[1];
+    // Where the grin is drawn on the second bough's card (about a third across, half-way down).
+    const GRIN1 = { x: B1.x + (0.33 - 0.5) * CW, y: B1.y - BOUGH_DROP + CH * 0.52 };
     const camera = cameraTrack([
       { t: start, dur: 0, pos: [1.8, 0.25, 1.0], look: [1.0, 0.15, 0.0] },                         // out into the open air
       { t: start + 4, dur: 20, pos: [0.4, 0.2, 0.9], look: [-0.2, 0.15, 0.0] },
@@ -238,7 +243,7 @@ export const wood6 = {
       { t: T.bough - 1, dur: 3, pos: [-0.5, 0.18, 0.55], look: [-1.1, 0.3, -0.35] },               // the Cheshire Cat on a bough
       { t: T.bough + 30, dur: 6, pos: [-0.75, 0.25, 0.35], look: [B0.x, B0.y + 0.05, B0.z] },
       { t: T.vanished2 + 3, dur: 6, pos: [-2.0, 0.3, 0.45], look: [-2.9, 0.5, -0.7] },
-      { t: T.slowly - 2, dur: 2, pos: [B1.x + 0.2, B1.y + 0.04, B1.z + 0.5], look: [B1.x, B1.y + 0.06, B1.z] }, // a grin without a cat
+      { t: T.slowly - 2, dur: 2, pos: [GRIN1.x + 0.12, GRIN1.y + 0.03, B1.z + 0.42], look: [GRIN1.x, GRIN1.y, B1.z] }, // a grin without a cat
       { t: T.hare - 1, dur: 4, pos: [-2.4, 0.35, 0.4], look: [-5.0, 0.5, -4.0] },                  // the March Hare's house
     ]);
     return { T, bg: PAPER, fog: [6, 24], bounds: null, hotspots: [], camera, update, actors: (t) => ({ alice: aliceA(t), pig: pigA(t) }) };

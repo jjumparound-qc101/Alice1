@@ -68,7 +68,7 @@ async function main() {
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',
-    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', // tools/walls.py // tools/ch1_art.py
+    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', // tools/walls.py // tools/ch1_art.py
     // Chapter II (tools/ch2_art.py): the Rabbit, the Mouse, the birds, props, the pool and the thoughts.
     ...['rabbit2_trot', 'rabbit2_start', 'rabbit2_away', 'mouse_swim', 'mouse_leap', 'mouse_bristle', 'mouse_away',
       'duck_swim', 'duck_stand', 'dodo_swim', 'dodo_stand', 'lory_swim', 'lory_stand', 'eaglet_swim', 'eaglet_stand',
@@ -203,7 +203,7 @@ async function main() {
     pig2: new Puppet({ up: drawn(guineaPig(), 0.32) }, 0.32),
     // Chapter V placeholders.
     // The AI drawing (tools/ch5_art.py): blue, with his hookah, on the scene's own mushroom.
-    caterpillar: new Puppet({ sit: art('ch5/caterpillar_sit', 0.1) }, 0.1),
+    caterpillar: new Puppet({ sit: art('ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 0.1) }, 0.1),
     pigeon: new Puppet({ fly: drawn(pigeon('fly'), 0.22), perch: drawn(pigeon('perch'), 0.2) }, 0.2),
     // Chapter VI placeholders.
     fish: new Puppet({ stand: drawn(footman('fish'), 0.3) }, 0.3),

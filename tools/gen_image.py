@@ -27,7 +27,7 @@ def main():
     ap.add_argument("prompt")
     ap.add_argument("--ref", action="append", default=[])
     ap.add_argument("--size", default="1024x1536")
-    ap.add_argument("--model", default="gpt-image-2")
+    ap.add_argument("--model", default="gpt-image-2.5-sunburst")  # owner, 2026-10-13; gpt-image-2 as fallback
     ap.add_argument("--quality", default="high")
     a = ap.parse_args()
     prompt = style_block() + "\n\nRequest:\n" + a.prompt
