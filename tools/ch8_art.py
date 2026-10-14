@@ -1,4 +1,5 @@
-"""The court cards (Chapters VIII-XII): the Queen, King, Knave of Hearts and the executioner.
+"""The court cards (Chapters VIII-XII): the Queen, King, Knave of Hearts and the executioner; and the
+gardeners Two, Five and Seven of Spades (fully drawn, pips checked by eye; red paint on the brush).
 
 They are drawn with their hearts already flat red (and the Queen's and King's face flushes in
 colour), so this cut-out keeps colour: ink and white are paper-tinted as usual, coloured pixels
@@ -18,7 +19,8 @@ PAPER = np.array([0xEF, 0xE9, 0xDA], np.float32)
 SUIT_RED = np.array([0xC8, 0x22, 0x22], np.float32)
 NAMES = ["queen_stand", "queen_point", "queen_flush", "queen_stamp", "queen_folded", "queen_specs", "queen_purple",
          "king_stand", "king_judge", "king_judge_specs", "king_judge_fold", "king_judge_point", "king_judge_pale",
-         "knave_carry", "knave_stand", "knave_chains", "executioner"]
+         "knave_carry", "knave_stand", "knave_chains", "executioner",
+         *[f"{c}_{p}" for c in ("two", "five", "seven") for p in ("stand", "paint", "bow", "run")], "two_kneel"]
 
 
 CRIMSON = np.array([0xA3, 0x12, 0x3A], np.float32)  # "turned crimson with fury" (SPOT.crimson)

@@ -64,7 +64,7 @@ async function main() {
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',
-    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_paw', ...['queen_stand', 'queen_point', 'queen_flush', 'queen_stamp', 'queen_folded', 'queen_specs', 'queen_purple', 'king_stand', 'king_judge', 'king_judge_specs', 'king_judge_fold', 'king_judge_point', 'king_judge_pale', 'knave_carry', 'knave_stand', 'knave_chains', 'executioner'].map((n) => `ch8/${n}`), ...['hatter_sit_stare', 'hatter_sit_riddle', 'hatter_sit_watch', 'hatter_cup', 'hatter_pale', 'hatter_bite', 'hatter_tremble', 'hatter_knee', 'hatter_run', 'marchhare_sit', 'marchhare_dip', 'dormouse_sleep', 'dormouse_talk'].map((n) => `ch7/${n}`), 'vignettes/axis', 'vignettes/pigs', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back', 'kitchen_side', 'little_house', 'march_hare_house', ...['irons', 'saucepan', 'saucepan2', 'pan', 'plate', 'plate2', 'plate3', 'dish'].map((n) => `thrown_${n}`)].map((n) => `ch6/${n}`),
+    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_paw', ...['queen_stand', 'queen_point', 'queen_flush', 'queen_stamp', 'queen_folded', 'queen_specs', 'queen_purple', 'king_stand', 'king_judge', 'king_judge_specs', 'king_judge_fold', 'king_judge_point', 'king_judge_pale', 'knave_carry', 'knave_stand', 'knave_chains', 'executioner', ...['two', 'five', 'seven'].flatMap((c) => ['stand', 'paint', 'bow', 'run'].map((p) => `${c}_${p}`)), 'two_kneel'].map((n) => `ch8/${n}`), ...['hatter_sit_stare', 'hatter_sit_riddle', 'hatter_sit_watch', 'hatter_cup', 'hatter_pale', 'hatter_bite', 'hatter_tremble', 'hatter_knee', 'hatter_run', 'marchhare_sit', 'marchhare_dip', 'dormouse_sleep', 'dormouse_talk'].map((n) => `ch7/${n}`), 'vignettes/axis', 'vignettes/pigs', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back', 'kitchen_side', 'little_house', 'march_hare_house', ...['irons', 'saucepan', 'saucepan2', 'pan', 'plate', 'plate2', 'plate3', 'dish'].map((n) => `thrown_${n}`)].map((n) => `ch6/${n}`),
     ...['duchess_nurse', 'duchess_toss', 'duchess_fling', 'duchess9_arm', 'duchess9_tremble', 'duchess9_run'].map((n) => `ch6/${n}`),
     ...['sit', 'sob', 'count', 'hide', 'dance', 'sing', 'yawn'].map((n) => `ch9/mockturtle_${n}`),
     ...['sit', 'asleep', 'walk', 'paws', 'hide', 'dance', 'bound'].map((n) => `ch9/gryphon_${n}`), 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', 'vignettes/histories', 'vignettes/poker', 'vignettes/knife', 'vignettes/poison', 'vignettes/candle', 'vignettes/telescope', 'vignettes/croquet', // tools/walls.py // tools/ch1_art.py
@@ -252,9 +252,14 @@ async function main() {
       ...Object.fromEntries([['cup', 1481], ['pale', 1482], ['bite', 1477], ['tremble', 1481], ['knee', 1251], ['run', 1394, false]]
         .map(([p, px, left = true]) => [p, art(`ch7/hatter_${p}`, 0.36 * px / 1481, left)])) }, 0.42),
     hare: new Puppet({ sit: art('ch7/marchhare_sit', 0.4, false), dip: art('ch7/marchhare_dip', 0.4, false) }, 0.4),
-    // Chapter VIII placeholders: the cards (props8.js), coloured like real cards (owner, 2026-10-11).
-    ...Object.fromEntries([['two', 2], ['five', 5], ['seven', 7]].map(([name, rank]) => [name, new Puppet(Object.fromEntries(
-      ['stand', 'paint', 'bow', 'kneel', 'run'].map((p) => [p, drawn(card({ suit: 'spades', rank }, p), 0.28)])), 0.28)])),
+    // Chapter VIII: the gardeners Two, Five and Seven of Spades, fully drawn (tools/ch8_art.py; owner,
+    // 2026-10-14: the card people with parts in the story are drawn as characters). px: heights in source pixels.
+    ...Object.fromEntries(Object.entries({
+      two: { stand: 1386, paint: 1362, bow: 1371, run: 1265, kneel: 1226 },
+      five: { stand: 1479, paint: 1465, bow: 1430, run: 1383 },
+      seven: { stand: 1418, paint: 1409, bow: 1382, run: 1300 },
+    }).map(([name, px]) => [name, new Puppet(Object.fromEntries(Object.entries(px)
+      .map(([p, h]) => [p, art(`ch8/${name}_${p}`, 0.3 * h / px.stand)])), 0.3)])),
     // The court cards (AI drawings with their hearts red, tools/ch8_art.py; px = height in source pixels).
     queen: new Puppet(Object.fromEntries([['stand', 1509], ['point', 1460], ['flush', 1507], ['stamp', 1494], ['folded', 1509], ['specs', 1508], ['purple', 1509]]
       .map(([p, px]) => [p, art(`ch8/queen_${p}`, 0.34 * px / 1509)])), 0.34),
