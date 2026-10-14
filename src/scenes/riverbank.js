@@ -69,8 +69,8 @@ export const riverbank = {
     const camera = cameraTrack([
       { t: 0, dur: 0, pos: [0, 2.0, 17.5], look: [0, 1.6, -3] },                     // from a seat in the stalls: the theatre, the toy stage, title and all
       // Up the aisle over the heads, then on through the toy stage, eased as one move.
-      { t: T.title, dur: (T.her - T.title) * 0.55, pos: [0, 1.9, 11.0], look: [0, 1.5, -3] },
-      { t: T.title + (T.her - T.title) * 0.35, dur: (T.her - T.title) * 0.65, pos: [-1.5, 1.15, 0.3], look: [-2.75, 0.45, -2.35] },
+      { t: T.title, dur: (T.her - T.title) * 0.55, pos: [0, 1.9, 11.0], look: [0, 1.5, -3], exact: true },
+      { t: T.title + (T.her - T.title) * 0.35, dur: (T.her - T.title) * 0.65, pos: [-1.5, 1.15, 0.3], look: [-2.75, 0.45, -2.35], exact: true }, // ends on "her" (owner)
       { t: T.book - 1, dur: 3, pos: [-3.0, 1.05, 0.15], look: [-3.0, 0.5, -2.6] },   // her sister in the middle, Alice beside her, both whole
       { t: T.so, dur: 8, pos: [-1.7, 1.3, 1.4], look: [-2.6, 0.5, -2.35] },
       { t: T.rabbit - 2.5, dur: 2.5, pos: [-0.6, 1.25, 1.2], look: [-2.6, 0.4, -2.0] },

@@ -38,12 +38,32 @@ export function step(t, keys) {
 
 // Camera keys: { t, dur, pos: [x,y,z], look: [x,y,z] }. From the previous pose,
 // ease to each key over `dur` seconds starting at t.
-export function cameraTrack(keys) {
+// Calm moves (owner, 2026-10-14: "simple and smooth"): a move is never quicker than MIN_DUR,
+// never turns faster than MAX_TURN degrees a second on average, nor travels faster than
+// MAX_TRAVEL metres a second; a lengthened move starts earlier by half the extra time, so it
+// still arrives about when the text names what it shows. Keys at the scene's start (dur 0) stay cuts.
+const MIN_DUR = 2.2, MAX_TURN = 22, MAX_TRAVEL = 1.6;
+const dirOf = (k) => { const d = [k.look[0] - k.pos[0], k.look[1] - k.pos[1], k.look[2] - k.pos[2]]; const l = Math.hypot(...d) || 1; return d.map((v) => v / l); };
+export function calmKeys(keys) {
+  const out = [{ ...keys[0] }];
+  for (let i = 1; i < keys.length; i++) {
+    const k = keys[i], prev = keys[i - 1];
+    if (!k.dur || k.exact) { out.push({ ...k }); continue; } // exact: timed by the owner, left as written
+    const a = dirOf(prev), b = dirOf(k);
+    const turn = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))) * 180 / Math.PI;
+    const travel = Math.hypot(k.pos[0] - prev.pos[0], k.pos[1] - prev.pos[1], k.pos[2] - prev.pos[2]);
+    const dur = Math.max(k.dur, MIN_DUR, turn / MAX_TURN, travel / MAX_TRAVEL);
+    out.push({ ...k, t: k.t - (dur - k.dur) / 2, dur });
+  }
+  return [out[0], ...out.slice(1).sort((a, b) => a.t - b.t)]; // (a lengthened move may now start before the one before it)
+}
+export function cameraTrack(rawKeys) {
+  const keys = calmKeys(rawKeys);
   return (t) => {
     const pos = [...keys[0].pos], look = [...keys[0].look];
     for (const k of keys.slice(1)) {
       if (t < k.t) break;
-      const e = smooth((t - k.t) / k.dur);
+      const e = k.dur ? smooth((t - k.t) / k.dur) : 1;
       for (let i = 0; i < 3; i++) { pos[i] = lerp(pos[i], k.pos[i], e); look[i] = lerp(look[i], k.look[i], e); }
     }
     return { pos, look };

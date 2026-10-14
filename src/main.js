@@ -624,13 +624,19 @@ async function main() {
   }
 
   const look = new THREE.Vector3();
-  let last = performance.now();
+  let last = performance.now(), smoothT = 0;
   const perf = new PerfMeter(renderer);
   renderer.setAnimationLoop((now) => {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     if (!ch) { renderer.clear(); return; }
-    const t = audio.currentTime;
+    // A steady clock (owner, 2026-10-14: jerky motion): some browsers report the narration's time in
+    // uneven steps; the picture follows a clock that runs smoothly with the frames and is gently
+    // pulled to the narration (snapping to it after a seek or a pause).
+    const at = audio.currentTime;
+    if (audio.paused || Math.abs(at - smoothT) > 0.3) smoothT = at;
+    else smoothT += dt * audio.playbackRate + (at - smoothT) * 0.08;
+    const t = smoothT;
     show(sceneAt(t));
 
     if (mode === 'watch') {
