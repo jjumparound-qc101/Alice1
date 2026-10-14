@@ -13,9 +13,7 @@ import { texture, PAPER } from '../ink.js';
 import { card, cardBack, SOLDIERS, COURTIERS, CHILDREN, GUESTS, OFFICERS, hedgehog } from '../props8.js';
 import { mouseWalk } from '../props3.js';
 import { lizard, guineaPig } from '../props4.js';
-import { duchess, baby } from '../props6.js';
 import { hatter, marchHare, teapot } from '../props7.js';
-import { gryphon, mockTurtle } from '../props9.js';
 import { verses, noteBook, inkstand, deadLeaf, goldfishVignette, countryVignette, grownAliceVignette } from '../props12.js';
 import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, JURY, BILL } from '../sets/court.js';
 import { drawnPose, extras } from '../crowd.js';
@@ -197,8 +195,9 @@ export const waking = {
     // The creatures of the dream, faint, each as the text names it; they fade back into the
     // sounds of the countryside: the teacups into sheep-bells, the Queen into the shepherd boy,
     // the baby and the Gryphon into the farm-yard, the Mock Turtle into the lowing cattle.
+    // c: a drawing in code (canvas) or an AI drawing from `ai` ({ tex, aspect }).
     const ghost = (c, h, x, z, t0, t1) => {
-      const f = paperFlat(texture(c), h * c.width / c.height, h, { edge: false });
+      const f = c.tex ? paperFlat(c.tex, h * c.aspect, h, { edge: false }) : paperFlat(texture(c), h * c.width / c.height, h, { edge: false });
       const m = f.userData.front.material; m.transparent = true; m.alphaTest = 0.02; m.depthWrite = false;
       f.position.set(x, 0, z); group.add(f);
       return { f, m, t0, t1 };
@@ -208,11 +207,11 @@ export const waking = {
       ghost(mouseWalk(), 0.3, -2.3, -2.2, T.mouse, reality(0.9)),
       ghost(hatter('stare'), 0.9, -0.9, -2.9, T.teacups, T.bells), ghost(marchHare('sit'), 0.85, -0.3, -3.0, T.teacups, T.bells), ghost(teapot(), 0.35, -0.6, -2.6, T.teacups, T.bells),
       ghost(card({ suit: 'hearts', rank: 'queen' }, 'point'), 1.1, 0.5, -2.6, T.queen, reality(0.3)),
-      ghost(duchess('sit'), 1.1, -4.3, -2.5, T.pig, reality(0.55)), ghost(baby(1), 0.35, -3.9, -2.3, T.pig, reality(0.55)),
-      ghost(gryphon('walk'), 1.1, -1.6, -3.3, T.gryphon, reality(0.6)),
+      ghost(ai['ch6/duchess_nurse'], 1.1, -4.3, -2.5, T.pig, reality(0.55)), ghost(ai['ch6/baby_snout'], 0.35, -3.9, -2.3, T.pig, reality(0.55)),
+      ghost(ai['ch9/gryphon_walk'], 0.75, -1.6, -3.3, T.gryphon, reality(0.6)),
       ghost(lizard('stand'), 0.5, -1.9, -2.1, T.gryphon + 1.5, reality(0.7)),
       ghost(guineaPig(), 0.42, 1.1, -2.3, T.gryphon + 3.5, reality(0.75)), ghost(guineaPig(), 0.42, 1.45, -2.4, T.gryphon + 3.8, reality(0.75)),
-      ghost(mockTurtle('sob'), 1.0, 1.6, -3.2, T.turtle, T.cattle + 2),
+      ghost(ai['ch9/mockturtle_sob'], 1.2, 1.6, -3.2, T.turtle, T.cattle + 2),
       ghost(hedgehog('ball'), 0.16, 0.1, -2.1, T.queen + 1, reality(0.3)),
     ];
     const LAP = { x: SISTER.x + 0.38, z: SISTER.z + 0.18 };

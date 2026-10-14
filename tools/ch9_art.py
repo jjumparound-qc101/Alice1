@@ -7,10 +7,12 @@ of its height, so he sits on a ledge or the sand on his hooves.
 
 - The Mock Turtle (Chapters IX, X): mockturtle_ledge_norock (sitting; the rock taken out so he
   sits on the seashore set's own ledge), _sob, _count, _hide, _dance, _sing, _yawn.
+- The Gryphon (Chapters IX, X): gryphon_sit, _asleep, _walk, _paws, _hide, _dance, _bound (the
+  landscape ones were drawn on a wider canvas, so their px don't compare with the upright ones).
 - The Duchess (Chapters VI, IX; output to ch6/): duchess_toss, duchess_fling, duchess9_arm,
   duchess9_tremble, duchess9_run (duchess_nurse is done by ch6_art.py).
 
-Usage: python3 tools/ch9_art.py   -> public/art/ai/ch9/mockturtle_*.webp, public/art/ai/ch6/duchess_*.webp
+Usage: python3 tools/ch9_art.py   -> public/art/ai/ch9/mockturtle_*.webp, gryphon_*.webp, public/art/ai/ch6/duchess_*.webp
 Requires Pillow, NumPy and SciPy.
 """
 import os
@@ -23,6 +25,7 @@ from PIL import Image
 
 TURTLE = {"mockturtle_ledge_norock": "mockturtle_sit", **{f"mockturtle_{p}": f"mockturtle_{p}" for p in
           ("sob", "count", "hide", "dance", "sing", "yawn")}}
+GRYPHON = ["gryphon_sit", "gryphon_asleep", "gryphon_walk", "gryphon_paws", "gryphon_hide", "gryphon_dance", "gryphon_bound"]
 DUCHESS = ["duchess_nurse", "duchess_toss", "duchess_fling", "duchess9_arm", "duchess9_tremble", "duchess9_run"]
 
 
@@ -52,6 +55,9 @@ def main():
     for name, out in TURTLE.items():
         a, h = cut(name, f"public/art/ai/ch9/{out}.webp")
         print(f"{out}: px {h}, drop {(h - hooves(a)) / h:.3f}")
+    for name in GRYPHON:
+        _, h = cut(name, f"public/art/ai/ch9/{name}.webp", 700)
+        print(f"{name}: px {h}")
     for name in DUCHESS:
         _, h = cut(name, f"public/art/ai/ch6/{name}.webp" if name != "duchess_nurse" else None, 700)
         print(f"{name}: px {h}")

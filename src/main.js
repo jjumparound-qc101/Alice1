@@ -13,7 +13,6 @@ import { lizard, guineaPig, puppy } from './props4.js';
 import { pigeon } from './props5.js';
 import { hatter, marchHare } from './props7.js';
 import { card } from './props8.js';
-import { gryphon } from './props9.js';
 import { hatterStand } from './props11.js';
 import { mouseUp, mouseWalk, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
 
@@ -69,7 +68,8 @@ async function main() {
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',
     'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back'].map((n) => `ch6/${n}`),
     ...['duchess_nurse', 'duchess_toss', 'duchess_fling', 'duchess9_arm', 'duchess9_tremble', 'duchess9_run'].map((n) => `ch6/${n}`),
-    ...['sit', 'sob', 'count', 'hide', 'dance', 'sing', 'yawn'].map((n) => `ch9/mockturtle_${n}`), 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', 'vignettes/histories', 'vignettes/poker', 'vignettes/knife', 'vignettes/poison', // tools/walls.py // tools/ch1_art.py
+    ...['sit', 'sob', 'count', 'hide', 'dance', 'sing', 'yawn'].map((n) => `ch9/mockturtle_${n}`),
+    ...['sit', 'asleep', 'walk', 'paws', 'hide', 'dance', 'bound'].map((n) => `ch9/gryphon_${n}`), 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', 'vignettes/histories', 'vignettes/poker', 'vignettes/knife', 'vignettes/poison', // tools/walls.py // tools/ch1_art.py
     // Chapter II (tools/ch2_art.py): the Rabbit, the Mouse, the birds, props, the pool and the thoughts.
     ...['rabbit2_trot', 'rabbit2_start', 'rabbit2_away', 'mouse_swim', 'mouse_leap', 'mouse_bristle', 'mouse_away',
       'duck_swim', 'duck_stand', 'dodo_swim', 'dodo_stand', 'lory_swim', 'lory_stand', 'eaglet_swim', 'eaglet_stand',
@@ -239,7 +239,10 @@ async function main() {
     knave: new Puppet({ carry: drawn(card({ suit: 'hearts', rank: 'knave' }, 'carry'), 0.3), stand: drawn(card({ suit: 'hearts', rank: 'knave' }, 'stand'), 0.3), chains: drawn(card({ suit: 'hearts', rank: 'knave', chains: true }, 'stand'), 0.3) }, 0.3),
     executioner: new Puppet({ axe: drawn(card({ suit: 'spades', rank: 'executioner' }, 'axe'), 0.32) }, 0.32),
     // Chapter IX placeholders (props9.js).
-    gryphon: new Puppet(Object.fromEntries(['asleep', 'sit', 'walk', 'paws', 'hide'].map((p) => [p, drawn(gryphon(p), p === 'asleep' ? 0.5 : 0.36)])), 0.36),
+    // The Gryphon (tools/ch9_art.py): the upright drawings scaled by their px; the wide ones by eye.
+    gryphon: new Puppet(Object.fromEntries([['sit', 0.38, false], ['paws', 0.38 * 1495 / 1519, false], ['hide', 0.38 * 1507 / 1519, false],
+      ['dance', 0.38 * 1500 / 1519], ['asleep', 0.25], ['walk', 0.3], ['bound', 0.3]]
+      .map(([pose, h, left = true]) => [pose, art(`ch9/gryphon_${pose}`, h, left)])), 0.38),
     mockTurtle: new Puppet(Object.fromEntries([['sit', 1399, 0.231], ['sob', 1395, 0.239], ['count', 1399, 0.232], ['hide', 1442, 0.223],
       ['walk', 1356, 0.069, 'dance'], ['sing', 1370, 0.036], ['yawn', 1409, 0.227]]
       .map(([pose, px, drop, name = pose]) => [pose, { ...art(`ch9/mockturtle_${name}`, px * 0.4525 / 1399), drop }])), 0.35),

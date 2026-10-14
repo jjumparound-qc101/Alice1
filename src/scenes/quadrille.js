@@ -60,7 +60,7 @@ export const quadrille = {
       return { ...s, pose: seated ? 'sit' : 'stand', scale: FOOT, tilt: trodden + hands, dir: s.moving ? s.dir : 1, visible: t < T.breeze + 2 };
     };
     const gryphonA = (t) => {
-      if (dancing(t)) return { ...round(t, 0), pose: 'paws', moving: true, phase: t * 1.2, y: Math.abs(Math.sin(t * 2.4)) * 0.01 };
+      if (dancing(t)) return { ...round(t, 0), pose: 'dance', moving: true, phase: t * 1.2, y: Math.abs(Math.sin(t * 2.4)) * 0.01 };
       if (t >= T.hand) {
         const s = route(t, [[T.hand, R], [T.hand + 1.2, { x: D.x - 0.05, z: D.z + 0.02, dir: -1 }], [T.breeze + 2, { x: -3.0, z: 0.35, dir: -1 }]], { phase: t * 2.4 });
         return { ...s, pose: 'walk', visible: t < T.breeze + 2 };
@@ -72,12 +72,13 @@ export const quadrille = {
       const thump = t >= T.shaking && t < T.shaking + 4 ? Math.sin(t * 14) * 0.12 : 0;
       const leap = t >= T.bound && t < T.bound + 0.8 ? Math.sin((t - T.bound) / 0.8 * Math.PI) * 0.12 : t >= T.lobsters && t < T.capering + 6 ? Math.abs(Math.sin(t * 5)) * 0.03 : 0;
       let pose = s.moving ? 'walk' : 'sit';
-      if (t >= T.lobsters && t < T.capering + 6) pose = 'paws';
+      if (t >= T.lobsters && t < T.capering + 6) pose = 'dance';
+      if (t >= T.bound && t < T.bound + 0.8) pose = 'bound';                      // "leaping into the air with a bound"
       if (t >= T.songEnd + 3 && t < T.hand) pose = 'sit';
       return { ...s, pose, y: leap, tilt: thump, dir: t >= T.songEnd + 3 ? -1 : s.dir };
     };
     const turtleA = (t) => {
-      if (dancing(t)) return { ...round(t, Math.PI), pose: 'count', moving: true, phase: t * 1.2, y: Math.abs(Math.sin(t * 2.4 + 1)) * 0.01 };
+      if (dancing(t)) return { ...round(t, Math.PI), pose: 'walk', moving: true, phase: t * 1.2, y: Math.abs(Math.sin(t * 2.4 + 1)) * 0.01 };
       if (t < T.quadrille) {
         const shake = t >= T.shaking && t < T.shaking + 4 ? Math.sin(t * 22) * 0.008 : 0;
         return { pose: 'sob', x: LEDGE_AT.x + shake, z: LEDGE_AT.z, y: LEDGE_AT.y - 0.01, dir: -1 };
