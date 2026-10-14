@@ -10,7 +10,7 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, INK, PAPER } from '../ink.js';
 import { garden as gardenPicture } from '../props.js';
-import { tableCloth, cup, teapot, armchair, dayWatch, treeDoor, flowerBed, dormouse, ravenVignette, concertVignette, batVignette, treacleVignette } from '../props7.js';
+import { tableCloth, cup, teapot, armchair, dayWatch, treeDoor, flowerBed, ravenVignette, concertVignette, batVignette, treacleVignette } from '../props7.js';
 import { buildHall, TABLE, DOOR, KEY } from '../sets/hall.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
@@ -62,7 +62,7 @@ export const teaParty = {
     const pot = paperFlat(texture(teapot()), 0.14, 0.11); pot.position.set(SEATS[2] - 0.02, TBL.h + 0.008, TBL.z + 0.02); group.add(pot);
     const chair = paperFlat(texture(armchair()), 0.32, 0.38); chair.position.set(TBL.x0 - 0.14, 0, TBL.z + 0.08); chair.rotation.y = 0.9; group.add(chair);
     const watch = paperFlat(texture(dayWatch()), 0.04, 0.045, { anchor: 'center' }); group.add(watch);
-    const dor = paperFlat(texture(dormouse('sleep')), 0.12, 0.098); const dorTalk = paperFlat(texture(dormouse('talk')), 0.1, 0.082); group.add(dor, dorTalk);
+    const dA = ai['ch7/dormouse_sleep'], dB = ai['ch7/dormouse_talk']; const dor = paperFlat(dA.tex, 0.11, 0.11 / dA.aspect); const dorTalk = paperFlat(dB.tex, 0.11, 0.11 / dB.aspect); // AI (tools/ch7_art.py) group.add(dor, dorTalk);
     const tree = paperFlat(texture(treeDoor()), 0.5, 1.12); tree.position.set(-3.6, 0, 0.2); group.add(tree);
     const think = thoughts(group, [
       { t0: T.raven - 0.5, t1: T.raven + 12, art: ravenVignette() },

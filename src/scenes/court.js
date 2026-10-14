@@ -8,7 +8,6 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER, canvas, INK } from '../ink.js';
 import { card, OFFICERS } from '../props8.js';
-import { dormouse } from '../props7.js';
 import { trumpet, scroll, canvasBag, shoe, refreshmentsVignette, slatesVignette } from '../props11.js';
 import { FOOT } from '../sets/croquet.js';
 import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, TARTS, JURY, WITNESS, DOOR, FRONT, BILL } from '../sets/court.js';
@@ -34,7 +33,7 @@ export const trial = {
     { title: 'The cook', t: cue.at('witness', 5) - 1 },
     { title: '"Alice!"', t: cue.at('list', 3) - 3 },
   ],
-  build({ group, cue }) {
+  build({ group, ai, cue }) {
     const at = cue.at;
     const T = {
       tarts: at('tarts', 1), judge: at('judge', 1), juryBox: at('jury-box'), slates: at('slates', 1), stupid: at('stupid', 1), silence: at('silence'), specs: at('spectacles', 1),
@@ -59,7 +58,7 @@ export const trial = {
     const shoeTex = texture(shoe());
     const shoes = [0, 1].map(() => { const s = paperFlat(shoeTex, 0.04, 0.02); group.add(s); return s; });
     const bags = [0, 1].map(() => { const b = paperFlat(texture(canvasBag()), 0.09, 0.076); group.add(b); return b; });
-    const dorSleep = paperFlat(texture(dormouse('sleep')), 0.06, 0.049), dorTalk = paperFlat(texture(dormouse('talk')), 0.05, 0.041);
+    const dorSleep = paperFlat(ai['ch7/dormouse_sleep'].tex, 0.055, 0.055 / ai['ch7/dormouse_sleep'].aspect), dorTalk = paperFlat(ai['ch7/dormouse_talk'].tex, 0.055, 0.055 / ai['ch7/dormouse_talk'].aspect); // AI
     group.add(trump, scrollRolled, scrollOpen, pencil, dorSleep, dorTalk);
     // Extras: the two soldiers guarding the Knave, and the two officers who suppress the guinea-pigs.
     const guards = extras(group, [soldier(5), soldier(6), ...OFFICERS.map(officer)]);

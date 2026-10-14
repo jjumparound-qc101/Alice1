@@ -13,7 +13,7 @@ import { texture, PAPER } from '../ink.js';
 import { card, cardBack, SOLDIERS, COURTIERS, CHILDREN, GUESTS, OFFICERS, hedgehog } from '../props8.js';
 import { mouseWalk } from '../props3.js';
 import { lizard, guineaPig } from '../props4.js';
-import { hatter, marchHare, teapot } from '../props7.js';
+import { teapot } from '../props7.js';
 import { verses, noteBook, inkstand, deadLeaf, goldfishVignette, countryVignette, grownAliceVignette } from '../props12.js';
 import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, JURY, BILL } from '../sets/court.js';
 import { drawnPose, extras } from '../crowd.js';
@@ -205,7 +205,7 @@ export const waking = {
     const reality = (k) => lerp(T.bells, T.cattle, k);
     const ghosts = [
       ghost(mouseWalk(), 0.3, -2.3, -2.2, T.mouse, reality(0.9)),
-      ghost(hatter('stare'), 0.9, -0.9, -2.9, T.teacups, T.bells), ghost(marchHare('sit'), 0.85, -0.3, -3.0, T.teacups, T.bells), ghost(teapot(), 0.35, -0.6, -2.6, T.teacups, T.bells),
+      ghost(ai['ch7/hatter_sit_stare'], 0.9, -0.9, -2.9, T.teacups, T.bells), ghost(ai['ch7/marchhare_sit'], 0.85, -0.3, -3.0, T.teacups, T.bells), ghost(teapot(), 0.35, -0.6, -2.6, T.teacups, T.bells),
       ghost(card({ suit: 'hearts', rank: 'queen' }, 'point'), 1.1, 0.5, -2.6, T.queen, reality(0.3)),
       ghost(ai['ch6/duchess_nurse'], 1.1, -4.3, -2.5, T.pig, reality(0.55)), ghost(ai['ch6/baby_snout'], 0.35, -3.9, -2.3, T.pig, reality(0.55)),
       ghost(ai['ch9/gryphon_walk'], 0.75, -1.6, -3.3, T.gryphon, reality(0.6)),

@@ -11,9 +11,7 @@ import { CHAPTERS } from './chapters.js';
 import { texture } from './ink.js';
 import { lizard, guineaPig, puppy } from './props4.js';
 import { pigeon } from './props5.js';
-import { hatter, marchHare } from './props7.js';
 import { card } from './props8.js';
-import { hatterStand } from './props11.js';
 import { mouseUp, mouseWalk, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
 
 const $ = (id) => document.getElementById(id);
@@ -66,7 +64,7 @@ async function main() {
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',
-    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_paw', 'vignettes/axis', 'vignettes/pigs', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back', 'kitchen_side', 'little_house', 'march_hare_house', ...['irons', 'saucepan', 'saucepan2', 'pan', 'plate', 'plate2', 'plate3', 'dish'].map((n) => `thrown_${n}`)].map((n) => `ch6/${n}`),
+    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_paw', ...['hatter_sit_stare', 'hatter_sit_riddle', 'hatter_sit_watch', 'hatter_cup', 'hatter_pale', 'hatter_bite', 'hatter_tremble', 'hatter_knee', 'hatter_run', 'marchhare_sit', 'marchhare_dip', 'dormouse_sleep', 'dormouse_talk'].map((n) => `ch7/${n}`), 'vignettes/axis', 'vignettes/pigs', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back', 'kitchen_side', 'little_house', 'march_hare_house', ...['irons', 'saucepan', 'saucepan2', 'pan', 'plate', 'plate2', 'plate3', 'dish'].map((n) => `thrown_${n}`)].map((n) => `ch6/${n}`),
     ...['duchess_nurse', 'duchess_toss', 'duchess_fling', 'duchess9_arm', 'duchess9_tremble', 'duchess9_run'].map((n) => `ch6/${n}`),
     ...['sit', 'sob', 'count', 'hide', 'dance', 'sing', 'yawn'].map((n) => `ch9/mockturtle_${n}`),
     ...['sit', 'asleep', 'walk', 'paws', 'hide', 'dance', 'bound'].map((n) => `ch9/gryphon_${n}`), 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', 'vignettes/histories', 'vignettes/poker', 'vignettes/knife', 'vignettes/poison', 'vignettes/candle', 'vignettes/telescope', 'vignettes/croquet', // tools/walls.py // tools/ch1_art.py
@@ -218,10 +216,12 @@ async function main() {
     cook: new Puppet({ stir: art('ch6/cook_stir', 0.3), throw: art('ch6/cook_throw', 0.3 * 1390 / 1451, false) }, 0.3),
     pig: new Puppet({ trot: art('ch6/pig_trot', 0.08, false) }, 0.08),
     // Chapter VII placeholders (seated, waist up).
-    hatter: new Puppet({ stare: drawn(hatter('stare'), 0.42), riddle: drawn(hatter('riddle'), 0.42), watch: drawn(hatter('watch'), 0.42),
-      // Chapter XI: standing as a witness (props11.js).
-      ...Object.fromEntries(['cup', 'pale', 'bite', 'tremble', 'knee', 'run'].map((p) => [p, drawn(hatterStand(p), 0.36)])) }, 0.42),
-    hare: new Puppet({ sit: drawn(marchHare('sit'), 0.4), dip: drawn(marchHare('dip'), 0.4) }, 0.4),
+    // The Hatter and the March Hare (AI drawings, tools/ch7_art.py): sitting at the tea-table (VII),
+    // standing as a witness (XI); standing poses scaled by their heights in source pixels.
+    hatter: new Puppet({ stare: art('ch7/hatter_sit_stare', 0.42), riddle: art('ch7/hatter_sit_riddle', 0.42), watch: art('ch7/hatter_sit_watch', 0.42),
+      ...Object.fromEntries([['cup', 1481], ['pale', 1482], ['bite', 1477], ['tremble', 1481], ['knee', 1251], ['run', 1394, false]]
+        .map(([p, px, left = true]) => [p, art(`ch7/hatter_${p}`, 0.36 * px / 1481, left)])) }, 0.42),
+    hare: new Puppet({ sit: art('ch7/marchhare_sit', 0.4, false), dip: art('ch7/marchhare_dip', 0.4, false) }, 0.4),
     // Chapter VIII placeholders: the cards (props8.js), coloured like real cards (owner, 2026-10-11).
     ...Object.fromEntries([['two', 2], ['five', 5], ['seven', 7]].map(([name, rank]) => [name, new Puppet(Object.fromEntries(
       ['stand', 'paint', 'bow', 'kneel', 'run'].map((p) => [p, drawn(card({ suit: 'spades', rank }, p), 0.28)])), 0.28)])),
