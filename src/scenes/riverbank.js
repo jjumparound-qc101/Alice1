@@ -55,7 +55,7 @@ export const riverbank = {
     }
 
     const camera = cameraTrack([
-      { t: 0, dur: 0, pos: [0, 2.1, 9.2], look: [0, 1.4, -3] },
+      { t: 0, dur: 0, pos: [0, 2.0, 17.5], look: [0, 1.6, -3] },                     // the whole toy-theatre front, title and all
       { t: T.alice, dur: 6, pos: [-1.5, 1.15, 0.3], look: [-2.75, 0.45, -2.35] },
       { t: T.book - 1, dur: 3, pos: [-3.0, 1.05, 0.15], look: [-3.0, 0.5, -2.6] },   // her sister in the middle, Alice beside her, both whole
       { t: T.so, dur: 8, pos: [-1.7, 1.3, 1.4], look: [-2.6, 0.5, -2.35] },

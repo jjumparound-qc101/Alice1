@@ -109,6 +109,26 @@ export function buildStage(scene, ai = {}) {
     x: px((PW - open.w) / 2), y: py(PH - open.cy - open.h / 2), w: px(open.w), h: py(open.h),
   })), PW, PH);
   pros.position.set(0, 0, 2.2);
+  // The AI toy-theatre front (tools/proscenium.py) in place of the drawn one: scaled so its stage
+  // opening (x 254-1281, y 318-840 of 1536x1024) matches the old opening, its foot below ground.
+  if (ai.proscenium) {
+    const k = open.w / (1281 - 254); // metres per pixel
+    const W = 1536 * k, H = 1024 * k;
+    pros.visible = false;
+    const front = paperFlat(ai.proscenium.tex, W, H, { edge: false });
+    const y0 = (open.cy - open.h / 2) - (1024 - 840) * k;
+    front.position.set(0, y0, 2.2);
+    scene.add(front);
+    // A plain paper surround, so the opening shot shows the theatre on the page, not in the landscape.
+    const outer = new THREE.Shape([new THREE.Vector2(-40, -20), new THREE.Vector2(40, -20), new THREE.Vector2(40, 30), new THREE.Vector2(-40, 30)]);
+    outer.holes.push(new THREE.Path([new THREE.Vector2(-W / 2 + 0.05, y0 + 0.05), new THREE.Vector2(-W / 2 + 0.05, y0 + H - 0.05), new THREE.Vector2(W / 2 - 0.05, y0 + H - 0.05), new THREE.Vector2(W / 2 - 0.05, y0 + 0.05)]));
+    const surround = new THREE.Mesh(new THREE.ShapeGeometry(outer), new THREE.MeshBasicMaterial({ color: '#efe9da', fog: false, depthTest: false, transparent: true }));
+    // Drawn over everything (the ground beside the stage reaches out in front of it), but only
+    // from the audience's side: from the stage its back face is culled, so it never shows there.
+    surround.renderOrder = 50; // (transparent, so it is drawn after the paper flats)
+    surround.position.z = 2.25;
+    scene.add(surround);
+  }
   scene.add(pros);
   // Beside the proscenium, out of the Watch shots: more ground and the side scenery, for the
   // wider Explore look arc (owner, 2026-10-11).
