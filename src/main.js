@@ -11,7 +11,6 @@ import { CHAPTERS } from './chapters.js';
 import { texture } from './ink.js';
 import { lizard, guineaPig, puppy } from './props4.js';
 import { pigeon } from './props5.js';
-import { footman, cook, pig } from './props6.js';
 import { hatter, marchHare } from './props7.js';
 import { card } from './props8.js';
 import { gryphon } from './props9.js';
@@ -68,7 +67,8 @@ async function main() {
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',
-    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_hearth', ...['duchess_nurse', 'duchess_toss', 'duchess_fling', 'duchess9_arm', 'duchess9_tremble', 'duchess9_run'].map((n) => `ch6/${n}`),
+    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back'].map((n) => `ch6/${n}`),
+    ...['duchess_nurse', 'duchess_toss', 'duchess_fling', 'duchess9_arm', 'duchess9_tremble', 'duchess9_run'].map((n) => `ch6/${n}`),
     ...['sit', 'sob', 'count', 'hide', 'dance', 'sing', 'yawn'].map((n) => `ch9/mockturtle_${n}`), 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', 'vignettes/histories', 'vignettes/poker', 'vignettes/knife', 'vignettes/poison', // tools/walls.py // tools/ch1_art.py
     // Chapter II (tools/ch2_art.py): the Rabbit, the Mouse, the birds, props, the pool and the thoughts.
     ...['rabbit2_trot', 'rabbit2_start', 'rabbit2_away', 'mouse_swim', 'mouse_leap', 'mouse_bristle', 'mouse_away',
@@ -207,15 +207,16 @@ async function main() {
     caterpillar: new Puppet({ sit: art('ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 0.1) }, 0.1),
     pigeon: new Puppet({ fly: drawn(pigeon('fly'), 0.22), perch: drawn(pigeon('perch'), 0.2) }, 0.2),
     // Chapter VI placeholders.
-    fish: new Puppet({ stand: drawn(footman('fish'), 0.3) }, 0.3),
-    frog: new Puppet({ stand: drawn(footman('frog'), 0.3), sit: drawn(footman('frog', 'sit'), 0.3) }, 0.3),
+    // Chapter VI's people: AI drawings, scaled alike by their heights in source pixels (tools/ch6_art.py prints them).
+    fish: new Puppet({ stand: art('ch6/fish_footman', 0.3) }, 0.3),
+    frog: new Puppet({ stand: art('ch6/frog_footman', 0.3 * 1439 / 1490, false), sit: art('ch6/frog_footman_sit', 0.3 * 1167 / 1490, false) }, 0.3),
     // The Duchess and the Mock Turtle: AI drawings all at one scale per character (tools/ch9_art.py prints
     // each drawing's height in source pixels, `px`, and the Turtle's `drop`, his tail below his hooves).
     duchess: new Puppet(Object.fromEntries([['sit', 'duchess_nurse', 1467], ['toss', 'duchess_toss', 1472], ['fling', 'duchess_fling', 1376],
       ['stand', 'duchess9_arm', 1494], ['tremble', 'duchess9_tremble', 1495], ['run', 'duchess9_run', 1408, false]]
       .map(([pose, name, px, left = true]) => [pose, art(`ch6/${name}`, px * 0.34 / 1467, left)])), 0.34),
-    cook: new Puppet({ stir: drawn(cook('stir'), 0.3), throw: drawn(cook('throw'), 0.3) }, 0.3),
-    pig: new Puppet({ trot: drawn(pig(), 0.07) }, 0.07),
+    cook: new Puppet({ stir: art('ch6/cook_stir', 0.3), throw: art('ch6/cook_throw', 0.3 * 1390 / 1451, false) }, 0.3),
+    pig: new Puppet({ trot: art('ch6/pig_trot', 0.08, false) }, 0.08),
     // Chapter VII placeholders (seated, waist up).
     hatter: new Puppet({ stare: drawn(hatter('stare'), 0.42), riddle: drawn(hatter('riddle'), 0.42), watch: drawn(hatter('watch'), 0.42),
       // Chapter XI: standing as a witness (props11.js).

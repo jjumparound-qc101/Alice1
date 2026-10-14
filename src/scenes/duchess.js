@@ -10,7 +10,7 @@ import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { flagstones } from '../props.js';
 import { littleHouse } from '../props5.js';
-import { greatLetter, baby, kitchenWall, thrown, marchHareHouse, axisVignette, pigsVignette } from '../props6.js';
+import { kitchenWall, thrown, marchHareHouse, axisVignette, pigsVignette } from '../props6.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
@@ -32,20 +32,22 @@ export const doorstep = {
     outdoors(group, ai, { groundRepeat: 40 });
     trees(group, ai, [[-1.6, -0.4, 3.2, 1], [1.4, -1.6, 3.4, -1], [-2.4, -2.6, 3.6, 1], [2.6, -0.2, 3.2, -1]]);
     const house = paperFlat(texture(littleHouse()), 1.15, 1.22); house.position.set(0, 0, -0.6); group.add(house);
-    const letter = paperFlat(texture(greatLetter()), 0.16, 0.104, { anchor: 'center' }); group.add(letter);
     const plate = paperFlat(texture((() => { const c = document.createElement('canvas'); c.width = 200; c.height = 120; const g = c.getContext('2d'); g.fillStyle = PAPER; g.strokeStyle = '#17140f'; g.lineWidth = 6; g.beginPath(); g.ellipse(100, 60, 90, 50, 0, 0, Math.PI * 2); g.fill(); g.stroke(); return c; })()), 0.08, 0.05, { anchor: 'center' });
     group.add(plate);
     const DOOR = { x: 0, z: -0.5 };
+    // "they both bowed low, and their curls got entangled together": one drawing of the two
+    // (mirrored, so the Fish-Footman is on the left, as here) stands in for both puppets.
+    const bowArt = ai['ch6/footmen_bow'], bowCard = paperFlat(bowArt.tex, 0.25 * bowArt.aspect, 0.25);
+    bowCard.scale.x = -1; bowCard.position.set(DOOR.x - 0.04, 0, DOOR.z + 0.1); group.add(bowCard);
+    const bowing = (t) => t >= T.bowed && t < T.laughed;
     const fish = (t) => {
       const s = route(t, [[0, { x: -2.2, z: 0.4, dir: 1 }], [T.rapped - 0.5, { x: DOOR.x - 0.16, z: DOOR.z + 0.1 }], [T.peeped - 3, { x: DOOR.x - 0.16, z: DOOR.z + 0.1 }], [T.peeped, { x: 1.6, z: 0.6, dir: 1 }]], { pose: 'stand', phase: t * 3 });
-      const bow = t >= T.bowed && t < T.laughed ? smooth((t - T.bowed) / 0.8) * 0.5 : 0;
-      return { ...s, dir: s.moving ? s.dir : 1, tilt: -bow, visible: t < T.peeped };
+      return { ...s, dir: s.moving ? s.dir : 1, visible: t < T.peeped && !bowing(t) };
     };
     const frog = (t) => {
       if (t < T.opened - 0.5) return { visible: false };
       const sitting = t >= T.peeped - 2;
-      const bow = t >= T.bowed && t < T.laughed ? smooth((t - T.bowed) / 0.8) * 0.5 : 0;
-      return { pose: sitting ? 'sit' : 'stand', x: sitting ? DOOR.x + 0.22 : DOOR.x + 0.08, z: DOOR.z + (sitting ? 0.18 : 0.1), dir: -1, tilt: bow };
+      return { pose: sitting ? 'sit' : 'stand', x: sitting ? DOOR.x + 0.22 : DOOR.x + 0.08, z: DOOR.z + (sitting ? 0.18 : 0.1), dir: -1, visible: !bowing(t) };
     };
     const alice = (t) => {
       const s = route(t, [
@@ -57,9 +59,8 @@ export const doorstep = {
       return { ...s, pose: 'stand', scale: NINE, tilt: laughing, visible: t < T.kitchen - 2 };
     };
     function update(t, cast) {
-      // The great letter: under the Fish-Footman's arm, handed over, then into the house.
-      letter.visible = t < T.peeped - 1;
-      if (t < T.handed) carry(letter, cast.fish); else carry(letter, cast.frog);
+      // The great letter is in the Fish-Footman's drawing (AI); the Footmen bow as one drawing.
+      bowCard.visible = bowing(t);
       // "a large plate came skimming out, straight at the Footman's head … broke to pieces against one of the trees"
       const k = (t - T.plate) / 1.3;
       plate.visible = k > 0 && k < 1;
@@ -96,13 +97,14 @@ export const kitchen = {
       verse2: at('wow', 3) + 1, nurse: at('nurse'), fling: at('flinging'), pan: at('frying-pan'), air: at('air', 2) };
     // The room: the back wall with the fireplace, plain side walls, flagstones, a low ceiling; smoke is the fog.
     const plain = (map, side = THREE.FrontSide) => new THREE.MeshBasicMaterial({ map, side });
-    const back = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.h), plain(texture(kitchenWall()))); back.position.set(0, K.h / 2, K.z0); group.add(back);
+    const back = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.h), plain(ai['ch6/kitchen_back'].tex)); back.position.set(0, K.h / 2, K.z0); group.add(back); // AI drawing
     for (const s of [-1, 1]) { const side = new THREE.Mesh(new THREE.PlaneGeometry(K.z1 - K.z0, K.h), plain(texture(kitchenWall()))); side.rotation.y = -s * Math.PI / 2; side.position.set(s * K.w / 2, K.h / 2, 0); group.add(side); }
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.z1 - K.z0), plain(texture(flagstones(), { repeat: [4, 3] }))); floor.rotation.x = -Math.PI / 2; group.add(floor);
     // The Cat on the hearth: AI drawing (gpt-image-2.5-sunburst, from cheshire_bough), on his patch of hearthstone.
     const catArt = ai['ch6/cheshire_hearth'], catOnHearth = paperFlat(catArt.tex, 0.13, 0.13 / catArt.aspect); catOnHearth.position.set(0.42, 0, K.z0 + 0.12); group.add(catOnHearth);
-    const babyArt = [0, 1, 2].map((s) => texture(baby(s)));
-    const babyCard = paperFlat(babyArt[0], 0.1, 0.083, { anchor: 'center' }); group.add(babyCard);
+    // The baby (AI drawings): howling like a star-fish; then with a snout (also while it is a pig in its clothes).
+    const babyArt = ['baby_starfish', 'baby_snout', 'baby_snout'].map((n) => ai[`ch6/${n}`].tex);
+    const babyCard = paperFlat(babyArt[0], 0.12, 0.12 / ai['ch6/baby_starfish'].aspect, { anchor: 'center' }); group.add(babyCard);
     const kinds = ['irons', 'saucepan', 'plate', 'plate', 'saucepan', 'plate', 'pan'];
     const missiles = kinds.map((k) => { const m = paperFlat(texture(thrown(k)), 0.07, 0.042, { anchor: 'center' }); group.add(m); return m; });
     const think = thoughts(group, [{ t0: at('axis') - 1, t1: T.axes, art: axisVignette() }]);
@@ -182,8 +184,9 @@ export const wood6 = {
     trees(group, ai, [[-1.2, -1.0, 3.4, 1], [1.4, -1.4, 3.2, -1], [-4.1, -2.0, 3.6, 1], [0.2, -3.2, 3.6, -1], [-2.4, -3.6, 3.4, 1]]);
     const hare = paperFlat(texture(marchHareHouse()), 1.6, 1.4); hare.position.set(-5.2, 0, -4.2); group.add(hare);
     // The baby, carried; it changes as it grunts.
-    const babyArt = [0, 1, 2].map((s) => texture(baby(s)));
-    const babyCard = paperFlat(babyArt[0], 0.1, 0.083, { anchor: 'center' }); group.add(babyCard);
+    // The baby (AI drawings): howling like a star-fish; then with a snout (also while it is a pig in its clothes).
+    const babyArt = ['baby_starfish', 'baby_snout', 'baby_snout'].map((n) => ai[`ch6/${n}`].tex);
+    const babyCard = paperFlat(babyArt[0], 0.12, 0.12 / ai['ch6/baby_starfish'].aspect, { anchor: 'center' }); group.add(babyCard);
     // Two boughs with the Cat: the first, and the "branch of a tree" where it appears again.
     // AI drawings (tools/ch6_art.py), all on one canvas so they line up: the bough alone; the
     // Cat on the bough; and the grin alone. The empty bough stays when the Cat vanishes.
@@ -238,10 +241,11 @@ export const wood6 = {
     const B0 = boughs[0], B1 = boughs[1];
     // Where the grin is drawn on the second bough's card (about a third across, half-way down).
     const GRIN1 = { x: B1.x + (0.33 - 0.5) * CW, y: B1.y - BOUGH_DROP + CH * 0.52 };
+    const aS = aliceA(T.snout);
     const camera = cameraTrack([
       { t: start, dur: 0, pos: [1.8, 0.25, 1.0], look: [1.0, 0.15, 0.0] },                         // out into the open air
       { t: start + 4, dur: 20, pos: [0.4, 0.2, 0.9], look: [-0.2, 0.15, 0.0] },
-      { t: T.snout - 2, dur: 2, pos: [-0.05, 0.17, 0.55], look: [-0.3, 0.15, 0.1] },               // a very turn-up nose
+      { t: T.snout - 2, dur: 2, pos: [aS.x + 0.2, 0.17, aS.z + 0.45], look: [aS.x, 0.14, aS.z] },   // a very turn-up nose (on Alice, wherever she is by then)
       { t: T.trot - 2, dur: 3, pos: [0.0, 0.25, 0.9], look: [0.0, 0.05, -0.5] },                   // the pig trots away
       { t: T.bough - 1, dur: 3, pos: [-0.5, 0.18, 0.55], look: [-1.1, 0.3, -0.35] },               // the Cheshire Cat on a bough
       { t: T.bough + 30, dur: 6, pos: [-0.75, 0.25, 0.35], look: [B0.x, B0.y + 0.05, B0.z] },
