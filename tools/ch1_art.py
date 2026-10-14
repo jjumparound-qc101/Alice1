@@ -79,7 +79,7 @@ def main():
     # Thought vignettes (the same oval card treatment as Chapter II's).
     sys.path.insert(0, "tools")
     import ch2_art
-    for n in ("dinah", "bats", "stairs", "histories", "knife", "poison"):
+    for n in ("dinah", "bats", "stairs", "histories", "knife", "poison", "candle", "telescope", "croquet"):
         ch2_art.vignette(f"vignette_{n}", n)
     ch2_art.vignette("vignette_poker", "poker", paint=red_hot)
     # The globe drawing has its caption printed under the oval: crop it off first.

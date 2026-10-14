@@ -5,7 +5,6 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { buildHall, TABLE, DOOR, KEY } from '../sets/hall.js';
-import { candleVignette } from '../props.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, step, cameraTrack } from '../track.js';
@@ -25,7 +24,7 @@ export const hall = {
       knelt: at('knelt'), waiting: cue.para('There seemed to be no use'), backToTable: at('table', 2),
       bottle: at('bottle', 1), histories: at('histories'), poker: at('poker'), finger: at('finger'), bleeds: at('bleeds'),
       poison: at('poison', 2), notMarked: at('poison', 3), candle: at('candle', 1), blownOut: at('candle', 3), ventured: at('ventured'),
-      drunk: at('finished', 1), telescope: at('telescope', 1, at('ventured')), decided: at('decided'), forgotten: at('forgotten', 2),
+      drunk: at('finished', 1), telescope: at('telescope', 1, at('ventured')), ears: at('ears', 2), croquet: at('croquet'), decided: at('decided'), forgotten: at('forgotten', 2),
       legs: at('legs'), sat: at('sat'), scold: cue.para('“Come, there’s no use'), box: at('box', 2), // #1 is "box her own ears"
       label: at('label'), currants: at('currants'),
       ate: cue.para('She ate a little bit'), finished: at('finished', 2),
@@ -59,7 +58,9 @@ export const hall = {
       { t0: T.poker - 2, t1: T.finger - 0.3, art: ai['vignettes/poker'].tex },
       { t0: T.finger - 0.3, t1: T.poison - 1.2, art: ai['vignettes/knife'].tex },
       { t0: T.poison - 1.2, t1: T.notMarked - 0.5, art: ai['vignettes/poison'].tex },
-      { t0: T.candle - 1.5, t1: T.blownOut + 2, art: candleVignette() },
+      { t0: T.telescope - 2.5, t1: T.telescope + 3, art: ai['vignettes/telescope'].tex },   // "shutting up like a telescope"
+      { t0: T.candle - 1.5, t1: T.blownOut + 2, art: ai['vignettes/candle'].tex },
+      { t0: T.ears - 1, t1: T.croquet + 4, art: ai['vignettes/croquet'].tex },             // boxing her own ears
     ]);
 
     // --- Alice -----------------------------------------------------------------
