@@ -1,5 +1,5 @@
 """Process the AI drawings of the smaller creatures (the Pigeon in V; the Crab and her daughter, the
-Owl, the Magpie and the Canary in III, who also sit on the jury in XI).
+Owl, the Magpie and the Canary in III, who also sit on the jury in XI; the flamingoes and hedgehogs in VIII).
 
 Each figure is cut out from white and saved under public/art/ai/<chapter>/; its height in source
 pixels and its aspect are printed, so poses of one creature are scaled alike in main.js.
@@ -16,10 +16,13 @@ from PIL import Image
 
 NAMES = {
     "pigeon_attack": "ch5", "pigeon_scream": "ch5", "pigeon_nest": "ch5",
+    "flamingo_stand": "ch8", "flamingo_mallet": "ch8", "flamingo_twist": "ch8", "flamingo_fly": "ch8",
+    "hedgehog_crawl": "ch8", "hedgehog_ball": "ch8", "hedgehog_fight": "ch8",
     "crabs3": "ch3", "owl3": "ch3", "magpie3": "ch3", "magpie3_shawl": "ch3", "canary3": "ch3", "canary3_chicks": "ch3",
 }
 CLEAR = {"pigeon_scream": "436,929;584,992;611,1135", "magpie3": "270,1030;400,1050;380,980", "magpie3_shawl": "350,1040;490,1000",
-         "canary3": "486,1101;546,1011", "canary3_chicks": "589,1096;608,1013"}  # name: "x,y;x,y" source points inside closed gaps that are background
+         "canary3": "486,1101;546,1011", "canary3_chicks": "589,1096;608,1013",
+         "hedgehog_fight": "540,720;560,735;575,760"}  # name: "x,y;x,y" source points inside closed gaps that are background
 
 
 def main():

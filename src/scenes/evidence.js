@@ -11,7 +11,7 @@ import * as THREE from 'three';
 import { crowdCard } from '../cards.js';
 import { paperFlat, buildStage } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
-import { card, cardBack, SOLDIERS, COURTIERS, CHILDREN, GUESTS, OFFICERS, hedgehog } from '../props8.js';
+import { card, cardBack, SOLDIERS, COURTIERS, CHILDREN, GUESTS, OFFICERS } from '../props8.js';
 import { mouseWalk } from '../props3.js';
 import { teapot } from '../props7.js';
 import { verses, noteBook, inkstand, deadLeaf, goldfishVignette, countryVignette, grownAliceVignette } from '../props12.js';
@@ -214,7 +214,7 @@ export const waking = {
       ghost(ai['ch4/bill_stand'], 0.5, -1.9, -2.1, T.gryphon + 1.5, reality(0.7)),
       ghost(ai['ch4/guinea_stand'], 0.42, 1.1, -2.3, T.gryphon + 3.5, reality(0.75)), ghost(ai['ch4/guinea_bottle'], 0.42, 1.45, -2.4, T.gryphon + 3.8, reality(0.75)),
       ghost(ai['ch9/mockturtle_sob'], 1.2, 1.6, -3.2, T.turtle, T.cattle + 2),
-      ghost(hedgehog('ball'), 0.16, 0.1, -2.1, T.queen + 1, reality(0.3)),
+      ghost(ai['ch8/hedgehog_ball'], 0.16, 0.1, -2.1, T.queen + 1, reality(0.3)),
     ];
     const LAP = { x: SISTER.x + 0.38, z: SISTER.z + 0.18 };
     const aliceA = (t) => {

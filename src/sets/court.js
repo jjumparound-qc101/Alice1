@@ -7,7 +7,6 @@ import { paperFlat } from '../stage.js';
 import { texture, canvas, hatch, INK, PAPER } from '../ink.js';
 import { flagstones } from '../props.js';
 import { mouseUp } from '../props3.js';
-import { hedgehog } from '../props8.js';
 import { courtWall, throne, juryBox, tartsTable, witnessBox, crowdGallery, slate } from '../props11.js';
 
 export const COURT = { w: 5.4, d: 4.4, h: 1.8, back: -2.2 };
@@ -22,9 +21,9 @@ export const DOOR = { x: 2.6, z: -0.4 };
 export const FRONT = { x: 0.95, z: 0.4 };                                  // Alice and the Gryphon, at the front of the crowd
 
 // The twelve jurors, left to right, back row then front row; Bill the Lizard is the fourth.
-// AI drawings where the creature has one (2026-10-14); the Mouse standing and the hedgehog are still drawn in code.
+// AI drawings where the creature has one (2026-10-14); the Mouse standing is still drawn in code.
 const JURORS = ['ch2/dodo_stand', 'ch2/duck_stand', 'ch2/lory_stand', 'ch4/bill_stand', 'ch2/eaglet_stand', 'ch3/owl3', 'ch3/magpie3', 'ch3/canary3', mouseUp,
-  'ch3/crab', () => hedgehog('crawl'), 'ch4/guinea_stand'];
+  'ch3/crab', 'ch8/hedgehog_crawl', 'ch4/guinea_stand'];
 export const BILL = 3;
 
 // The ceiling: plain boards between beams, lightly hatched.

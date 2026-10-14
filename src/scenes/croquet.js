@@ -10,7 +10,7 @@ import * as THREE from 'three';
 import { crowdCard } from '../cards.js';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
-import { card, cardBack, cardArch, flamingo, hedgehog, catHead, CAT_HEAD_PX, SOLDIERS, COURTIERS, CHILDREN, GUESTS, tulipVignette } from '../props8.js';
+import { card, cardBack, cardArch, catHead, CAT_HEAD_PX, SOLDIERS, COURTIERS, CHILDREN, GUESTS, tulipVignette } from '../props8.js';
 import { buildCroquet, FOOT, ROSE, POT, CROQ, FTREE } from '../sets/croquet.js';
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
@@ -248,10 +248,17 @@ export const croquetGame = {
     const ARCHES = [[1.3, -0.6], [2.4, -1.2], [3.1, -0.3], [4.0, -1.1], [4.6, 0.1], [3.0, -1.6]];
     const arches = ARCHES.map(([x, z]) => { const a = paperFlat(archTex, 0.2, 0.2 / ai['ch8/card_arch'].aspect); a.position.set(x, 0, z); group.add(a); return { a, x, z }; });
     // Alice's flamingo and hedgehogs.
-    const flam = Object.fromEntries(['held', 'twist', 'fly'].map((p) => [p, paperFlat(texture(flamingo(p)), 0.16, 0.133, { anchor: 'center' })]));
+    // AI drawings (tools/creatures_art.py, 2026-10-14), the flamingo after Tenniel's plate 8.3: held as a mallet
+    // (body under her arm, neck hanging straight down), its neck twisted round to look up at her, flapping up at
+    // the tree. FH: the held drawing's height, about from her elbow to the ground.
+    const FH = 0.55 * 1.25 * FOOT;
+    const flamArt = (n, h) => paperFlat(ai[`ch8/${n}`].tex, h * ai[`ch8/${n}`].aspect, h, { anchor: 'center' });
+    const flam = { held: flamArt('flamingo_mallet', FH), twist: flamArt('flamingo_twist', FH), fly: flamArt('flamingo_fly', 0.36) };
     Object.values(flam).forEach((f) => group.add(f));
-    const hog = { ball: paperFlat(texture(hedgehog('ball')), 0.05, 0.0375), crawl: paperFlat(texture(hedgehog('crawl')), 0.06, 0.045) };
-    const hog2 = paperFlat(texture(hedgehog('crawl')), 0.06, 0.045);
+    // The hedgehogs (after the same plate): rolled up as a ball; unrolled and crawling away; two fighting.
+    const hogArt = (n, h) => paperFlat(ai[`ch8/${n}`].tex, h * ai[`ch8/${n}`].aspect, h);
+    const hog = { ball: hogArt('hedgehog_ball', 0.045), crawl: hogArt('hedgehog_crawl', 0.045) };
+    const hog2 = hogArt('hedgehog_fight', 0.09);
     group.add(hog.ball, hog.crawl, hog2);
     // The Cat's head, appearing grin first, then the eyes, then the rest.
     const CAT = { x: 2.3, y: 0.44, z: 0.0 };
@@ -347,22 +354,18 @@ export const croquetGame = {
       const twist = t >= T.twist && t < T.laughing + 3;
       const flying = t >= T.search && t < T.caught;
       for (const f of Object.values(flam)) f.visible = false;
-      if (flying) { const f = flam.fly; f.visible = true; f.position.set(FLY.x + Math.sin(t * 1.5) * 0.06, FLY.y + Math.abs(Math.sin(t * 2)) * 0.12, FLY.z); f.rotation.set(0, 0, Math.sin(t * 6) * 0.1); f.scale.set(2.2, 2.2, 1); }
-      else if (held) { const f = twist ? flam.twist : flam.held; f.visible = true; flam.fly.scale.set(1, 1, 1); carry(f, cast.alice, { drop: 0.02 }); f.scale.x = cast.alice.poses[cast.alice.pose].scale.x; }
-      else if (t >= T.down && t < T.search) { const f = flam.held; f.visible = true; f.position.set(SPOT.x - 0.1, 0.03, SPOT.z + 0.05); f.rotation.set(0, 0, -1.3); f.scale.x = 1; }
+      if (flying) { const f = flam.fly; f.visible = true; f.position.set(FLY.x + Math.sin(t * 1.5) * 0.06, FLY.y + Math.abs(Math.sin(t * 2)) * 0.12, FLY.z); f.rotation.set(0, 0, Math.sin(t * 6) * 0.1); }
+      else if (held) { const f = twist ? flam.twist : flam.held; f.visible = true; carry(f, cast.alice, { drop: (FH * (twist ? 0.02 : 0.32)) / FOOT }); f.scale.x = cast.alice.poses[cast.alice.pose].scale.x; } // its body at her hand
+      else if (t >= T.down && t < T.search) { const f = flam.held; f.visible = true; f.position.set(SPOT.x - 0.1, FH * 0.2, SPOT.z + 0.05); f.rotation.set(0, 0, -1.4); f.scale.x = 1; } // put down, lying on its side
       // The hedgehogs: rolled up; unrolled and crawling away; two fighting.
       hog.ball.visible = t >= start && t < T.unrolled;
       hog.ball.position.set(HOG.x, 0, HOG.z);
       const crawl = smooth((t - T.unrolled) / 10);
       hog.crawl.visible = t >= T.unrolled && t < T.unrolled + 10;
       hog.crawl.position.set(lerp(HOG.x, HOG.x + 0.6, crawl), 0, lerp(HOG.z, HOG.z - 0.4, crawl));
-      const fighting = t >= T.fight - 1 && t < T.caught + 1;
-      hog.crawl.visible ||= fighting; hog2.visible = fighting;
-      if (fighting) {
-        const j = Math.sin(t * 18) * 0.01;
-        hog.crawl.position.set(FIGHT.x - 0.04 + j, 0, FIGHT.z); hog.crawl.scale.x = -1;
-        hog2.position.set(FIGHT.x + 0.04 - j, 0, FIGHT.z);
-      } else hog.crawl.scale.x = 1;
+      const fighting = t >= T.fight - 1 && t < T.caught + 1;   // one drawing of the two fighting
+      hog2.visible = fighting;
+      if (fighting) { hog2.position.set(FIGHT.x + Math.sin(t * 18) * 0.004, 0, FIGHT.z); hog.crawl.visible = false; }
       // The Cat's head: a grin, then eyes, then the whole head; fading away when the
       // executioner goes for the Duchess, gone by the time he is back.
       const fade = 1 - smooth((t - T.fading) / (T.duchess - T.fading));
