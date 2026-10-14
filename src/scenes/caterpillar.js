@@ -104,17 +104,21 @@ export const mushroomTalk = {
       const a = alice(t);
       think(t, { x: a.x + 0.12, y: 0.19, z: a.z - 0.02 }, 0.1);
     }
+    // (2026-10-14) Framed a little higher, so her feet are above the text strip, and both she and the
+    // Caterpillar are in the conversation shot.
+    const TALK = { pos: [0.25, 0.11, 0.48], look: [0.02, 0.1, 0] };
     const camera = cameraTrack([
-      { t: 0, dur: 0, pos: [0.28, 0.13, 0.42], look: [0.04, 0.12, 0] },                        // looking at each other in silence
-      { t: 8, dur: 4, pos: [0.16, 0.09, 0.3], look: [0.02, 0.15, 0] },                         // "Who are you?"
-      { t: T.gravely - 1, dur: 2, pos: [0.3, 0.1, 0.32], look: [0.08, 0.11, 0.05] },
-      { t: T.turned, dur: 3, pos: [0.45, 0.14, 0.5], look: [0.15, 0.1, 0.05] },                // turning away, and coming back
-      { t: T.back + 3, dur: 3, pos: [0.16, 0.09, 0.3], look: [0.02, 0.15, 0] },
-      { t: T.folded - 1, dur: 3, pos: [0.38, 0.12, 0.42], look: [0.18, 0.11, 0.05] },          // Father William, in Tenniel's plates
-      { t: T.notRight, dur: 3, pos: [0.16, 0.09, 0.3], look: [0.02, 0.15, 0] },
+      { t: 0, dur: 0, pos: [0.3, 0.13, 0.5], look: [0.04, 0.1, 0] },                           // looking at each other in silence
+      { t: 8, dur: 4, ...TALK },                                                               // "Who are you?"
+      { t: T.gravely - 1, dur: 2, pos: [0.34, 0.11, 0.42], look: [0.08, 0.1, 0.05] },
+      { t: T.turned, dur: 3, pos: [0.45, 0.14, 0.55], look: [0.15, 0.09, 0.05] },                // turning away, and coming back
+      { t: T.back + 3, dur: 3, ...TALK },
+      { t: T.folded - 1, dur: 3, pos: [0.38, 0.12, 0.42], look: [0.18, 0.09, 0.05] },          // Father William, in Tenniel's plates
+      { t: T.notRight, dur: 3, ...TALK },
       { t: T.rearing - 1, dur: 1.5, pos: [0.12, 0.13, 0.22], look: [0.01, 0.2, 0] },           // "a very good height indeed!"
+      { t: T.rearing + 5, dur: 3, ...TALK },
       { t: T.crawled - 1, dur: 4, pos: [0.3, 0.12, 0.45], look: [0.15, 0.06, -0.05] },
-      { t: T.broke - 2, dur: 3, pos: [0.14, 0.12, 0.28], look: [0.02, 0.1, 0.03] },            // a bit of the edge with each hand
+      { t: T.broke - 2, dur: 3, pos: [0.14, 0.12, 0.28], look: [0.02, 0.08, 0.03] },            // a bit of the edge with each hand
       { t: T.blow - 0.3, dur: 1, pos: [0.1, 0.05, 0.2], look: [0.04, 0.03, 0.05] },             // chin against her foot
     ]);
     return {
