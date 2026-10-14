@@ -50,7 +50,12 @@ export const riverbank = {
       else if (t < T.pop - 1.4) s = { ...NEAR_HEDGE, moving: false, dir: -1, idle: t }; // facing back toward Alice (no sudden turns)
       else if (t < T.pop - 0.2) s = path(t, T.pop - 1.4, T.pop - 0.2, NEAR_HEDGE, MOUTH);
       else s = hop(t, T.pop - 0.2, MOUTH, INSIDE, { dur: 0.5, peak: 0.25 }); // "pop down a large rabbit-hole"
-      return { phase: t * 2.6, ...s, pose: s.moving ? 'trot1' : 'watch1' }; // the Chapter I sheet
+      // The Chapter I model: running past and across the field; his watch; glancing back at Alice by the
+      // hedge; leaping head-first down the hole.
+      let pose = s.moving ? 'run' : 'watch1';
+      if (!s.moving && t >= T.hurried + 5 && t < T.pop - 1.4) pose = 'idleB';
+      if (t >= T.pop - 0.2) pose = 'hop';
+      return { phase: t * 2.6, ...s, pose };
     }
 
     function alice(t) {

@@ -21,6 +21,7 @@ NAMES = {
     "mouse3_lecture": "ch3", "mouse3_cross": "ch3", "mouse3_sigh": "ch3", "mouse3_angry": "ch3", "mouse3_away": "ch3",
     "dodo3_rise": "ch3", "dodo3_think": "ch3", "dodo3_point": "ch3", "dodo3_thimble": "ch3", "lory3_sulk": "ch3",
     "eaglet3_smile": "ch3", "duck3_ask": "ch3",
+    "cheshire_head": "ch8",
     "crabs3": "ch3", "owl3": "ch3", "magpie3": "ch3", "magpie3_shawl": "ch3", "canary3": "ch3", "canary3_chicks": "ch3",
 }
 CLEAR = {"pigeon_scream": "436,929;584,992;611,1135", "magpie3": "270,1030;400,1050;380,980", "magpie3_shawl": "350,1040;490,1000",
@@ -38,11 +39,33 @@ def main():
                 cmd += ["--clear", CLEAR[n]]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL)
             img = Image.open(f"{d}/c.png").convert("RGBA")
+        if n == "cheshire_head":  # the head in the air: also the grin alone, then the grin and the eyes
+            save(n, img, out)
+            for part, ovals in HEAD_PARTS.items():
+                save(part, masked(img, ovals), out)
+            continue
         if n == "crabs3":  # the old Crab and her daughter, split into two figures at the gap between them
             for part, box in split(img).items():
                 save(part, img.crop(box), out)
             continue
         save(n, img, out)
+
+
+# The Cheshire Cat's head appearing in stages (Chapter VIII: "it began with a grin", then the eyes, then
+# the whole head): ovals in the cut-out image (976x886 px).
+MOUTH, EYE_L, EYE_R = (225, 630, 700, 800), (265, 425, 420, 570), (580, 425, 735, 570)
+HEAD_PARTS = {"cheshire_head_grin": [MOUTH], "cheshire_head_eyes": [MOUTH, EYE_L, EYE_R]}
+
+
+def masked(img, ovals):
+    from PIL import ImageDraw, ImageFilter
+    m = Image.new("L", img.size, 0)
+    for o in ovals:
+        ImageDraw.Draw(m).ellipse(o, fill=255)
+    m = m.filter(ImageFilter.GaussianBlur(10))
+    a = np.asarray(img).copy()
+    a[..., 3] = (a[..., 3].astype(np.float32) * np.asarray(m, np.float32) / 255).astype(np.uint8)
+    return Image.fromarray(a, "RGBA")
 
 
 def split(img):

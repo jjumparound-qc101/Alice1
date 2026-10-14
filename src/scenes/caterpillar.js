@@ -45,6 +45,7 @@ export const mushroomTalk = {
       v1: at('old', 2), v2: at('old', 3), v3: at('old', 4), v4: at('old', 5), notRight: at('right', 2),
       rearing: at('rearing'), yawned: at('yawned'), crawled: at('crawled'), sight: cue.at('sight', 1, at('crawled')),
       broke: at('broke'), nibbled: at('nibbled'), blow: at('blow'), swallow: at('swallow'), end: at('free') - 1.5,
+      out1: at('hookah', 1), puffed: at('puffed'), out2: at('hookah', 2), in3: at('hookah', 3), out4: at('hookah', 4),
     };
     wood(group, ai);
     // Tenniel's four Father William plates, on paper mounts, one per question and answer.
@@ -83,13 +84,25 @@ export const mushroomTalk = {
       if (squashed) pose = 'squashed';
       return { ...s, pose, scale: squashed ? lerp(TINY, 0.09, smooth((t - T.blow) / 0.4)) : scale, dir: pose === 'away' ? 1 : s.moving ? s.dir : -1 };
     }
+    // Smoking while the hookah is in his mouth (the text says when it goes in and out); otherwise speaking
+    // with it standing beside him; rearing up; yawning; crawling away (AI poses, 2026-10-14).
+    const smoking = (t) => t < T.out1 + 0.8 || (t >= T.puffed - 1 && t < T.out2 + 0.7) || (t >= T.in3 && t < T.out4 + 0.7);
     function cat(t) {
-      const rear = t >= T.rearing - 0.5 && t < T.rearing + 4 ? smooth((t - T.rearing + 0.5) / 0.5) : 0; // "rearing itself upright"
-      if (t < T.crawled) return { pose: 'sit', x: MU.x + 0.01, z: MU.z + 0.005, y: MU.h - 0.045, dir: -1, scale: 1 + rear * 0.3, tilt: rear * -0.3 + (t >= T.yawned && t < T.yawned + 2 ? Math.sin(t * 20) * 0.05 : 0) };
+      if (t < T.crawled) {
+        let pose = smoking(t) ? 'sit' : 'speak';
+        if (t >= T.rearing - 0.5 && t < T.rearing + 4) pose = 'rear';            // "rearing itself upright as it spoke"
+        if (t >= T.yawned - 0.3 && t < T.yawned + 2.5) pose = 'yawn';            // "yawned once or twice, and shook itself"
+        const shake = pose === 'yawn' ? Math.sin(t * 20) * 0.04 : 0;
+        return { pose, x: MU.x + 0.01 + (pose === 'sit' ? 0 : -0.012), z: MU.z + 0.005, y: MU.h - 0.045, dir: -1, tilt: shake };
+      }
       const k = smooth((t - T.crawled) / 5);
-      return { pose: 'sit', x: MU.x + 0.01 + k * 0.4, z: MU.z - k * 0.2, y: (MU.h - 0.045) * (1 - smooth((t - T.crawled) / 1.5)), dir: 1, visible: t < T.sight + 1 };
+      return { pose: 'crawl', x: MU.x + 0.01 + k * 0.4, z: MU.z - k * 0.2, y: (MU.h - 0.045) * (1 - smooth((t - T.crawled) / 1.5)), dir: 1, visible: t < T.sight + 1 };
     }
+    // The hookah, standing on the mushroom beside him when it isn't in his drawing.
+    const H = ai['ch5/hookah'], hookah = paperFlat(H.tex, 0.058 * H.aspect, 0.058);
+    hookah.position.set(MU.x + 0.04, MU.h - 0.045, MU.z - 0.002); group.add(hookah);
     function update(t, cast) {
+      hookah.visible = cast.caterpillar.pose !== 'sit';
       const k = verses.findIndex((v, i) => t >= v - 0.3 && t < verses[i + 1] - 0.3);
       plates.forEach((p, i) => {
         p.visible = i === k;

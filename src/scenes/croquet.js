@@ -10,7 +10,7 @@ import * as THREE from 'three';
 import { crowdCard } from '../cards.js';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
-import { card, cardBack, cardArch, catHead, CAT_HEAD_PX, SOLDIERS, COURTIERS, CHILDREN, GUESTS, tulipVignette } from '../props8.js';
+import { card, cardBack, cardArch, SOLDIERS, COURTIERS, CHILDREN, GUESTS, tulipVignette } from '../props8.js';
 import { buildCroquet, FOOT, ROSE, POT, CROQ, FTREE } from '../sets/croquet.js';
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
@@ -262,8 +262,9 @@ export const croquetGame = {
     group.add(hog.ball, hog.crawl, hog2);
     // The Cat's head, appearing grin first, then the eyes, then the rest.
     const CAT = { x: 2.3, y: 0.44, z: 0.0 };
-    const CW = 0.12, CH = CW * CAT_HEAD_PX.h / CAT_HEAD_PX.w;
-    const heads = [0, 1, 2].map((s) => { const h = paperFlat(texture(catHead(s)), CW, CH, { anchor: 'center', edge: false }); h.position.set(CAT.x, CAT.y, CAT.z); group.add(h); return h; });
+    // AI drawing after Tenniel's plate 8.4 (tools/creatures_art.py, 2026-10-14): the grin alone, the grin and eyes, the head.
+    const CW = 0.16, CH = CW / ai['ch8/cheshire_head'].aspect;
+    const heads = ['cheshire_head_grin', 'cheshire_head_eyes', 'cheshire_head'].map((n) => { const h = paperFlat(ai[`ch8/${n}`].tex, CW, CH, { anchor: 'center', edge: false }); h.position.set(CAT.x, CAT.y, CAT.z); group.add(h); return h; });
     heads.forEach((h) => { h.userData.front.material.transparent = true; h.userData.front.material.alphaTest = 0.01; });
     // The other players, quarrelling and fighting for the hedgehogs; at the end, a crowd round the Cat.
     const players = [...GUESTS, COURTIERS[2], CHILDREN[3]];       // the guests play, and a courtier and a child
@@ -384,7 +385,7 @@ export const croquetGame = {
       { t: T.unrolled - 1, dur: 2, pos: [2.0, 0.25, 0.85], look: [2.1, 0.06, 0.05] },                 // the hedgehog crawls away
       { t: T.allOnce, dur: 4, pos: [2.8, 0.6, 2.0], look: [3.0, 0.1, -0.5] },                         // all played at once
       { t: T.uneasy, dur: 3, pos: [2.5, 0.25, 0.95], look: [2.3, 0.2, 0.45] },                        // Alice uneasy
-      { t: T.appearance, dur: 4, pos: [1.9, 0.25, 0.95], look: [CAT.x, CAT.y - 0.04, CAT.z] },        // a curious appearance in the air
+      { t: T.appearance, dur: 4, pos: [1.75, 0.3, 1.3], look: [2.15, 0.27, 0.15] },                  // a curious appearance in the air, and Alice
       { t: T.whole + 8, dur: 4, pos: [1.75, 0.3, 1.0], look: [2.15, 0.3, 0.12] },                     // talking to the Cat
       { t: T.close - 3, dur: 3, pos: [1.85, 0.36, 1.25], look: [2.15, 0.25, 0.1] },                   // the Queen close behind
       { t: T.hurried + 1, dur: 3, pos: [3.0, 0.5, 1.6], look: [3.4, 0.1, -0.3] },

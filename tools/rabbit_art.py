@@ -15,12 +15,14 @@ from ch1_art import shrink, whitecut  # noqa: E402
 from white_rabbit import pink_eye, whiten  # noqa: E402
 
 NAMES = {
+    "rabbit_run_side": "ch1", "rabbit_hop": "ch1", "rabbit_idle_b": "ch1",
     "rabbit2_trot": "ch2", "rabbit2_start": "ch2", "rabbit2_away": "ch2",
     "rabbit4_search": "ch4", "rabbit4_point": "ch4", "rabbit4_frame": "ch4", "rabbit4_order": "ch4",
     "rabbit8_peep": "ch8", "rabbit8_tiptoe": "ch8",
     "rabbit_herald": "ch11", "rabbit_trumpet": "ch11", "rabbit_scroll": "ch11", "rabbit_specs": "ch11",
 }
 EYES = {
+    "rabbit_run_side": (143, 315, 13), "rabbit_hop": (800, 245, 11), "rabbit_idle_b": (384, 296, 12),
     "rabbit2_trot": (342, 292, 13), "rabbit2_start": (548, 351, 13), "rabbit4_search": (158, 365, 13), "rabbit4_point": (312, 288, 13),
     "rabbit4_frame": (553, 219, 13), "rabbit4_order": (205, 284, 13), "rabbit8_peep": (197, 235, 13), "rabbit8_tiptoe": (472, 271, 13),
     "rabbit_herald": (222, 278, 13), "rabbit_trumpet": (399, 284, 13), "rabbit_scroll": (367, 287, 13), "rabbit_specs": (252, 300, 12),

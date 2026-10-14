@@ -5,6 +5,9 @@
   the Caterpillar himself is coloured blue ("a large blue caterpillar", COLOR.md); the hookah
   stays ink on paper.
 
+- caterpillar_speak, _rear, _yawn, _crawl (2026-10-14): drawn without the hookah, coloured blue all over;
+  hookah: the hookah alone, uncoloured.
+
 Usage: python3 tools/ch5_art.py   -> public/art/ai/ch5/*.webp
 Requires Pillow, NumPy and SciPy.
 """
@@ -17,6 +20,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 OUT = "public/art/ai/ch5"
+POSES = ["caterpillar_speak", "caterpillar_rear", "caterpillar_yawn", "caterpillar_crawl", "hookah"]
 BLUE = np.array([0x5B, 0x86, 0xC4], np.float32)  # SPOT.blue in src/props.js
 # Source pixels (1024x1536): keep everything above the line where his body meets the cap.
 KEEP = [(0, 0), (1024, 0), (1024, 955), (925, 955), (905, 975), (735, 975), (700, 1050), (600, 1085),
@@ -56,6 +60,22 @@ def main():
     img.thumbnail((900, 900))
     img.save(f"{OUT}/caterpillar_sit.webp", quality=90, method=6)
     print(f"{OUT}/caterpillar_sit.webp: {img.size[0]}x{img.size[1]}")
+    # His other poses (2026-10-14) are drawn without the hookah, so the whole figure is coloured blue;
+    # the hookah is its own drawing, standing beside him on the mushroom while he talks.
+    for n in POSES:
+        with tempfile.TemporaryDirectory() as d:
+            clear = ["--clear", "582,387;365,1241"] if n == "hookah" else []  # inside the loops of the hose
+            subprocess.run([sys.executable, "tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png", *clear], check=True, stdout=subprocess.DEVNULL)
+            cut = Image.open(f"{d}/c.png").convert("RGBA")
+        a = np.asarray(cut, np.float32).copy()
+        if n != "hookah":
+            tone = a[..., :3].mean(2, keepdims=True) / 230.0
+            blue = BLUE * np.clip(tone, 0, 1) ** 0.9 + 255 * 0.12 * np.clip(tone, 0, 1)
+            a[..., :3] = a[..., :3] * 0.25 + np.clip(blue, 0, 255) * 0.75
+        print(f"{n}: px {cut.height} aspect {cut.width / cut.height:.3f}")
+        img = Image.fromarray(a.astype(np.uint8), "RGBA")
+        img.thumbnail((900, 900))
+        img.save(f"{OUT}/{n}.webp", quality=90, method=6)
 
 
 if __name__ == "__main__":
