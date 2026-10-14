@@ -9,8 +9,7 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { flagstones } from '../props.js';
-import { littleHouse } from '../props5.js';
-import { kitchenWall, thrown, marchHareHouse, axisVignette, pigsVignette } from '../props6.js';
+import { axisVignette, pigsVignette } from '../props6.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
@@ -31,7 +30,7 @@ export const doorstep = {
       bowed: at('bowed'), laughed: at('laughed'), peeped: at('peeped'), knocked: at('knocked'), plate: at('plate'), whistling: at('whistling'), kitchen: at('kitchen') };
     outdoors(group, ai, { groundRepeat: 40 });
     trees(group, ai, [[-1.6, -0.4, 3.2, 1], [1.4, -1.6, 3.4, -1], [-2.4, -2.6, 3.6, 1], [2.6, -0.2, 3.2, -1]]);
-    const house = paperFlat(texture(littleHouse()), 1.15, 1.22); house.position.set(0, 0, -0.6); group.add(house);
+    const house = paperFlat(ai['ch6/little_house'].tex, 1.15, 1.15 / ai['ch6/little_house'].aspect); house.position.set(0, 0, -0.6); group.add(house);
     const plate = paperFlat(texture((() => { const c = document.createElement('canvas'); c.width = 200; c.height = 120; const g = c.getContext('2d'); g.fillStyle = PAPER; g.strokeStyle = '#17140f'; g.lineWidth = 6; g.beginPath(); g.ellipse(100, 60, 90, 50, 0, 0, Math.PI * 2); g.fill(); g.stroke(); return c; })()), 0.08, 0.05, { anchor: 'center' });
     group.add(plate);
     const DOOR = { x: 0, z: -0.5 };
@@ -90,7 +89,7 @@ export const doorstep = {
 };
 
 // --- 2. The kitchen --------------------------------------------------------------------
-const K = { w: 1.6, h: 0.9, z0: -0.6, z1: 0.6 };
+const K = { w: 1.9, h: 0.95, z0: -0.6, z1: 1.4 }; // deep enough that the wider shots stay inside the room
 export const kitchen = {
   id: 'kitchen',
   title: 'The kitchen',
@@ -107,15 +106,16 @@ export const kitchen = {
     // The room: the back wall with the fireplace, plain side walls, flagstones, a low ceiling; smoke is the fog.
     const plain = (map, side = THREE.FrontSide) => new THREE.MeshBasicMaterial({ map, side });
     const back = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.h), plain(ai['ch6/kitchen_back'].tex)); back.position.set(0, K.h / 2, K.z0); group.add(back); // AI drawing
-    for (const s of [-1, 1]) { const side = new THREE.Mesh(new THREE.PlaneGeometry(K.z1 - K.z0, K.h), plain(texture(kitchenWall()))); side.rotation.y = -s * Math.PI / 2; side.position.set(s * K.w / 2, K.h / 2, 0); group.add(side); }
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.z1 - K.z0), plain(texture(flagstones(), { repeat: [4, 3] }))); floor.rotation.x = -Math.PI / 2; group.add(floor);
+    for (const s of [-1, 1]) { const side = new THREE.Mesh(new THREE.PlaneGeometry(K.z1 - K.z0, K.h), plain(ai['ch6/kitchen_side'].tex)); side.rotation.y = -s * Math.PI / 2; side.position.set(s * K.w / 2, K.h / 2, (K.z0 + K.z1) / 2); group.add(side); }
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.z1 - K.z0), plain(texture(flagstones(), { repeat: [4, 3] }))); floor.rotation.x = -Math.PI / 2; floor.position.z = (K.z0 + K.z1) / 2; group.add(floor);
     // The Cat on the hearth: AI drawing (gpt-image-2.5-sunburst, from cheshire_bough), on his patch of hearthstone.
     const catArt = ai['ch6/cheshire_hearth'], catOnHearth = paperFlat(catArt.tex, 0.13, 0.13 / catArt.aspect); catOnHearth.position.set(0.42, 0, K.z0 + 0.12); group.add(catOnHearth);
     // The baby (AI drawings): howling like a star-fish; then with a snout (also while it is a pig in its clothes).
     const babyArt = ['baby_starfish', 'baby_snout', 'baby_snout'].map((n) => ai[`ch6/${n}`].tex);
     const babyCard = paperFlat(babyArt[0], 0.12, 0.12 / ai['ch6/baby_starfish'].aspect, { anchor: 'center' }); group.add(babyCard);
-    const kinds = ['irons', 'saucepan', 'plate', 'plate', 'saucepan', 'plate', 'pan'];
-    const missiles = kinds.map((k) => { const m = paperFlat(texture(thrown(k)), 0.07, 0.042, { anchor: 'center' }); group.add(m); return m; });
+    // The shower of things (AI drawings, one sheet split by tools/ch6_art.py); the frying-pan last.
+    const kinds = ['irons', 'saucepan', 'plate', 'dish', 'saucepan2', 'plate2', 'pan'];
+    const missiles = kinds.map((k) => { const a = ai[`ch6/thrown_${k}`], w = k === 'irons' ? 0.09 : 0.11; /* a little larger than life, to read in the smoke */ const m = paperFlat(a.tex, w, w / a.aspect, { anchor: 'center' }); group.add(m); return m; });
     const think = thoughts(group, [{ t0: at('axis') - 1, t1: T.axes, art: axisVignette() }]);
     const DUCHESS = { x: 0.05, z: -0.15 }, COOK = { x: -0.32, z: -0.42 }, ALICE = { x: 0.42, z: 0.12 };
     const duchessA = (t) => {
@@ -195,7 +195,7 @@ export const wood6 = {
       grinGone: at('grin', 4) + 1, hare: at('hare', 4), two: at('two', 1, at('hare', 4)) };
     outdoors(group, ai, { groundRepeat: 40 });
     trees(group, ai, [[-1.2, -1.0, 3.4, 1], [1.4, -1.4, 3.2, -1], [-4.1, -2.0, 3.6, 1], [0.2, -3.2, 3.6, -1], [-2.4, -3.6, 3.4, 1]]);
-    const hare = paperFlat(texture(marchHareHouse()), 1.6, 1.4); hare.position.set(-5.2, 0, -4.2); group.add(hare);
+    const hare = paperFlat(ai['ch6/march_hare_house'].tex, 1.6, 1.6 / ai['ch6/march_hare_house'].aspect); hare.position.set(-5.2, 0, -4.2); group.add(hare);
     // The baby, carried; it changes as it grunts.
     // The baby (AI drawings): howling like a star-fish; then with a snout (also while it is a pig in its clothes).
     const babyArt = ['baby_starfish', 'baby_snout', 'baby_snout'].map((n) => ai[`ch6/${n}`].tex);

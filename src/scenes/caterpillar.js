@@ -9,7 +9,7 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, INK, PAPER } from '../ink.js';
 import { mushroom } from '../props4.js';
-import { treetops, nest, mushroomBit, littleHouse, plateMount, chrysalisVignette, eggsVignette } from '../props5.js';
+import { treetops, nest, mushroomBit, plateMount, chrysalisVignette, eggsVignette } from '../props5.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
@@ -210,7 +210,7 @@ export const clearing = {
     for (const [x, z, s] of [[-3, -2, 1], [3.2, -3, -1], [-2.4, -6, 1], [2.6, -6.5, -1]]) {
       const tree = paperFlat(ai.tree.tex, 4.5 * ai.tree.aspect, 4.5); tree.position.set(x, 0, z); tree.scale.x = s; group.add(tree);
     }
-    const house = paperFlat(texture(littleHouse()), 1.15, 1.22); house.position.set(0.2, 0, -3.2); group.add(house); // "about four feet high"
+    const house = paperFlat(ai['ch6/little_house'].tex, 1.15, 1.15 / ai['ch6/little_house'].aspect); house.position.set(0.2, 0, -3.2); group.add(house); // "about four feet high"
     const alice = (t) => {
       const s = route(t, [[start, { x: 1.4, z: 0.6, dir: -1 }], [T.open + 1, { x: 0.8, z: -0.8 }]], { phase: t * 2.2 });
       const scale = lerp(1, 0.18, smooth((t - T.nibble - 1) / 4)); // "down to nine inches high"

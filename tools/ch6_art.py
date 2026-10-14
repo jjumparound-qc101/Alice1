@@ -11,6 +11,9 @@ the grin, for "a grin without a cat".
 - The Footmen (fish_footman, frog_footman, frog_footman_sit, footmen_bow), the Cook (cook_stir,
   cook_throw), the baby (baby_starfish, baby_snout), the pig (pig_trot): cut out; each figure's
   height in source pixels is printed (`px`), for scaling poses of one character alike.
+- little_house, march_hare_house: the Duchess's little house (V, VI) and the March Hare's (VI, VII), cut out.
+- kitchen_side: the kitchen's side walls (opaque, cropped above its floor).
+- thrown_things: one sheet, split into pieces (irons, saucepans, frying-pan, plates, dish).
 - kitchen_back: the kitchen's back wall, cropped to the wall (the game has its own floor).
 
 Usage: python3 tools/ch6_art.py   -> public/art/ai/ch6/cheshire_{bough,bough_empty,grin,hearth}.webp, duchess_nurse.webp
@@ -72,6 +75,23 @@ def main():
     Image.open(f"{OUT}/kitchen_back.png").save(f"{OUT}/kitchen_back.webp", quality=88, method=6)
     os.remove(f"{OUT}/kitchen_back.png")
     print(f"{OUT}/kitchen_back.webp")
+    for name, w in (("little_house", 800), ("march_hare_house", 1000)):
+        with tempfile.TemporaryDirectory() as d:
+            subprocess.run([sys.executable, "tools/whitecut.py", f"source/ai/{name}.png", f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
+            save(Image.open(f"{d}/c.png").convert("RGBA"), name, w)
+    with tempfile.TemporaryDirectory() as d:
+        Image.open("source/ai/kitchen_side.png").convert("RGB").crop((0, 0, 1536, 830)).save(f"{d}/k.png")
+        subprocess.run([sys.executable, "tools/whitecut.py", f"{d}/k.png", f"{d}/o.png", "--opaque"], check=True, stdout=subprocess.DEVNULL)
+        Image.open(f"{d}/o.png").save(f"{OUT}/kitchen_side.webp", quality=88, method=6)
+    pieces = {"irons": (53, 39, 533, 595), "saucepan": (575, 43, 1107, 402), "saucepan2": (1063, 90, 1513, 439),
+              "pan": (536, 437, 1179, 672), "plate": (1133, 494, 1499, 723), "plate2": (73, 599, 421, 880),
+              "plate3": (456, 715, 832, 950), "dish": (956, 713, 1469, 976)}
+    for name, box in pieces.items():
+        with tempfile.TemporaryDirectory() as d:
+            Image.open("source/ai/thrown_things.png").convert("RGB").crop(box).save(f"{d}/c.png")
+            subprocess.run([sys.executable, "tools/whitecut.py", f"{d}/c.png", f"{d}/o.png"], check=True, stdout=subprocess.DEVNULL)
+            Image.open(f"{d}/o.png").save(f"{OUT}/thrown_{name}.webp", quality=88, method=6)
+    print("little_house, march_hare_house, kitchen_side, thrown_* done")
 
 
 if __name__ == "__main__":

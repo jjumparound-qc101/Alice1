@@ -10,7 +10,6 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, INK, PAPER } from '../ink.js';
 import { garden as gardenPicture } from '../props.js';
-import { marchHareHouse } from '../props6.js';
 import { tableCloth, cup, teapot, armchair, dayWatch, treeDoor, flowerBed, dormouse, ravenVignette, concertVignette, batVignette, treacleVignette } from '../props7.js';
 import { buildHall, TABLE, DOOR, KEY } from '../sets/hall.js';
 import { thoughts } from '../thoughts.js';
@@ -50,7 +49,7 @@ export const teaParty = {
     for (const [x, z, h, s] of [[-2.6, -1.8, 3.4, 1], [2.8, -2.2, 3.6, -1], [0.4, -2.6, 3.8, 1], [-4.5, -0.5, 3.4, -1]]) {
       const t = paperFlat(ai.tree.tex, h * ai.tree.aspect, h); t.position.set(x, 0, z); t.scale.x = s; group.add(t);
     }
-    const house = paperFlat(texture(marchHareHouse()), 2.0, 1.75); house.position.set(1.6, 0, -3.4); group.add(house);
+    const house = paperFlat(ai['ch6/march_hare_house'].tex, 2.0, 2.0 / ai['ch6/march_hare_house'].aspect); house.position.set(1.6, 0, -3.4); group.add(house);
     // The long table: a white top and a hanging cloth in front (the far side is open; people sit behind).
     const topGeo = new THREE.BoxGeometry(TBL.x1 - TBL.x0, 0.015, TBL.d);
     const top = new THREE.Mesh(topGeo, new THREE.MeshBasicMaterial({ color: '#f6f2e8' }));
