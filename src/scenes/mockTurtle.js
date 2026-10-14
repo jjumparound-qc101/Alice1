@@ -59,6 +59,14 @@ export const duchessWalk = {
     }));
     const n = players.length;
     const taken = (i) => lerp(T.quarrel + 6, T.breath - 2, i / (n - 1));                       // when each is led away
+    // The soldiers who were the arches lead each prisoner away by the arm (AI drawing, 2026-10-14).
+    const guards = extras(group, players.map((_, i) => ({ poses: { lead: crowdCard(ai, { suit: 'clubs', rank: 2 + (i % 9), body: 'lead' }, CARD_H) }, height: CARD_H })));
+    const guardA = (i) => (t) => {
+      if (t < taken(i) - 1.5 || t > taken(i) + 5) return { visible: false };
+      const p = playerA(i)(t), from = ARCHES[i % ARCHES.length];
+      if (t < taken(i)) { const k = smooth((t - taken(i) + 1.5) / 1.5); return { pose: 'lead', x: lerp(from[0], p.x + 0.14, k), z: lerp(from[1], p.z + 0.02, k), moving: true, phase: t * 2.6, dir: 1 }; }
+      return { ...p, pose: 'lead', x: p.x + 0.14, z: p.z + 0.02, dir: 1, visible: true };   // ahead of the prisoner, walking off
+    };
     const playerA = (i) => (t) => {
       const game = { x: lerp(CROQ.x0 + 0.6, CROQ.x1 - 0.6, (i + 0.5) / n) + Math.sin(t * 0.2 + i) * 0.25, z: lerp(CROQ.z0 + 0.4, CROQ.z1 - 0.6, ((i * 37) % 10) / 10) };
       const shade = { x: FTREE.x - 0.5 + (i % 3) * 0.2, z: FTREE.z + 0.4 + Math.floor(i / 3) * 0.2 };
@@ -101,6 +109,7 @@ export const duchessWalk = {
     const kingA = (t) => (t < T.walked - 2 ? { visible: false } : { pose: 'stand', x: 3.4, z: -0.5, dir: -1, idle: t });
     function update(t, cast, camera) {
       crowd.apply(players.map((_, i) => playerA(i)(t)), camera);
+      guards.apply(players.map((_, i) => guardA(i)(t)), camera);
       arches.forEach((a, i) => { a.visible = t < taken(i) + 1; });                            // "there were no arches left"
       const a = aliceA(t);
       think(t, { x: a.x + 0.05, y: 0.46, z: a.z - 0.1 }, 0.24);
@@ -140,9 +149,11 @@ export const gryphonBank = {
     const G = { x: -0.1, z: -0.35 };
     const gryphonA = (t) => {
       const s = route(t, [[start, G], [T.come + 0.5, G], [T.end, { x: -2.2, z: 0.1, dir: -1 }]], { phase: t * 2 });
-      const pose = s.moving ? 'walk' : t >= T.rubbed - 0.5 ? 'sit' : 'asleep';
-      const chuckle = t >= T.chuckled && t < T.chuckled + 2 ? Math.sin(t * 20) * 0.04 : 0;
-      return { ...s, pose, tilt: chuckle, dir: s.moving ? -1 : 1 };
+      // AI poses (2026-10-14): "The Gryphon sat up and rubbed its eyes"; "then it chuckled".
+      let pose = s.moving ? 'walk' : t >= T.rubbed - 0.5 ? 'sit' : 'asleep';
+      if (!s.moving && t >= T.rubbed - 0.5 && t < T.chuckled - 0.5) pose = 'wake';
+      if (!s.moving && t >= T.chuckled - 0.3 && t < T.chuckled + 3) pose = 'chuckle';
+      return { ...s, pose, dir: s.moving ? -1 : 1 };
     };
     const aliceA = (t) => {
       const s = route(t, [[start, { x: 1.4, z: 0.3, dir: -1 }], [T.lazy - 1, { x: 0.45, z: 0.05 }], [T.come + 1.2, { x: 0.45, z: 0.05 }], [T.end, { x: -1.7, z: 0.2, dir: -1 }]], { phase: t * 2.2 });

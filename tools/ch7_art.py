@@ -14,12 +14,13 @@ from PIL import Image
 
 OUT = "public/art/ai/ch7"
 NAMES = ["hatter_sit_stare", "hatter_sit_riddle", "hatter_sit_watch", "hatter_cup", "hatter_pale", "hatter_bite",
-         "hatter_tremble", "hatter_knee", "hatter_run", "marchhare_sit", "marchhare_dip", "dormouse_sleep", "dormouse_talk"]
+         "hatter_tremble", "hatter_knee", "hatter_run", "marchhare_sit", "marchhare_dip", "dormouse_sleep", "dormouse_talk",
+         "dormouse_teapot", "march_hare_push", "hatter_push", "hatter_move"]
 
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    for n in NAMES:
+    for n in sys.argv[1:] or NAMES:
         with tempfile.TemporaryDirectory() as d:
             subprocess.run([sys.executable, "tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
             img = Image.open(f"{d}/c.png").convert("RGBA")

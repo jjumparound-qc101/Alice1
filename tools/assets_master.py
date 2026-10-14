@@ -55,6 +55,8 @@ DONE_AS = {
     "herald_props": "not needed: the trumpet and scroll are in the Rabbit's herald drawings",
     "knave_chains_sad": "done as knave_chains",
     "rabbit_spectacles": "done as rabbit_specs (from the Chapter I model)",
+    "gryphon_wake": "done as gryphon_wake, gryphon_chuckle",
+    "soldier9_custody": "done as body_soldier_lead (the prisoner is the player's own card)",
 }
 
 

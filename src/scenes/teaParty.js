@@ -63,6 +63,8 @@ export const teaParty = {
     const chair = paperFlat(texture(armchair()), 0.32, 0.38); chair.position.set(TBL.x0 - 0.14, 0, TBL.z + 0.08); chair.rotation.y = 0.9; group.add(chair);
     const watch = paperFlat(texture(dayWatch()), 0.04, 0.045, { anchor: 'center' }); group.add(watch);
     const dA = ai['ch7/dormouse_sleep'], dB = ai['ch7/dormouse_talk']; const dor = paperFlat(dA.tex, 0.11, 0.11 / dA.aspect); const dorTalk = paperFlat(dB.tex, 0.11, 0.11 / dB.aspect); // AI (tools/ch7_art.py) group.add(dor, dorTalk);
+    const DT = ai['ch7/dormouse_teapot']; const potDor = paperFlat(DT.tex, 0.19, 0.19 / DT.aspect); group.add(potDor); // the Dormouse in the teapot (AI, after plate 7.3)
+    potDor.position.set(SEATS[2] - 0.02, TBL.h + 0.008, TBL.z + 0.02);
     const tree = paperFlat(texture(treeDoor()), 0.5, 1.12); tree.position.set(-3.6, 0, 0.2); group.add(tree);
     const think = thoughts(group, [
       { t0: T.raven - 0.5, t1: T.raven + 12, art: ravenVignette() },
@@ -78,8 +80,19 @@ export const teaParty = {
       const k = smooth((t - T.move - 1) / 2.5);
       return lerp(SEATS[before], SEATS[before - 1], k);
     };
-    const hatterA = (t) => ({ pose: t >= T.raven - 1 && t < T.raven + 3 ? 'riddle' : t >= T.watch && t < T.dipped ? 'watch' : 'stare', x: seat('hatter', t), z: TBL.z - 0.14, y: SEATED_Y, dir: -1 });
-    const hareA = (t) => ({ pose: t >= T.dipped && t < T.dipped + 6 ? 'dip' : 'sit', x: seat('hare', t), z: TBL.z - 0.14, y: SEATED_Y, dir: -1 });
+    // AI poses (2026-10-14): the Hatter steps along one place standing; at last both push the Dormouse into the
+    // teapot (after Tenniel's plate 7.3: the Hare on the left, the Hatter on the right, the teapot between them).
+    const POT_X = SEATS[2] - 0.02, pushing = (t) => t >= T.teapot - 2.5;
+    const moving = (t) => t >= T.move + 0.8 && t < T.move + 3.7;
+    const hatterA = (t) => {
+      if (pushing(t)) return { pose: 'push', x: POT_X + 0.13, z: TBL.z - 0.1, y: TBL.h - 0.05, dir: -1 };
+      if (moving(t)) return { pose: 'move', x: seat('hatter', t), z: TBL.z - 0.16, y: 0.2, dir: -1 }; // his head about where it is when seated
+      return { pose: t >= T.raven - 1 && t < T.raven + 3 ? 'riddle' : t >= T.watch && t < T.dipped ? 'watch' : 'stare', x: seat('hatter', t), z: TBL.z - 0.14, y: SEATED_Y, dir: -1 };
+    };
+    const hareA = (t) => {
+      if (pushing(t)) return { pose: 'push', x: POT_X - 0.13, z: TBL.z - 0.1, y: TBL.h - 0.05, dir: 1 };
+      return { pose: t >= T.dipped && t < T.dipped + 6 ? 'dip' : 'sit', x: seat('hare', t), z: TBL.z - 0.14, y: SEATED_Y, dir: -1 };
+    };
     const ARMCHAIR = { x: TBL.x0 - 0.12, z: TBL.z + 0.06 };
     const aliceA = (t) => {
       // To the arm-chair; along to the March Hare's old place; up in disgust and off into the wood.
@@ -100,7 +113,10 @@ export const teaParty = {
       dor.visible = !awake; dorTalk.visible = awake;
       const jig = (t >= T.pinch && t < T.pinch + 1.5) || (t >= T.wake && t < T.wake + 1) || (t >= T.pinched && t < T.pinched + 1) ? Math.sin(t * 40) * 0.01 : 0;
       for (const d of [dor, dorTalk]) d.position.set(lerp(dx, SEATS[2] - 0.02, intoPot) + jig, TBL.h + 0.008 + intoPot * 0.06 - smooth((t - T.teapot) / 1.5) * 0.08, TBL.z - 0.02);
-      dor.visible = dor.visible && t < T.teapot + 1.5;
+      // Into the teapot: the drawing of the Dormouse half in the pot replaces the pot and the sleeping Dormouse.
+      const inPot = t >= T.teapot - 1;
+      dor.visible = dor.visible && !inPot; dorTalk.visible = dorTalk.visible && !inPot;
+      pot.visible = !inPot; potDor.visible = inPot;
       pot.position.x = SEATS[2] - 0.02;
       // The watch: out of the Hatter's pocket, into the March Hare's tea, back.
       watch.visible = t >= T.watch && t < T.dipped + 8;

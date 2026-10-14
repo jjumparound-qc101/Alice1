@@ -63,19 +63,20 @@ export const quadrille = {
       if (dancing(t)) return { ...round(t, 0), pose: 'dance', moving: true, phase: t * 1.2, y: Math.abs(Math.sin(t * 2.4)) * 0.01 };
       if (t >= T.hand) {
         const s = route(t, [[T.hand, R], [T.hand + 1.2, { x: D.x - 0.05, z: D.z + 0.02, dir: -1 }], [T.breeze + 2, { x: -3.0, z: 0.35, dir: -1 }]], { phase: t * 2.4 });
-        return { ...s, pose: 'walk', visible: t < T.breeze + 2 };
+        return { ...s, pose: s.moving ? 'run' : 'walk', visible: t < T.breeze + 2 }; // hurrying off, pulling her by the hand
       }
       // Thumping the Mock Turtle on the back; leaping about as they describe the dance.
       const s = route(t, [[0, GSEAT], [T.shaking - 1, { x: LEDGE_AT.x - 0.3, z: LEDGE_AT.z + 0.08 }], [T.shaking + 4, { x: LEDGE_AT.x - 0.3, z: LEDGE_AT.z + 0.08 }],
         [T.shaking + 6, GSEAT], [T.lobsters, GSEAT], [T.lobsters + 1.5, { x: GSEAT.x - 0.25, z: GSEAT.z + 0.35 }], [T.capering + 6, { x: GSEAT.x + 0.15, z: GSEAT.z + 0.4 }],
         [T.sadly, GSEAT], [T.solemnly - 1, round(T.solemnly, 0)], [T.songEnd, round(T.songEnd, 0)], [T.songEnd + 3, R]], { phase: t * 2 });
-      const thump = t >= T.shaking && t < T.shaking + 4 ? Math.sin(t * 14) * 0.12 : 0;
+      const thumping = t >= T.shaking && t < T.shaking + 4 && !s.moving; // "shaking him and punching him in the back"
       const leap = t >= T.bound && t < T.bound + 0.8 ? Math.sin((t - T.bound) / 0.8 * Math.PI) * 0.12 : t >= T.lobsters && t < T.capering + 6 ? Math.abs(Math.sin(t * 5)) * 0.03 : 0;
       let pose = s.moving ? 'walk' : 'sit';
       if (t >= T.lobsters && t < T.capering + 6) pose = 'dance';
       if (t >= T.bound && t < T.bound + 0.8) pose = 'bound';                      // "leaping into the air with a bound"
       if (t >= T.songEnd + 3 && t < T.hand) pose = 'sit';
-      return { ...s, pose, y: leap, tilt: thump, dir: t >= T.songEnd + 3 ? -1 : s.dir };
+      if (thumping) pose = 'thump';
+      return { ...s, pose, y: leap, tilt: thumping ? Math.sin(t * 14) * 0.04 : 0, dir: thumping ? 1 : t >= T.songEnd + 3 ? -1 : s.dir };
     };
     const turtleA = (t) => {
       if (dancing(t)) return { ...round(t, Math.PI), pose: 'walk', moving: true, phase: t * 1.2, y: Math.abs(Math.sin(t * 2.4 + 1)) * 0.01 };

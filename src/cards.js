@@ -14,33 +14,36 @@ const BODIES = {
   diamonds: { art: 'ch8/body_courtier', face: [0.188, 0.232, 0.705, 0.686] },
   hearts: { art: 'ch8/body_child', face: [0.288, 0.281, 0.722, 0.719], small: true },
   spades: { art: 'ch8/body_officer', face: [0.287, 0.219, 0.852, 0.74] },
+  // A soldier walking off, leading a prisoner away by the arm (Chapter IX, "in custody"; 2026-10-14).
+  lead: { art: 'ch8/body_soldier_lead', face: [0.198, 0.249, 0.68, 0.749], sign: 'clubs', scale: 1426 / 1384 },
 };
 const SIGN = { hearts: 'ch8/suit_heart', diamonds: 'ch8/suit_diamond', clubs: 'ch8/suit_club', spades: 'ch8/suit_spade' };
 const COURT = { king: 'king', queen: 'queen', knave: 'knave' };
 
 const made = new Map();
 
-// who: { suit, rank (1-10 | 'king' | 'queen' | 'knave') }. Returns a puppet pose { tex, aspect,
+// who: { suit, rank (1-10 | 'king' | 'queen' | 'knave'), body? ('lead') }. Returns a puppet pose { tex, aspect,
 // height, facesLeft } at the given height (children are drawn at two thirds of it).
 export function crowdCard(ai, who, height) {
   if (COURT[who.rank]) {
     const a = ai[`ch8/${who.rank}_${who.suit}`] ?? ai[`ch8/${who.rank}_stand`];
     return { ...a, height: height * 1.15, facesLeft: true };
   }
-  const key = `${who.suit}-${who.rank}`;
+  const key = `${who.body ?? who.suit}-${who.rank}`;
   if (!made.has(key)) made.set(key, compose(ai, who));
-  const b = BODIES[who.suit];
-  return { ...made.get(key), height: b.small ? height * 0.72 : height, facesLeft: true };
+  const b = BODIES[who.body ?? who.suit];
+  return { ...made.get(key), height: (b.small ? height * 0.72 : height) * (b.scale ?? 1), facesLeft: true };
 }
 
 function compose(ai, who) {
-  const body = ai[BODIES[who.suit].art].tex.image, sign = ai[SIGN[who.suit]].tex.image;
+  const B = BODIES[who.body ?? who.suit];
+  const body = ai[B.art].tex.image, sign = ai[SIGN[B.sign ?? who.suit]].tex.image;
   const W = body.naturalWidth || body.width, H = body.naturalHeight || body.height;
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const g = c.getContext('2d');
   g.drawImage(body, 0, 0, W, H);
   // Blank paper on the face: where the pips may show.
-  const [u0, v0, u1, v1] = BODIES[who.suit].face;
+  const [u0, v0, u1, v1] = B.face;
   const fx = u0 * W, fy = v0 * H, fw = (u1 - u0) * W, fh = (v1 - v0) * H;
   const base = g.getImageData(0, 0, W, H);
   // The pips, on their own layer.

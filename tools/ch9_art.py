@@ -25,7 +25,8 @@ from PIL import Image
 
 TURTLE = {"mockturtle_ledge_norock": "mockturtle_sit", **{f"mockturtle_{p}": f"mockturtle_{p}" for p in
           ("sob", "count", "hide", "dance", "sing", "yawn")}}
-GRYPHON = ["gryphon_sit", "gryphon_asleep", "gryphon_walk", "gryphon_paws", "gryphon_hide", "gryphon_dance", "gryphon_bound"]
+GRYPHON = ["gryphon_sit", "gryphon_asleep", "gryphon_walk", "gryphon_paws", "gryphon_hide", "gryphon_dance", "gryphon_bound",
+           "gryphon_wake", "gryphon_chuckle", "gryphon_thump", "gryphon_run"]
 DUCHESS = ["duchess_nurse", "duchess_toss", "duchess_fling", "duchess9_arm", "duchess9_tremble", "duchess9_run"]
 
 
