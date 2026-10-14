@@ -42,6 +42,7 @@ const place = {
       const p = this.load() ?? { times: {} };
       p.chapter = chapter;
       p.times[chapter] = t;
+      p.at = Date.now(); // when, so a reload soon after puts the reader straight back (see below)
       localStorage.setItem(SAVE_KEY, JSON.stringify(p));
     } catch {}
   },
@@ -314,6 +315,9 @@ async function main() {
     if (chapter) place.save(chapter.n, audio.currentTime);
     switching = true;
     audio.pause();
+    // Free the pictures held on the graphics card (owner, 2026-10-14: the tab ran out of memory late in
+    // the book and the browser reloaded the page). Textures upload again by themselves when next shown.
+    if (chapter) freeTextures();
     chapter = c;
     ch = build(c);
     if (active) { active.group.visible = false; active = null; }
@@ -355,6 +359,18 @@ async function main() {
     $('card').hidden = false;
   }
   function closeCard() { shown = null; $('card').hidden = true; }
+
+  function freeTextures() {
+    const seen = new Set();
+    scene.traverse((o) => {
+      for (const m of [o.material].flat()) {
+        if (!m) continue;
+        for (const v of Object.values(m)) if (v?.isTexture && !seen.has(v)) { seen.add(v); v.dispose(); }
+      }
+    });
+  }
+  // If the graphics card resets (a phone under memory pressure), keep the page and redraw.
+  renderer.domElement.addEventListener('webglcontextlost', (e) => e.preventDefault());
 
   // Start reading chapter c at time t.
   async function begin(c, t) {
@@ -453,6 +469,13 @@ async function main() {
     $('continue').addEventListener('click', () => begin(savedCh, savedT));
   }
   $('begin').addEventListener('click', () => begin(CHAPTERS[0], 0));
+  // A reload within 15 minutes of reading (the page updated, or the browser reloaded it) goes straight
+  // back to the place, paused, instead of the start screen (owner, 2026-10-14). Browsers allow sound
+  // only after a tap, so the reader presses Play.
+  if (savedCh && saved.at && Date.now() - saved.at < 15 * 60e3 && savedT < savedCh.cue.end - 2) {
+    $('intro').hidden = true;
+    openChapter(savedCh).then(() => { audio.currentTime = savedT; started = true; wake(); });
+  }
   $('modeBtn').addEventListener('click', () => setMode(mode === 'watch' ? 'explore' : 'watch'));
   // In Explore the play button reads "Back to the story" (on phones the Explore button is in the More panel).
   const phoneForm = () => document.body.dataset.form !== 'wide';

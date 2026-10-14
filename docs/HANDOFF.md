@@ -128,10 +128,16 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 
 **Tools**: `bank_art.py` (riverbank ground), `ch9_art.py` (Duchess, Mock Turtle, Gryphon), `gen_image.py` (OpenAI images), `frame_report.mjs` (Alice out of the picture), `white_rabbit.py` (the Rabbit white, pink eyes), `jar_colour.py`, `walls.py` (walls, floors, ceilings), `ch5_art.py`, `ch6_art.py`, `forced_align.py` (re-times every chapter's words against the narration with a wav2vec2 model and marks words the readers leave out, `"x": 1`, shown faint and explained under Contents → "Why are some words faint?"; model files from huggingface.co/Xenova/wav2vec2-base-960h in `$W2V_DIR`; run it after `narration.py`), `ch1_art.py`, `ch2_art.py` (process those chapters' AI drawings), `mobile_shots.mjs` (phone and tablet screenshots), `explore_edges.mjs` (every explorable scene at the edges of its walkable area, looking to the limits of the 150° arc: run it after changing a set), `narration.py` (prepare a chapter's narration: text, alignment, trimmed audio), `transcribe.py`, `align.py`, `assets_master.py`, `whitecut.py`, `cutout.py` (Tenniel scans, spot colour), `compose_poses.py`, `hall_props.py`, `shaft_strip.py`, `smoke.mjs` (all chapters; fails on console errors), `chapter_shots.mjs` (screenshots of one chapter), `walk_report.mjs` (Alice's steps per second; keep under ~4), `electron_smoke.mjs`.
 
+## Memory and reloads (owner, 2026-10-14: "the story sends me back to the menu")
+- The game never returns to the start screen itself; a page reload does (the web link republished while someone watches, or the tab running out of memory). Now: textures are freed on every chapter change (`freeTextures` in main.js; they upload again when shown), WebGL context loss is caught, and a reload within 15 minutes of reading opens straight at the saved place, paused.
+- All the art together is ~650 MB on the graphics card; keep new drawings at the sizes the tools save (600-1200 px wide).
+
 ## Camera and motion (owner, 2026-10-14: "simple and smooth")
 - **Calm moves**: `cameraTrack` lengthens any move quicker than 2.2 s, turning faster than 22°/s or travelling faster than 1.6 m/s (centred on the written time). Mark a key `exact: true` when the owner has timed it (the Chapter I opening).
 - **Steady clock**: the picture follows a clock that runs with the frames and is pulled gently to the narration (main.js), so uneven narration timing on some browsers doesn't make motion stutter.
 - **Keep Alice in frame** turns are eased (about 0.6 s), not snapped.
+- **Thought bubbles** are placed once when they open and held still (they glide once, smoothly, only if Alice comes to stand under one); they fade in and out, no scaling.
+- **Held props** must be well inside the picture (the marmalade jar shots were raised for this).
 - **Thought bubbles** are flat overlays (thoughts.js `layoutThoughts`): same oval for all, never over Alice, never cut off, with a trail to her head. Scenes still call `think(t, …)`; position arguments are ignored now.
 - Check with `node tools/jerk_report.mjs URL chapter` (sudden changes in camera turning/travel, Alice's jumps) and `frame_report.mjs`.
 
