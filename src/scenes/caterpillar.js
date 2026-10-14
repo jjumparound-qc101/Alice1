@@ -137,7 +137,7 @@ export const treetopsScene = {
   build({ group, ai, cue }) {
     const at = cue.at;
     const start = treetopsScene.start(cue);
-    const T = { free: at('free'), green: at('green', 1), hands: at('hands', 1), serpent: at('serpent', 1), hiss: at('hiss'), screamed: at('serpent', 2),
+    const T = { free: at('free'), green: at('green', 1), hands: at('hands', 1, at('free')), serpent: at('serpent', 1), hiss: at('hiss'), screamed: at('serpent', 2),
       eggs: at('eggs', 1), nest: at('nest'), crouched: at('crouched'), nibbling: at('nibbling', 1), end: at('right', 1, at('nibbling')) - 2 };
     // The leaves, far below, and sky.
     const leaves = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ map: texture(treetops(), { repeat: [40, 40] }) }));
@@ -170,6 +170,7 @@ export const treetopsScene = {
       return new THREE.Vector3(x, y, z);
     }
     function update(t, cast) {
+      nestCard.visible = cast.pigeon.pose !== 'nest'; // the nesting drawing brings its own nest
       const h = headAt(t);
       const zig = smooth((t - T.serpent + 1) / 6) * (1 - smooth((t - T.hiss) / 0.5)) + 0.6 * smooth((t - T.crouched) / 3);
       const pts = [new THREE.Vector3(0, -0.3, 0)];
@@ -189,11 +190,13 @@ export const treetopsScene = {
       think(t, { x: h.x - 0.35, y: h.y + 0.15, z: h.z }, 0.35);
     }
     function pigeon(t) {
-      if (t < T.hiss - 0.3) return { pose: 'perch', x: NEST.x, z: NEST.z + 0.02, y: 0, dir: -1 };
+      const onNest = { pose: 'nest', x: NEST.x, z: NEST.z + 0.02, y: -0.04, dir: 1 }; // the drawing has her nest and eggs
+      if (t < T.hiss - 0.3) return onNest;
       const h = headAt(t);
       if (t < T.screamed + 3) { // "flown into her face, and was beating her violently with its wings"
         return { pose: 'fly', x: h.x + 0.12 + Math.sin(t * 9) * 0.05, z: h.z + 0.15, y: h.y + Math.sin(t * 13) * 0.04 - 0.05, dir: -1, scale: 1 + Math.sin(t * 22) * 0.08 };
       }
+      if (t >= T.nest + 2) return onNest;
       if (t >= T.nest) { const k = smooth((t - T.nest) / 2); return { pose: 'perch', x: lerp(h.x + 0.3, NEST.x, k), z: lerp(h.z + 0.1, NEST.z + 0.02, k), y: lerp(h.y - 0.1, 0, k), dir: -1 }; }
       return { pose: 'perch', x: h.x + 0.3, z: h.z + 0.1, y: h.y - 0.1 + Math.sin(t * 2) * 0.02, dir: -1, tilt: Math.sin(t * 3) * 0.06 };
     }
