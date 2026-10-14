@@ -128,6 +128,23 @@ export function buildStage(scene, ai = {}) {
     surround.renderOrder = 50; // (transparent, so it is drawn after the paper flats)
     surround.position.z = 2.25;
     scene.add(surround);
+    // The theatre around the toy stage (owner, 2026-10-14): the auditorium, its own stage opening
+    // (x 502-1035, y 349-822 of 1536x1024) framing the toy front, and in the foreground a row of
+    // stalls with the audience's backs, as if from a seat. Drawn over the set like the surround.
+    if (ai.theatre_house) {
+      surround.visible = false;
+      const k2 = H * 0.98 / (822 - 349);
+      const house = paperFlat(ai.theatre_house.tex, 1536 * k2, 1024 * k2, { edge: false });
+      house.position.set((768 - (502 + 1035) / 2) * k2, y0 - (1024 - 822) * k2, 2.3);
+      scene.add(house);
+      // The row in front of our seat: hat-tops at about the lower third of the opening shot.
+      const seatsW = 4.6, seatsH = seatsW / ai.theatre_seats.aspect, seats = paperFlat(ai.theatre_seats.tex, seatsW, seatsH, { edge: false });
+      seats.position.set(-0.5, 1.22 - (1 - 233 / 793) * seatsH, 14.2); // the child (shortest) straight ahead, so the stage shows over her
+      scene.add(seats);
+      // The same row again at each end (mirrored), for tall phone screens.
+      const more = [-1, 1].map((d) => { const m = paperFlat(ai.theatre_seats.tex, seatsW, seatsH, { edge: false }); m.scale.x = -1; m.position.set(seats.position.x + d * seatsW, seats.position.y, 14.2); scene.add(m); return m; });
+      [[house, 50], [seats, 60], ...more.map((m) => [m, 60])].forEach(([o, r]) => o.traverse((m) => { if (m.material) { m.material.depthTest = false; m.material.transparent = true; m.material.fog = false; m.renderOrder = r; } }));
+    }
   }
   scene.add(pros);
   // Beside the proscenium, out of the Watch shots: more ground and the side scenery, for the

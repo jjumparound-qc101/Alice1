@@ -62,7 +62,7 @@ async function main() {
   const camera = new THREE.PerspectiveCamera(45, 1, 0.02, 80);
 
   // Interim AI master drawings (PROVENANCE.md), shared by every chapter.
-  const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'bank_grass', 'bank_edge', 'proscenium', 'cloud_a', 'cloud_b', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar_orange',
+  const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'bank_grass', 'bank_edge', 'proscenium', 'cloud_a', 'cloud_b', 'theatre_house', 'theatre_seats', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar_orange',
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',

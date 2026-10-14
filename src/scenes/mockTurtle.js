@@ -219,6 +219,7 @@ export const mockTurtleRock = {
       { t: start, dur: 0, pos: [-1.4, 0.35, 1.6], look: [ROCK.x - 0.3, 0.25, ROCK.z] },              // the Mock Turtle in the distance
       { t: start + 3, dur: T.tears - start - 3, pos: [-0.5, 0.3, 1.1], look: [ROCK.x - 0.1, 0.25, ROCK.z] },
       { t: T.tears - 1, dur: 2, pos: [0.15, 0.36, 0.25], look: L },                                  // large eyes full of tears
+      { t: T.tears + 8, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },                                  // Alice and the Gryphon with him (Alice in frame every ~10 s)
       { t: T.sat, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },                                        // they sat down
       { t: T.real - 1, dur: 2, pos: [0.1, 0.36, 0.3], look: L },                                     // "Once I was a real Turtle"
       { t: T.hjckrrh - 1, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },
@@ -226,6 +227,8 @@ export const mockTurtleRock = {
       { t: T.drive, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },
       { t: T.paws - 1, dur: 2, pos: [GSEAT.x + 0.1, 0.3, GSEAT.z + 0.8], look: [GSEAT.x + 0.1, 0.2, GSEAT.z] }, // "Never heard of uglifying!"
       { t: T.flappers - 1, dur: 2, pos: [0.1, 0.36, 0.3], look: L },                                 // counting off on his flappers
+      { t: T.flappers + 9, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },
+      { t: T.flappers + 20, dur: 3, pos: [0.1, 0.36, 0.3], look: L },
       { t: T.crab, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },
       { t: T.faces - 1, dur: 3, pos: [-0.15, 0.32, 0.8], look: [LEDGE_AT.x - 0.3, 0.22, ROCK.z + 0.1] }, // both hid their faces
       { t: T.games - 8, dur: 6, pos: [-0.6, 0.4, 1.4], look: mid },

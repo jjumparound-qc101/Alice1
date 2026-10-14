@@ -104,6 +104,7 @@ export const quadrille = {
     const DC = [D.x, 0.14, D.z - 0.05];
     const camera = cameraTrack([
       { t: 0, dur: 0, pos: [0.1, 0.36, 0.3], look: LG },                                                // sobs choked his voice
+      { t: 9, dur: 3, pos: [-0.2, 0.32, 0.8], look: mid },                                              // Alice listening
       { t: T.shaking - 1, dur: 2, pos: [-0.2, 0.32, 0.8], look: mid },                                  // shaking him and punching him in the back
       { t: T.quadrille + 2, dur: 4, pos: [-0.4, 0.35, 1.1], look: [0.0, 0.16, -0.35] },                 // a Lobster Quadrille
       { t: T.lobsters - 1, dur: 2, pos: [-0.5, 0.38, 1.3], look: [-0.1, 0.16, -0.2] },                  // capering wildly
