@@ -42,11 +42,13 @@ export const evidence = {
       jumped: at('jumped'), tipped: at('tipped'), goldfish: at('goldfish', 1), pardon: at('pardon'), collected: at('collected'), downwards: at('downwards'),
       right: at('right', 1), mouth: at('mouth'), what: at('nothing', 1) - 4, silence: at('silence', 1), mile: at('mile', 1), pale: at('pale'), paper: at('paper', 1),
       unfolded: at('verses', 1) - 4, guilt: at('guilt'), spectacles: at('spectacles'), read: at('verses', 2), large: at('important', 3) + 6, shook: at('shook'),
-      tarts: at('tarts', 2), inkstand: at('inkstand'), sentence: at('sentence', 1), purple: at('purple'), offHead: at('head', 4), cares: at('cares'), cards: at('cards'),
+      knee: at('knee'), roof: at('roof'), tarts: at('tarts', 2), inkstand: at('inkstand'), sentence: at('sentence', 1), purple: at('purple'), offHead: at('head', 4), cares: at('cares'), cards: at('cards'),
       air: at('air', 1), scream: at('scream'),
     };
     const end = at('bank') - 1;
     const { jury, jurors } = buildCourt({ group, ai });
+    const BG = ai['ch12/bill_gape'], billGape = paperFlat(BG.tex, 0.14 * BG.aspect, 0.14); // gazing up into the roof (AI, 2026-10-14)
+    billGape.position.copy(jurors[BILL].home); billGape.rotation.y = JURY.turn; billGape.visible = false; group.add(billGape);
     const think = thoughts(group, [{ t0: T.goldfish - 1, t1: T.goldfish + 12, art: goldfishVignette() }]);
     const note = paperFlat(texture(noteBook()), 0.05, 0.0375, { anchor: 'center' });
     const paper = paperFlat(texture(verses()), 0.05, 0.065, { anchor: 'center' });
@@ -71,13 +73,16 @@ export const evidence = {
       if (t >= T.silence - 0.5 && t < T.silence + 3) pose = 'judgePoint';               // cackled out "Silence!"
       if (t >= T.pale - 0.3 && t < T.pale + 7) pose = 'judgePale';                      // "The King turned pale"
       if (t >= T.tarts - 0.5 && t < T.tarts + 4) pose = 'judgePoint';                   // pointing to the tarts
+      // AI poses (2026-10-14): "busily writing in his note-book"; the verses spread out on his knee, one eye shut.
+      if (t >= T.silence - 6 && t < T.pale - 0.3) pose = 'judgeNote';
+      if (t >= T.knee - 0.5 && t < T.knee + 7) pose = 'judgePaper';
       return { pose, x: KING.x, z: KING.z, y: THRONE.seat, dir: 1 };
     };
     const queenA = (t) => {
       if (flown(t)) return { visible: false };
       let pose = 'stand';
       if (t >= T.guilt - 0.5 && t < T.guilt + 2) pose = 'point';
-      if (t >= T.inkstand - 1 && t < T.inkstand + 1.5) pose = 'stamp';                 // throwing an inkstand at the Lizard
+      if (t >= T.inkstand - 1 && t < T.inkstand + 0.3) pose = 'inkstand';              // throwing an inkstand at the Lizard (AI, 2026-10-14)
       if (t >= T.sentence - 0.5 && t < T.sentence + 3) pose = 'point';
       if (t >= T.purple - 0.3 && t < T.offHead) pose = 'purple';                        // "turning purple"
       if (t >= T.offHead && t < T.cards) pose = 'point';                                // "Off with her head!" Nobody moved.
@@ -102,6 +107,9 @@ export const evidence = {
     // The whole pack, rising into the air and flying down upon her.
     const pack = [...SOLDIERS, ...COURTIERS, ...CHILDREN, ...GUESTS, ...OFFICERS, { suit: 'hearts', rank: 'king' }, { suit: 'hearts', rank: 'queen' }, { suit: 'hearts', rank: 'knave' }];
     const backTex = ai['ch8/card_back'].tex;
+    // Behind the separate cards, a drawn cloud of the pack (after Tenniel's plate 12.3, AI 2026-10-14).
+    const PF = ai['ch8/pack_flying'], packCloud = paperFlat(PF.tex, 1.7, 1.7 / PF.aspect, { anchor: 'center', edge: false }); group.add(packCloud);
+    packCloud.userData.front.material.transparent = true;
     const flyers = pack.map((who, i) => {
       const face = crowdCard(ai, who, 0.28);
       const art = i % 3 === 2 ? ai['ch8/card_back'] : face, h = 0.3; // the whole pack flying up: faces and backs, in their own proportions
@@ -124,16 +132,22 @@ export const evidence = {
       if (t >= backAt(BILL) + 1 && t < T.right) { bill.rotation.z = Math.PI + Math.sin(t * 6) * 0.15; bill.position.y = jurors[BILL].home.y + 0.12; }   // head downwards, tail waving
       if (t >= T.inkstand && t < T.inkstand + 6) bill.rotation.z = Math.sin(t * 12) * 0.1;
       // The King's note-book; the paper of verses; the inkstand thrown at Bill.
-      note.visible = !flown(t) && t >= T.silence - 6 && t < T.pale + 7;
+      note.visible = !flown(t) && t >= T.pale - 0.3 && t < T.pale + 7; // (in his writing drawing before that)
       if (note.visible) carry(note, cast.king);
+      // Bill, put back right way up: "sit with its mouth open, gazing up into the roof of the court".
+      const gaping = t >= T.roof - 2 && t < T.roof + 9;
+      billGape.visible = gaping; bill.visible = !gaping;
       paper.visible = false; // the paper is in his reading drawing
       const throwK = smooth((t - T.inkstand) / 0.9);
-      ink.visible = t >= T.inkstand - 1 && t < T.inkstand + 8;
+      ink.visible = t >= T.inkstand + 0.3 && t < T.inkstand + 8; // out of her hand (her drawing holds it before)
       const h = jurors[BILL].home;
-      ink.position.set(lerp(QUEEN.x, h.x + 0.03, throwK), lerp(THRONE.seat + 0.25, h.y + 0.1, throwK) + Math.sin(throwK * Math.PI) * 0.3, lerp(QUEEN.z, h.z + 0.04, throwK));
+      ink.position.set(lerp(QUEEN.x - 0.05, h.x + 0.03, throwK), lerp(THRONE.seat + 0.25, h.y + 0.1, throwK) + Math.sin(throwK * Math.PI) * 0.3, lerp(QUEEN.z, h.z + 0.04, throwK));
       ink.rotation.set(0, 0, throwK * 6);
       // The pack: up into the air, swirling, then down upon Alice.
       const a = aliceA(t);
+      const cloud = smooth((t - T.air + 0.2) / 1.5) * (1 - smooth((t - T.scream - 1) / 1.5));
+      packCloud.visible = cloud > 0.01; packCloud.userData.front.material.opacity = cloud;
+      packCloud.position.set(a.x, 0.75 + cloud * 0.15, a.z - 0.5); packCloud.rotation.set(0, 0, Math.sin(t * 0.7) * 0.05);
       flyers.forEach((f, i) => {
         f.visible = t >= T.air - 0.2;
         if (!f.visible) return;
@@ -252,7 +266,8 @@ export const waking = {
     ]);
     return {
       T, bg: PAPER, fog: [9, 34], bounds: set.bounds, hotspots: set.hotspots, camera: withAlice(camera, aliceA, [[69, 92], [145, 159], [181, 335], [457, 512]]), update,
-      actors: (t) => ({ alice: aliceA(t), rabbit: rabbitA(t), sister: { pose: 'read', x: SISTER.x, z: SISTER.z, dir: 1 } }),
+      // The sister (AI poses, 2026-10-14): Alice's head in her lap, brushing away the leaves; then alone, her head on her hand, dreaming.
+      actors: (t) => ({ alice: aliceA(t), rabbit: rabbitA(t), sister: { pose: t < T.ran ? 'lap' : t >= T.ran + 4 ? 'dream' : 'read', x: SISTER.x, z: SISTER.z, dir: 1 } }),
     };
   },
 };

@@ -22,7 +22,8 @@ NAMES = ["queen_stand", "queen_point", "queen_flush", "queen_stamp", "queen_fold
          "knave_carry", "knave_stand", "knave_chains", "executioner",
          *[f"{c}_{p}" for c in ("two", "five", "seven") for p in ("stand", "paint", "bow", "run")], "two_kneel",
          "rose_tree", "rose_white", "rose_red", "card_back",
-         "suit_heart", "suit_diamond", "suit_club", "suit_spade", "body_soldier", "body_courtier", "body_child", "body_officer", "card_arch", "body_soldier_lead",
+         "suit_heart", "suit_diamond", "suit_club", "suit_spade", "body_soldier", "body_courtier", "body_child", "body_officer", "card_arch", "body_soldier_lead", "body_officer_bag",
+         "king_judge_notebook", "king_judge_paper", "queen_inkstand", "pack_flying", "crowd_court",
          *[f"{r}_{s}" for r in ("king", "queen") for s in ("clubs", "diamonds", "spades")], "knave_spades"]
 
 

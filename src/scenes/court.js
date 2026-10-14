@@ -18,7 +18,7 @@ import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
 
 const RABBIT = 0.38, PIG = 0.32;          // the Rabbit's and the guinea-pigs' scale in the court
-const officer = (ai) => (who) => ({ poses: { stand: crowdCard(ai, who, 0.28) }, height: 0.28 });
+const officer = (ai) => (who) => ({ poses: { stand: crowdCard(ai, who, 0.28), bag: crowdCard(ai, { ...who, body: 'bag' }, 0.28) }, height: 0.28 });
 const soldier = (ai, n) => ({ poses: { stand: crowdCard(ai, { suit: 'clubs', rank: n }, 0.28) }, height: 0.28 });
 
 export const trial = {
@@ -60,7 +60,8 @@ export const trial = {
     const shoes = [0, 1].map(() => { const s = paperFlat(shoeTex, 0.04, 0.02); group.add(s); return s; });
     const bags = [0, 1].map(() => { const b = paperFlat(texture(canvasBag()), 0.09, 0.076); group.add(b); return b; });
     const dorSleep = paperFlat(ai['ch7/dormouse_sleep'].tex, 0.055, 0.055 / ai['ch7/dormouse_sleep'].aspect), dorTalk = paperFlat(ai['ch7/dormouse_talk'].tex, 0.055, 0.055 / ai['ch7/dormouse_talk'].aspect); // AI
-    group.add(trump, scrollRolled, scrollOpen, pencil, dorSleep, dorTalk);
+    const dorSulky = paperFlat(ai['ch11/dormouse_sulky'].tex, 0.06 * ai['ch11/dormouse_sulky'].aspect, 0.06); // walking off sulkily (2026-10-14)
+    group.add(trump, scrollRolled, scrollOpen, pencil, dorSleep, dorTalk, dorSulky);
     // Extras: the two soldiers guarding the Knave, and the two officers who suppress the guinea-pigs.
     const guards = extras(group, [soldier(ai, 5), soldier(ai, 6), ...OFFICERS.map(officer(ai))]);
     const PIGS = [{ x: -0.45, z: 0.62 }, { x: -0.75, z: 0.66 }];
@@ -68,6 +69,8 @@ export const trial = {
     // Alice: at the front of the crowd; round behind the jury-box for the pencil; sitting among
     // the crowd, beginning to grow.
     const billHome = jurors[BILL].home;
+    const BF = ai['ch11/bill_finger'], billFinger = paperFlat(BF.tex, 0.14 * BF.aspect, 0.14); // writing with one finger (2026-10-14)
+    billFinger.position.copy(billHome); billFinger.rotation.y = JURY.turn; group.add(billFinger);
     const BEHIND = { x: billHome.x - 0.1, z: billHome.z - 0.22 };
     const SEAT = { x: FRONT.x + 0.05, z: FRONT.z + 0.05 };
     const scaleAt = (t) => FOOT + smooth((t - T.larger) / 18) * 0.16 + smooth((t - T.larger - 18) / (end - T.larger - 18)) * 0.1;
@@ -117,11 +120,18 @@ export const trial = {
       const fidget = pose === 'pale' || pose === 'tremble' ? Math.sin(t * 22) * 0.04 : 0;
       return { ...s, pose, tilt: fidget, dir: s.moving ? s.dir : -1 };
     };
-    const hareA = (t) => (t < T.hare - 2 || t >= T.off + 2 ? { visible: false } : { pose: 'sit', x: WITNESS.x + 0.3, z: WITNESS.z - 0.18, dir: -1, scale: 0.55 });
+    // The March Hare comes in arm in arm with the Dormouse (one drawing of the two, 2026-10-14), then sits.
+    const HARE_AT = { x: WITNESS.x + 0.3, z: WITNESS.z - 0.18 };
+    const armInArm = (t) => t >= T.hare - 2 && t < T.hare + 4;
+    const hareA = (t) => {
+      if (t < T.hare - 2 || t >= T.off + 2) return { visible: false };
+      if (armInArm(t)) { const s = route(t, [[T.hare - 2, { x: DOOR.x - 0.1, z: DOOR.z, dir: -1 }], [T.hare + 4, HARE_AT]], { phase: t * 2.4 }); return { ...s, pose: 'arm', scale: 0.55 }; }
+      return { pose: 'sit', ...HARE_AT, dir: -1, scale: 0.55 };
+    };
     const cookA = (t) => {
       if (t < T.cook - 3 || t >= T.gone) return { visible: false };
       const s = route(t, [[T.cook - 3, { x: DOOR.x - 0.1, z: DOOR.z, dir: -1 }], [T.cook + 4, STAND]], { phase: t * 2.4 });
-      return { ...s, pose: 'stir', scale: 0.9 };
+      return { ...s, pose: 'pepper', scale: 0.9 }; // the pepper-box in her hand: "Shan't," said the cook (2026-10-14)
     };
     const pigA = (k) => (t) => {
       const cheer = k === 0 ? T.cheered : T.cheered2;
@@ -135,7 +145,8 @@ export const trial = {
       ...[0, 1].map((k) => {
         const cheer = k === 0 ? T.cheered : T.cheered2;
         const s = route(t, [[0, { x: -1.0 - k * 0.25, z: 0.25, dir: 1 }], [cheer, { x: -1.0 - k * 0.25, z: 0.25 }], [cheer + 1.5, { x: PIGS[k].x, z: PIGS[k].z - 0.02 }]], { phase: t * 2.6 });
-        return { ...s, pose: 'stand', y: t >= cheer + 2.5 ? 0.05 : 0 };               // "and then sat upon it"
+        if (t >= cheer + 2.5) return { pose: 'bag', x: PIGS[k].x, z: PIGS[k].z, dir: 1, idle: t }; // "and then sat upon it" (one drawing, 2026-10-14)
+        return { ...s, pose: 'stand' };
       }),
     ];
     function update(t, cast, camera) {
@@ -156,14 +167,19 @@ export const trial = {
         s.position.set(STAND.x - 0.08 + k * 0.16 * k2, Math.sin(k2 * Math.PI) * 0.08, STAND.z + 0.12 + k * 0.03); s.rotation.z = k2 * (k ? 2.5 : -2.5);
       });
       // The canvas bags, a guinea-pig inside each, an officer sitting on top.
-      bags.forEach((b, k) => { const cheer = k === 0 ? T.cheered : T.cheered2; b.visible = t >= cheer + 1.5; b.position.set(PIGS[k].x, 0, PIGS[k].z); });
+      bags.forEach((b, k) => { const cheer = k === 0 ? T.cheered : T.cheered2; b.visible = t >= cheer + 1.5 && t < cheer + 2.5; b.position.set(PIGS[k].x, 0, PIGS[k].z); });
       // The Dormouse: beside Alice, asleep; across the court; awake for "Treacle"; turned out.
       const dx = route(t, [[T.hare - 2, { x: WITNESS.x + 0.4, z: WITNESS.z + 0.2 }], [T.hare + 10, { x: SEAT.x - 0.15, z: SEAT.z + 0.04 }], [T.crossed - 1, { x: SEAT.x - 0.15, z: SEAT.z + 0.04 }],
         [T.crossed + 6, { x: -0.95, z: 0.5 }], [T.collar + 1, { x: -0.95, z: 0.5 }], [T.gone - 2, { x: DOOR.x - 0.1, z: DOOR.z }]]);
       const awake = t >= T.treacle - 0.5 && t < T.collar + 1;
       const inCourt = t >= T.hare - 2 && t < T.gone - 2;
-      dorSleep.visible = inCourt && !awake; dorTalk.visible = inCourt && awake;
-      for (const d of [dorSleep, dorTalk]) d.position.set(dx.x, 0, dx.z);
+      const crossing = t >= T.crossed - 1 && t < T.crossed + 6;            // "got up very sulkily and crossed over"
+      dorSleep.visible = inCourt && !awake && !crossing && !armInArm(t); dorTalk.visible = inCourt && awake && !crossing;
+      dorSulky.visible = crossing;
+      for (const d of [dorSleep, dorTalk, dorSulky]) d.position.set(dx.x, 0, dx.z);
+      // Bill, having lost his pencil, writes with one finger for the rest of the day.
+      const finger = t >= T.lizard + 6;
+      billFinger.visible = finger; jurors[BILL].flat.visible = !finger;
       const a = aliceA(t);
       think(t, { x: a.x - 0.1, y: 0.42, z: a.z - 0.25 }, 0.24);
     }

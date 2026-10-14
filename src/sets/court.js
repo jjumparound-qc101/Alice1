@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, canvas, hatch, INK, PAPER } from '../ink.js';
 import { flagstones } from '../props.js';
-import { courtWall, throne, juryBox, tartsTable, witnessBox, crowdGallery, slate } from '../props11.js';
+import { courtWall, throne, juryBox, tartsTable, witnessBox, slate } from '../props11.js';
 
 export const COURT = { w: 5.4, d: 4.4, h: 1.8, back: -2.2 };
 export const THRONE = { x: 0, z: -1.95, w: 0.9, seat: 0.09 };              // the dais top, where the King and Queen stand
@@ -57,7 +57,15 @@ export function buildCourt({ group, ai }) {
   const table = paperFlat(texture(tartsTable()), 0.36, 0.27); table.position.set(TARTS.x, 0, TARTS.z); group.add(table);
   // The crowd: little birds and beasts and the pack of cards behind rails on either side and behind the bar.
   for (const [x, z, turn, w, seed] of [[-2.05, -1.6, 0.9, 1.4, 2251], [2.05, -1.65, -0.9, 1.4, 2252], [-1.3, 0.75, 0.25, 1.6, 2253]]) {
-    const c = paperFlat(texture(crowdGallery(2400, 500, seed)), w, w * 500 / 2400); c.position.set(x, 0, z); c.rotation.y = turn; group.add(c);
+    // The gallery, packed with birds, beasts and cards (AI, 2026-10-14; was drawn in code): the drawing twice
+    // along each rail (the second mirrored), so the spectators are about the size of the jurors.
+    const C = ai['ch8/crowd_court'], tw = w / 2;
+    for (const k of [0, 1]) {
+      const c = paperFlat(C.tex, tw, tw / C.aspect);
+      c.position.set(x + Math.cos(turn) * (k - 0.5) * tw, 0, z - Math.sin(turn) * (k - 0.5) * tw); c.rotation.y = turn;
+      if ((k + seed) % 2) c.scale.x = -1;
+      group.add(c);
+    }
   }
   // The witness stand.
   const wb = paperFlat(texture(witnessBox()), WITNESS.w, WITNESS.h); wb.position.set(WITNESS.x, 0, WITNESS.z); wb.rotation.y = WITNESS.turn; group.add(wb);

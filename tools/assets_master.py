@@ -56,6 +56,12 @@ DONE_AS = {
     "knave_chains_sad": "done as knave_chains",
     "rabbit_spectacles": "done as rabbit_specs (from the Chapter I model)",
     "gryphon_wake": "done as gryphon_wake, gryphon_chuckle",
+    "jurors": "done as the twelve creatures' own drawings, seated in the jury-box by the game (src/sets/court.js)",
+    "guinea_bag": "done as body_officer_bag",
+    "jurors_sprawl": "done: the game tips the jurors' drawings out of the box (src/scenes/evidence.js)",
+    "bill_upside_down": "done as bill_gape; head downwards is Bill's drawing turned over by the game",
+    "king_judge_notebook": "done as king_judge_notebook, king_judge_paper",
+    "sister_lap": "done as sister_lap, sister_dream",
     "soldier9_custody": "done as body_soldier_lead (the prisoner is the player's own card)",
 }
 

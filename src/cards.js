@@ -16,6 +16,8 @@ const BODIES = {
   spades: { art: 'ch8/body_officer', face: [0.287, 0.219, 0.852, 0.74] },
   // A soldier walking off, leading a prisoner away by the arm (Chapter IX, "in custody"; 2026-10-14).
   lead: { art: 'ch8/body_soldier_lead', face: [0.198, 0.249, 0.68, 0.749], sign: 'clubs', scale: 1426 / 1384 },
+  // An officer of the court sitting on the canvas bag with a guinea-pig in it (Chapter XI; 2026-10-14).
+  bag: { art: 'ch8/body_officer_bag', face: [0.38, 0.17, 0.65, 0.36], sign: 'spades', scale: 1.15 },
 };
 const SIGN = { hearts: 'ch8/suit_heart', diamonds: 'ch8/suit_diamond', clubs: 'ch8/suit_club', spades: 'ch8/suit_spade' };
 const COURT = { king: 'king', queen: 'queen', knave: 'knave' };
