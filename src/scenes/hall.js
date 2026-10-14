@@ -168,10 +168,12 @@ export const hall = {
       { t: T.doors, dur: 3, pos: [-2.4, 1.2, 1.4], look: [-3.0, 0.7, -2.3] },        // along the locked doors, with her               // the locked doors
       { t: T.doors + 5, dur: 7, pos: [0.2, 1.2, 1.2], look: [0.5, 0.8, -2.6] },
       { t: T.table - 0.5, dur: 2.5, pos: [1.6, 1.25, 0.7], look: [TABLE.x, 0.85, TABLE.z] },
-      { t: T.key - 1, dur: 2, pos: [1.25, 1.2, -0.3], look: [TABLE.x - 0.1, 0.92, TABLE.z] }, // the golden key
-      { t: T.tryKey, dur: 3, pos: [-1.2, 1.3, 1.0], look: [-2.5, 1.0, -3] },
-      { t: T.curtain - 1.5, dur: 3, pos: [DOOR.x - 1.3, 0.9, -0.3], look: [DOOR.x, 0.4, DOOR.z] },
-      { t: T.fits, dur: 2, pos: [DOOR.x + 0.45, 0.5, -1.6], look: [DOOR.x - 0.05, 0.22, DOOR.z] },
+      // The key, the doors, the little door (owner, 2026-10-14: Alice kept whole in the picture). Full-figure
+      // shots are about 2.4 m from her, looking at her middle, so she stands clear of the text strip.
+      { t: T.key - 1, dur: 2.5, pos: [AT_TABLE.x + 0.8, 1.0, AT_TABLE.z + 2.3], look: [AT_TABLE.x + 0.2, 0.55, AT_TABLE.z] }, // Alice with the golden key, at the glass table
+      { t: T.tryKey - 0.5, dur: 3, pos: [0, 1.2, 1.8], look: [0, 0.45, -2.4] },                   // the whole row of doors, wide and still, as she tries them
+      { t: T.curtain - 1.5, dur: 3, pos: [AT_DOOR.x - 0.4, 0.95, AT_DOOR.z + 2.5], look: [AT_DOOR.x + 0.25, 0.45, AT_DOOR.z] }, // the low curtain, Alice beside it
+      { t: T.fits, dur: 2.5, pos: [AT_DOOR.x - 0.1, 0.85, AT_DOOR.z + 2.3], look: [AT_DOOR.x + 0.3, 0.42, DOOR.z + 0.1] }, // the key fits: Alice whole, the little door beside her
       { t: T.knelt, dur: 3, pos: [DOOR.x - 0.02, 0.22, DOOR.z + 0.55], look: [DOOR.x, 0.2, DOOR.z - 0.5] }, // the garden, as she sees it
       { t: T.knelt + 6, dur: 3, pos: [AT_DOOR.x - 0.75, 0.75, AT_DOOR.z + 1.6], look: [DOOR.x - 0.25, 0.35, DOOR.z + 0.1] }, // over her shoulder: Alice kneeling, the garden beyond
       { t: T.waiting - 6, dur: 3, pos: [DOOR.x - 1.2, 1.0, 0.1], look: [DOOR.x - 0.2, 0.5, DOOR.z] },
