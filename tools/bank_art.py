@@ -6,7 +6,9 @@
 - bank_edge: the bank's grassy lip, side on; cut out from white, its two ends cross-faded so it
   repeats sideways.
 
-Usage: python3 tools/bank_art.py   -> public/art/ai/bank_grass.webp, bank_edge.webp
+- sky_summer: the hot day's sky (every outdoor scene shares it), no hills; ends joined.
+
+Usage: python3 tools/bank_art.py   -> public/art/ai/bank_grass.webp, bank_edge.webp, sky.webp
 Requires Pillow, NumPy and SciPy.
 """
 import subprocess
@@ -44,6 +46,10 @@ def main():
     img = img.resize((1400, round(img.height * 1400 / img.width)), Image.LANCZOS)
     img.save("public/art/ai/bank_edge.webp", quality=90, method=6)
     print(f"public/art/ai/bank_edge.webp: {img.size[0]}x{img.size[1]}")
+    sky = np.asarray(Image.open("source/ai/sky_summer.png").convert("L"), np.float32)
+    sky = wrap(sky, 1, 80)
+    Image.fromarray((sky[..., None] / 255 * PAPER).astype(np.uint8), "RGB").save("public/art/ai/sky.webp", quality=88, method=6)
+    print("public/art/ai/sky.webp")
 
 
 if __name__ == "__main__":
