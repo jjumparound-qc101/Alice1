@@ -55,6 +55,11 @@ def main():
     cat = cut_full("source/ai/cheshire_bough.png")
     save(cat, "cheshire_bough")
     save(cut_full("source/ai/cheshire_bough_empty.png"), "cheshire_bough_empty")
+    save(cut_full("source/ai/cheshire_paw.png"), "cheshire_paw")  # waving a paw, same canvas
+    sys.path.insert(0, "tools")
+    import ch2_art
+    for n in ("axis", "pigs"):
+        ch2_art.vignette(f"vignette_{n}", n)
     m = Image.new("L", cat.size, 0)
     ImageDraw.Draw(m).ellipse(GRIN, fill=255)
     grin = cat.copy()

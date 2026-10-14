@@ -9,7 +9,6 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { flagstones } from '../props.js';
-import { axisVignette, pigsVignette } from '../props6.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
@@ -116,7 +115,7 @@ export const kitchen = {
     // The shower of things (AI drawings, one sheet split by tools/ch6_art.py); the frying-pan last.
     const kinds = ['irons', 'saucepan', 'plate', 'dish', 'saucepan2', 'plate2', 'pan'];
     const missiles = kinds.map((k) => { const a = ai[`ch6/thrown_${k}`], w = k === 'irons' ? 0.09 : 0.11; /* a little larger than life, to read in the smoke */ const m = paperFlat(a.tex, w, w / a.aspect, { anchor: 'center' }); group.add(m); return m; });
-    const think = thoughts(group, [{ t0: at('axis') - 1, t1: T.axes, art: axisVignette() }]);
+    const think = thoughts(group, [{ t0: at('axis') - 1, t1: T.axes, art: ai['vignettes/axis'].tex }]);
     const DUCHESS = { x: 0.05, z: -0.15 }, COOK = { x: -0.32, z: -0.42 }, ALICE = { x: 0.42, z: 0.12 };
     const duchessA = (t) => {
       const s = route(t, [[start, DUCHESS], [T.fling + 1, DUCHESS], [T.fling + 4, { x: 0.85, z: -0.4, dir: 1 }]], { phase: t * 3 }); // "she hurried out of the room" (behind Alice)
@@ -214,7 +213,7 @@ export const wood6 = {
     const clip = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 10);
     catCard.traverse((m) => { if (m.material) { m.material.clippingPlanes = [clip]; } });
     group.add(catCard, grinCard);
-    const think = thoughts(group, [{ t0: T.children, t1: T.children + 8, art: pigsVignette() }]);
+    const think = thoughts(group, [{ t0: T.children, t1: T.children + 8, art: ai['vignettes/pigs'].tex }]);
 
     const aliceA = (t) => {
       const s = route(t, [
@@ -248,7 +247,10 @@ export const wood6 = {
       const shown = t >= T.bough - 0.5 && !(t >= T.vanished && t < T.appeared) && !(t >= T.vanished2 && t < T.again);
       catCard.visible = shown && t < T.slowly + 4;
       grinCard.visible = shown && t < T.grinGone;
-      const wave = (t >= T.paw1 && t < T.paw1 + 3) || (t >= T.paw2 && t < T.paw2 + 3) ? Math.sin(t * 6) * 0.08 : 0;
+      // "waving its right paw round": the drawing with a paw raised (AI, same canvas), rocking gently.
+      const waving = (t >= T.paw1 && t < T.paw1 + 3) || (t >= T.paw2 && t < T.paw2 + 3);
+      catCard.userData.front.material.map = waving ? ai['ch6/cheshire_paw'].tex : ai['ch6/cheshire_bough'].tex;
+      const wave = waving ? Math.sin(t * 6) * 0.04 : 0;
       for (const card of [catCard, grinCard]) { card.position.set(b.x, b.y - BOUGH_DROP, b.z + 0.004 + (card === grinCard ? 0.002 : 0)); card.rotation.z = wave * 0.3; }
       // "beginning with the end of the tail, and ending with the grin"
       const k = smooth((t - T.slowly) / 3.5);
