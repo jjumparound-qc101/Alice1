@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { buildHall, TABLE, DOOR, KEY } from '../sets/hall.js';
-import { pokerVignette, knifeVignette, poisonVignette, candleVignette } from '../props.js';
+import { candleVignette } from '../props.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, step, cameraTrack } from '../track.js';
@@ -23,7 +23,7 @@ export const hall = {
       hall: at('hall', 1), lamps: at('lamps'), doors: at('doors', 1), table: at('three-legged'),
       key: at('key', 1), tryKey: at('key', 2), curtain: at('curtain'), fits: at('key', 3),
       knelt: at('knelt'), waiting: cue.para('There seemed to be no use'), backToTable: at('table', 2),
-      bottle: at('bottle', 1), poker: at('poker'), finger: at('finger'), bleeds: at('bleeds'),
+      bottle: at('bottle', 1), histories: at('histories'), poker: at('poker'), finger: at('finger'), bleeds: at('bleeds'),
       poison: at('poison', 2), notMarked: at('poison', 3), candle: at('candle', 1), blownOut: at('candle', 3), ventured: at('ventured'),
       drunk: at('finished', 1), telescope: at('telescope', 1, at('ventured')), decided: at('decided'), forgotten: at('forgotten', 2),
       legs: at('legs'), sat: at('sat'), scold: cue.para('“Come, there’s no use'), box: at('box', 2), // #1 is "box her own ears"
@@ -54,9 +54,11 @@ export const hall = {
 
     // "the simple rules their friends had taught them", and later the candle going out.
     const think = thoughts(group, [
-      { t0: T.poker - 2, t1: T.finger - 0.3, art: pokerVignette() },
-      { t0: T.finger - 0.3, t1: T.poison - 1.2, art: knifeVignette() },
-      { t0: T.poison - 1.2, t1: T.notMarked - 0.5, art: poisonVignette() },
+      // AI drawings (tools/ch1_art.py; the poker's tip coloured red there).
+      { t0: T.histories - 1, t1: T.poker - 2, art: ai['vignettes/histories'].tex },
+      { t0: T.poker - 2, t1: T.finger - 0.3, art: ai['vignettes/poker'].tex },
+      { t0: T.finger - 0.3, t1: T.poison - 1.2, art: ai['vignettes/knife'].tex },
+      { t0: T.poison - 1.2, t1: T.notMarked - 0.5, art: ai['vignettes/poison'].tex },
       { t0: T.candle - 1.5, t1: T.blownOut + 2, art: candleVignette() },
     ]);
 
@@ -128,8 +130,10 @@ export const hall = {
       bottle.visible = t >= T.bottle - 0.5 && t < T.drunk + 0.5;
       if (t >= T.bottle + 1 && t < T.drunk + 0.5) carry(bottle, cast.alice, { drop: 0.08 });
       else rest(bottle, TABLE.x - 0.12, TABLE.top + 0.015, TABLE.z + 0.05);
-      // Her thoughts, above and beside her head, sized to her.
-      think(t, { x: a.x - 0.2 * a.scale, y: (a.y ?? 0) + 1.75 * a.scale, z: a.z + 0.15 }, Math.max(a.scale, 0.35));
+      // Her thoughts beside her head (to the left, away from the table), sized to her: above
+      // her head the close shots slid them down over her face.
+      const ts = Math.max(a.scale, 0.35);
+      think(t, { x: a.x - 0.2 * a.scale - 0.62 * ts, y: (a.y ?? 0) + 1.3 * a.scale, z: a.z + 0.15 }, ts);
       // Under the table: the little glass box and the cake.
       box.visible = cake.visible = glassFront.visible = t >= T.box - 0.5;
       box.position.set(BOX_AT.x, 0, BOX_AT.z);

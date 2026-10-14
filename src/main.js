@@ -69,7 +69,7 @@ async function main() {
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',
     'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_hearth', ...['duchess_nurse', 'duchess_toss', 'duchess_fling', 'duchess9_arm', 'duchess9_tremble', 'duchess9_run'].map((n) => `ch6/${n}`),
-    ...['sit', 'sob', 'count', 'hide', 'dance', 'sing', 'yawn'].map((n) => `ch9/mockturtle_${n}`), 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', // tools/walls.py // tools/ch1_art.py
+    ...['sit', 'sob', 'count', 'hide', 'dance', 'sing', 'yawn'].map((n) => `ch9/mockturtle_${n}`), 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', 'vignettes/histories', 'vignettes/poker', 'vignettes/knife', 'vignettes/poison', // tools/walls.py // tools/ch1_art.py
     // Chapter II (tools/ch2_art.py): the Rabbit, the Mouse, the birds, props, the pool and the thoughts.
     ...['rabbit2_trot', 'rabbit2_start', 'rabbit2_away', 'mouse_swim', 'mouse_leap', 'mouse_bristle', 'mouse_away',
       'duck_swim', 'duck_stand', 'dodo_swim', 'dodo_stand', 'lory_swim', 'lory_stand', 'eaglet_swim', 'eaglet_stand',

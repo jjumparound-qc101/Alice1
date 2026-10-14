@@ -42,6 +42,23 @@ def whitecut(path, *args):
 # "a White Rabbit with pink eyes" (COLOR.md): the eye of each sheet figure (x, y, radius in the
 # cut-out image), its iris tinted the same pink as the Tenniel Rabbit's.
 EYES = {"rabbit_watch": (140, 225, 12), "rabbit_trot": (95, 228, 12), "rabbit_back": (214, 216, 8)}
+def red_hot(rgb, g):
+    """The poker red-hot (COLOR.md): glowing at the tip, red along the first part of the shaft.
+    The colour lies over the drawing, so the ink lines still show."""
+    h, w = g.shape
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    (x0, y0), (x1, y1) = (440, 418), (640, 512)  # the tip, and where the red fades (source pixels)
+    dx, dy = x1 - x0, y1 - y0
+    t = np.clip(((xx - x0) * dx + (yy - y0) * dy) / (dx * dx + dy * dy), -0.05, 1.2)
+    dist = np.hypot(xx - (x0 + t * dx), yy - (y0 + t * dy))
+    a = np.clip(1.3 - dist / 15, 0, 1) * np.clip(1 - t, 0, 1) ** 0.6
+    red = np.array([0xF0, 0x38, 0x1A], np.float32)
+    glow = np.array([0xFF, 0x9A, 0x3C], np.float32)
+    col = red + (glow - red) * np.clip(1 - t * 3, 0, 1)[..., None]
+    light = (g[..., None] / 255.0) * 0.6 + 0.4
+    rgb[:] = rgb * (1 - a[..., None] * 0.95) + col * light * a[..., None] * 0.95
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     for n in ("leaf_heap", "alice_land", "rabbit_run_away"):  # (the Rabbit whitened below)
@@ -62,8 +79,9 @@ def main():
     # Thought vignettes (the same oval card treatment as Chapter II's).
     sys.path.insert(0, "tools")
     import ch2_art
-    for n in ("dinah", "bats", "stairs"):
+    for n in ("dinah", "bats", "stairs", "histories", "knife", "poison"):
         ch2_art.vignette(f"vignette_{n}", n)
+    ch2_art.vignette("vignette_poker", "poker", paint=red_hot)
     # The globe drawing has its caption printed under the oval: crop it off first.
     with tempfile.TemporaryDirectory() as d:
         Image.open("source/ai/vignette_globe.webp").crop((0, 0, 1254, 1100)).save(f"{d}/vignette_globe.png")

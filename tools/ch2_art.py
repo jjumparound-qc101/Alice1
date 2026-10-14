@@ -66,10 +66,13 @@ def whitecut(path, *args):
     return img
 
 
-def vignette(name, out):
-    """Paper-tint, crop to the content, cover an oval of 512:360 and outline it."""
+def vignette(name, out, paint=None):
+    """Paper-tint, crop to the content, cover an oval of 512:360 and outline it.
+    paint(rgb, g): optional, colours the paper-tinted drawing in place (source pixels)."""
     g = np.asarray(Image.open(src(name)).convert("L"), np.float32)
     rgb = g[..., None] / 255.0 * PAPER
+    if paint:
+        paint(rgb, g)
     if out == "terrier":
         # The dog's hair brown: blend paper toward brown inside the figure, keep the ink.
         from scipy import ndimage as ndi
