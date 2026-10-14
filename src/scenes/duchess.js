@@ -108,9 +108,10 @@ export const kitchen = {
     const think = thoughts(group, [{ t0: at('axis') - 1, t1: T.axes, art: axisVignette() }]);
     const DUCHESS = { x: 0.05, z: -0.15 }, COOK = { x: -0.32, z: -0.42 }, ALICE = { x: 0.42, z: 0.12 };
     const duchessA = (t) => {
-      const standing = t >= T.verse2 - 1 && t < T.fling + 1;
       const s = route(t, [[start, DUCHESS], [T.fling + 1, DUCHESS], [T.fling + 4, { x: 0.85, z: 0.5, dir: 1 }]], { phase: t * 3 }); // "she hurried out of the room"
-      return { ...s, pose: standing || t >= T.fling + 1 ? 'stand' : 'sit', dir: s.moving ? 1 : -1, visible: t < T.fling + 4 };
+      // Sitting with the baby; tossing it through the lullaby; flinging it; hurrying out.
+      const pose = t >= T.fling ? 'run' : t >= T.fling - 0.6 ? 'fling' : t >= T.verse2 - 1 ? 'toss' : 'sit';
+      return { ...s, pose, dir: s.moving || pose === 'run' ? 1 : -1, visible: t < T.fling + 4 };
     };
     const cookA = (t) => {
       const throwing = (t >= T.irons - 1 && t < T.axes - 4) || (t >= T.pan - 1 && t < T.pan + 1);
@@ -125,7 +126,7 @@ export const kitchen = {
     function update(t, cast) {
       // The baby: in the Duchess's lap, tossed in the lullaby, flung to Alice.
       const d = cast.duchess.root.position;
-      babyCard.visible = !(t < T.fling && duchessA(t).pose === 'sit'); // the AI Duchess has the baby in her lap
+      babyCard.visible = t >= T.fling; // until it is flung, the baby is in the Duchess's drawings
       if (t < T.fling) {
         const toss = t >= T.verse2 && t < T.fling ? Math.abs(Math.sin(t * 5)) * 0.08 : 0;
         babyCard.position.set(d.x - 0.01, (duchessA(t).pose === 'sit' ? 0.14 : 0.2) + toss, d.z + 0.04);

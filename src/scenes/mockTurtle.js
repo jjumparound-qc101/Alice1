@@ -80,12 +80,12 @@ export const duchessWalk = {
       const a = aliceA(t);
       if (t >= T.gone) {
         const k = smooth((t - T.gone) / 2.5);
-        return { pose: 'stand', x: lerp(a.x - 0.11, 0.2, k), z: lerp(a.z - 0.03, -0.8, k), moving: true, phase: t * 5, dir: -1, scale: DUCHESS };
+        return { pose: 'run', x: lerp(a.x - 0.15, 0.2, k), z: lerp(a.z + 0.02, -0.8, k), moving: true, phase: t * 5, dir: -1, scale: DUCHESS };
       }
       const dig = [T.chin1, T.chin3, T.chin4].some((c) => t >= c && t < c + 3);
       const close = t >= T.squeezed ? 0.02 : 0;
       const shake = t >= T.tremble ? Math.sin(t * 40) * 0.03 : 0;
-      return { ...a, pose: 'stand', x: a.x + (a.dir < 0 ? 0.11 : -0.11) * (1 - close * 10) * (dig ? 0.7 : 1), z: a.z - 0.03, scale: DUCHESS, tilt: (dig ? -0.25 * a.dir : 0) + shake };
+      return { ...a, pose: t >= T.tremble ? 'tremble' : 'stand', x: a.x + (a.dir < 0 ? 0.15 : -0.15) * (1 - close * 10) * (dig ? 0.75 : 1), z: a.z + 0.02, scale: DUCHESS, tilt: (dig ? -0.25 * a.dir : 0) + shake };
     };
     const queenA = (t) => {
       if (t < T.tremble - 3) return { visible: false };
@@ -107,7 +107,7 @@ export const duchessWalk = {
     const camera = cameraTrack([
       { t: 0, dur: 0, pos: [2.3, 0.3, 1.1], look: [2.5, 0.2, 0.2] },                                    // arm in arm
       { t: 10, dur: 30, pos: [1.6, 0.28, 1.0], look: [1.8, 0.18, 0.3] },
-      { t: T.chin1 - 2, dur: 2, pos: [1.75, 0.27, 0.7], look: [1.62, 0.24, 0.33] },                     // the sharp chin
+      { t: T.chin1 - 2, dur: 2, pos: [1.82, 0.29, 0.9], look: [1.58, 0.22, 0.33] },                     // the sharp chin
       { t: T.chin1 + 10, dur: 4, pos: [1.7, 0.3, 1.0], look: [1.7, 0.2, 0.3] },
       { t: T.squeezed + 30, dur: T.chin4 - T.squeezed - 32, pos: [3.0, 0.3, 1.1], look: [3.1, 0.2, 0.35] }, // walking on together
       { t: T.tremble - 1, dur: 3, pos: [3.0, 0.32, 1.1], look: [3.4, 0.24, 0.35] },                     // the Queen in front of them

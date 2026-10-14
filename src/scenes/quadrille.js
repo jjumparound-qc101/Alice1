@@ -87,9 +87,9 @@ export const quadrille = {
         [T.capering + 5, { x: MSAND.x - 0.45, z: MSAND.z + 0.3 }], [T.sadly, MSAND], [T.solemnly - 1, round(T.solemnly, Math.PI)], [T.songEnd, round(T.songEnd, Math.PI)], [T.songEnd + 3, L]], { phase: t * 2 });
       const down = t < T.quadrille + 2 ? LEDGE_AT.y * (1 - smooth((t - T.quadrille) / 2)) : 0;
       const caper = t >= T.somersault && t < T.capering + 5 ? Math.abs(Math.sin(t * 6)) * 0.05 : 0;
-      let pose = t >= T.somersault && t < T.capering + 5 ? 'count' : s.moving ? 'walk' : 'sit';
-      if (t >= T.yawned && t < T.yawned + 3) pose = 'hide';
-      if (t >= T.sighed && t < T.chorus + 2) pose = 'sob';                        // singing, "choked with sobs"
+      let pose = s.moving || (t >= T.somersault && t < T.capering + 5) ? 'walk' : 'sit'; // 'walk' is the dancing drawing
+      if (t >= T.yawned && t < T.yawned + 3) pose = 'yawn';
+      if (t >= T.sighed && t < T.chorus + 2) pose = 'sing';                       // singing, "choked with sobs"
       if (t >= T.chorus + 2) pose = 'sob';
       return { ...s, pose, y: down + caper, dir: t >= T.songEnd + 3 ? 1 : s.dir };
     };
