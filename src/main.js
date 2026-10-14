@@ -1,4 +1,4 @@
-import { keepThoughtsInView } from './thoughts.js';
+import { layoutThoughts } from './thoughts.js';
 import * as THREE from 'three';
 import { Puppet } from './puppet.js';
 import { makeCues } from './cues.js';
@@ -128,27 +128,57 @@ async function main() {
   // strip), turn the camera just enough to take her in. Shots that leave her out altogether
   // (close-ups, her point of view, other characters) are left alone. (Owner, 2026-10-13.)
   const corner = new THREE.Vector3();
-  function keepAliceInFrame() {
+  // Alice's box on screen (CSS pixels), from points on her card; null if she isn't shown or is
+  // behind the camera. Also the box in view coordinates (-1..1), for keepAliceInFrame.
+  function aliceOnScreen() {
     const al = cast.alice, flat = al.poses[al.pose];
-    if (!al.root.visible || !flat) return;
+    if (!al.root.visible || !flat) return null;
     camera.updateMatrixWorld();
     const [w, h] = flat.userData.size;
     let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, inside = 0, n = 0;
     for (const u of [0.15, 0.5, 0.85]) for (const v of [0.05, 0.5, 0.95]) {
       flat.localToWorld(corner.set((u - 0.5) * w, v * h, 0)).project(camera);
-      if (corner.z > 1) return; // behind the camera
+      if (corner.z > 1) return null;
       n++; if (Math.abs(corner.x) <= 1 && corner.y <= 1 && corner.y >= -0.4) inside++;
       x0 = Math.min(x0, corner.x); x1 = Math.max(x1, corner.x); y0 = Math.min(y0, corner.y); y1 = Math.max(y1, corner.y);
     }
-    if (inside === 0 || inside === n) return;
-    const M = 0.92, BOTTOM = -0.38;
-    let dx = 0, dy = 0;
-    if (x1 - x0 < 2 * M) dx = x1 > M ? x1 - M : x0 < -M ? x0 + M : 0;
-    if (y1 - y0 < M - BOTTOM) dy = y0 < BOTTOM ? y0 - BOTTOM : y1 > M ? y1 - M : 0;
-    const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-    const cap = 0.3;
-    camera.rotateY(-THREE.MathUtils.clamp(Math.atan(dx * tanV * camera.aspect), -cap, cap));
-    camera.rotateX(THREE.MathUtils.clamp(Math.atan(dy * tanV), -cap, cap));
+    const r = renderer.domElement.getBoundingClientRect(), W = r.width, H = r.height; // the picture on screen (a band on portrait phones)
+    return { ndc: { x0, x1, y0, y1 }, inside, n, px: { x: r.left + (x0 + 1) / 2 * W, y: r.top + (1 - y1) / 2 * H, w: (x1 - x0) / 2 * W, h: (y1 - y0) / 2 * H } };
+  }
+  // Watch mode: if Alice is partly in the shot but cut by its edge (or hidden under the text strip),
+  // turn the camera just enough to take her in. The turn is eased in and out over about half a
+  // second (owner, 2026-10-14: it used to snap on and off, which made the camera jerk).
+  const nudge = { yaw: 0, pitch: 0, last: 0 };
+  function keepAliceInFrame(dt, seeked) {
+    // Measured against the shot as directed (before this frame's turn), so the target is absolute.
+    const a = aliceOnScreen();
+    let yaw = 0, pitch = 0;
+    if (a && a.inside > 0 && a.inside < a.n) {
+      const { x0, x1, y0, y1 } = a.ndc, M = 0.92, BOTTOM = -0.38;
+      let dx = 0, dy = 0;
+      if (x1 - x0 < 2 * M) dx = x1 > M ? x1 - M : x0 < -M ? x0 + M : 0;
+      if (y1 - y0 < M - BOTTOM) dy = y0 < BOTTOM ? y0 - BOTTOM : y1 > M ? y1 - M : 0;
+      const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)), cap = 0.3;
+      yaw = -THREE.MathUtils.clamp(Math.atan(dx * tanV * camera.aspect), -cap, cap);
+      pitch = THREE.MathUtils.clamp(Math.atan(dy * tanV), -cap, cap);
+    }
+    const k = seeked ? 1 : 1 - Math.exp(-dt / 0.6);
+    nudge.yaw += (yaw - nudge.yaw) * k;
+    nudge.pitch += (pitch - nudge.pitch) * k;
+    camera.rotateY(nudge.yaw);
+    camera.rotateX(nudge.pitch);
+  }
+  // The picture free of the text strip and the controls, for the thought bubbles.
+  function freeView() {
+    const pic = renderer.domElement.getBoundingClientRect();
+    let top = pic.top, bottom = pic.bottom;
+    for (const id of ['page', 'controls', 'timeline']) {
+      const el = document.getElementById(id); if (!el || el.offsetParent === null) continue;
+      const r = el.getBoundingClientRect(); if (r.height === 0 || r.width < innerWidth * 0.3) continue;
+      if (r.top >= pic.bottom || r.bottom <= pic.top) continue; // not over the picture
+      if (r.top > pic.top + pic.height * 0.45) bottom = Math.min(bottom, r.top - 6); else if (r.bottom < pic.top + pic.height * 0.55) top = Math.max(top, r.bottom + 6);
+    }
+    return { x: pic.left, y: top, w: pic.width, h: Math.max(80, bottom - top) };
   }
 
   // Shared cast.
@@ -617,8 +647,11 @@ async function main() {
     const actors = active.actors(t);
     for (const [name, puppet] of Object.entries(cast)) puppet.apply(actors[name] ?? { visible: false }, camera);
     active.update?.(t, cast, camera); // after the cast, so props can follow a puppet's hand
-    if (mode === 'watch') keepAliceInFrame();
-    keepThoughtsInView(camera);
+    // A jump in narration time (a seek, a new chapter) resets the eased camera turn at once.
+    const seeked = Math.abs(t - nudge.last) > 0.5; nudge.last = t;
+    if (mode === 'watch') keepAliceInFrame(dt, seeked);
+    const al = aliceOnScreen();
+    layoutThoughts(freeView(), al && al.inside > 0 ? al.px : null);
 
     lightUp(t);
     page.update(t);
@@ -644,6 +677,7 @@ async function main() {
     get scenes() { return (ch ?? CHAPTERS[0].built).scenes; },
     get cue() { return (ch ?? CHAPTERS[0].built).cue; },
     get ready() { return started && !switching; },
+    scene: () => active?.def?.id, // for tools/jerk_report.mjs
   };
 }
 

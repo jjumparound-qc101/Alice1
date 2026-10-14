@@ -113,7 +113,7 @@ export const shaft = {
     }
 
     const camera = cameraTrack([
-      { t: start, dur: 0, pos: [0, 2.2, 2.4], look: [0, 3.5, -1.5] },          // looking up the dark tunnel
+      { t: start, dur: 0, pos: [0, 2.2, 2.4], look: [0, 2.6, -1.5] },          // looking a little up the tunnel (not so far that the walls' top shows; owner)
       { t: T.dipped, dur: 3, pos: [0, 1.1, 2.4], look: [0, 0.7, -1.2] },       // she falls into view
       { t: T.jar - 3, dur: 3, pos: [0.4, 0.9, 1.3], look: [0, 0.6, -1.2] },    // the jar
       { t: T_PUT - 1.5, dur: 2, pos: [-0.3, 0.9, 1.4], look: [-0.45, 0.6, -1.4] },  // into the cupboard

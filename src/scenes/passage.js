@@ -60,7 +60,10 @@ export const passage = {
     // AI drawings, tools/ch1_art.py). The landing drawing has its own heap, so it stands in
     // for the heap and Alice from "thump!" until she jumps up.
     const HEAP_W = 1.05; // sized so Alice in the landing drawing matches her standing figure
-    const heap = paperFlat(ai['ch1/leaf_heap'].tex, HEAP_W, HEAP_W / ai['ch1/leaf_heap'].aspect);
+    // The heap itself half as big again (owner, 2026-10-14); it stays behind the landing drawing,
+    // so Alice keeps her size and lands in a bigger heap.
+    const HEAP_BIG = HEAP_W * 1.5;
+    const heap = paperFlat(ai['ch1/leaf_heap'].tex, HEAP_BIG, HEAP_BIG / ai['ch1/leaf_heap'].aspect);
     heap.position.set(0, 0, -0.6);
     const LAND_W = HEAP_W * 0.95;
     const landing = paperFlat(ai['ch1/alice_land'].tex, LAND_W, LAND_W / ai['ch1/alice_land'].aspect);
@@ -114,7 +117,7 @@ export const passage = {
       bounds: { minX: -HALF_W + 0.4, maxX: HALF_W - 0.4, minZ: CORNER_Z + 1, maxZ: 1.5 },
       hotspots: [{ pos: new THREE.Vector3(0, 0.4, -0.6), title: 'A heap of sticks and dry leaves', text: 'down she came upon a heap of sticks and dry leaves, and the fall was over.' }],
       camera,
-      update(t) { landing.visible = landed(t); heap.visible = !landing.visible; },
+      update(t) { landing.visible = landed(t); },
       actors: (t) => ({ alice: alice(t), rabbit: rabbit(t) }),
     };
   },

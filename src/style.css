@@ -197,3 +197,12 @@ body.chrome-hidden[data-form="landscape"] #page { bottom: calc(10px + env(safe-a
 #stick .knob { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%;
   background: var(--paper); border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 rgba(23, 20, 15, 0.25); }
 @media (pointer: coarse) { body[data-mode="explore"] #stick { display: block; } }
+
+/* Thought bubbles (src/thoughts.js): one uniform oval, the picture filling it, drawn over the
+   picture beside Alice with a trail of small bubbles toward her head (owner, 2026-10-14). */
+#thoughts { position: fixed; inset: 0; pointer-events: none; z-index: 2; }
+#thoughts .thought { position: fixed; display: none; border-radius: 50%; overflow: hidden; background: var(--paper, #efe9da);
+  border: 3px solid #17140f; box-shadow: 0 2px 10px rgba(23, 20, 15, 0.25); transform-origin: 50% 50%; }
+#thoughts .thought img { position: absolute; left: -3%; top: -3%; width: 106%; height: 106%; object-fit: cover; }
+#thoughts .thought-dot { position: fixed; display: none; border-radius: 50%; background: var(--paper, #efe9da); border: 2px solid #17140f; }
+body[data-mode="explore"] #thoughts { display: none; }

@@ -72,7 +72,23 @@ export const hall = {
     const BY_LEG = { x: LEG_FOOT.x + 0.05, z: LEG_FOOT.z + 0.05 };
     const scaleAt = (t) => lerp(1, 0.2, smooth((t - T.telescope) / 3.6)); // "now only ten inches high"
 
-    const walk = (t) => route(t, [
+    // Walks go round the glass table, never through it (owner, 2026-10-14): a leg whose straight
+    // line passes within CLEAR of the table's centre gets an extra waypoint on the near side.
+    const CLEAR = TABLE.r + 0.3;
+    const aroundTable = (pts) => pts.flatMap((p, i) => {
+      if (i === 0) return [p];
+      const [t0, a] = pts[i - 1], [t1, b] = p;
+      const dx = b.x - a.x, dz = b.z - a.z, L2 = dx * dx + dz * dz;
+      if (!L2) return [p];
+      const k = Math.max(0, Math.min(1, ((TABLE.x - a.x) * dx + (TABLE.z - a.z) * dz) / L2));
+      const cx = a.x + k * dx, cz = a.z + k * dz;
+      if (Math.hypot(cx - TABLE.x, cz - TABLE.z) >= CLEAR || k <= 0.05 || k >= 0.95) return [p];
+      // Round the near side (toward the camera, +z) of the table.
+      const ang = Math.atan2(Math.max(cz - TABLE.z, 0.2), cx - TABLE.x);
+      const w = { x: TABLE.x + Math.cos(ang) * CLEAR, z: TABLE.z + Math.sin(ang) * CLEAR };
+      return [[t0 + (t1 - t0) * k, w], p];
+    });
+    const walk = (t) => route(t, aroundTable([
       [start, { x: -5.4, z: 0.6, dir: 1 }],
       [T.doors, { x: -4, z: -2.3 }],          // "doors all round the hall, but they were all locked"
       [T.doors + 4, { x: -2, z: -2.3 }],
@@ -90,7 +106,7 @@ export const hall = {
       [T.forgotten + 6.5, BY_LEG],
       [T.box, BY_LEG],
       [T.box + 2.5, { x: TABLE.x - 0.05, z: TABLE.z + 0.45 }],
-    ], { phase: t * 2.2 });
+    ]), { phase: t * 2.2 });
 
     function alice(t) {
       const s = walk(t);
