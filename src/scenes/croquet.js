@@ -158,10 +158,11 @@ export const roseTree = {
     };
     const rabbitA = (t) => {
       // In the procession among the guests; then walking beside Alice, whispering on tiptoe.
-      if (t < T.timid - 1) return { ...member(t, OFF.rabbit, LANE[0], { pose: 'watch', phase: t * 3 }), scale: RABBIT };
+      // The Chapter I model (owner, 2026-10-14): trotting in the procession; peeping up into her face; on tiptoe.
+      if (t < T.timid - 1) { const m = member(t, OFF.rabbit, LANE[0], { phase: t * 3 }); return { ...m, pose: m.moving ? 'trot1' : 'watch1', scale: RABBIT }; }
       const a = aliceA(t);
-      const lift = t >= T.tiptoe && t < T.tiptoe + 4 ? smooth((t - T.tiptoe) / 0.5) * 0.03 : 0;
-      return { ...a, pose: 'watch', x: a.x - 0.18, z: a.z - 0.05, y: lift, scale: RABBIT, dir: t >= T.tiptoe && t < T.tiptoe + 4 ? 1 : a.dir, visible: t < T.end };
+      const whisper = t >= T.tiptoe && t < T.tiptoe + 4;
+      return { ...a, pose: whisper ? 'tiptoe' : 'peep', x: a.x - 0.18, y: 0, z: a.z - 0.05, scale: RABBIT, dir: whisper ? 1 : a.dir, visible: t < T.end };
     };
     const WALK = [[T.joined + 2, A], [T.joined + 5, { x: A.x + 0.25, z: A.z + 0.1, dir: 1 }], [T.timid, { x: A.x + 0.25, z: A.z + 0.1 }], [T.end, { x: CROQ.x0 + 0.1, z: 0.3 }]];
     const aliceA = (t) => {

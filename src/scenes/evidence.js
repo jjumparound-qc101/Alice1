@@ -47,7 +47,7 @@ export const evidence = {
       air: at('air', 1), scream: at('scream'),
     };
     const end = at('bank') - 1;
-    const { jury, jurors } = buildCourt({ group });
+    const { jury, jurors } = buildCourt({ group, ai });
     const think = thoughts(group, [{ t0: T.goldfish - 1, t1: T.goldfish + 12, art: goldfishVignette() }]);
     const note = paperFlat(texture(noteBook()), 0.05, 0.0375, { anchor: 'center' });
     const paper = paperFlat(texture(verses()), 0.05, 0.065, { anchor: 'center' });
@@ -87,7 +87,9 @@ export const evidence = {
     const knaveA = (t) => (flown(t) ? { visible: false } : { pose: 'chains', x: KNAVE.x, z: KNAVE.z, dir: 1, tilt: t >= T.shook && t < T.shook + 2.5 ? Math.sin(t * 9) * 0.1 : 0 });
     const rabbitA = (t) => {
       const hop = t >= T.paper - 2 && t < T.paper - 1 ? Math.sin((t - T.paper + 2) * Math.PI) * 0.04 : 0;   // "jumping up in a great hurry"
-      return { pose: 'watch', x: HERALD.x, z: HERALD.z, y: hop, scale: RABBIT, dir: 1, idle: t, visible: !flown(t) };
+      // The Chapter I model as herald (owner, 2026-10-14); in spectacles reading the paper of verses (drawn in his paws).
+      const reading = t >= T.paper - 1 && t < T.read + 70;
+      return { pose: reading ? 'specs' : 'herald', x: HERALD.x, z: HERALD.z, y: hop, scale: RABBIT, dir: 1, idle: t, visible: !flown(t) };
     };
     const gryphonA = (t) => ({ pose: 'sit', x: 1.3, z: 0.45, dir: -1, scale: 0.85 });
     const guardStates = (t) => (flown(t) ? [] : [
@@ -125,8 +127,7 @@ export const evidence = {
       // The King's note-book; the paper of verses; the inkstand thrown at Bill.
       note.visible = !flown(t) && t >= T.silence - 6 && t < T.pale + 7;
       if (note.visible) carry(note, cast.king);
-      paper.visible = !flown(t) && t >= T.paper - 1 && t < T.read + 70;
-      if (paper.visible) carry(paper, cast.rabbit);
+      paper.visible = false; // the paper is in his reading drawing
       const throwK = smooth((t - T.inkstand) / 0.9);
       ink.visible = t >= T.inkstand - 1 && t < T.inkstand + 8;
       const h = jurors[BILL].home;
@@ -225,7 +226,7 @@ export const waking = {
     const rabbitA = (t) => {
       if (t < T.rabbit - 0.5 || t > T.rabbit + 5) return { visible: false };
       const s = route(t, [[T.rabbit - 0.5, { x: -6, z: -1.9, dir: 1 }], [T.rabbit + 5, { x: 3.5, z: -1.9 }]], { phase: t * 2.6 });   // "the White Rabbit hurried by"
-      return { ...s, pose: 'watch' };
+      return { ...s, pose: s.moving ? 'trot1' : 'watch1' }; // the Chapter I model
     };
     function update(t) {
       leaves.forEach((l, k) => {

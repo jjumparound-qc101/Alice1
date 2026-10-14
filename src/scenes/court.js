@@ -45,7 +45,7 @@ export const trial = {
       arms: at('arms'), treacle: at('treacle'), collar: at('collar'), gone: at('disappeared'), list: at('list', 3), alice: at('alice', 16),
     };
     const end = cue.end;
-    const { jurors } = buildCourt({ group });
+    const { jurors } = buildCourt({ group, ai });
     const think = thoughts(group, [
       { t0: T.tarts + 2, t1: T.tarts + 12, art: refreshmentsVignette() },
       { t0: T.stupid2 - 1, t1: T.stupid2 + 10, art: slatesVignette() },
@@ -84,7 +84,11 @@ export const trial = {
     const gryphonA = () => ({ pose: 'sit', x: FRONT.x + 0.32, z: FRONT.z - 0.02, dir: -1, scale: 0.85 });
     const rabbitA = (t) => {
       const hop = (t >= T.silence && t < T.silence + 0.6) || (t >= T.blasts && t < T.blasts + 0.6) ? Math.sin(((t % 0.6) / 0.6) * Math.PI) * 0.03 : 0;
-      return { pose: 'watch', x: HERALD.x, z: HERALD.z, y: hop, scale: RABBIT, dir: 1, idle: t };
+      // The Chapter I model as herald (owner, 2026-10-14), after Tenniel's plate 11.1: the trumpet for the blasts,
+      // the scroll unrolled for the accusation (both drawn in his paws).
+      const blowing = (t >= T.blasts - 0.5 && t < T.unrolled) || (t >= T.blasts2 - 0.5 && t < T.blasts2 + 3);
+      const pose = blowing ? 'trumpet' : t >= T.unrolled && t < T.verdict ? 'scroll' : 'herald';
+      return { pose, x: HERALD.x, z: HERALD.z, y: hop, scale: RABBIT, dir: 1, idle: t };
     };
     const kingA = (t) => {
       let pose = 'judge';
@@ -136,11 +140,8 @@ export const trial = {
     ];
     function update(t, cast, camera) {
       guards.apply(guardStates(t), camera);
-      // The herald: the trumpet for the three blasts, the scroll unrolled for the accusation.
-      const blowing = (t >= T.blasts - 0.5 && t < T.unrolled) || (t >= T.blasts2 - 0.5 && t < T.blasts2 + 3);
-      trump.visible = blowing; if (blowing) carry(trump, cast.rabbit, { tilt: 0.3 });
-      scrollOpen.visible = t >= T.unrolled && t < T.verdict; if (scrollOpen.visible) carry(scrollOpen, cast.rabbit);
-      scrollRolled.visible = !scrollOpen.visible && !blowing; if (scrollRolled.visible) carry(scrollRolled, cast.rabbit, { tilt: -0.4 });
+      // The herald's trumpet and scroll are in his drawings now (the separate props stay hidden).
+      trump.visible = scrollOpen.visible = scrollRolled.visible = false;
       // Bill's squeaking pencil: in his hand, then in Alice's, then gone.
       pencil.visible = t < T.lizard + 3;
       if (t < T.behind + 4) { const h = jurors[BILL].home; pencil.position.set(h.x + 0.02, h.y + 0.08, h.z + 0.03); pencil.rotation.set(0, JURY.turn, 0.6 + Math.sin(t * 9) * 0.1); }

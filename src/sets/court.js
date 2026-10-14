@@ -6,8 +6,7 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, canvas, hatch, INK, PAPER } from '../ink.js';
 import { flagstones } from '../props.js';
-import { dodoStand, duckStand, loryStand, eagletStand, owlStand, magpieStand, canaryStand, mouseUp, crabStand } from '../props3.js';
-import { lizard, guineaPig } from '../props4.js';
+import { mouseUp } from '../props3.js';
 import { hedgehog } from '../props8.js';
 import { courtWall, throne, juryBox, tartsTable, witnessBox, crowdGallery, slate } from '../props11.js';
 
@@ -23,7 +22,9 @@ export const DOOR = { x: 2.6, z: -0.4 };
 export const FRONT = { x: 0.95, z: 0.4 };                                  // Alice and the Gryphon, at the front of the crowd
 
 // The twelve jurors, left to right, back row then front row; Bill the Lizard is the fourth.
-const JURORS = [dodoStand, duckStand, loryStand, () => lizard('stand'), eagletStand, owlStand, magpieStand, canaryStand, mouseUp, () => crabStand(), () => hedgehog('crawl'), () => guineaPig()];
+// AI drawings where the creature has one (2026-10-14); the Mouse standing and the hedgehog are still drawn in code.
+const JURORS = ['ch2/dodo_stand', 'ch2/duck_stand', 'ch2/lory_stand', 'ch4/bill_stand', 'ch2/eaglet_stand', 'ch3/owl3', 'ch3/magpie3', 'ch3/canary3', mouseUp,
+  'ch3/crab', () => hedgehog('crawl'), 'ch4/guinea_stand'];
 export const BILL = 3;
 
 // The ceiling: plain boards between beams, lightly hatched.
@@ -35,7 +36,7 @@ function beams() {
   return c;
 }
 
-export function buildCourt({ group }) {
+export function buildCourt({ group, ai }) {
   const plain = (map) => new THREE.MeshBasicMaterial({ map });
   const wallTex = texture(courtWall());
   const back = new THREE.Mesh(new THREE.PlaneGeometry(COURT.w, COURT.h), plain(wallTex));
@@ -69,10 +70,10 @@ export function buildCourt({ group }) {
   const slateTex = texture(slate());
   const toWorld = (lx, ly, lz) => new THREE.Vector3(lx, ly, lz).applyAxisAngle(new THREE.Vector3(0, 1, 0), JURY.turn).add(jury.position);
   const jurors = JURORS.map((draw, i) => {
-    const c = draw();
     const row = i < 6 ? 0 : 1, col = i % 6;
     const h = 0.11 + (row === 0 ? 0.03 : 0);
-    const flat = paperFlat(texture(c), h * c.width / c.height, h);
+    const a = typeof draw === 'string' ? ai[draw] : null, c = a ? null : draw();
+    const flat = a ? paperFlat(a.tex, h * a.aspect, h) : paperFlat(texture(c), h * c.width / c.height, h);
     const home = toWorld(-JURY.w / 2 + 0.09 + col * 0.145, row === 0 ? 0.12 : 0.06, row === 0 ? -0.12 : -0.05);
     flat.position.copy(home); flat.rotation.y = JURY.turn; group.add(flat);
     const sl = paperFlat(slateTex, 0.05, 0.0375, { anchor: 'center', edge: false });

@@ -110,6 +110,8 @@ export const bank = {
     const ALICE_RACE_END = slot(PARTY.alice.deg, RACE_R);
     const nearAlice = (deg) => ({ x: ALICE_RACE_END.x + Math.cos(deg) * 0.13, z: ALICE_RACE_END.z + Math.sin(deg) * 0.1 - 0.04 });
 
+    // When each creature leaves: most "hurried off at once"; the Magpie and the Canary after their lines.
+    const leaveAt = (name, i) => (name === 'magpie' ? T.magpie + 6 : name === 'canary' ? T.canary + 6 : T.sensation + (i % 4) * 1.5);
     function place(name, t, i) {
       const p = PARTY[name], s0 = slot(p.deg);
       if (t >= RACE.start && t < RACE.end) return racing(name, t, i);
@@ -130,7 +132,8 @@ export const bank = {
         [T.ringAgain + 2, s0],                                    // "they sat down again in a ring"
       ];
       if (name === 'dodo') after.splice(4, 0, [T.handOver, nearAlice(ang)], [T.presented - 1, { x: ALICE_RACE_END.x - 0.08, z: ALICE_RACE_END.z - 0.05 }], [T.bowed + 1, { x: ALICE_RACE_END.x - 0.08, z: ALICE_RACE_END.z - 0.05 }]);
-      const leave = p.off ? [[T.sensation + (i % 4) * 1.5, s0], [T.sensation + 6 + (i % 4) * 2, p.off]] : [];
+      const go = leaveAt(name, i);
+      const leave = p.off ? [[go, s0], [go + 5, p.off]] : [];
       const s = route(t, t < RACE.start ? keys : [...after, ...leave], { phase: t * 2.4 + i });
       return s;
     }
@@ -184,8 +187,12 @@ export const bank = {
         if (name === 'eaglet' && t >= T.smile - 1 && t < T.smile + 3) tilt = 0.35;                   // bent down its head
         if (name === 'dodo' && t >= T.rising && t < T.rising + 1) y = Math.sin((t - T.rising) * Math.PI) * 0.03; // rising to its feet
         if ((name === 'canary' || name === 'magpie') && t >= T.eat && t < T.eat + 9) y = Math.abs(Math.sin(t * 6 + i)) * 0.015; // choking on comfits
-        const gone = p.off && t > T.sensation + 7 + (i % 4) * 2;
-        return { ...s, pose: name.startsWith('crab') ? 'stand' : 'up', visible: !gone, tilt, y, dir: s.moving ? s.dir : (p.deg > 90 && p.deg < 270 ? 1 : -1) };
+        const gone = p.off && t > leaveAt(name, i) + 5.5;
+        // AI poses (2026-10-14): the Magpie wrapping itself up "as if in a shawl"; the Canary calling to its children.
+        let pose = name.startsWith('crab') ? 'stand' : 'up';
+        if (name === 'magpie' && t >= T.magpie && !s.moving) pose = 'shawl';
+        if (name === 'canary' && t >= T.canary && !s.moving) pose = 'chicks';
+        return { ...s, pose, visible: !gone, tilt, y, dir: s.moving ? s.dir : (p.deg > 90 && p.deg < 270 ? 1 : -1) };
       };
     }
     const crowd = Object.fromEntries(['dodo', 'duck', 'lory', 'eaglet', 'owl', 'magpie', 'canary', 'crab', 'crabling'].map((n, i) => [n, creature(n, i + 1)]));
@@ -248,6 +255,8 @@ export const bank = {
       cam(T.pity - 1, 3, [0.2, 0.11, -0.25], [S('crab').x, 0.04, S('crab').z]),                       // the Crabs
       cam(T.dinah - 1, 2, [0.12, 0.1, -0.15], [slot(90).x, 0.08, slot(90).z]),
       cam(T.sensation, 4, [0.6, 0.3, 0.3], [RC.x - 0.2, 0.05, RC.z]),                                 // everyone hurries off
+      cam(T.magpie - 0.5, 2, [S('magpie').x + 0.22, 0.09, S('magpie').z + 0.3], [S('magpie').x + 0.05, 0.05, S('magpie').z]),  // the old Magpie
+      cam(T.canary - 0.5, 2, [S('canary').x + 0.22, 0.09, S('canary').z + 0.3], [S('canary').x + 0.05, 0.04, S('canary').z]),  // the Canary and her children
       cam(T.alone - 1, 4, [0.18, 0.1, -0.15], [slot(90).x, 0.07, slot(90).z]),                         // left alone
       cam(T.pattering - 0.5, 2, [0.25, 0.09, -0.3], [-0.8, 0.08, -0.9]),                              // pattering footsteps, far off
     ]);

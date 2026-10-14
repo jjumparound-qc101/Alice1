@@ -59,9 +59,10 @@ export const lane = {
         [0, { x: 1.6, z: -5, dir: -1 }],
         [T.noticed - 2, { x: 0.5, z: -0.8 }],                       // "trotting slowly back again, and looking anxiously about"
         [T.ran + 6, { x: 0.5, z: -0.8 }],
-      ], { pose: 'watch', phase: t * 1.6 });
+      ], { phase: t * 1.6 });
+      // The Chapter I model (owner, 2026-10-14): looking anxiously about; pointing ("run home this moment").
       const pointing = t >= T.mary && t < T.ran + 2;
-      return { ...s, dir: pointing ? -1 : s.dir, tilt: pointing ? -0.12 : s.moving ? 0 : Math.sin(t * 1.3) * 0.08 }; // looking about
+      return { ...s, pose: pointing ? 'point' : 'search', dir: pointing ? -1 : s.dir };
     };
     const alice = (t) => {
       const s = route(t, [
@@ -223,9 +224,11 @@ export const rabbitHouse = {
         [T.pat + 8, { x: FRAMES.x, z: FRAMES.z + 0.02 }], [T.pat + 12, { x: FRAMES.x - 0.6, z: 1.0 }],
         [T.snatch2 - 1, { x: FRAMES.x - 0.6, z: 1.0 }], [T.rumbling + 3, { x: -0.1, z: 1.05 }],
         [T.ranOut, { x: -0.1, z: 1.05 }], [T.held, { x: DOORX + 1.0, z: 1.0 }],
-      ], { pose: 'watch', phase: t * 2.4 });
+      ], { phase: t * 2.4 });
+      // The Chapter I model: trotting round; tumbling into the cucumber-frame (drawn falling); giving orders.
       const tumble = fell && t < T.pat + 10 ? Math.min(1, (t - T.shriek) / 0.4) : 0;
-      return { ...s, tilt: tumble * 1.2, y: -tumble * 0.12, dir: t > T.pat + 12 && !s.moving ? 1 : s.dir };
+      const pose = tumble > 0 ? 'frame' : s.moving ? 'trot1' : t > T.pat + 12 ? 'order' : 'watch1';
+      return { ...s, pose, y: -tumble * 0.05, dir: t > T.pat + 12 && !s.moving ? 1 : s.dir };
     }
     function pat(t) {
       if (t < T.pat + 1) return { visible: false };

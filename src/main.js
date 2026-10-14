@@ -10,7 +10,7 @@ import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { CHAPTERS } from './chapters.js';
 import { texture } from './ink.js';
 import { card } from './props8.js';
-import { mouseUp, mouseWalk, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
+import { mouseUp, mouseWalk } from './props3.js';
 
 const $ = (id) => document.getElementById(id);
 const SAVE_KEY = 'alice.place.v2';
@@ -63,7 +63,7 @@ async function main() {
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',
-    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch4/alice_hand', 'ch5/pigeon_attack', 'ch5/pigeon_scream', 'ch5/pigeon_nest', ...['bill_stand', 'bill_ladder', 'bill_climb', 'bill_rocket', 'bill_limp', 'guinea_stand', 'guinea_hold', 'guinea_bottle', 'pat', 'pat_cap', 'puppy_look', 'puppy_jump', 'puppy_tumble', 'puppy_sit'].map((n) => `ch4/${n}`), 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_paw', ...['queen_stand', 'queen_point', 'queen_flush', 'queen_stamp', 'queen_folded', 'queen_specs', 'queen_purple', 'king_stand', 'king_judge', 'king_judge_specs', 'king_judge_fold', 'king_judge_point', 'king_judge_pale', 'knave_carry', 'knave_stand', 'knave_chains', 'executioner', ...['two', 'five', 'seven'].flatMap((c) => ['stand', 'paint', 'bow', 'run'].map((p) => `${c}_${p}`)), 'two_kneel', 'rose_tree', 'rose_white', 'rose_red', 'card_back', 'suit_heart', 'suit_diamond', 'suit_club', 'suit_spade', 'body_soldier', 'body_courtier', 'body_child', 'body_officer', 'card_arch', 'king_clubs', 'king_diamonds', 'king_spades', 'queen_clubs', 'queen_diamonds', 'queen_spades', 'knave_spades'].map((n) => `ch8/${n}`), ...['hatter_sit_stare', 'hatter_sit_riddle', 'hatter_sit_watch', 'hatter_cup', 'hatter_pale', 'hatter_bite', 'hatter_tremble', 'hatter_knee', 'hatter_run', 'marchhare_sit', 'marchhare_dip', 'dormouse_sleep', 'dormouse_talk'].map((n) => `ch7/${n}`), 'vignettes/axis', 'vignettes/pigs', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back', 'kitchen_side', 'little_house', 'march_hare_house', ...['irons', 'saucepan', 'saucepan2', 'pan', 'plate', 'plate2', 'plate3', 'dish'].map((n) => `thrown_${n}`)].map((n) => `ch6/${n}`),
+    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch4/alice_hand', 'ch4/rabbit4_search', 'ch4/rabbit4_point', 'ch4/rabbit4_frame', 'ch4/rabbit4_order', 'ch8/rabbit8_peep', 'ch8/rabbit8_tiptoe', 'ch11/rabbit_herald', 'ch11/rabbit_trumpet', 'ch11/rabbit_scroll', 'ch11/rabbit_specs', ...['owl3', 'magpie3', 'magpie3_shawl', 'canary3', 'canary3_chicks', 'crab', 'crabling'].map((n) => `ch3/${n}`), 'ch5/pigeon_attack', 'ch5/pigeon_scream', 'ch5/pigeon_nest', ...['bill_stand', 'bill_ladder', 'bill_climb', 'bill_rocket', 'bill_limp', 'guinea_stand', 'guinea_hold', 'guinea_bottle', 'pat', 'pat_cap', 'puppy_look', 'puppy_jump', 'puppy_tumble', 'puppy_sit'].map((n) => `ch4/${n}`), 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_paw', ...['queen_stand', 'queen_point', 'queen_flush', 'queen_stamp', 'queen_folded', 'queen_specs', 'queen_purple', 'king_stand', 'king_judge', 'king_judge_specs', 'king_judge_fold', 'king_judge_point', 'king_judge_pale', 'knave_carry', 'knave_stand', 'knave_chains', 'executioner', ...['two', 'five', 'seven'].flatMap((c) => ['stand', 'paint', 'bow', 'run'].map((p) => `${c}_${p}`)), 'two_kneel', 'rose_tree', 'rose_white', 'rose_red', 'card_back', 'suit_heart', 'suit_diamond', 'suit_club', 'suit_spade', 'body_soldier', 'body_courtier', 'body_child', 'body_officer', 'card_arch', 'king_clubs', 'king_diamonds', 'king_spades', 'queen_clubs', 'queen_diamonds', 'queen_spades', 'knave_spades'].map((n) => `ch8/${n}`), ...['hatter_sit_stare', 'hatter_sit_riddle', 'hatter_sit_watch', 'hatter_cup', 'hatter_pale', 'hatter_bite', 'hatter_tremble', 'hatter_knee', 'hatter_run', 'marchhare_sit', 'marchhare_dip', 'dormouse_sleep', 'dormouse_talk'].map((n) => `ch7/${n}`), 'vignettes/axis', 'vignettes/pigs', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back', 'kitchen_side', 'little_house', 'march_hare_house', ...['irons', 'saucepan', 'saucepan2', 'pan', 'plate', 'plate2', 'plate3', 'dish'].map((n) => `thrown_${n}`)].map((n) => `ch6/${n}`),
     ...['duchess_nurse', 'duchess_toss', 'duchess_fling', 'duchess9_arm', 'duchess9_tremble', 'duchess9_run'].map((n) => `ch6/${n}`),
     ...['sit', 'sob', 'count', 'hide', 'dance', 'sing', 'yawn'].map((n) => `ch9/mockturtle_${n}`),
     ...['sit', 'asleep', 'walk', 'paws', 'hide', 'dance', 'bound'].map((n) => `ch9/gryphon_${n}`), 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', 'vignettes/histories', 'vignettes/poker', 'vignettes/knife', 'vignettes/poison', 'vignettes/candle', 'vignettes/telescope', 'vignettes/croquet', // tools/walls.py // tools/ch1_art.py
@@ -181,6 +181,7 @@ async function main() {
   }
 
   // Shared cast.
+  const RB = 0.9 / 1465;
   const cast = {
     rabbit: new Puppet({
       watch: { ...rabbitArt, facesLeft: true },
@@ -189,10 +190,26 @@ async function main() {
       // Chapter I's Rabbit (the owner's sheet, tools/ch1_art.py): with his watch; trotting.
       watch1: { ...ai['ch1/rabbit_watch'], facesLeft: true, height: 0.9 },
       trot1: { ...ai['ch1/rabbit_trot'], facesLeft: true, height: 0.9 },
+      // Every later pose is drawn from the Chapter I sheet, all at one scale (RB: metres per source pixel, the
+      // standing figures matching the sheet's 0.9 m) (owner, 2026-10-14: that model is the standard
+      // in every scene he is in; tools/rabbit_art.py).
       // Chapter II: "splendidly dressed", gloves and fan in his paws; starting; scurrying away.
-      trot: { ...ai['ch2/rabbit2_trot'], facesLeft: true, height: 0.95 },
-      start: { ...ai['ch2/rabbit2_start'], facesLeft: false, height: 1.0 },
-      away: { ...ai['ch2/rabbit2_away'], facesLeft: true, height: 0.9 },
+      trot: { ...ai['ch2/rabbit2_trot'], facesLeft: true, height: 1215 * RB },
+      start: { ...ai['ch2/rabbit2_start'], facesLeft: true, height: 1302 * RB },
+      away: { ...ai['ch2/rabbit2_away'], facesLeft: true, height: 1329 * RB },
+      // Chapter IV: looking anxiously about; pointing ("run home this moment"); into the cucumber-frame; giving orders.
+      search: { ...ai['ch4/rabbit4_search'], facesLeft: true, height: 1158 * RB },
+      point: { ...ai['ch4/rabbit4_point'], facesLeft: true, height: 1418 * RB },
+      frame: { ...ai['ch4/rabbit4_frame'], facesLeft: true, height: 836 * RB },
+      order: { ...ai['ch4/rabbit4_order'], facesLeft: true, height: 1465 * RB },
+      // Chapter VIII: walking beside her, peeping into her face; on tiptoe to whisper.
+      peep: { ...ai['ch8/rabbit8_peep'], facesLeft: true, height: 1309 * RB },
+      tiptoe: { ...ai['ch8/rabbit8_tiptoe'], facesLeft: false, height: 1393 * RB },
+      // Chapters XI and XII: the herald, with his scroll; the trumpet; reading the accusation; the paper, in spectacles.
+      herald: { ...ai['ch11/rabbit_herald'], facesLeft: true, height: 1431 * RB },
+      trumpet: { ...ai['ch11/rabbit_trumpet'], facesLeft: true, height: 1316 * RB },
+      scroll: { ...ai['ch11/rabbit_scroll'], facesLeft: true, height: 1348 * RB },
+      specs: { ...ai['ch11/rabbit_specs'], facesLeft: true, height: 1434 * RB },
     }, 0.85),
     alice: new Puppet({
       sit: { ...ai.alice_sit, facesLeft: false, height: 0.85, hand: [0.65, 0.7] },
@@ -219,11 +236,13 @@ async function main() {
     lory: new Puppet({ swim: art('ch2/lory_swim', 0.06, false), up: art('ch2/lory_stand', 0.1, false) }, 0.065),
     eaglet: new Puppet({ swim: art('ch2/eaglet_swim', 0.06, false), up: art('ch2/eaglet_stand', 0.11, false) }, 0.065),
     // Chapter III placeholders (props3.js).
-    owl: new Puppet({ up: drawn(owlStand(), 0.09) }, 0.09),
-    magpie: new Puppet({ up: drawn(magpieStand(), 0.1) }, 0.1),
-    canary: new Puppet({ up: drawn(canaryStand(), 0.06) }, 0.06),
-    crab: new Puppet({ stand: drawn(crabStand(), 0.035) }, 0.035),
-    crabling: new Puppet({ stand: drawn(crabStand(true), 0.022) }, 0.022),
+    // Chapter III's creatures (AI, tools/creatures_art.py, 2026-10-14): the Owl after Tenniel's plate 3.1; the
+    // Magpie wrapping herself up "as if in a shawl"; the Canary calling to her children; the old Crab and her daughter.
+    owl: new Puppet({ up: art('ch3/owl3', 0.1) }, 0.1),
+    magpie: new Puppet({ up: art('ch3/magpie3', 0.1), shawl: art('ch3/magpie3_shawl', 0.1 * 1188 / 1154) }, 0.1),
+    canary: new Puppet({ up: art('ch3/canary3', 0.06), chicks: art('ch3/canary3_chicks', 0.06 * 1143 / 1131) }, 0.06),
+    crab: new Puppet({ stand: art('ch3/crab', 0.035) }, 0.035),
+    crabling: new Puppet({ stand: art('ch3/crabling', 0.022) }, 0.022),
     // Chapter IV (AI drawings, tools/ch4_art.py, 2026-10-14): Bill the Lizard after Tenniel's plate 4.3,
     // the two guinea-pigs and Pat (a guinea-pig gardener in a smock and cap; the book doesn't say).
     bill: new Puppet({ stand: art('ch4/bill_stand', 0.32), ladder: art('ch4/bill_ladder', 0.34, false), climb: art('ch4/bill_climb', 0.42),
