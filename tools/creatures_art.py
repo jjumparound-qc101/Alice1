@@ -18,6 +18,9 @@ NAMES = {
     "pigeon_attack": "ch5", "pigeon_scream": "ch5", "pigeon_nest": "ch5",
     "flamingo_stand": "ch8", "flamingo_mallet": "ch8", "flamingo_twist": "ch8", "flamingo_fly": "ch8",
     "hedgehog_crawl": "ch8", "hedgehog_ball": "ch8", "hedgehog_fight": "ch8",
+    "mouse3_lecture": "ch3", "mouse3_cross": "ch3", "mouse3_sigh": "ch3", "mouse3_angry": "ch3", "mouse3_away": "ch3",
+    "dodo3_rise": "ch3", "dodo3_think": "ch3", "dodo3_point": "ch3", "dodo3_thimble": "ch3", "lory3_sulk": "ch3",
+    "eaglet3_smile": "ch3", "duck3_ask": "ch3",
     "crabs3": "ch3", "owl3": "ch3", "magpie3": "ch3", "magpie3_shawl": "ch3", "canary3": "ch3", "canary3_chicks": "ch3",
 }
 CLEAR = {"pigeon_scream": "436,929;584,992;611,1135", "magpie3": "270,1030;400,1050;380,980", "magpie3_shawl": "350,1040;490,1000",

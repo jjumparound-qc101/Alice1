@@ -173,8 +173,14 @@ export const bank = {
       const facing = t >= T.sad && t < T.walking ? 1 : t >= T.foundWhat && t < T.foundWhat + 8 ? -1 : (s.dir ?? -1);
       const angry = t >= at('not', 1, T.knot - 6) && t < T.knot + 1;
       const walkingAway = t >= T.walking;
-      return { ...s, pose: walkingAway || (s.moving && t >= RACE.start && t < RACE.end) ? 'walk' : 'up', dir: walkingAway ? -1 : facing,
-        visible: t < T.quicker + 3, tilt: angry ? Math.sin(t * 40) * 0.05 : 0 };
+      // AI poses (2026-10-14): lecturing; cross ("I beg your pardon!", "Found IT"); sighing over his long and sad
+      // tale; angry ("I had NOT!"); walking off on all fours.
+      let pose = 'up';
+      if ((t >= T.ugh + 1 && t < T.ugh + 5) || (t >= T.foundWhat && t < T.foundWhat + 5)) pose = 'cross';
+      if (t >= T.sad - 1 && t < T.tail + 3) pose = 'sigh';
+      if (angry) pose = 'angry';
+      if (walkingAway || (s.moving && t >= RACE.start && t < RACE.end)) pose = 'walk';
+      return { ...s, pose, dir: walkingAway ? -1 : facing, visible: t < T.quicker + 3 };
     }
 
     function creature(name, i) {
@@ -183,13 +189,22 @@ export const bank = {
         const p = PARTY[name];
         let tilt = 0, y = 0;
         if (name === 'lory' && t >= T.ugh && t < T.ugh + 2.5) tilt = Math.sin(t * 50) * 0.08;      // "with a shiver"
-        if (name === 'lory' && t >= T.sulky && t < T.sit) tilt = -0.1;                               // turned sulky
-        if (name === 'eaglet' && t >= T.smile - 1 && t < T.smile + 3) tilt = 0.35;                   // bent down its head
         if (name === 'dodo' && t >= T.rising && t < T.rising + 1) y = Math.sin((t - T.rising) * Math.PI) * 0.03; // rising to its feet
         if ((name === 'canary' || name === 'magpie') && t >= T.eat && t < T.eat + 9) y = Math.abs(Math.sin(t * 6 + i)) * 0.015; // choking on comfits
         const gone = p.off && t > leaveAt(name, i) + 5.5;
         // AI poses (2026-10-14): the Magpie wrapping itself up "as if in a shawl"; the Canary calling to its children.
         let pose = name.startsWith('crab') ? 'stand' : 'up';
+        if (!s.moving) {
+          // AI poses (2026-10-14): the Lory sulky; the Eaglet hiding a smile; the Duck asking "Found WHAT?";
+          // the Dodo rising, thinking with a finger to his forehead, pointing at Alice, presenting the thimble.
+          if (name === 'lory' && t >= T.sulky && t < T.sit) pose = 'sulk';
+          if (name === 'eaglet' && t >= T.smile - 1 && t < T.smile + 3) pose = 'smile';
+          if (name === 'duck' && t >= T.foundWhat - 0.5 && t < T.foundWhat + 3) pose = 'ask';
+          if (name === 'dodo' && t >= T.rising - 0.5 && t < T.rising + 4) pose = 'rise';
+          if (name === 'dodo' && t >= T.thought && t < T.everybody) pose = 'think';
+          if (name === 'dodo' && t >= T.pointing - 0.5 && t < T.pointing + 3) pose = 'point';
+          if (name === 'dodo' && t >= T.presented - 1 && t < T.bowed + 1) pose = 'thimble';
+        }
         if (name === 'magpie' && t >= T.magpie && !s.moving) pose = 'shawl';
         if (name === 'canary' && t >= T.canary && !s.moving) pose = 'chicks';
         return { ...s, pose, visible: !gone, tilt, y, dir: s.moving ? s.dir : (p.deg > 90 && p.deg < 270 ? 1 : -1) };
@@ -206,7 +221,9 @@ export const bank = {
       box.visible = t >= T.comfits && t < T.herself && alice(t).pose !== 'comfits'; // drawn in her pose
       if (box.visible) carry(box, cast.alice);
       thim.visible = t >= T.thimble && t < T.ringAgain;
-      if (thim.visible) carry(thim, t >= T.handOver + 1 && t < T.bowed + 0.6 ? cast.dodo : cast.alice);
+      const dodoHas = t >= T.handOver + 1 && t < T.bowed + 0.6;
+      if (dodoHas && cast.dodo.pose === 'thimble') thim.visible = false; // his presenting drawing holds it
+      if (thim.visible) carry(thim, dodoHas ? cast.dodo : cast.alice);
       // The Mouse's tale, as Alice pictures it.
       const open = smooth((t - T.tale + 0.3) / 0.6) * (1 - smooth((t - T.attending + 0.5) / 0.5));
       tale.visible = open > 0.01;

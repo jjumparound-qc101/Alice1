@@ -51,6 +51,7 @@ Updated: 2026-10-14 (session 4: Chapters IV-VI and VIII-XII art, the White Rabbi
 | XII Alice's Evidence | CHAPTER_12_ASSETS.md | ✓ | `evidence.js`: `evidence`, `waking` (court and riverbank sets) |
 
 ## Open decisions for the owner
+- **Next after the character list (owner, 2026-10-14): prompt the owner** to look at the physical structures and backgrounds (sets, walls, grounds, buildings, props drawn in code) and get them developed properly. Do this as soon as the remaining character assets are done.
 - **Remind the owner** (asked 2026-10-11) when Chapter XI art begins: the Tenniel frontispiece (the trial) is needed as the reference for the court prompts and isn't on Victorian Web. The owner downloads it from a scan of the 1865/66 edition, or adds commons.wikimedia.org to the network allowlist so Claude can fetch it.
 
 ## Next steps, in order
