@@ -7,6 +7,7 @@
 //              argument about beheading a head; the Cat fades away.
 // Figures and props not yet drawn are placeholders from props8.js.
 import * as THREE from 'three';
+import { crowdCard } from '../cards.js';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { card, cardBack, cardArch, flamingo, hedgehog, catHead, CAT_HEAD_PX, SOLDIERS, COURTIERS, CHILDREN, GUESTS, tulipVignette } from '../props8.js';
@@ -85,7 +86,7 @@ export const roseTree = {
     for (const [off, zs, kind] of ROWS) for (const z of zs) {
       const who = deck[kind][next[kind]++];                      // each card person is a different card of the pack
       const h = kind === 'child' ? CHILD_H : kind === 'guest' ? COURT_H : CARD_H;
-      list.push({ poses: { stand: cardPose(who, 'stand', h) }, height: h });
+      list.push({ poses: { stand: crowdCard(ai, who, h) }, height: h });
       places.push({ off, z, kind, i: list.length - 1 });
     }
     const crowd = extras(group, list);
@@ -242,9 +243,9 @@ export const croquetGame = {
     };
     buildCroquet({ group, ai });
     // Soldiers doubled up as arches; now and then one gets up and walks off to another place.
-    const archTex = texture(cardArch());
+    const archTex = ai['ch8/card_arch'].tex; // a soldier doubled up into a hoop (AI)
     const ARCHES = [[1.3, -0.6], [2.4, -1.2], [3.1, -0.3], [4.0, -1.1], [4.6, 0.1], [3.0, -1.6]];
-    const arches = ARCHES.map(([x, z]) => { const a = paperFlat(archTex, 0.18, 0.18); a.position.set(x, 0, z); group.add(a); return { a, x, z }; });
+    const arches = ARCHES.map(([x, z]) => { const a = paperFlat(archTex, 0.2, 0.2 / ai['ch8/card_arch'].aspect); a.position.set(x, 0, z); group.add(a); return { a, x, z }; });
     // Alice's flamingo and hedgehogs.
     const flam = Object.fromEntries(['held', 'twist', 'fly'].map((p) => [p, paperFlat(texture(flamingo(p)), 0.16, 0.133, { anchor: 'center' })]));
     Object.values(flam).forEach((f) => group.add(f));
@@ -260,7 +261,7 @@ export const croquetGame = {
     const players = [...GUESTS, COURTIERS[2], CHILDREN[3]];       // the guests play, and a courtier and a child
     const crowd = extras(group, players.map((who) => {
       const h = who.rank === 'king' || who.rank === 'queen' ? COURT_H : who.suit === 'hearts' ? CHILD_H : CARD_H;
-      return { poses: { stand: cardPose(who, 'stand', h) }, height: h };
+      return { poses: { stand: crowdCard(ai, who, h) }, height: h };
     }));
     const playerA = (i) => (t) => {
       const cx = lerp(CROQ.x0 + 0.5, CROQ.x1 - 0.5, (i + 0.5) / players.length), cz = lerp(CROQ.z0 + 0.4, CROQ.z1 - 0.4, ((i * 37) % 10) / 10);

@@ -8,6 +8,7 @@
 //              its creatures appear faintly around her, then turn back into the countryside.
 // Figures and props not yet drawn are placeholders (props12.js and earlier chapters').
 import * as THREE from 'three';
+import { crowdCard } from '../cards.js';
 import { paperFlat, buildStage } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { card, cardBack, SOLDIERS, COURTIERS, CHILDREN, GUESTS, OFFICERS, hedgehog } from '../props8.js';
@@ -22,7 +23,7 @@ import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
 
 const RABBIT = 0.38;
-const soldier = (who) => ({ poses: { stand: drawnPose(`${who.suit}-${who.rank}-stand`, () => card(who, 'stand'), 0.28) }, height: 0.28 });
+const soldier = (ai) => (who) => ({ poses: { stand: crowdCard(ai, who, 0.28) }, height: 0.28 });
 // Pseudo-random but fixed, so every frame (and every reader) sees the same flight.
 const rnd = (i, k) => { const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return x - Math.floor(x); };
 
@@ -37,7 +38,7 @@ export const evidence = {
     { title: 'Sentence first', t: cue.at('sentence', 1) - 3 },
     { title: 'A pack of cards', t: cue.at('cares') - 2 },
   ],
-  build({ group, cue }) {
+  build({ group, ai, cue }) {
     const at = cue.at;
     const T = {
       jumped: at('jumped'), tipped: at('tipped'), goldfish: at('goldfish', 1), pardon: at('pardon'), collected: at('collected'), downwards: at('downwards'),
@@ -53,7 +54,7 @@ export const evidence = {
     const paper = paperFlat(texture(verses()), 0.05, 0.065, { anchor: 'center' });
     const ink = paperFlat(texture(inkstand()), 0.05, 0.043, { anchor: 'center' });
     group.add(note, paper, ink);
-    const guards = extras(group, [soldier(SOLDIERS[4]), soldier(SOLDIERS[5]), ...OFFICERS.map(soldier)]);
+    const guards = extras(group, [soldier(ai)(SOLDIERS[4]), soldier(ai)(SOLDIERS[5]), ...OFFICERS.map(soldier(ai))]);
 
     // Alice: seated by the jury-box, grown large; jumps up; picks up the jurors; walks out
     // before the throne; full size by "Who cares for you?"
@@ -100,10 +101,11 @@ export const evidence = {
     const backAt = (i) => lerp(T.pardon + 2, T.collected + 3, i / (jurors.length - 1));
     // The whole pack, rising into the air and flying down upon her.
     const pack = [...SOLDIERS, ...COURTIERS, ...CHILDREN, ...GUESTS, ...OFFICERS, { suit: 'hearts', rank: 'king' }, { suit: 'hearts', rank: 'queen' }, { suit: 'hearts', rank: 'knave' }];
-    const backTex = texture(cardBack());
+    const backTex = ai['ch8/card_back'].tex;
     const flyers = pack.map((who, i) => {
-      const face = drawnPose(`${who.suit}-${who.rank}-stand`, () => card(who, 'stand'), 0.28);
-      const f = paperFlat(i % 3 === 2 ? backTex : face.tex, 0.16, 0.24, { anchor: 'center' });
+      const face = crowdCard(ai, who, 0.28);
+      const art = i % 3 === 2 ? ai['ch8/card_back'] : face, h = 0.3; // the whole pack flying up: faces and backs, in their own proportions
+      const f = paperFlat(art.tex, h * art.aspect, h, { anchor: 'center' });
       group.add(f); return f;
     });
     function update(t, cast, camera) {

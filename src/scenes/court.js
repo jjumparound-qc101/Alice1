@@ -5,6 +5,7 @@
 // guinea-pigs suppressed, the cook and her pepper, the Dormouse turned out, and "Alice!"
 // Figures and props not yet drawn are placeholders (props11.js and earlier chapters').
 import * as THREE from 'three';
+import { crowdCard } from '../cards.js';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER, canvas, INK } from '../ink.js';
 import { card, OFFICERS } from '../props8.js';
@@ -17,8 +18,8 @@ import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
 
 const RABBIT = 0.38, PIG = 0.32;          // the Rabbit's and the guinea-pigs' scale in the court
-const officer = (who) => ({ poses: { stand: drawnPose(`${who.suit}-${who.rank}-stand`, () => card(who, 'stand'), 0.28) }, height: 0.28 });
-const soldier = (n) => ({ poses: { stand: drawnPose(`clubs-${n}-stand`, () => card({ suit: 'clubs', rank: n }, 'stand'), 0.28) }, height: 0.28 });
+const officer = (ai) => (who) => ({ poses: { stand: crowdCard(ai, who, 0.28) }, height: 0.28 });
+const soldier = (ai, n) => ({ poses: { stand: crowdCard(ai, { suit: 'clubs', rank: n }, 0.28) }, height: 0.28 });
 
 export const trial = {
   id: 'trial',
@@ -61,7 +62,7 @@ export const trial = {
     const dorSleep = paperFlat(ai['ch7/dormouse_sleep'].tex, 0.055, 0.055 / ai['ch7/dormouse_sleep'].aspect), dorTalk = paperFlat(ai['ch7/dormouse_talk'].tex, 0.055, 0.055 / ai['ch7/dormouse_talk'].aspect); // AI
     group.add(trump, scrollRolled, scrollOpen, pencil, dorSleep, dorTalk);
     // Extras: the two soldiers guarding the Knave, and the two officers who suppress the guinea-pigs.
-    const guards = extras(group, [soldier(5), soldier(6), ...OFFICERS.map(officer)]);
+    const guards = extras(group, [soldier(ai, 5), soldier(ai, 6), ...OFFICERS.map(officer(ai))]);
     const PIGS = [{ x: -0.45, z: 0.62 }, { x: -0.75, z: 0.66 }];
 
     // Alice: at the front of the crowd; round behind the jury-box for the pencil; sitting among

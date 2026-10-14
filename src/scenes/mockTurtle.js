@@ -7,6 +7,7 @@
 //                 on his ledge of rock, his history, school in the sea, the lessons.
 // Figures and props not yet drawn are placeholders from props9.js (and props8.js).
 import * as THREE from 'three';
+import { crowdCard } from '../cards.js';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { card, cardArch, GUESTS, COURTIERS, CHILDREN } from '../props8.js';
@@ -49,12 +50,12 @@ export const duchessWalk = {
     // The arches and the players: resting in the shade while the Queen is away; back to the game;
     // taken into custody one by one until only the King, the Queen and Alice are left.
     const ARCHES = [[1.3, -0.6], [2.4, -1.2], [3.1, -0.3], [4.0, -1.1], [4.6, 0.1], [3.0, -1.6]];
-    const archTex = texture(cardArch());
-    const arches = ARCHES.map(([x, z]) => { const a = paperFlat(archTex, 0.18, 0.18); a.position.set(x, 0, z); group.add(a); return a; });
+    const archTex = ai['ch8/card_arch'].tex;
+    const arches = ARCHES.map(([x, z]) => { const a = paperFlat(archTex, 0.2, 0.2 / ai['ch8/card_arch'].aspect); a.position.set(x, 0, z); group.add(a); return a; });
     const players = [...GUESTS, COURTIERS[2], CHILDREN[3]];
     const crowd = extras(group, players.map((who) => {
       const h = who.rank === 'king' || who.rank === 'queen' ? COURT_H : who.suit === 'hearts' ? CHILD_H : CARD_H;
-      return { poses: { stand: cardPose(who, 'stand', h) }, height: h };
+      return { poses: { stand: crowdCard(ai, who, h) }, height: h };
     }));
     const n = players.length;
     const taken = (i) => lerp(T.quarrel + 6, T.breath - 2, i / (n - 1));                       // when each is led away

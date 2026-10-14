@@ -21,7 +21,9 @@ NAMES = ["queen_stand", "queen_point", "queen_flush", "queen_stamp", "queen_fold
          "king_stand", "king_judge", "king_judge_specs", "king_judge_fold", "king_judge_point", "king_judge_pale",
          "knave_carry", "knave_stand", "knave_chains", "executioner",
          *[f"{c}_{p}" for c in ("two", "five", "seven") for p in ("stand", "paint", "bow", "run")], "two_kneel",
-         "rose_tree", "rose_white", "rose_red", "card_back"]
+         "rose_tree", "rose_white", "rose_red", "card_back",
+         "suit_heart", "suit_diamond", "suit_club", "suit_spade", "body_soldier", "body_courtier", "body_child", "body_officer", "card_arch",
+         *[f"{r}_{s}" for r in ("king", "queen") for s in ("clubs", "diamonds", "spades")], "knave_spades"]
 
 
 CRIMSON = np.array([0xA3, 0x12, 0x3A], np.float32)  # "turned crimson with fury" (SPOT.crimson)
@@ -55,11 +57,27 @@ def cut(path, red_as=SUIT_RED):
     return img.crop(box)
 
 
+def face_rect(img):
+    """The blank card face of a crowd body: the largest plain white region inside the figure, as
+    fractions (u0, v0, u1, v1) of the cut-out image. The game prints the pips inside it."""
+    a = np.asarray(img, np.float32)
+    white = (a[..., 3] > 200) & (a[..., :3].mean(-1) > 215)
+    white = ndi.binary_opening(white, iterations=3)
+    lab, n = ndi.label(white)
+    sizes = ndi.sum(white, lab, range(1, n + 1))
+    k = int(np.argmax(sizes)) + 1
+    ys, xs = np.nonzero(lab == k)
+    H, W = white.shape
+    return tuple(round(v, 3) for v in (xs.min() / W, ys.min() / H, xs.max() / W, ys.max() / H))
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     for n in NAMES:
         img = cut(f"source/ai/{n}.png", {"queen_flush": CRIMSON, "rose_red": ROSE_RED}.get(n, SUIT_RED))
         print(f"{n}: px {img.height}")
+        if n.startswith("body_"):
+            print(f"  face {face_rect(img)}")
         img.resize((600, round(img.height * 600 / img.width)), Image.LANCZOS).save(f"{OUT}/{n}.webp", quality=90, method=6)
 
 
