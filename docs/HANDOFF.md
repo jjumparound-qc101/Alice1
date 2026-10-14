@@ -23,6 +23,7 @@ Updated: 2026-10-13 (end of session 3: Chapters I–II art in, Chapter III's Ali
   - **Chapters IX–X**: the Mock Turtle, every pose (sitting, sobbing into a handkerchief, counting, hiding his face, dancing, singing, yawning; the rock taken out of the sitting drawing so he sits on the set's ledge; puppet `drop` lets his tail hang below his hooves), and the Duchess in Chapter IX (arm in arm, trembling, running). `tools/ch9_art.py` processes both and prints each drawing's height and drop. The Gryphon, every pose (sitting, asleep, walking, paws up, hiding his face, dancing, bounding), 2026-10-14. Chapter XII's dream shows the new Duchess, baby, Gryphon and Mock Turtle.
   - The rest of the book is placeholder art drawn in code.
 - **Alice's walk**: two matching steps from one drawing (`alice_walk_pair`); keep it. **Do not generate the walk cycle** (owner, 2026-10-13: the owner will make it later; the API attempts got the arms and legs wrong).
+- **Chapter I's audio starts with 4.14 s of added silence** (owner, 2026-10-14: a 5 s hold in the theatre seat before "CHAPTER I"; `lead_silence` in ch01_words.json, all times shifted). If `tools/narration.py`/`forced_align.py` is ever rerun for Chapter I, add the silence and the shift again (original audio: `ffmpeg -ss 4.14`).
 - **Narration timing**: every word re-timed against the audio (`tools/forced_align.py`, wav2vec2); 51 words the readers leave out are shown faint, explained under Contents → "Why are some words faint?".
 
 | Chapter | Asset list | Staged | Scenes (`src/scenes/`) |
