@@ -25,6 +25,7 @@ export function thoughts(group, list) {
       if (!card.visible) continue;
       card.position.set(pos.x, pos.y, pos.z);
       card.scale.setScalar(size * open);
+      card.userData.open = open;
     }
   };
 }
@@ -46,7 +47,12 @@ export function keepThoughtsInView(camera) {
     const minX = -hx * 0.94, maxX = hx * 0.94, minY = -hy * 0.3, maxY = hy * 0.94;
     let s = card.scale.x;
     const fit = Math.min((maxX - minX) / 1.0, (maxY - minY) / 0.7) * 0.9;
-    if (s > fit) { s = fit; card.scale.setScalar(s); }
+    // Big enough to read (owner, 2026-10-14): at least about 220 screen pixels wide (more than half a
+    // small phone's picture), whatever the shot; still opening and closing with the card.
+    const least = Math.min(fit, 2 * hx * Math.min(0.55, 220 / Math.max(1, innerWidth))) * (card.userData.open ?? 1);
+    if (s < least) s = least;
+    if (s > fit) s = fit;
+    card.scale.setScalar(s);
     const halfW = 0.5 * s, halfH = 0.35 * s;
     v.x = THREE.MathUtils.clamp(v.x, minX + halfW, maxX - halfW);
     v.y = THREE.MathUtils.clamp(v.y, minY + halfH, maxY - halfH);
