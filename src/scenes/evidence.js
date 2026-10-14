@@ -19,7 +19,7 @@ import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, JURY, BILL } from '../s
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
 
 const RABBIT = 0.38;
 const soldier = (who) => ({ poses: { stand: drawnPose(`${who.suit}-${who.rank}-stand`, () => card(who, 'stand'), 0.28) }, height: 0.28 });
@@ -163,7 +163,7 @@ export const evidence = {
       { t: T.air, dur: 4, pos: [0.9, 1.0, 1.5], look: [0.4, 0.9, -0.3] },                                  // the whole pack rose up into the air
     ]);
     return {
-      T, bg: PAPER, fog: [7, 26], bounds: null, hotspots: [], camera, update,
+      T, bg: PAPER, fog: [7, 26], bounds: null, hotspots: [], camera: withAlice(camera, aliceA, [[69, 92], [145, 159], [181, 335], [457, 512]]), update,
       actors: (t) => ({ alice: aliceA(t), king: kingA(t), queen: queenA(t), knave: knaveA(t), rabbit: rabbitA(t), gryphon: gryphonA(t) }),
     };
   },
@@ -250,7 +250,7 @@ export const waking = {
       { t: T.children, dur: Math.max(4, end - T.children), pos: [-1.2, 1.6, 1.4], look: [SISTER.x + 0.6, 1.0, SISTER.z] },
     ]);
     return {
-      T, bg: PAPER, fog: [9, 34], bounds: set.bounds, hotspots: set.hotspots, camera, update,
+      T, bg: PAPER, fog: [9, 34], bounds: set.bounds, hotspots: set.hotspots, camera: withAlice(camera, aliceA, [[69, 92], [145, 159], [181, 335], [457, 512]]), update,
       actors: (t) => ({ alice: aliceA(t), rabbit: rabbitA(t), sister: { pose: 'read', x: SISTER.x, z: SISTER.z, dir: 1 } }),
     };
   },

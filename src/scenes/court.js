@@ -15,7 +15,7 @@ import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, TARTS, JURY, WITNESS, D
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
 
 const RABBIT = 0.38, PIG = 0.32;          // the Rabbit's and the guinea-pigs' scale in the court
 const officer = (who) => ({ poses: { stand: drawnPose(`${who.suit}-${who.rank}-stand`, () => card(who, 'stand'), 0.28) }, height: 0.28 });
@@ -191,7 +191,7 @@ export const trial = {
     return {
       T, bg: PAPER, fog: [7, 26], bounds: { minX: -2.2, maxX: 2.2, minZ: 0.2, maxZ: 2.0 },
       hotspots: [{ pos: new THREE.Vector3(TARTS.x, 0.2, TARTS.z), title: 'The tarts', text: 'In the very middle of the court was a table, with a large dish of tarts upon it' }],
-      camera, update,
+      camera: withAlice(camera, aliceA, [[0, 7], [22, 141], [154, 285], [334, 600]]), update,
       actors: (t) => ({ alice: aliceA(t), gryphon: gryphonA(t), rabbit: rabbitA(t), king: kingA(t), queen: queenA(t), knave: knaveA(t), hatter: hatterA(t), hare: hareA(t), cook: cookA(t), pig1: pigA(0)(t), pig2: pigA(1)(t) }),
     };
   },

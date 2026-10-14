@@ -11,7 +11,7 @@ import { water, tear } from '../props2.js';
 import { comfitBox, thimble, mouseTale, shakespeareVignette, knotVignette, dinahBirdsVignette } from '../props3.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
 
 const TINY = 0.13;
 const WATER_Y = 0.1;
@@ -259,7 +259,7 @@ export const bank = {
         { pos: new THREE.Vector3(RC.x, 0.1, RC.z), title: 'The race-course', text: 'First it marked out a race-course, in a sort of circle, (“the exact shape doesn’t matter,” it said,)' },
         { pos: new THREE.Vector3(POOL.x, 0.2, POOL.z), title: 'The pool of tears', text: 'They were indeed a queer-looking party that assembled on the bank' },
       ],
-      camera, update,
+      camera: withAlice(camera, alice, [[61, 151], [160, 213], [237, 267], [367, 403]]), update,
       actors: (t) => ({ alice: alice(t), mouse: mouse(t), ...Object.fromEntries(Object.entries(crowd).map(([n, f]) => [n, f(t)])) }),
     };
   },
