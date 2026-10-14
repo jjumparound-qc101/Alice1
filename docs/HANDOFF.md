@@ -13,7 +13,8 @@ Updated: 2026-10-13 (end of session 3: Chapters I–II art in, Chapter III's Ali
   - **Chapter I**: nearly complete. All of Alice's poses (falling, kneeling, crying, eating, holding, reaching, landing on the leaf heap), the White Rabbit (owner's sheet: watch, trot, from behind; white with pink eyes), every wall, floor and ceiling (hall, shaft sides, passage), the leaf heap, the garden through the little door, the coloured marmalade jar (orange label, empty glass), and thoughts (Dinah ×2, the stairs, the globe). Still placeholder: the poker/knife/poison/candle/histories/telescope/croquet thoughts (prompts 27–29, 32, 44–46), antipodes/Dinah-down/dream (39–41), the Rabbit's run_side/hop/idle_b (10, 12, 13), the chapter end (33).
   - **Chapter II**: complete (all 36): Alice ×13, Rabbit ×3, Mouse ×4, the four birds swimming and standing, gloves, splash, pool water, shore stones, 7 thoughts.
   - **Chapter III**: all 8 Alice poses and the four birds standing; the rest placeholder.
-  - **Chapter V**: the Caterpillar (blue), also at Chapter IV's end. **Chapter VI**: the Cheshire Cat in the wood (on his bough, the empty bough, the grin alone); the Cat on the kitchen hearth (prompt 22, 2026-10-13; not yet checked in a screenshot, see Environment quirks).
+  - **Chapter V**: the Caterpillar (blue), also at Chapter IV's end. **Chapter VI**: the Cheshire Cat in the wood (on his bough, the empty bough, the grin alone); the Cat on the kitchen hearth (prompt 22) and the Duchess sitting with the baby (prompt 14; her other poses still placeholders).
+  - **Chapters IX–X**: the Mock Turtle sitting (prompt IX-14, rock removed so he sits on the set's ledge; puppet `drop` lets his tail hang below his hooves). In Chapter X, sitting on the sand, his hooves sink into it; fine for now. His other poses are placeholders.
   - The rest of the book is placeholder art drawn in code.
 - **Alice's walk**: two matching steps from one drawing (`alice_walk_pair`); keep it. **Do not generate the walk cycle** (owner, 2026-10-13: the owner will make it later; the API attempts got the arms and legs wrong).
 - **Narration timing**: every word re-timed against the audio (`tools/forced_align.py`, wav2vec2); 51 words the readers leave out are shown faint, explained under Contents → "Why are some words faint?".
@@ -37,7 +38,7 @@ Updated: 2026-10-13 (end of session 3: Chapters I–II art in, Chapter III's Ali
 - **Remind the owner** (asked 2026-10-11) when Chapter XI art begins: the Tenniel frontispiece (the trial) is needed as the reference for the court prompts and isn't on Victorian Web. The owner downloads it from a scan of the 1865/66 edition, or adds commons.wikimedia.org to the network allowlist so Claude can fetch it.
 
 ## Next steps, in order
-1. **Generate art by API** chapter by chapter (see "Generating art directly"), showing the owner each new character's first picture; or drop in art the owner sends (see "When art arrives"). Offered next: the Duchess (plate 6.2), the Mock Turtle (plate 9.3).
+1. **Generate art by API** chapter by chapter (see "Generating art directly"), showing the owner each new character's first picture; or drop in art the owner sends (see "When art arrives"). Next: the Duchess's other poses (VI-15, 16; IX-6, 7), the Mock Turtle's (IX-15; X-6, 7), then the rest of Chapter VI.
 2. **Re-direct each chapter's camera as its art arrives** (Alice in frame every 10–15 s; `tools/frame_report.mjs`). Worst: XI, VI, XII, III.
 3. Work through the owner's patch notes as they come.
 4. Regeneration list (owner: "later"): `alice3_wonder` (should look down at the tail), optional closer `alice3_ring` (from behind) and `alice3_bow` (facing right, taking the thimble).

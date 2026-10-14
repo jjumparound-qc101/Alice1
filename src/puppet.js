@@ -20,6 +20,7 @@ export class Puppet {
       flat.visible = false;
       flat.userData.facesLeft = p.facesLeft;
       flat.userData.offsetX = p.offsetX ?? 0; // shifts a pose so its body lines up with the others
+      flat.position.y = -(p.drop ?? 0) * h; // drop: fraction of the drawing below the feet (a tail hanging over a ledge)
       flat.userData.size = [h * p.aspect, h];
       flat.userData.hand = p.hand;
       this.root.add(flat);

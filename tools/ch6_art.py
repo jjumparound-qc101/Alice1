@@ -6,7 +6,10 @@
 Both are cut out on the same full canvas so they line up exactly, plus a third layer with only
 the grin, for "a grin without a cat".
 
-Usage: python3 tools/ch6_art.py   -> public/art/ai/ch6/cheshire_{bough,bough_empty,grin}.webp
+- cheshire_hearth: the Cat sitting on the kitchen hearth (from cheshire_bough).
+- duchess_nurse: the Duchess sitting, nursing the howling baby (from plate 6.2; her skirts hide the stool).
+
+Usage: python3 tools/ch6_art.py   -> public/art/ai/ch6/cheshire_{bough,bough_empty,grin,hearth}.webp, duchess_nurse.webp
 Requires Pillow, NumPy and SciPy.
 """
 import os
@@ -34,8 +37,8 @@ def cut_full(path):
     return full
 
 
-def save(img, name):
-    img = img.resize((W, round(img.height * W / img.width)), Image.LANCZOS)
+def save(img, name, w=W):
+    img = img.resize((w, round(img.height * w / img.width)), Image.LANCZOS)
     img.save(f"{OUT}/{name}.webp", quality=90, method=6)
     print(f"{OUT}/{name}.webp: {img.size[0]}x{img.size[1]}")
 
@@ -51,6 +54,10 @@ def main():
     a = np.asarray(grin, np.float32).copy()
     a[..., 3] *= np.asarray(m.filter(ImageFilter.GaussianBlur(3)), np.float32) / 255.0
     save(Image.fromarray(a.astype(np.uint8), "RGBA"), "cheshire_grin")
+    for name, w in (("cheshire_hearth", 600), ("duchess_nurse", 700)):
+        with tempfile.TemporaryDirectory() as d:
+            subprocess.run([sys.executable, "tools/whitecut.py", f"source/ai/{name}.png", f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
+            save(Image.open(f"{d}/c.png").convert("RGBA"), name, w)
 
 
 if __name__ == "__main__":

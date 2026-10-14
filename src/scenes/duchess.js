@@ -125,6 +125,7 @@ export const kitchen = {
     function update(t, cast) {
       // The baby: in the Duchess's lap, tossed in the lullaby, flung to Alice.
       const d = cast.duchess.root.position;
+      babyCard.visible = !(t < T.fling && duchessA(t).pose === 'sit'); // the AI Duchess has the baby in her lap
       if (t < T.fling) {
         const toss = t >= T.verse2 && t < T.fling ? Math.abs(Math.sin(t * 5)) * 0.08 : 0;
         babyCard.position.set(d.x - 0.01, (duchessA(t).pose === 'sit' ? 0.14 : 0.2) + toss, d.z + 0.04);
@@ -146,7 +147,7 @@ export const kitchen = {
       think(t, { x: ALICE.x - 0.1, y: 0.32, z: ALICE.z }, 0.16);
     }
     const camera = cameraTrack([
-      { t: start, dur: 0, pos: [0.6, 0.28, 0.55], look: [0, 0.2, -0.4] },                     // a large kitchen full of smoke
+      { t: start, dur: 0, pos: [0.65, 0.3, 0.65], look: [0, 0.22, -0.4] },                    // a large kitchen full of smoke
       { t: T.cat - 1, dur: 2, pos: [0.2, 0.12, 0.05], look: [0.42, 0.07, K.z0 + 0.12] },          // the cat grinning on the hearth
       { t: T.pig - 0.5, dur: 1, pos: [0.25, 0.2, 0.35], look: [0.05, 0.17, -0.15] },              // "Pig!"
       { t: T.irons - 1, dur: 2, pos: [0.45, 0.32, 0.6], look: [-0.1, 0.2, -0.3] },                // a shower of saucepans

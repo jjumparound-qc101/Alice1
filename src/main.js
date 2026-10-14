@@ -68,7 +68,7 @@ async function main() {
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',
-    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_hearth', 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', // tools/walls.py // tools/ch1_art.py
+    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_hearth', 'ch6/duchess_nurse', 'ch9/mockturtle_sit', 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', // tools/walls.py // tools/ch1_art.py
     // Chapter II (tools/ch2_art.py): the Rabbit, the Mouse, the birds, props, the pool and the thoughts.
     ...['rabbit2_trot', 'rabbit2_start', 'rabbit2_away', 'mouse_swim', 'mouse_leap', 'mouse_bristle', 'mouse_away',
       'duck_swim', 'duck_stand', 'dodo_swim', 'dodo_stand', 'lory_swim', 'lory_stand', 'eaglet_swim', 'eaglet_stand',
@@ -208,7 +208,7 @@ async function main() {
     // Chapter VI placeholders.
     fish: new Puppet({ stand: drawn(footman('fish'), 0.3) }, 0.3),
     frog: new Puppet({ stand: drawn(footman('frog'), 0.3), sit: drawn(footman('frog', 'sit'), 0.3) }, 0.3),
-    duchess: new Puppet({ sit: drawn(duchess('sit'), 0.3), stand: drawn(duchess('stand'), 0.32) }, 0.32),
+    duchess: new Puppet({ sit: art('ch6/duchess_nurse', 0.34), stand: drawn(duchess('stand'), 0.32) }, 0.32),
     cook: new Puppet({ stir: drawn(cook('stir'), 0.3), throw: drawn(cook('throw'), 0.3) }, 0.3),
     pig: new Puppet({ trot: drawn(pig(), 0.07) }, 0.07),
     // Chapter VII placeholders (seated, waist up).
@@ -234,7 +234,8 @@ async function main() {
     executioner: new Puppet({ axe: drawn(card({ suit: 'spades', rank: 'executioner' }, 'axe'), 0.32) }, 0.32),
     // Chapter IX placeholders (props9.js).
     gryphon: new Puppet(Object.fromEntries(['asleep', 'sit', 'walk', 'paws', 'hide'].map((p) => [p, drawn(gryphon(p), p === 'asleep' ? 0.5 : 0.36)])), 0.36),
-    mockTurtle: new Puppet(Object.fromEntries(['sit', 'sob', 'count', 'hide', 'walk'].map((p) => [p, drawn(mockTurtle(p), 0.3)])), 0.3),
+    mockTurtle: new Puppet({ ...Object.fromEntries(['sob', 'count', 'hide', 'walk'].map((p) => [p, drawn(mockTurtle(p), 0.3)])),
+      sit: { ...art('ch9/mockturtle_sit', 0.3 / 0.663), drop: 0.31 } }, 0.3), // tools/ch9_art.py: his tail hangs over the ledge
     puppy: new Puppet({ stand: drawn(puppy('stand'), 0.75), sit: drawn(puppy('sit'), 0.8) }, 0.75),
   };
   Object.values(cast).forEach((p) => scene.add(p.root));
