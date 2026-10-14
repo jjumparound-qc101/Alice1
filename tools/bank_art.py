@@ -6,11 +6,14 @@
 - bank_edge: the bank's grassy lip, side on; cut out from white, its two ends cross-faded so it
   repeats sideways.
 
+- clouds_two: two loose clouds, cut out separately, hung low behind the hedge so the riverbank's
+  closer shots (the Rabbit, the hole) have clouds too (owner).
 - sky_summer: the hot day's sky (every outdoor scene shares it), no hills; ends joined.
 
-Usage: python3 tools/bank_art.py   -> public/art/ai/bank_grass.webp, bank_edge.webp, sky.webp
+Usage: python3 tools/bank_art.py   -> public/art/ai/bank_grass.webp, bank_edge.webp, sky.webp, cloud_a.webp, cloud_b.webp
 Requires Pillow, NumPy and SciPy.
 """
+import os
 import subprocess
 import sys
 import tempfile
@@ -50,6 +53,13 @@ def main():
     sky = wrap(sky, 1, 80)
     Image.fromarray((sky[..., None] / 255 * PAPER).astype(np.uint8), "RGB").save("public/art/ai/sky.webp", quality=88, method=6)
     print("public/art/ai/sky.webp")
+    for name, box in (("cloud_a", (20, 250, 930, 660)), ("cloud_b", (990, 420, 1515, 640))):
+        with tempfile.TemporaryDirectory() as d:
+            Image.open("source/ai/clouds_two.png").convert("RGB").crop(box).save(f"{d}/c.png")
+            subprocess.run([sys.executable, "tools/whitecut.py", f"{d}/c.png", f"public/art/ai/{name}.png"], check=True, stdout=subprocess.DEVNULL)
+        Image.open(f"public/art/ai/{name}.png").save(f"public/art/ai/{name}.webp", quality=90, method=6)
+        os.remove(f"public/art/ai/{name}.png")
+        print(f"public/art/ai/{name}.webp")
 
 
 if __name__ == "__main__":
