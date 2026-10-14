@@ -64,7 +64,7 @@ async function main() {
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',
-    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_paw', ...['hatter_sit_stare', 'hatter_sit_riddle', 'hatter_sit_watch', 'hatter_cup', 'hatter_pale', 'hatter_bite', 'hatter_tremble', 'hatter_knee', 'hatter_run', 'marchhare_sit', 'marchhare_dip', 'dormouse_sleep', 'dormouse_talk'].map((n) => `ch7/${n}`), 'vignettes/axis', 'vignettes/pigs', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back', 'kitchen_side', 'little_house', 'march_hare_house', ...['irons', 'saucepan', 'saucepan2', 'pan', 'plate', 'plate2', 'plate3', 'dish'].map((n) => `thrown_${n}`)].map((n) => `ch6/${n}`),
+    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_paw', ...['queen_stand', 'queen_point', 'queen_flush', 'queen_stamp', 'queen_folded', 'queen_specs', 'queen_purple', 'king_stand', 'king_judge', 'king_judge_specs', 'king_judge_fold', 'king_judge_point', 'king_judge_pale', 'knave_carry', 'knave_stand', 'knave_chains', 'executioner'].map((n) => `ch8/${n}`), ...['hatter_sit_stare', 'hatter_sit_riddle', 'hatter_sit_watch', 'hatter_cup', 'hatter_pale', 'hatter_bite', 'hatter_tremble', 'hatter_knee', 'hatter_run', 'marchhare_sit', 'marchhare_dip', 'dormouse_sleep', 'dormouse_talk'].map((n) => `ch7/${n}`), 'vignettes/axis', 'vignettes/pigs', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back', 'kitchen_side', 'little_house', 'march_hare_house', ...['irons', 'saucepan', 'saucepan2', 'pan', 'plate', 'plate2', 'plate3', 'dish'].map((n) => `thrown_${n}`)].map((n) => `ch6/${n}`),
     ...['duchess_nurse', 'duchess_toss', 'duchess_fling', 'duchess9_arm', 'duchess9_tremble', 'duchess9_run'].map((n) => `ch6/${n}`),
     ...['sit', 'sob', 'count', 'hide', 'dance', 'sing', 'yawn'].map((n) => `ch9/mockturtle_${n}`),
     ...['sit', 'asleep', 'walk', 'paws', 'hide', 'dance', 'bound'].map((n) => `ch9/gryphon_${n}`), 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', 'vignettes/histories', 'vignettes/poker', 'vignettes/knife', 'vignettes/poison', 'vignettes/candle', 'vignettes/telescope', 'vignettes/croquet', // tools/walls.py // tools/ch1_art.py
@@ -255,19 +255,15 @@ async function main() {
     // Chapter VIII placeholders: the cards (props8.js), coloured like real cards (owner, 2026-10-11).
     ...Object.fromEntries([['two', 2], ['five', 5], ['seven', 7]].map(([name, rank]) => [name, new Puppet(Object.fromEntries(
       ['stand', 'paint', 'bow', 'kneel', 'run'].map((p) => [p, drawn(card({ suit: 'spades', rank }, p), 0.28)])), 0.28)])),
-    queen: new Puppet(Object.fromEntries([...['stand', 'point', 'flush', 'stamp', 'folded'].map((p) => [p, drawn(card({ suit: 'hearts', rank: 'queen' }, p), 0.32)]),
-      ['specs', drawn(card({ suit: 'hearts', rank: 'queen', specs: true }, 'stand'), 0.32)], ['purple', drawn(card({ suit: 'hearts', rank: 'queen', face: 'purple' }, 'point'), 0.32)]]), 0.32),
+    // The court cards (AI drawings with their hearts red, tools/ch8_art.py; px = height in source pixels).
+    queen: new Puppet(Object.fromEntries([['stand', 1509], ['point', 1460], ['flush', 1507], ['stamp', 1494], ['folded', 1509], ['specs', 1508], ['purple', 1509]]
+      .map(([p, px]) => [p, art(`ch8/queen_${p}`, 0.34 * px / 1509)])), 0.34),
     // The King: as judge in Chapters XI and XII, his crown over his wig; spectacles; arms folded; pale.
-    king: new Puppet({
-      stand: drawn(card({ suit: 'hearts', rank: 'king' }, 'stand'), 0.32),
-      judge: drawn(card({ suit: 'hearts', rank: 'king', wig: true }, 'stand'), 0.32),
-      judgeSpecs: drawn(card({ suit: 'hearts', rank: 'king', wig: true, specs: true }, 'stand'), 0.32),
-      judgeFold: drawn(card({ suit: 'hearts', rank: 'king', wig: true }, 'folded'), 0.32),
-      judgePoint: drawn(card({ suit: 'hearts', rank: 'king', wig: true }, 'point'), 0.32),
-      judgePale: drawn(card({ suit: 'hearts', rank: 'king', wig: true, face: 'pale' }, 'stand'), 0.32),
-    }, 0.32),
-    knave: new Puppet({ carry: drawn(card({ suit: 'hearts', rank: 'knave' }, 'carry'), 0.3), stand: drawn(card({ suit: 'hearts', rank: 'knave' }, 'stand'), 0.3), chains: drawn(card({ suit: 'hearts', rank: 'knave', chains: true }, 'stand'), 0.3) }, 0.3),
-    executioner: new Puppet({ axe: drawn(card({ suit: 'spades', rank: 'executioner' }, 'axe'), 0.32) }, 0.32),
+    king: new Puppet(Object.fromEntries([['stand', 'king_stand', 1467], ['judge', 'king_judge', 1475], ['judgeSpecs', 'king_judge_specs', 1485],
+      ['judgeFold', 'king_judge_fold', 1473], ['judgePoint', 'king_judge_point', 1471], ['judgePale', 'king_judge_pale', 1484]]
+      .map(([p, n, px]) => [p, art(`ch8/${n}`, 0.34 * px / 1475)])), 0.34),
+    knave: new Puppet(Object.fromEntries([['carry', 1432], ['stand', 1429], ['chains', 1429]].map(([p, px]) => [p, art(`ch8/knave_${p}`, 0.31 * px / 1430)])), 0.31),
+    executioner: new Puppet({ axe: art('ch8/executioner', 0.33) }, 0.33),
     // Chapter IX placeholders (props9.js).
     // The Gryphon (tools/ch9_art.py): the upright drawings scaled by their px; the wide ones by eye.
     gryphon: new Puppet(Object.fromEntries([['sit', 0.38, false], ['paws', 0.38 * 1495 / 1519, false], ['hide', 0.38 * 1507 / 1519, false],
