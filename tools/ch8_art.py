@@ -20,10 +20,12 @@ SUIT_RED = np.array([0xC8, 0x22, 0x22], np.float32)
 NAMES = ["queen_stand", "queen_point", "queen_flush", "queen_stamp", "queen_folded", "queen_specs", "queen_purple",
          "king_stand", "king_judge", "king_judge_specs", "king_judge_fold", "king_judge_point", "king_judge_pale",
          "knave_carry", "knave_stand", "knave_chains", "executioner",
-         *[f"{c}_{p}" for c in ("two", "five", "seven") for p in ("stand", "paint", "bow", "run")], "two_kneel"]
+         *[f"{c}_{p}" for c in ("two", "five", "seven") for p in ("stand", "paint", "bow", "run")], "two_kneel",
+         "rose_tree", "rose_white", "rose_red", "card_back"]
 
 
 CRIMSON = np.array([0xA3, 0x12, 0x3A], np.float32)  # "turned crimson with fury" (SPOT.crimson)
+ROSE_RED = np.array([0xD8, 0x28, 0x3A], np.float32)  # the painted roses (SPOT.rose)
 
 
 def cut(path, red_as=SUIT_RED):
@@ -56,7 +58,7 @@ def cut(path, red_as=SUIT_RED):
 def main():
     os.makedirs(OUT, exist_ok=True)
     for n in NAMES:
-        img = cut(f"source/ai/{n}.png", CRIMSON if n == "queen_flush" else SUIT_RED)
+        img = cut(f"source/ai/{n}.png", {"queen_flush": CRIMSON, "rose_red": ROSE_RED}.get(n, SUIT_RED))
         print(f"{n}: px {img.height}")
         img.resize((600, round(img.height * 600 / img.width)), Image.LANCZOS).save(f"{OUT}/{n}.webp", quality=90, method=6)
 

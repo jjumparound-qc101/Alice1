@@ -46,7 +46,7 @@ export const roseTree = {
     const at = cue.at;
     const T = {
       nearer: at('nearer'), five: at('queen', 1) - 4, tulip: at('tulip-roots'), flung: at('flung'), bowed: at('bowed', 1), ask: at('alice', 3) - 1,
-      queenCry: at('queen', 3), flat: at('flat', 1), soldiers: at('soldiers', 1), kings: at('king', 1), opposite: at('opposite'), who: at('queen', 7),
+      queenCry: at('queen', 3), flat: at('flat', 1), backs: at('backs'), soldiers: at('soldiers', 1), kings: at('king', 1), opposite: at('opposite'), who: at('queen', 7),
       idiot: at('idiot'), these: at('queen', 9), crimson: at('crimson', 2), nonsense: at('nonsense'), laid: at('laid'), turn: at('knave', 3),
       carefully: at('carefully'), get: at('get', 1), leave: at('leave'), roses: at('queen', 15) + 2, knee: at('knee'), offHeads: at('queen', 16),
       moved: at('moved'), ran: at('ran', 1), pot: at('flower-pot'), wandered: at('wandered'), marched: at('marched'), joined: at('joined'),
@@ -57,11 +57,11 @@ export const roseTree = {
     const A = { x: -1.35, z: 0.1 };                      // where Alice stands and watches
     // The three gardeners: where each paints, where each lies flat, and in the pot.
     const G = { two: { x: -2.48, z: -0.6, dir: 1, rank: 2 }, five: { x: -1.95, z: -0.6, dir: -1, rank: 5 }, seven: { x: -2.22, z: -0.52, dir: -1, rank: 7 } };
+    // Lying flat on their faces: the card's back, the same for the whole pack, with head, hands
+    // and feet showing; turned over, the gardener's own drawing on its back (AI, tools/ch8_art.py).
     const lying = Object.fromEntries(Object.entries(G).map(([name, g]) => {
-      const back = texture(cardBack()), face = texture(card({ suit: 'spades', rank: g.rank }, 'stand'));
-      const flat = paperFlat(back, 0.13, 0.2, { anchor: 'center', edge: false });
-      flat.rotation.x = -Math.PI / 2; flat.position.set(g.x, 0.004, g.z); group.add(flat);
-      return [name, { flat, back, face }];
+      const lay = (a, w) => { const f = paperFlat(a.tex, w, w / a.aspect, { anchor: 'center', edge: false }); f.rotation.x = -Math.PI / 2; f.position.set(g.x, 0.004, g.z); group.add(f); return f; };
+      return [name, { back: lay(ai['ch8/card_back'], 0.24), face: lay(ai[`ch8/${name}_stand`], 0.2) }];
     }));
 
     // The column: the head's distance along the path. It passes Alice slowly, each group as
@@ -179,8 +179,8 @@ export const roseTree = {
       paint(Math.floor(lerp(3, 8, Math.min(1, t / T.queenCry))));
       // Flat on their faces; turned over by the Knave; up again.
       for (const l of Object.values(lying)) {
-        l.flat.visible = t >= T.flat - 0.3 && t < T.get;
-        l.flat.userData.front.material.map = t >= T.carefully ? l.face : l.back;
+        const down = t >= T.flat - 0.3 && t < T.get;
+        l.back.visible = down && t < T.carefully; l.face.visible = down && t >= T.carefully;
       }
       crowd.apply(crowdStates(t), camera);
       const a = aliceA(t);
@@ -196,6 +196,9 @@ export const roseTree = {
       { t: T.soldiers - 3, dur: 4, pos: [-1.5, 0.3, 1.0], look: L(-2.3) },                             // the procession passes
       { t: T.kings - 6, dur: 4, pos: [-1.8, 0.3, 0.75], look: L(-2.4, 0.2) },                          // the Knave, the King and Queen
       { t: T.opposite - 1, dur: 3, pos: [-1.2, 0.3, 0.85], look: [-1.6, 0.18, -0.15] },               // opposite to Alice
+      // "the pattern on their backs was the same as the rest of the pack": looking down at the three backs.
+      { t: T.backs - 1.5, dur: 2.5, pos: [-2.05, 0.75, 0.25], look: [-2.2, 0.0, -0.62] },
+      { t: T.backs + 5, dur: 2.5, pos: [-1.2, 0.3, 0.85], look: [-1.6, 0.18, -0.15] },
       { t: T.crimson - 1, dur: 2, pos: [-1.55, 0.29, 0.45], look: [QSTOP, 0.26, LANE[0]] },            // "Off with her head!"
       { t: T.nonsense - 0.3, dur: 1.5, pos: [-1.15, 0.25, 0.65], look: [A.x - 0.1, 0.2, 0.0] },       // "Nonsense!"
       { t: T.turn - 1, dur: 3, pos: [-1.5, 0.45, 1.1], look: [-2.0, 0.1, -0.45] },                    // "Turn them over!"

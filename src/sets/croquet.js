@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture } from '../ink.js';
-import { roseTree, ROSE_TREE_PX, ROSES, rose, paintPot, flowerPot, gardenWall, furrows } from '../props8.js';
+import { ROSE_TREE_PX, paintPot, flowerPot, gardenWall, furrows } from '../props8.js';
 import { flowerBed } from '../props7.js';
 import { outdoors } from '../scenes/rabbit.js';
 
@@ -29,12 +29,16 @@ export function buildCroquet({ group, ai }) {
   const gw = CROQ.x1 - CROQ.x0, gd = CROQ.z1 - CROQ.z0;
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(gw, gd), new THREE.MeshBasicMaterial({ map: texture(furrows(), { repeat: [gw / 0.35, gd / 0.35] }) }));
   ground.rotation.x = -Math.PI / 2; ground.position.set((CROQ.x0 + CROQ.x1) / 2, 0.002, (CROQ.z0 + CROQ.z1) / 2); group.add(ground);
-  // The rose-tree, its roses as separate cards (white, and red once painted).
-  const tree = paperFlat(texture(roseTree()), ROSE.w, ROSE.h); tree.position.set(ROSE.x, 0, ROSE.z); group.add(tree);
-  const white = texture(rose(false)), red = texture(rose(true));
-  const roses = ROSES.map(([u, v]) => {
-    const r = paperFlat(white, 0.055, 0.055, { anchor: 'center', edge: false });
-    r.position.set(ROSE.x + (u - 0.5) * ROSE.w, (1 - v) * ROSE.h, ROSE.z + 0.01); group.add(r); return r;
+  // AI drawings (tools/ch8_art.py): the rose-tree with leaves only, and one rose, white or painted
+  // red, placed on its crown at SPOTS (fractions of the tree drawing from its top left).
+  const treeArt = ai['ch8/rose_tree'], TH = ROSE.h * 1.25;
+  const tree = paperFlat(treeArt.tex, TH * treeArt.aspect, TH); tree.position.set(ROSE.x, 0, ROSE.z); group.add(tree);
+  const TW = TH * treeArt.aspect;
+  const white = ai['ch8/rose_white'].tex, red = ai['ch8/rose_red'].tex, RW = 0.075, RH = RW / ai['ch8/rose_white'].aspect;
+  const SPOTS = [[0.32, 0.15], [0.52, 0.12], [0.66, 0.2], [0.2, 0.26], [0.42, 0.24], [0.62, 0.28], [0.8, 0.34], [0.28, 0.36], [0.52, 0.36], [0.7, 0.42], [0.4, 0.44], [0.56, 0.46]];
+  const roses = SPOTS.map(([u, v]) => {
+    const r = paperFlat(white, RW, RH, { anchor: 'center', edge: false });
+    r.position.set(ROSE.x + (u - 0.5) * TW, (1 - v) * TH, ROSE.z + 0.01); group.add(r); return r;
   });
   const paint = (n) => roses.forEach((r, i) => { r.userData.front.material.map = i < n ? red : white; });
   const pot = paperFlat(texture(paintPot()), 0.07, 0.07); pot.position.set(ROSE.x + 0.05, 0, ROSE.z + 0.12); group.add(pot);
