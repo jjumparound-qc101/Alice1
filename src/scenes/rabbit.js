@@ -12,7 +12,7 @@ import { texture, PAPER } from '../ink.js';
 import * as art from '../art.js';
 import { flagstones } from '../props.js';
 import {
-  HOUSE_PX, houseFront, roomWall, windowTable, plainBottle, cucumberFrames, ladder, barrow, pebble, littleCake,
+  windowTable, plainBottle, ladder, barrow, pebble, littleCake,
   thistle, buttercup, mushroom, stick, dinahNurseVignette, bookVignette,
 } from '../props4.js';
 import { thoughts } from '../thoughts.js';
@@ -52,7 +52,7 @@ export const lane = {
     for (const z of [0.8, -3, -7]) {
       const grass = paperFlat(tiled(ai.grass.tex, 12 / (0.55 * ai.grass.aspect)), 12, 0.55, { edge: false }); grass.position.set(z > 0 ? 0 : (z < -5 ? 3 : -3), 0, z); group.add(grass);
     }
-    const house = paperFlat(texture(houseFront()), 2.4, 2.4 * HOUSE_PX.h / HOUSE_PX.w); house.position.set(0.4, 0, -10); group.add(house);
+    const H = ai['ch4/rabbit_house'], house = paperFlat(H.tex, 2.4, 2.4 / H.aspect); house.position.set(0.4, 0, -10); group.add(house); // the AI house (tools/ch4_art.py)
 
     const rabbit = (t) => {
       const s = route(t, [
@@ -93,12 +93,19 @@ export const lane = {
 
 // --- 2. The Rabbit's house ---------------------------------------------------------------
 // The front of the house stands on z = 0, facing +z; the little room upstairs is behind it.
-const HW = 3.0, HH = HW * HOUSE_PX.h / HOUSE_PX.w, PXM = HW / HOUSE_PX.w;
+// The AI drawing of the house (2026-10-14, as the book describes it: the brass plate on the door, one
+// upstairs window over the cucumber-frames, a slate roof, the chimney): positions measured in its pixels
+// (public/art/ai/ch4/rabbit_house.webp, 1004 x 1240, cut off at the ground line).
+const HOUSE_PX = { w: 1004, h: 1240, window: { x0: 578, x1: 725, y0: 575, y1: 695 }, door: { x0: 228, x1: 400 }, chimney: { x0: 800, x1: 910 },
+  ridge: 205, room: { x0: 225, x1: 800, ceil: 545, floor: 860 } };
+const HW = 3.0, PXM = HW / HOUSE_PX.w, HH = HOUSE_PX.h * PXM;
 const px = (x) => -HW / 2 + x * PXM, py = (y) => HH - y * PXM;
-const WIN = { x0: px(HOUSE_PX.window.x), x1: px(HOUSE_PX.window.x + HOUSE_PX.window.w), y0: py(HOUSE_PX.window.y + HOUSE_PX.window.h), y1: py(HOUSE_PX.window.y) };
-const DOORX = px(HOUSE_PX.door.x + HOUSE_PX.door.w / 2);
-const CHIMNEY = { x: px(HOUSE_PX.chimney.x + HOUSE_PX.chimney.w / 2), y: HH };
-const ROOM = { x0: -0.75, x1: 0.95, z0: -1.05, z1: -0.03, floor: 1.45, ceil: 2.42 };
+const WIN = { x0: px(HOUSE_PX.window.x0), x1: px(HOUSE_PX.window.x1), y0: py(HOUSE_PX.window.y1), y1: py(HOUSE_PX.window.y0) };
+const DOORX = px((HOUSE_PX.door.x0 + HOUSE_PX.door.x1) / 2);
+const CHIMNEY = { x: px((HOUSE_PX.chimney.x0 + HOUSE_PX.chimney.x1) / 2), y: HH };
+const RIDGE = py(HOUSE_PX.ridge);
+// The room upstairs: from the partition with the door (left) to the chimney-breast with the narrow fireplace (right).
+const ROOM = { x0: px(HOUSE_PX.room.x0), x1: px(HOUSE_PX.room.x1), z0: -1.05, z1: -0.03, floor: py(HOUSE_PX.room.floor), ceil: py(HOUSE_PX.room.ceil) };
 const FRAMES = { x: (WIN.x0 + WIN.x1) / 2, z: 0.9 };
 
 export const rabbitHouse = {
@@ -128,18 +135,18 @@ export const rabbitHouse = {
     // The house shakes when she trembles ("she trembled till she shook the house").
     const house = new THREE.Group(); group.add(house);
     outdoors(group, ai);
-    const front = paperFlat(texture(houseFront()), HW, HH, { edge: false }); house.add(front);
-    // The room: front wall (with the window), back wall (fireplace and looking-glass), sides, floor, ceiling.
+    const front = paperFlat(ai['ch4/rabbit_house'].tex, HW, HH, { edge: false }); house.add(front);
+    // The room (AI walls, 2026-10-14): the back wall with the looking-glass, the door on the left, the narrow
+    // fireplace on the right (her foot goes up its chimney), floor and ceiling.
     const RW = ROOM.x1 - ROOM.x0, RH = ROOM.ceil - ROOM.floor, RD = ROOM.z1 - ROOM.z0;
-    const wall = (kind, w, pos, rotY) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, RH), plain(texture(roomWall(kind)), { transparent: true, alphaTest: 0.5, side: THREE.DoubleSide })); m.position.set(...pos); m.rotation.y = rotY; house.add(m); return m; };
-    const windowWall = wall('window', RW, [(ROOM.x0 + ROOM.x1) / 2, ROOM.floor + RH / 2, ROOM.z1 - 0.01], Math.PI);
-    wall('fire', RW, [(ROOM.x0 + ROOM.x1) / 2, ROOM.floor + RH / 2, ROOM.z0], 0);
-    const doorWall = wall('door', RD, [ROOM.x0, ROOM.floor + RH / 2, (ROOM.z0 + ROOM.z1) / 2], Math.PI / 2);
-    wall('fire', RD, [ROOM.x1, ROOM.floor + RH / 2, (ROOM.z0 + ROOM.z1) / 2], -Math.PI / 2);
+    const wall = (name, w, pos, rotY) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, RH), plain(ai[`ch4/${name}`].tex, { side: THREE.DoubleSide })); m.position.set(...pos); m.rotation.y = rotY; house.add(m); return m; };
+    wall('rabbit_room_back', RW, [(ROOM.x0 + ROOM.x1) / 2, ROOM.floor + RH / 2, ROOM.z0], 0);
+    const doorWall = wall('rabbit_room_door', RD, [ROOM.x0, ROOM.floor + RH / 2, (ROOM.z0 + ROOM.z1) / 2], Math.PI / 2);
+    wall('rabbit_room_fire', RD, [ROOM.x1, ROOM.floor + RH / 2, (ROOM.z0 + ROOM.z1) / 2], -Math.PI / 2);
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(RW, RD), plain(texture(flagstones(), { repeat: [3, 2] })));
     floor.rotation.x = -Math.PI / 2; floor.position.set((ROOM.x0 + ROOM.x1) / 2, ROOM.floor + 0.002, (ROOM.z0 + ROOM.z1) / 2); house.add(floor);
     const ceil = floor.clone(); ceil.rotation.x = Math.PI / 2; ceil.position.y = ROOM.ceil; house.add(ceil);
-    const table = paperFlat(texture(windowTable()), 0.5, 0.375); table.position.set(0.55, ROOM.floor, ROOM.z1 - 0.12); house.add(table);
+    const table = paperFlat(texture(windowTable()), 0.5, 0.375); table.position.set((WIN.x0 + WIN.x1) / 2, ROOM.floor, ROOM.z1 - 0.12); house.add(table); // "a table in the window"
     const bottle = paperFlat(texture(plainBottle()), 0.04, 0.08); house.add(bottle);
     // The dollhouse view (2026-10-14): the room is seen from in front of the house, with the front
     // cut away over it, so the whole of her is in the picture however large she grows. Once her arm is
@@ -153,16 +160,19 @@ export const rabbitHouse = {
       const m = new THREE.Mesh(geo, front.userData.front.material); house.add(m); return m;
     };
     const fullCut = cutFront(ROOM.x1 - 0.03), halfCut = cutFront(WIN.x0 - 0.06);
-    const cutAt = (t) => (t < T.upstairs - 0.5 || t >= T.ranOut - 0.5 ? 'none' : t < T.arm ? 'full' : 'half');
+    // Half from when she lies down: her arm then reaches up to the window, behind the part of the front left standing.
+    let cutAt = () => 'none'; // set once the camera's shots are known (below)
     // Outside: the cucumber-frames under the window, and later the ladders, the barrow.
-    const framesWhole = paperFlat(texture(cucumberFrames(false)), 1.4, 0.44), framesBroken = paperFlat(texture(cucumberFrames(true)), 1.4, 0.44);
+    const fr = (n) => paperFlat(ai[`ch4/${n}`].tex, 1.3, 1.3 / ai[`ch4/${n}`].aspect); // AI (2026-10-14)
+    const framesWhole = fr('cucumber_frames'), framesBroken = fr('cucumber_frames_broken');
     for (const f of [framesWhole, framesBroken]) { f.position.set(FRAMES.x, 0, FRAMES.z); group.add(f); }
-    const lad = paperFlat(texture(ladder()), 0.5, HH + 0.1); lad.position.set(HW / 2 - 0.25, 0, 0.25); lad.rotation.x = -0.08; group.add(lad);
+    const lad = paperFlat(texture(ladder()), 0.5, ROOM.ceil + 0.4); // two ladders tied together, up to the eaves lad.position.set(HW / 2 - 0.25, 0, 0.25); lad.rotation.x = -0.08; group.add(lad);
     const bar = paperFlat(texture(barrow()), 0.6, 0.33); bar.position.set(1.75, 0, 0.75); group.add(bar);
-    // Her arm out of the window, hanging down the front of the house.
-    const ARM = 0.7; // shoulder to fingertips at her full size: it "fills the whole window"
-    const arm = paperFlat(ai['ch4/alice_hand'].tex, ARM, ARM / ai['ch4/alice_hand'].aspect, { anchor: 'center' }); // AI, after Tenniel's plate 4.2
-    const armPivot = new THREE.Group(); armPivot.position.set((WIN.x0 + WIN.x1) / 2, (WIN.y0 + WIN.y1) / 2, 0.06); arm.position.x = ARM * 0.44; armPivot.add(arm); group.add(armPivot);
+    // Her arm out of the window, hanging down the front of the house: the same arm that reaches up to the
+    // window inside (forearm and hand from the model sheet drawing, sized to the lying Alice's arm).
+    const FA = ai['ch4/alice_forearm'], ARM = 0.55;
+    const arm = paperFlat(FA.tex, ARM, ARM / FA.aspect, { anchor: 'center' });
+    const armPivot = new THREE.Group(); armPivot.position.set((WIN.x0 + WIN.x1) / 2 - 0.05, (WIN.y0 + WIN.y1) / 2, 0.04); arm.position.x = ARM * 0.5; armPivot.add(arm); group.add(armPivot);
     // Pebbles on the floor, turning into little cakes.
     const pebTex = texture(pebble()), cakeTex = texture(littleCake());
     const pebs = Array.from({ length: 9 }, (_, i) => {
@@ -185,7 +195,11 @@ export const rabbitHouse = {
       if (t < T.ceiling) return lerp(MAID, HEAD, smooth((t - T.uncorked - 2.5) / (T.ceiling - T.uncorked - 2.5)));
       return lerp(HEAD, GROWN, smooth((t - T.kneel + 1) / (T.effect - T.kneel + 1)));
     };
-    const GIANT = { x: -0.33, z: -0.6 }; // against the door, left of the window
+    const GIANT = { x: -0.35, z: -0.6 }; // kneeling, by the door
+    // Lying (after Tenniel's plate 4.1): head and elbow by the door, her skirts toward the fireplace, one arm
+    // reaching up to the window. Her drawing fills the room; its arm ends just behind the window.
+    const LIE = { x: -0.006, z: -0.45 };
+    const WINX = (WIN.x0 + WIN.x1) / 2;
     function alice(t) {
       const scale = scaleAt(t);
       if (t < T.upstairs) { // to the door and in
@@ -199,18 +213,19 @@ export const rabbitHouse = {
       // Inside: in at the door (thinking of Dinah), to the table, to the looking-glass, then growing.
       const s = route(t, [
         [T.upstairs, { x: ROOM.x0 + 0.15, z: -0.5, dir: 1 }], [T.room - 2, { x: ROOM.x0 + 0.15, z: -0.5 }],
-        [T.room + 1, { x: 0.35, z: ROOM.z1 - 0.3 }], [T.bottle, { x: 0.35, z: ROOM.z1 - 0.3 }],
-        [T.bottle + 3, { x: -0.25, z: ROOM.z0 + 0.3, dir: -1 }], [T.kneel - 1, { x: -0.25, z: ROOM.z0 + 0.3 }], [T.kneel + 1, GIANT],
+        [T.room + 1, { x: WINX - 0.1, z: ROOM.z1 - 0.3 }], [T.bottle, { x: WINX - 0.1, z: ROOM.z1 - 0.3 }],
+        [T.bottle + 3, { x: (ROOM.x0 + ROOM.x1) / 2 - 0.12, z: ROOM.z0 + 0.3, dir: -1 }], [T.kneel - 1, { x: (ROOM.x0 + ROOM.x1) / 2 - 0.12, z: ROOM.z0 + 0.3 }], [T.kneel + 1, GIANT],
+        [T.lying - 0.31, GIANT], [T.lying - 0.3, LIE],
       ], { phase: t * 2.2 });
       // AI poses (2026-10-14): the fan and gloves in her hand; drinking; then cramped, too big for the room.
       let pose = 'stand';
       if (!s.moving && t >= T.room + 2 && t < T.bottle) pose = 'hold4';
       if (t >= T.uncorked && t < T.uncorked + 2.5) pose = 'drink';
-      if (t >= T.kneel && scale > 0.4) pose = 'giant';
+      if (t >= T.kneel && scale > 0.4) pose = t >= T.lying - 0.3 ? 'lying' : 'giant';
       const stoop = pose === 'stand' && t >= T.ceiling - 1 && t < T.kneel ? 0.12 : 0; // "had to stoop to save her neck"
       const trembling = t >= T.shook - 1 && t < T.shook + 4 ? Math.sin(t * 50) * 0.02 : 0;
       const pelted = t >= T.pebbles && t < T.pebbles + 4 ? Math.sin(t * 30) * 0.04 : 0;
-      return { ...s, pose, scale, y: ROOM.floor, tilt: stoop + trembling + pelted, dir: t >= T.kneel ? 1 : s.dir };
+      return { ...s, pose, scale, y: ROOM.floor, tilt: stoop + trembling + pelted, dir: pose === 'lying' ? -1 : t >= T.kneel ? 1 : s.dir };
     }
 
     // --- The Rabbit, Pat, Bill and the crowd outside ---------------------------------
@@ -245,7 +260,7 @@ export const rabbitHouse = {
         const s = route(t, [[T.rumbling, { x: -2.6, z: 0.9, dir: 1 }], [T.heads - 4, { x: HW / 2 - 0.25, z: 0.45 }], [T.downChimney + 4, { x: HW / 2 - 0.25, z: 0.45 }], [T.kick - 6, ROOF]], { pose: 'stand', phase: t * 2.4 });
         const climb = smooth((t - T.downChimney - 4) / 8); // up the ladder and over the roof to the chimney
         const pose = t < T.heads - 4 ? 'ladder' : t >= T.downChimney + 4 ? 'climb' : 'stand';  // "Bill's got the other" ladder
-        return { ...s, pose, dir: pose === 'stand' ? -1 : s.dir, y: climb * (HH - 0.05), visible: t < T.kick - 5 };
+        return { ...s, pose, dir: pose === 'stand' ? -1 : s.dir, y: climb * (RIDGE - 0.1), visible: t < T.kick - 5 };
       }
       if (t < T.kick + 3) { // "up I goes like a sky-rocket!" and down by the hedge
         const k = (t - T.kick) / 3;
@@ -276,7 +291,7 @@ export const rabbitHouse = {
       bottle.visible = t >= T.room && t < T.swallowed;
       if (a.pose === 'drink') bottle.visible = false; // the drinking drawing has the bottle at her lips
       if (t >= T.bottle + 3 && t < T.putDown) carry(bottle, cast.alice, { drop: 0.03 * a.scale });
-      else { bottle.position.set(-0.45, ROOM.floor + 0.32, ROOM.z0 + 0.04); bottle.rotation.set(0, 0, 0); }
+      else { bottle.position.set((ROOM.x0 + ROOM.x1) / 2, ROOM.floor + RH * 0.47, ROOM.z0 + 0.04); bottle.rotation.set(0, 0, 0); } // on the shelf under the looking-glass
       // The arm: out of the window from "one arm out of the window" until she shrinks; it snatches twice.
       armPivot.visible = t >= T.arm && t < T.swallowed + 1;
       const snatch = (t0) => Math.max(0, Math.sin(Math.min(1, Math.max(0, (t - t0) / 0.8)) * Math.PI));
@@ -293,7 +308,7 @@ export const rabbitHouse = {
         p.visible = landed && cake < 0.5; c.visible = landed && cake >= 0.5 && !(i === 0 && t >= T.swallowed);
       }
       const cut = cutAt(t);
-      front.visible = cut === 'none'; fullCut.visible = cut === 'full'; halfCut.visible = cut === 'half'; windowWall.visible = cut === 'none';
+      front.visible = cut === 'none'; fullCut.visible = cut === 'full'; halfCut.visible = cut === 'half';
       // The house trembles with her.
       house.position.x = t >= T.shook - 1 && t < T.shook + 4 ? Math.sin(t * 47) * 0.01 : 0;
       doorWall.position.z = (ROOM.z0 + ROOM.z1) / 2 + (t >= T.door && t < T.door + 3 ? Math.sin(t * 30) * 0.006 : 0); // the Rabbit tries the door
@@ -301,33 +316,35 @@ export const rabbitHouse = {
     }
 
     const IN = (pos, look) => ({ pos, look });
+    const OUTSIDE = (pos, look) => ({ pos, look, out: true }); // shots from outside the house: its front uncut
     // Inside: the dollhouse view, from in front of the house through its cut-away front.
     const CUT = {
-      room: IN([0.1, 1.9, 2.4], [0.1, 1.75, -0.5]),          // the whole room
-      door: IN([-0.35, 1.9, 1.8], [-0.45, 1.78, -0.5]),      // by the door
-      table: IN([0.45, 1.88, 1.6], [0.35, 1.75, -0.4]),      // the table in the window
-      glass: IN([-0.15, 1.9, 1.7], [-0.25, 1.78, -0.8]),     // the bottle by the looking-glass
-      her: IN([-0.15, 1.92, 2.1], [-0.25, 1.8, -0.6]),       // filling the room
-      near: IN([-0.3, 1.97, 1.4], [-0.33, 1.86, -0.6]),      // closer: her face
-      both: IN([0.1, 1.95, 2.7], [-0.05, 1.82, -0.4]),       // her, and the window with her arm out of it
-      floor: IN([0.0, 1.85, 1.3], [-0.1, 1.55, -0.6]),       // the pebbles turning into cakes
-      small: IN([-0.3, 1.62, 0.9], [-0.33, 1.52, -0.6]),     // shrinking
+      room: IN([0.1, 1.58, 2.4], [0.1, 1.44, -0.5]),          // the whole room
+      door: IN([-0.35, 1.58, 1.8], [-0.45, 1.47, -0.5]),      // by the door
+      table: IN([0.5, 1.56, 1.6], [0.42, 1.44, -0.4]),       // the table in the window
+      glass: IN([-0.15, 1.58, 1.7], [-0.25, 1.47, -0.8]),     // the bottle by the looking-glass
+      her: IN([-0.15, 1.60, 2.1], [-0.25, 1.49, -0.6]),       // filling the room
+      near: IN([-0.3, 1.66, 1.4], [-0.33, 1.55, -0.6]),      // closer: her face
+      both: IN([0.1, 1.64, 2.7], [-0.05, 1.51, -0.4]),       // her, and the window with her arm out of it
+      floor: IN([0.0, 1.54, 1.3], [-0.1, 1.24, -0.6]),       // the pebbles turning into cakes
+      lie: IN([0.1, 1.62, 2.5], [0.0, 1.52, -0.5]),          // lying, the arm up to the window
+      small: IN([-0.3, 1.31, 0.9], [-0.33, 1.21, -0.6]),     // shrinking
     };
     const OUT = {
-      wide: IN([0.3, 1.7, 7.5], [0.2, 1.6, 0]),
-      door: IN([-0.6, 0.7, 2.6], [DOORX, 0.6, 0]),
-      house: IN([0.6, 1.3, 5.6], [0.2, 0.7, 0]),             // the house, her in it, the arm, the yard in front
-      window: IN([0.8, 1.6, 3.4], [0.35, 1.5, 0]),           // "what's that in the window?"
-      frames: IN([FRAMES.x + 0.6, 0.5, 2.2], [FRAMES.x - 0.1, 0.25, FRAMES.z]),
-      roof: IN([1.2, 2.7, 4.6], [0.45, 2.15, 0]),            // the roof and the chimney, and her below
-      sky: IN([1.6, 1.8, 6.0], [1.4, 2.6, 0.8]),
-      yard: IN([0.9, 0.45, 3.0], [0.8, 0.05, 0.6]),          // low on the yard (her window out of the picture): the crowd, Bill, the guinea-pigs
-      yardWide: IN([0.0, 0.5, 3.6], [-0.2, -0.05, 0.6]),     // the cart and the crowd arriving, Bill with the other ladder
-      held: IN([DOORX - 0.4, 0.45, 3.0], [DOORX - 0.5, 0.05, 0.6]),  // Bill held up by the guinea-pigs
+      wide: OUTSIDE([0.3, 1.7, 7.5], [0.2, 1.6, 0]),
+      door: OUTSIDE([-0.6, 0.7, 2.6], [DOORX, 0.6, 0]),
+      house: OUTSIDE([0.6, 1.3, 5.6], [0.2, 0.7, 0]),             // the house, her in it, the arm, the yard in front
+      window: OUTSIDE([0.8, 1.4, 3.4], [0.35, 1.3, 0]),           // "what's that in the window?"
+      frames: OUTSIDE([FRAMES.x + 0.6, 0.5, 2.2], [FRAMES.x - 0.1, 0.25, FRAMES.z]),
+      roof: OUTSIDE([1.5, 3.0, 5.2], [0.7, 2.6, 0]),              // the roof and the chimney, and her below
+      sky: OUTSIDE([1.6, 1.8, 6.0], [1.4, 2.6, 0.8]),
+      yard: OUTSIDE([0.9, 0.45, 3.0], [0.8, 0.05, 0.6]),          // low on the yard (her window out of the picture): the crowd, Bill, the guinea-pigs
+      yardWide: OUTSIDE([0.0, 0.5, 3.6], [-0.2, -0.05, 0.6]),     // the cart and the crowd arriving, Bill with the other ladder
+      held: OUTSIDE([DOORX - 0.4, 0.45, 3.0], [DOORX - 0.5, 0.05, 0.6]),  // Bill held up by the guinea-pigs
     };
     // Cuts (dur 0) wherever the front changes, so the cut-away never appears or vanishes in view.
     const k = (t, dur, s) => ({ t, dur, ...s });
-    const camera = cameraTrack([
+    const shots = [
       k(start, 0, OUT.wide), k(start + 0.5, 4, OUT.door),                            // "a neat little house" and its brass plate
       k(T.upstairs - 0.5, 0, CUT.room),                                              // in at the door upstairs
       k(T.dinah - 8, 8, CUT.door),                                                   // thinking of Dinah
@@ -335,7 +352,8 @@ export const rabbitHouse = {
       k(T.bottle - 0.5, 3, CUT.glass),                                               // the bottle near the looking-glass
       k(T.uncorked + 3, 6, CUT.room),                                                // growing
       k(T.ceiling - 3, 4, CUT.her), k(T.putDown, 5, CUT.near),                       // the ceiling; "That's quite enough"
-      k(T.kneel - 2, 5, CUT.her),                                                    // kneeling, lying down
+      k(T.kneel - 2, 5, CUT.her),                                                    // kneeling
+      k(T.lying - 0.3, 0, CUT.lie),                                                  // lying down, one elbow against the door
       k(T.arm, 0, OUT.house), k(T.arm + 4, 4, OUT.window),                           // the arm out of the window
       k(T.effect, 0, CUT.both), k(T.effect + 13, 8, CUT.near),                       // "it was much pleasanter at home"
       k(T.book - 4, 6, CUT.her), k(T.book + 14, 8, CUT.near),
@@ -359,9 +377,13 @@ export const rabbitHouse = {
       k(T.pebbles - 1, 0, CUT.her),                                                  // the pebbles in at the window
       k(T.cakes - 3, 4, CUT.floor),                                                  // turning into little cakes
       k(T.swallowed, 3, CUT.her), k(T.swallowed + 3, 3, CUT.small),                  // shrinking
-      k(T.ranOut - 0.5, 0, IN([DOORX - 0.3, 0.45, 2.7], [DOORX - 0.2, 0.15, 0.5])),     // out of the door, tiny; Bill held up
-      k(T.held, 3, IN([DOORX - 0.35, 0.47, 2.9], [DOORX - 0.25, 0.16, 0.6])),
-    ]);
+      k(T.ranOut - 0.5, 0, OUTSIDE([DOORX - 0.3, 0.45, 2.7], [DOORX - 0.2, 0.15, 0.5])),     // out of the door, tiny; Bill held up
+      k(T.held, 3, OUTSIDE([DOORX - 0.35, 0.47, 2.9], [DOORX - 0.25, 0.16, 0.6])),
+    ];
+    // From outside, the house is whole (only her arm shows, as the Rabbit sees it); from inside, the front is cut away.
+    const outside = (t) => { let o = true; for (const sh of shots) { if (sh.t > t) break; o = !!sh.out; } return o; };
+    cutAt = (t) => (outside(t) ? 'none' : t < T.lying - 0.3 ? 'full' : 'half');
+    const camera = cameraTrack(shots);
     return {
       T, bg: PAPER, fog: [9, 30], bounds: { minX: -2.5, maxX: 2.5, minZ: 0.8, maxZ: 6 },
       hotspots: [
