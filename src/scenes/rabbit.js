@@ -157,7 +157,7 @@ export const rabbitHouse = {
     const framesWhole = paperFlat(texture(cucumberFrames(false)), 1.4, 0.44), framesBroken = paperFlat(texture(cucumberFrames(true)), 1.4, 0.44);
     for (const f of [framesWhole, framesBroken]) { f.position.set(FRAMES.x, 0, FRAMES.z); group.add(f); }
     const lad = paperFlat(texture(ladder()), 0.5, HH + 0.1); lad.position.set(HW / 2 - 0.25, 0, 0.25); lad.rotation.x = -0.08; group.add(lad);
-    const bar = paperFlat(texture(barrow()), 0.6, 0.33); bar.position.set(-1.0, 0, 1.6); group.add(bar);
+    const bar = paperFlat(texture(barrow()), 0.6, 0.33); bar.position.set(1.75, 0, 0.75); group.add(bar);
     // Her arm out of the window, hanging down the front of the house.
     const ARM = 0.7; // shoulder to fingertips at her full size: it "fills the whole window"
     const arm = paperFlat(ai['ch4/alice_hand'].tex, ARM, ARM / ai['ch4/alice_hand'].aspect, { anchor: 'center' }); // AI, after Tenniel's plate 4.2
@@ -192,7 +192,7 @@ export const rabbitHouse = {
         return { ...s, pose: 'stand', scale, visible: t < T.upstairs - 1.2 };
       }
       if (t >= T.ranOut) { // out of the door, small, and away "as hard as she could"
-        const s = route(t, [[T.ranOut, { x: DOORX, z: 0.15, dir: -1 }], [T.held - 1, { x: DOORX - 0.2, z: 0.6 }], [T.ranOff, { x: DOORX - 0.2, z: 0.6 }], [T.ranOff + 3, { x: -3.5, z: 2.2 }]], { phase: t * 3 });
+        const s = route(t, [[T.ranOut, { x: DOORX, z: 0.15, dir: 1 }], [T.held - 1, { x: DOORX + 0.05, z: 0.45 }], [T.ranOff, { x: DOORX + 0.05, z: 0.45 }], [T.ranOff + 3, { x: -3.5, z: 1.6, dir: -1 }]], { phase: t * 3 });
         return { ...s, pose: 'stand', scale, y: 0 };
       }
       // Inside: in at the door (thinking of Dinah), to the table, to the looking-glass, then growing.
@@ -220,45 +220,49 @@ export const rabbitHouse = {
       const s = route(t, [
         [T.window - 1, { x: DOORX + 0.3, z: 1.0, dir: 1 }], [T.window + 4, UNDER],      // "round … to the window"
         [T.shriek, UNDER], [T.shriek + 0.4, { x: FRAMES.x, z: FRAMES.z + 0.02 }],          // into a cucumber-frame
-        [T.pat + 8, { x: FRAMES.x, z: FRAMES.z + 0.02 }], [T.pat + 12, { x: FRAMES.x - 0.6, z: 1.5 }],
-        [T.snatch2 - 1, { x: FRAMES.x - 0.6, z: 1.5 }], [T.rumbling + 3, { x: -0.6, z: 1.9 }],
-        [T.ranOut, { x: -0.6, z: 1.9 }], [T.held, { x: DOORX + 1.0, z: 1.4 }],
+        [T.pat + 8, { x: FRAMES.x, z: FRAMES.z + 0.02 }], [T.pat + 12, { x: FRAMES.x - 0.6, z: 1.0 }],
+        [T.snatch2 - 1, { x: FRAMES.x - 0.6, z: 1.0 }], [T.rumbling + 3, { x: -0.1, z: 1.05 }],
+        [T.ranOut, { x: -0.1, z: 1.05 }], [T.held, { x: DOORX + 1.0, z: 1.0 }],
       ], { pose: 'watch', phase: t * 2.4 });
       const tumble = fell && t < T.pat + 10 ? Math.min(1, (t - T.shriek) / 0.4) : 0;
       return { ...s, tilt: tumble * 1.2, y: -tumble * 0.12, dir: t > T.pat + 12 && !s.moving ? 1 : s.dir };
     }
     function pat(t) {
       if (t < T.pat + 1) return { visible: false };
-      const s = route(t, [[T.pat + 1, { x: 2.6, z: 1.6, dir: -1 }], [T.pat2, { x: FRAMES.x + 0.5, z: 1.1 }], [T.snatch2 - 3, { x: FRAMES.x + 0.15, z: 0.6 }],
-        [T.snatch2 + 0.4, { x: FRAMES.x + 0.25, z: FRAMES.z + 0.02 }], [T.snatch2 + 8, { x: FRAMES.x + 0.25, z: FRAMES.z + 0.02 }], [T.rumbling + 5, { x: 1.6, z: 2.0 }]], { pose: 'spade', phase: t * 2.4 });
+      const s = route(t, [[T.pat + 1, { x: 2.6, z: 1.0, dir: -1 }], [T.pat2, { x: FRAMES.x + 0.5, z: 0.95 }], [T.snatch2 - 3, { x: FRAMES.x + 0.15, z: 0.6 }],
+        [T.snatch2 + 0.4, { x: FRAMES.x + 0.25, z: FRAMES.z + 0.02 }], [T.snatch2 + 8, { x: FRAMES.x + 0.25, z: FRAMES.z + 0.02 }], [T.rumbling + 5, { x: 1.6, z: 1.1 }]], { pose: 'spade', phase: t * 2.4 });
       const fell = t >= T.snatch2 + 0.2 && t < T.snatch2 + 8 ? 1 : 0;
-      return { ...s, tilt: fell * -1.1, y: -fell * 0.08 };
+      const nervous = t >= T.pat2 + 2 && t < T.snatch2 - 4 && !s.moving; // "Sure, I don't like it, yer honour"
+      return { ...s, pose: nervous ? 'cap' : 'spade', tilt: fell * -1.1, y: -fell * 0.08 };
     }
     const ROOF = { x: CHIMNEY.x, z: 0.05 };
     function bill(t) {
       if (t < T.rumbling) return { visible: false };
       if (t < T.kick) {
-        const s = route(t, [[T.rumbling, { x: -2.4, z: 2.0, dir: 1 }], [T.heads - 4, { x: HW / 2 - 0.25, z: 0.45 }], [T.downChimney + 4, { x: HW / 2 - 0.25, z: 0.45 }], [T.kick - 6, ROOF]], { pose: 'stand', phase: t * 2.4 });
+        const s = route(t, [[T.rumbling, { x: -2.6, z: 0.9, dir: 1 }], [T.heads - 4, { x: HW / 2 - 0.25, z: 0.45 }], [T.downChimney + 4, { x: HW / 2 - 0.25, z: 0.45 }], [T.kick - 6, ROOF]], { pose: 'stand', phase: t * 2.4 });
         const climb = smooth((t - T.downChimney - 4) / 8); // up the ladder and over the roof to the chimney
-        return { ...s, y: climb * (HH - 0.05), visible: t < T.kick - 5 };
+        const pose = t < T.heads - 4 ? 'ladder' : t >= T.downChimney + 4 ? 'climb' : 'stand';  // "Bill's got the other" ladder
+        return { ...s, pose, dir: pose === 'stand' ? -1 : s.dir, y: climb * (HH - 0.05), visible: t < T.kick - 5 };
       }
       if (t < T.kick + 3) { // "up I goes like a sky-rocket!" and down by the hedge
         const k = (t - T.kick) / 3;
-        return { pose: 'fly', x: lerp(CHIMNEY.x, 2.4, k), z: lerp(0.05, 2.2, k), y: HH + 0.2 + 2.5 * 4 * k * (1 - k) - k * k * HH * 0.9, tilt: k * 6, dir: 1 };
+        return { pose: 'fly', x: lerp(CHIMNEY.x, 2.0, k), z: lerp(0.05, 0.7, k), y: HH + 0.2 + 2.5 * 4 * k * (1 - k) - k * k * HH * 0.9, tilt: -k * 2.6, dir: 1 }; // up, over and down
       }
-      const held = { x: DOORX + 0.5, z: 1.1 };
-      const s = route(t, [[T.kick + 3, { x: 2.4, z: 2.2 }], [T.feeble - 2, { x: 2.4, z: 2.2 }], [T.feeble + 2, held]], { pose: 'stand', phase: t * 1.5 });
-      return { ...s, tilt: t < T.feeble ? -1.4 : 0.3, y: t >= T.feeble ? 0.06 : 0 }; // limp, held up
+      const held = { x: DOORX - 0.6, z: 0.7 }; // left of the door, clear of the cucumber-frames
+      const s = route(t, [[T.kick + 3, { x: 2.0, z: 0.7 }], [T.feeble - 2, { x: 2.0, z: 0.7 }], [T.feeble + 2, held]], { pose: 'limp', phase: t * 1.5 });
+      return { ...s, pose: 'limp', tilt: t < T.feeble ? -1.4 : 0, y: t >= T.feeble ? 0.06 : 0 }; // limp by the hedge, then held up
     }
     const helper = (side) => (t) => {
       if (t < T.kick + 3) return { visible: false };
-      const s = route(t, [[T.kick + 3, { x: 2.4 + side * 0.3, z: 2.4 }], [T.feeble - 2, { x: 2.4 + side * 0.22, z: 2.25 }], [T.feeble + 2, { x: DOORX + 0.5 + side * 0.2, z: 1.12 }]], { pose: 'up', phase: t * 2 });
-      return { ...s, dir: -side };
+      const s = route(t, [[T.kick + 3, { x: 2.0 + side * 0.3, z: 0.85 }], [T.feeble - 2, { x: 2.0 + side * 0.2, z: 0.72 }], [T.feeble + 2, { x: DOORX - 0.6 + side * 0.17, z: 0.72 }]], { pose: 'up', phase: t * 2 });
+      // Holding him up under the arms; the other gives him something out of a bottle ("Brandy now").
+      const pose = t >= T.feeble - 2 ? (side < 0 ? 'hold' : 'bottle') : 'up';
+      return { ...s, pose, dir: -side };
     };
-    const CROWD = { duck: [-1.6, 2.2], lory: [-1.2, 2.6], eaglet: [1.1, 2.5], owl: [0.6, 2.8], magpie: [-0.4, 2.7], canary: [1.8, 2.7] };
+    const CROWD = { duck: [-1.6, 1.0], lory: [-1.2, 1.25], eaglet: [1.1, 1.2], owl: [0.6, 1.35], magpie: [-0.4, 1.3], canary: [1.8, 1.25] }; // close to the house, above the text strip
     const crowd = Object.fromEntries(Object.entries(CROWD).map(([name, [x, z]], i) => [name, (t) => {
       if (t < T.rumbling + 2) return { visible: false };
-      const rush = t >= T.ranOff - 1.5 ? { x: DOORX - 0.4 + i * 0.12, z: 0.9 + (i % 2) * 0.2 } : { x, z };   // "they all made a rush at Alice"
+      const rush = t >= T.ranOff - 1.5 ? { x: DOORX - 0.4 + i * 0.12, z: 0.6 + (i % 2) * 0.15 } : { x, z };   // "they all made a rush at Alice"
       const s = route(t, [[T.rumbling + 2, { x: x - 3, z, dir: 1 }], [T.rumbling + 8 + i, { x, z }], [T.ranOff - 1.5, { x, z }], [T.ranOff + 0.5, rush]], { pose: 'up', phase: t * 2 + i });
       return { ...s, scale: 1.8 }; // Chapter III's creatures, at the Rabbit's scale
     }]));
@@ -309,12 +313,14 @@ export const rabbitHouse = {
     const OUT = {
       wide: IN([0.3, 1.7, 7.5], [0.2, 1.6, 0]),
       door: IN([-0.6, 0.7, 2.6], [DOORX, 0.6, 0]),
-      house: IN([0.6, 1.4, 5.6], [0.2, 0.95, 0]),            // the house, her in it, the arm, the frames below
+      house: IN([0.6, 1.3, 5.6], [0.2, 0.7, 0]),             // the house, her in it, the arm, the yard in front
       window: IN([0.8, 1.6, 3.4], [0.35, 1.5, 0]),           // "what's that in the window?"
       frames: IN([FRAMES.x + 0.6, 0.5, 2.2], [FRAMES.x - 0.1, 0.25, FRAMES.z]),
       roof: IN([1.2, 2.7, 4.6], [0.45, 2.15, 0]),            // the roof and the chimney, and her below
       sky: IN([1.6, 1.8, 6.0], [1.4, 2.6, 0.8]),
-      crowd: IN([0.4, 1.3, 6.2], [0.5, 0.9, 0.6]),           // the crowd below, and the house
+      yard: IN([0.9, 0.45, 3.0], [0.8, 0.05, 0.6]),          // low on the yard (her window out of the picture): the crowd, Bill, the guinea-pigs
+      yardWide: IN([0.0, 0.5, 3.6], [-0.2, -0.05, 0.6]),     // the cart and the crowd arriving, Bill with the other ladder
+      held: IN([DOORX - 0.4, 0.45, 3.0], [DOORX - 0.5, 0.05, 0.6]),  // Bill held up by the guinea-pigs
     };
     // Cuts (dur 0) wherever the front changes, so the cut-away never appears or vanishes in view.
     const k = (t, dur, s) => ({ t, dur, ...s });
@@ -338,19 +344,20 @@ export const rabbitHouse = {
       k(T.pat2 + 18, 0, CUT.near),                                                   // a long silence, and whispers
       k(T.snatch2 - 1, 0, OUT.house), k(T.snatch2 + 2, 0, OUT.frames),               // the second snatch
       k(T.snatch2 + 6, 0, CUT.her),                                                  // "What a number of cucumber-frames"
-      k(T.rumbling - 1, 0, OUT.crowd), k(T.rumbling + 10, 6, OUT.house),             // the cart, the ladders
+      k(T.rumbling - 1, 0, OUT.yardWide), k(T.rumbling + 10, 6, OUT.house),              // the cart; Bill with the other ladder
       k(T.heads - 3, 3, OUT.roof), k(T.heads + 4, 0, CUT.near),                      // "Heads below!"
-      k(T.downChimney + 8, 0, OUT.roof),                                             // Bill up the ladder to the chimney
+      k(T.downChimney + 3, 0, OUT.roof),                                             // Bill up the ladder to the chimney
       k(T.kick - 9, 0, CUT.her),                                                     // her foot down the chimney
-      k(T.kick - 0.5, 0, OUT.sky), k(T.kick + 4, 4, OUT.crowd),                      // "There goes Bill!"
-      k(T.feeble - 5, 0, CUT.near), k(T.feeble, 0, OUT.crowd),                       // Bill's feeble voice
+      k(T.kick - 0.5, 0, OUT.sky), k(T.kick + 3.5, 0, OUT.yard),                     // "There goes Bill!" "Catch him, you by the hedge!"
+      k(T.feeble + 5.5, 4, OUT.house),                                               // "Hold up his head—Brandy now"
+      k(T.feeble + 14, 0, OUT.held), k(T.feeble + 24, 0, CUT.near),                  // Bill's feeble voice; "like a sky-rocket!"
       k(T.burn - 1, 0, CUT.her), k(T.dinah2 + 2, 4, CUT.near),                       // "I'll set Dinah at you!"
-      k(T.barrowful - 2, 0, OUT.crowd),                                              // "A barrowful will do"
+      k(T.barrowful - 2, 0, OUT.house),                                              // "A barrowful will do"
       k(T.pebbles - 1, 0, CUT.her),                                                  // the pebbles in at the window
       k(T.cakes - 3, 4, CUT.floor),                                                  // turning into little cakes
       k(T.swallowed, 3, CUT.her), k(T.swallowed + 3, 3, CUT.small),                  // shrinking
-      k(T.ranOut - 0.5, 0, IN([DOORX - 0.7, 0.28, 1.6], [DOORX - 0.05, 0.12, 0.5])),   // out of the door, tiny, and the crowd
-      k(T.held, 3, IN([DOORX - 0.8, 0.32, 1.9], [DOORX + 0.05, 0.14, 0.75])),
+      k(T.ranOut - 0.5, 0, IN([DOORX - 0.3, 0.45, 2.7], [DOORX - 0.2, 0.15, 0.5])),     // out of the door, tiny; Bill held up
+      k(T.held, 3, IN([DOORX - 0.35, 0.47, 2.9], [DOORX - 0.25, 0.16, 0.6])),
     ]);
     return {
       T, bg: PAPER, fog: [9, 30], bounds: { minX: -2.5, maxX: 2.5, minZ: 0.8, maxZ: 6 },
@@ -427,7 +434,11 @@ export const wood = {
       ], { phase: t * 1.5 });
       const jump = t >= T.jumped && t < T.jumped + 0.8 ? Math.sin(((t - T.jumped) / 0.8) * Math.PI) * 0.25 : 0; // "jumped into the air off all its feet at once"
       const tumble = t >= T.tumbled && t < T.tumbled + 1.2 ? ((t - T.tumbled) / 1.2) * Math.PI * 2 : 0;       // "tumbled head over heels"
-      return { ...s, x: s.x + charge, pose: t >= T.sat + 3 ? 'sit' : 'stand', y: jump, tilt: tumble, dir: -1, visible: t < T.escape + 6 };
+      // AI poses (2026-10-14): crouching, jumping "off all its feet at once", tumbling, sitting panting.
+      let pose = t >= T.sat + 3 ? 'sit' : 'stand';
+      if (jump > 0) pose = 'jump';
+      if (tumble > 0) pose = 'tumble';
+      return { ...s, x: s.x + charge, pose, y: jump, tilt: tumble, dir: -1, visible: t < T.escape + 6 };
     }
     function update(t, cast) {
       st.visible = t >= T.stick && t < T.escape;

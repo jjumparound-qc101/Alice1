@@ -13,7 +13,6 @@ import { paperFlat, buildStage } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { card, cardBack, SOLDIERS, COURTIERS, CHILDREN, GUESTS, OFFICERS, hedgehog } from '../props8.js';
 import { mouseWalk } from '../props3.js';
-import { lizard, guineaPig } from '../props4.js';
 import { teapot } from '../props7.js';
 import { verses, noteBook, inkstand, deadLeaf, goldfishVignette, countryVignette, grownAliceVignette } from '../props12.js';
 import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, JURY, BILL } from '../sets/court.js';
@@ -211,8 +210,8 @@ export const waking = {
       ghost(ai['ch8/queen_point'], 1.1, 0.5, -2.6, T.queen, reality(0.3)),
       ghost(ai['ch6/duchess_nurse'], 1.1, -4.3, -2.5, T.pig, reality(0.55)), ghost(ai['ch6/baby_snout'], 0.35, -3.9, -2.3, T.pig, reality(0.55)),
       ghost(ai['ch9/gryphon_walk'], 0.75, -1.6, -3.3, T.gryphon, reality(0.6)),
-      ghost(lizard('stand'), 0.5, -1.9, -2.1, T.gryphon + 1.5, reality(0.7)),
-      ghost(guineaPig(), 0.42, 1.1, -2.3, T.gryphon + 3.5, reality(0.75)), ghost(guineaPig(), 0.42, 1.45, -2.4, T.gryphon + 3.8, reality(0.75)),
+      ghost(ai['ch4/bill_stand'], 0.5, -1.9, -2.1, T.gryphon + 1.5, reality(0.7)),
+      ghost(ai['ch4/guinea_stand'], 0.42, 1.1, -2.3, T.gryphon + 3.5, reality(0.75)), ghost(ai['ch4/guinea_bottle'], 0.42, 1.45, -2.4, T.gryphon + 3.8, reality(0.75)),
       ghost(ai['ch9/mockturtle_sob'], 1.2, 1.6, -3.2, T.turtle, T.cattle + 2),
       ghost(hedgehog('ball'), 0.16, 0.1, -2.1, T.queen + 1, reality(0.3)),
     ];

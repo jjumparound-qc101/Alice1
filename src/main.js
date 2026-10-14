@@ -9,7 +9,6 @@ import { PerfMeter } from './perf.js';
 import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { CHAPTERS } from './chapters.js';
 import { texture } from './ink.js';
-import { lizard, guineaPig, puppy } from './props4.js';
 import { pigeon } from './props5.js';
 import { card } from './props8.js';
 import { mouseUp, mouseWalk, owlStand, crabStand, magpieStand, canaryStand } from './props3.js';
@@ -65,7 +64,7 @@ async function main() {
     'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
     'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
     'ch1/leaf_heap', 'ch1/alice_land', 'ch1/garden', 'ch1/rabbit_run_away', 'ch1/rabbit_watch', 'ch1/rabbit_trot',
-    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch4/alice_hand', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_paw', ...['queen_stand', 'queen_point', 'queen_flush', 'queen_stamp', 'queen_folded', 'queen_specs', 'queen_purple', 'king_stand', 'king_judge', 'king_judge_specs', 'king_judge_fold', 'king_judge_point', 'king_judge_pale', 'knave_carry', 'knave_stand', 'knave_chains', 'executioner', ...['two', 'five', 'seven'].flatMap((c) => ['stand', 'paint', 'bow', 'run'].map((p) => `${c}_${p}`)), 'two_kneel', 'rose_tree', 'rose_white', 'rose_red', 'card_back', 'suit_heart', 'suit_diamond', 'suit_club', 'suit_spade', 'body_soldier', 'body_courtier', 'body_child', 'body_officer', 'card_arch', 'king_clubs', 'king_diamonds', 'king_spades', 'queen_clubs', 'queen_diamonds', 'queen_spades', 'knave_spades'].map((n) => `ch8/${n}`), ...['hatter_sit_stare', 'hatter_sit_riddle', 'hatter_sit_watch', 'hatter_cup', 'hatter_pale', 'hatter_bite', 'hatter_tremble', 'hatter_knee', 'hatter_run', 'marchhare_sit', 'marchhare_dip', 'dormouse_sleep', 'dormouse_talk'].map((n) => `ch7/${n}`), 'vignettes/axis', 'vignettes/pigs', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back', 'kitchen_side', 'little_house', 'march_hare_house', ...['irons', 'saucepan', 'saucepan2', 'pan', 'plate', 'plate2', 'plate3', 'dish'].map((n) => `thrown_${n}`)].map((n) => `ch6/${n}`),
+    'walls/shaft_side', 'walls/passage', 'walls/passage_floor', 'walls/passage_ceiling', 'walls/hall', 'walls/hall_ceiling', 'ch5/caterpillar_sit', 'ch4/alice_hand', ...['bill_stand', 'bill_ladder', 'bill_climb', 'bill_rocket', 'bill_limp', 'guinea_stand', 'guinea_hold', 'guinea_bottle', 'pat', 'pat_cap', 'puppy_look', 'puppy_jump', 'puppy_tumble', 'puppy_sit'].map((n) => `ch4/${n}`), 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 'ch6/cheshire_paw', ...['queen_stand', 'queen_point', 'queen_flush', 'queen_stamp', 'queen_folded', 'queen_specs', 'queen_purple', 'king_stand', 'king_judge', 'king_judge_specs', 'king_judge_fold', 'king_judge_point', 'king_judge_pale', 'knave_carry', 'knave_stand', 'knave_chains', 'executioner', ...['two', 'five', 'seven'].flatMap((c) => ['stand', 'paint', 'bow', 'run'].map((p) => `${c}_${p}`)), 'two_kneel', 'rose_tree', 'rose_white', 'rose_red', 'card_back', 'suit_heart', 'suit_diamond', 'suit_club', 'suit_spade', 'body_soldier', 'body_courtier', 'body_child', 'body_officer', 'card_arch', 'king_clubs', 'king_diamonds', 'king_spades', 'queen_clubs', 'queen_diamonds', 'queen_spades', 'knave_spades'].map((n) => `ch8/${n}`), ...['hatter_sit_stare', 'hatter_sit_riddle', 'hatter_sit_watch', 'hatter_cup', 'hatter_pale', 'hatter_bite', 'hatter_tremble', 'hatter_knee', 'hatter_run', 'marchhare_sit', 'marchhare_dip', 'dormouse_sleep', 'dormouse_talk'].map((n) => `ch7/${n}`), 'vignettes/axis', 'vignettes/pigs', 'ch6/cheshire_hearth', ...['fish_footman', 'frog_footman', 'frog_footman_sit', 'footmen_bow', 'cook_stir', 'cook_throw', 'baby_starfish', 'baby_snout', 'pig_trot', 'kitchen_back', 'kitchen_side', 'little_house', 'march_hare_house', ...['irons', 'saucepan', 'saucepan2', 'pan', 'plate', 'plate2', 'plate3', 'dish'].map((n) => `thrown_${n}`)].map((n) => `ch6/${n}`),
     ...['duchess_nurse', 'duchess_toss', 'duchess_fling', 'duchess9_arm', 'duchess9_tremble', 'duchess9_run'].map((n) => `ch6/${n}`),
     ...['sit', 'sob', 'count', 'hide', 'dance', 'sing', 'yawn'].map((n) => `ch9/mockturtle_${n}`),
     ...['sit', 'asleep', 'walk', 'paws', 'hide', 'dance', 'bound'].map((n) => `ch9/gryphon_${n}`), 'vignettes/dinah', 'vignettes/bats', 'vignettes/stairs', 'vignettes/globe', 'vignettes/histories', 'vignettes/poker', 'vignettes/knife', 'vignettes/poison', 'vignettes/candle', 'vignettes/telescope', 'vignettes/croquet', // tools/walls.py // tools/ch1_art.py
@@ -226,11 +225,13 @@ async function main() {
     canary: new Puppet({ up: drawn(canaryStand(), 0.06) }, 0.06),
     crab: new Puppet({ stand: drawn(crabStand(), 0.035) }, 0.035),
     crabling: new Puppet({ stand: drawn(crabStand(true), 0.022) }, 0.022),
-    // Chapter IV placeholders (props4.js).
-    bill: new Puppet({ stand: drawn(lizard('stand'), 0.3), fly: drawn(lizard('fly'), 0.3) }, 0.3),
-    pat: new Puppet({ spade: drawn(guineaPig(true), 0.4) }, 0.4),
-    pig1: new Puppet({ up: drawn(guineaPig(), 0.32) }, 0.32),
-    pig2: new Puppet({ up: drawn(guineaPig(), 0.32) }, 0.32),
+    // Chapter IV (AI drawings, tools/ch4_art.py, 2026-10-14): Bill the Lizard after Tenniel's plate 4.3,
+    // the two guinea-pigs and Pat (a guinea-pig gardener in a smock and cap; the book doesn't say).
+    bill: new Puppet({ stand: art('ch4/bill_stand', 0.32), ladder: art('ch4/bill_ladder', 0.34, false), climb: art('ch4/bill_climb', 0.42),
+      fly: art('ch4/bill_rocket', 0.45), limp: art('ch4/bill_limp', 0.42) }, 0.32),
+    pat: new Puppet({ spade: art('ch4/pat', 0.4), cap: art('ch4/pat_cap', 0.39) }, 0.4),
+    ...Object.fromEntries(['pig1', 'pig2'].map((n) => [n, new Puppet({ up: art('ch4/guinea_stand', 0.32), hold: art('ch4/guinea_hold', 0.33, false),
+      bottle: art('ch4/guinea_bottle', 0.33) }, 0.32)])),
     // Chapter V placeholders.
     // The AI drawing (tools/ch5_art.py): blue, with his hookah, on the scene's own mushroom.
     caterpillar: new Puppet({ sit: art('ch5/caterpillar_sit', 0.1) }, 0.1),
@@ -278,7 +279,7 @@ async function main() {
     mockTurtle: new Puppet(Object.fromEntries([['sit', 1399, 0.231], ['sob', 1395, 0.239], ['count', 1399, 0.232], ['hide', 1442, 0.223],
       ['walk', 1356, 0.069, 'dance'], ['sing', 1370, 0.036], ['yawn', 1409, 0.227]]
       .map(([pose, px, drop, name = pose]) => [pose, { ...art(`ch9/mockturtle_${name}`, px * 0.4525 / 1399), drop }])), 0.35),
-    puppy: new Puppet({ stand: drawn(puppy('stand'), 0.75), sit: drawn(puppy('sit'), 0.8) }, 0.75),
+    puppy: new Puppet({ stand: art('ch4/puppy_look', 0.75), jump: art('ch4/puppy_jump', 0.62), tumble: art('ch4/puppy_tumble', 0.75), sit: art('ch4/puppy_sit', 0.8) }, 0.75), // after Tenniel's plate 4.4
   };
   Object.values(cast).forEach((p) => scene.add(p.root));
 
