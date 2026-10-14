@@ -74,8 +74,10 @@ export const pool = {
     });
 
     // The Rabbit's white kid gloves and large fan, which Alice picks up.
-    const gloves = paperFlat(ai['ch2/kid_gloves'].tex, 0.07, 0.07 / ai['ch2/kid_gloves'].aspect, { anchor: 'center' });
-    const fanProp = paperFlat(ai['props/fan'].tex, 0.2, 0.2 / ai['props/fan'].aspect, { anchor: 'center' }); // AI drawing (tools/small_props.py)
+    // Sized to match those in the Rabbit's starting drawing (he is 1 m tall there: each glove about
+    // 0.145 m long, the fan about 0.26 m across; owner, 2026-10-14).
+    const gloves = paperFlat(ai['ch2/kid_gloves'].tex, 0.125, 0.125 / ai['ch2/kid_gloves'].aspect, { anchor: 'center' });
+    const fanProp = paperFlat(ai['props/fan'].tex, 0.26, 0.26 / ai['props/fan'].aspect, { anchor: 'center' }); // AI drawing (tools/small_props.py)
     group.add(gloves, fanProp);
     const splash = paperFlat(ai['ch2/splash'].tex, 0.22, 0.22 / ai['ch2/splash'].aspect, { edge: false });
     // The pool's far shore, seen from water level by tiny Alice: the stones of the floor's
