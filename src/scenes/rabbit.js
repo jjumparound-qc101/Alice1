@@ -12,7 +12,7 @@ import { texture, PAPER } from '../ink.js';
 import * as art from '../art.js';
 import { flagstones } from '../props.js';
 import {
-  HOUSE_PX, houseFront, roomWall, windowTable, plainBottle, giantArm, cucumberFrames, ladder, barrow, pebble, littleCake,
+  HOUSE_PX, houseFront, roomWall, windowTable, plainBottle, cucumberFrames, ladder, barrow, pebble, littleCake,
   thistle, buttercup, mushroom, stick, dinahNurseVignette, bookVignette,
 } from '../props4.js';
 import { thoughts } from '../thoughts.js';
@@ -73,7 +73,7 @@ export const lane = {
         [T.house - 1, { x: 0.3, z: -9.6 }],                         // "she ran off at once in the direction it pointed to"
       ], { phase: t * 2.2 });
       const hunting = t < T.noticed && !s.moving;
-      return { ...s, pose: 'stand', scale: MAID, tilt: hunting ? 0.25 * (s.dir ?? 1) : 0, visible: t < T.house - 1 };
+      return { ...s, pose: hunting ? 'stoop' : 'stand', scale: MAID, visible: t < T.house - 1 }; // stooping to look for the fan and gloves (AI pose)
     };
     const camera = cameraTrack([
       { t: 0, dur: 0, pos: [0.2, 0.9, 2.6], look: [0.6, 0.5, -3] },
@@ -146,7 +146,7 @@ export const rabbitHouse = {
     const lad = paperFlat(texture(ladder()), 0.5, HH + 0.1); lad.position.set(HW / 2 - 0.25, 0, 0.25); lad.rotation.x = -0.08; group.add(lad);
     const bar = paperFlat(texture(barrow()), 0.6, 0.33); bar.position.set(-1.0, 0, 1.6); group.add(bar);
     // Her arm out of the window, hanging down the front of the house.
-    const arm = paperFlat(texture(giantArm()), 1.5, 0.5, { anchor: 'center' });
+    const arm = paperFlat(ai['ch4/alice_hand'].tex, 1.5, 1.5 / ai['ch4/alice_hand'].aspect, { anchor: 'center' }); // AI, after Tenniel's plate 4.2
     const armPivot = new THREE.Group(); armPivot.position.set((WIN.x0 + WIN.x1) / 2, (WIN.y0 + WIN.y1) / 2, 0.06); arm.position.x = 0.7; armPivot.add(arm); group.add(armPivot);
     // Pebbles on the floor, turning into little cakes.
     const pebTex = texture(pebble()), cakeTex = texture(littleCake());
@@ -185,11 +185,14 @@ export const rabbitHouse = {
       ], { phase: t * 2.2 });
       const lying = smooth((t - T.lying) / 3) * (1 - smooth((t - T.swallowed - 1) / 2));
       const big = scale * 1.25 > RH;
-      const pose = t >= T.kneel ? 'sit' : 'stand';
+      // AI poses (2026-10-14): the fan and gloves in her hand; drinking; then cramped, too big for the room.
+      let pose = t >= T.kneel ? 'giant' : 'stand';
+      if (!s.moving && t >= T.room + 2 && t < T.bottle) pose = 'hold4';
+      if (t >= T.uncorked && t < T.uncorked + 2.5) pose = 'drink';
       const stoop = !lying && big && t < T.kneel ? Math.min(0.5, (scale * 1.25 - RH) * 2) : 0; // "had to stoop to save her neck"
       const trembling = t >= T.shook - 1 && t < T.shook + 4 ? Math.sin(t * 50) * 0.02 : 0;
       const pelted = t >= T.pebbles && t < T.pebbles + 4 ? Math.sin(t * 30) * 0.04 : 0;
-      return { ...s, pose, scale, y: ROOM.floor, tilt: lying * 1.1 + stoop + trembling + pelted, dir: t >= T.kneel ? 1 : s.dir };
+      return { ...s, pose, scale, y: ROOM.floor, tilt: lying * 0.45 + stoop + trembling + pelted, dir: t >= T.kneel ? 1 : s.dir };
     }
 
     // --- The Rabbit, Pat, Bill and the crowd outside ---------------------------------
@@ -247,6 +250,7 @@ export const rabbitHouse = {
       const a = alice(t);
       // The bottle near the looking-glass; in her hand when she drinks; put down.
       bottle.visible = t >= T.room && t < T.swallowed;
+      if (a.pose === 'drink') bottle.visible = false; // the drinking drawing has the bottle at her lips
       if (t >= T.bottle + 3 && t < T.putDown) carry(bottle, cast.alice, { drop: 0.03 * a.scale });
       else { bottle.position.set(-0.45, ROOM.floor + 0.32, ROOM.z0 + 0.04); bottle.rotation.set(0, 0, 0); }
       // The arm: out of the window from "one arm out of the window" until she shrinks; it snatches twice.
@@ -370,7 +374,12 @@ export const wood = {
         [T.mushroom, { x: BC.x + 0.05, z: BC.z + 0.05 }], [T.tiptoe - 1, { x: MU.x + 0.07, z: MU.z + 0.08 }],
       ], { phase: t * 3 });
       const tiptoe = t >= T.tiptoe ? smooth((t - T.tiptoe) / 1) * 0.02 : 0;
-      return { ...s, pose: 'stand', scale: TINY, y: tiptoe, tilt: t >= T.buttercup && t < T.mushroom ? 0.15 : 0, dir: t >= T.tiptoe - 1 ? -1 : s.dir };
+      // AI poses (2026-10-14): holding out the stick; leaning on the buttercup, fanning herself; on tiptoe.
+      let pose = 'stand';
+      if (!s.moving && t >= T.stick && t < T.jumped + 0.5) pose = 'stick';
+      if (!s.moving && t >= T.buttercup && t < T.mushroom) pose = 'buttercup';
+      if (!s.moving && t >= T.tiptoe) pose = 'tiptoe';
+      return { ...s, pose, scale: TINY, y: tiptoe * 0.3, dir: pose === 'stick' ? 1 : t >= T.tiptoe - 1 ? -1 : s.dir };
     }
     const PUP = { x: 1.0, z: -0.9 };
     function puppy(t) {
@@ -386,7 +395,7 @@ export const wood = {
     }
     function update(t, cast) {
       st.visible = t >= T.stick && t < T.escape;
-      if (t < T.jumped + 1) carry(st, cast.alice, { tilt: 0.3 });
+      if (t < T.jumped + 1) { carry(st, cast.alice, { tilt: 0.3 }); if (cast.alice.pose === 'stick') st.visible = false; } // the drawing holds its own stick
       else { st.position.set(0.5, 0.01, -0.45); st.rotation.set(-1.4, 0, 0.2); }
       cat.visible = true;
     }

@@ -86,6 +86,22 @@ DRAWN = {
     "terror": {"src": "source/ai/alice6_terror.png", "h": 584, "bodyX": None},
     "back": {"src": "source/ai/alice6_back.png", "h": 700, "bodyX": None},
     "catch": {"src": "source/ai/alice6_catch.png", "h": 700, "bodyX": None},
+    # Chapters IV and V (gpt-image-2.5-sunburst, from the model sheet; 2026-10-14). Hunting about
+    # uses Chapter II's stoop (the image filter refused a girl bending over).
+    "hold4": {"src": "source/ai/alice4_hold.png", "h": 700, "bodyX": None},
+    "drink": {"src": "source/ai/alice4_drink.png", "h": 700, "bodyX": None},
+    "giant": {"src": "source/ai/alice4_giant.png", "h": 560, "bodyX": None},
+    "pebbles": {"src": "source/ai/alice4_pebbles.png", "h": 745, "bodyX": None},
+    "stick": {"src": "source/ai/alice4_stick.png", "h": 610, "bodyX": None, "mirror": True},
+    "buttercup": {"src": "source/ai/alice4_buttercup.png", "h": 700, "bodyX": None},
+    "tiptoe": {"src": "source/ai/alice4_tiptoe.png", "h": 735, "bodyX": None},
+    "lookup": {"src": "source/ai/alice5_lookup.png", "h": 700, "bodyX": None},
+    "grave": {"src": "source/ai/alice5_grave.png", "h": 710, "bodyX": None},
+    "away": {"src": "source/ai/alice5_away.png", "h": 700, "bodyX": None, "mirror": True},
+    "break": {"src": "source/ai/alice5_break.png", "h": 700, "bodyX": None},
+    "squashed": {"src": "source/ai/alice5_squashed.png", "h": 390, "bodyX": None},
+    "nibble": {"src": "source/ai/alice5_nibble.png", "h": 700, "bodyX": None},
+    "recite5": {"src": "source/ai/alice5_recite.png", "h": 700, "bodyX": None},
 }
 
 

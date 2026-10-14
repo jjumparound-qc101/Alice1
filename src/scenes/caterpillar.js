@@ -72,7 +72,16 @@ export const mushroomTalk = {
       ], { phase: t * 3 });
       const squashed = t >= T.blow; // "a violent blow underneath her chin: it had struck her foot!"
       const scale = squashed ? lerp(TINY, 0.04, smooth((t - T.blow) / 0.4)) : TINY;
-      return { ...s, pose: squashed ? 'sit' : 'stand', scale, dir: s.moving ? s.dir : -1, tilt: t >= T.gravely && t < T.gravely + 3 ? -0.05 : 0 };
+      // AI poses (2026-10-14): looking up at the Caterpillar; grave; turned away, offended; reciting with
+      // folded hands; breaking off a piece with each hand; nibbling; squashed, chin against her foot.
+      let pose = s.moving ? 'stand' : 'lookup';
+      if (t >= T.gravely && t < T.gravely + 3) pose = 'grave';
+      if (!s.moving && t >= T.turned + 2 && t < T.back) pose = 'away';
+      if (t >= T.folded && t < T.notRight) pose = 'recite5'; // standing, hands folded
+      if (!s.moving && t >= T.broke - 1 && t < T.nibbled) pose = 'break';
+      if (t >= T.nibbled && t < T.blow) pose = 'nibble';
+      if (squashed) pose = 'squashed';
+      return { ...s, pose, scale: squashed ? lerp(TINY, 0.09, smooth((t - T.blow) / 0.4)) : scale, dir: pose === 'away' ? 1 : s.moving ? s.dir : -1 };
     }
     function cat(t) {
       const rear = t >= T.rearing - 0.5 && t < T.rearing + 4 ? smooth((t - T.rearing + 0.5) / 0.5) : 0; // "rearing itself upright"
@@ -89,7 +98,8 @@ export const mushroomTalk = {
         p.position.set(MU.x + 0.26, 0.13, MU.z + 0.05);
         p.rotation.set(0, -0.35 + (1 - turn) * 1.4, 0);
       });
-      bitL.visible = bitR.visible = t >= T.broke && t < T.end + 2;
+      const drawnBits = ['break', 'nibble', 'squashed'].includes(cast.alice.pose); // those drawings hold the pieces
+      bitL.visible = bitR.visible = t >= T.broke && t < T.end + 2 && !drawnBits;
       if (bitL.visible) { carry(bitL, cast.alice); carry(bitR, cast.alice); bitR.position.x -= 0.03 * cast.alice.root.scale.x; }
       const a = alice(t);
       think(t, { x: a.x + 0.12, y: 0.19, z: a.z - 0.02 }, 0.1);
@@ -214,7 +224,7 @@ export const clearing = {
     const alice = (t) => {
       const s = route(t, [[start, { x: 1.4, z: 0.6, dir: -1 }], [T.open + 1, { x: 0.8, z: -0.8 }]], { phase: t * 2.2 });
       const scale = lerp(1, 0.18, smooth((t - T.nibble - 1) / 4)); // "down to nine inches high"
-      return { ...s, pose: 'stand', scale };
+      return { ...s, pose: !s.moving && t >= T.nibble - 1 && t < T.nibble + 5 ? 'nibble' : 'stand', scale };
     };
     const camera = cameraTrack([
       { t: start, dur: 0, pos: [2.4, 1.3, 2.6], look: [1.0, 0.8, -0.5] },
