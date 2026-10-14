@@ -206,7 +206,9 @@ export const pool = {
       const pose = t >= T.skurried ? 'away' : t >= T.started ? 'start' : 'trot';
       return { ...s, pose, dir: t > T.skurried ? -1 : s.moving ? 1 : -1, y: jump };
     }
-    const DROP = T.started + 0.7; // the gloves and fan, drawn flying in his starting pose, land
+    // The gloves and fan are drawn flying in his starting pose; the separate props appear only once
+    // he has scurried away (his 'away' drawing has neither), already on the ground (owner, 2026-10-14).
+    const DROP = T.skurried;
     const dropAt = (() => { const r = route(T.dropped, [[T.near, STOP]]); return { x: r.x + 0.08, z: r.z + 0.05 }; })();
 
     function update(t, cast) {
@@ -254,7 +256,7 @@ export const pool = {
         gloves.visible = fanProp.visible = false;
       } else if (t < T.took + 0.6) {
         gloves.visible = fanProp.visible = true;
-        const fall = smooth((t - DROP) / 0.4);
+        const fall = 1;
         gloves.position.set(dropAt.x, lerp(0.45, 0.035, fall), dropAt.z); gloves.rotation.set(-1.2 * fall, 0, 0);
         fanProp.position.set(dropAt.x + 0.12, lerp(0.4, 0.045, fall), dropAt.z + 0.06); fanProp.rotation.set(-1.2 * fall, 0, 0.4);
       } else if (t < T.droppedFan - 0.2) {

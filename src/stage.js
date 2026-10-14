@@ -44,7 +44,10 @@ function tiled(t, repeatX) {
 // Builds the riverbank set into `scene` (a THREE.Group owned by the riverbank scene).
 export function buildStage(scene, ai = {}) {
   // The floor stops at the proscenium, like a real stage.
-  const ground = texture(art.groundTile(), { repeat: [14, 6] });
+  // "sitting by her sister on the bank": meadow grass and daisies (AI tile, tools/bank_art.py),
+  // one tile per BANK_TILE metres; the drawn tile is the fallback.
+  const BANK_TILE = 1.6;
+  const ground = ai.bank_grass ? (() => { const t = ai.bank_grass.tex.clone(); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(40 / BANK_TILE, 17.2 / BANK_TILE); t.anisotropy = 8; t.needsUpdate = true; return t; })() : texture(art.groundTile(), { repeat: [14, 6] });
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 17.2), new THREE.MeshBasicMaterial({ map: ground }));
   floor.rotation.x = -Math.PI / 2;
   floor.position.set(0, 0, -6.4);
@@ -89,9 +92,11 @@ export function buildStage(scene, ai = {}) {
 
   [[0, 1.0, 5], [0.5, -0.9, 6]].forEach(([dx, z, seed]) => {
     // Each strip gets its own texture copy so the two rows can be offset.
-    const tex = ai.grass ? tiled(ai.grass.tex.clone(), 32 / (0.55 * ai.grass.aspect)) : texture(art.grassStrip(seed));
-    if (ai.grass) tex.offset.x = seed * 0.37;
-    const g = paperFlat(tex, 32, 0.55, { edge: false });
+    // The bank's grassy lip (AI, tools/bank_art.py), so the ground reads as a bank, not a field.
+    const art2 = ai.bank_edge ?? ai.grass, H = ai.bank_edge ? 0.7 : 0.55;
+    const tex = art2 ? tiled(art2.tex.clone(), 32 / (H * art2.aspect)) : texture(art.grassStrip(seed));
+    if (art2) tex.offset.x = seed * 0.37;
+    const g = paperFlat(tex, 32, H, { edge: false });
     g.position.set(dx, 0, z);
     scene.add(g);
   });
