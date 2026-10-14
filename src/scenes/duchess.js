@@ -55,8 +55,12 @@ export const doorstep = {
         [T.peeped - 1, { x: -1.55, z: -0.25 }], [T.peeped, { x: -1.15, z: 0.0 }], [T.knocked - 0.5, { x: DOOR.x - 0.12, z: DOOR.z + 0.2 }],
         [T.kitchen - 4, { x: DOOR.x - 0.12, z: DOOR.z + 0.2 }], [T.kitchen - 2, { x: DOOR.x, z: DOOR.z + 0.05 }],
       ], { phase: t * 2.2 });
-      const laughing = t >= T.laughed && t < T.laughed + 1.5 ? Math.sin(t * 25) * 0.05 : 0;
-      return { ...s, pose: 'stand', scale: NINE, tilt: laughing, visible: t < T.kitchen - 2 };
+      // Laughing; peeping out of the wood; knocking (AI poses, tools/compose_poses.py).
+      let pose = 'stand';
+      if (t >= T.laughed && t < T.laughed + 1.5) pose = 'laugh';
+      if (t >= T.peeped - 1.6 && t < T.peeped - 0.8) pose = 'peep';
+      if (t >= T.knocked - 0.3 && t < T.knocked + 2) pose = 'knock';
+      return { ...s, pose: s.moving && pose !== 'laugh' ? 'stand' : pose, scale: NINE, dir: pose === 'knock' ? 1 : s.dir, visible: t < T.kitchen - 2 };
     };
     function update(t, cast) {
       // The great letter is in the Fish-Footman's drawing (AI); the Footmen bow as one drawing.
@@ -70,6 +74,11 @@ export const doorstep = {
     const camera = cameraTrack([
       { t: 0, dur: 0, pos: [-1.0, 0.25, 1.4], look: [-0.4, 0.2, -0.3] },
       { t: T.rapped - 2, dur: 3, pos: [0.15, 0.22, 0.6], look: [0, 0.2, -0.5] },               // the Footmen and the letter
+      // Alice watching from the edge of the wood with the Footmen at the door, between closer looks
+      // (owner, 2026-10-13: Alice in the picture every 10-15 s).
+      { t: T.rapped + 7, dur: 3, pos: [-0.45, 0.26, 1.15], look: [-0.55, 0.15, -0.2] },
+      { t: T.handed - 1, dur: 2, pos: [0.15, 0.22, 0.6], look: [0, 0.2, -0.5] },               // handing the letter
+      { t: T.handed + 7, dur: 3, pos: [-0.45, 0.26, 1.15], look: [-0.55, 0.15, -0.2] },        // (and the bow)
       { t: T.laughed - 1, dur: 2, pos: [-0.9, 0.2, 0.7], look: [-1.3, 0.13, -0.1] },           // Alice laughing in the wood
       { t: T.peeped, dur: 3, pos: [0.0, 0.3, 0.9], look: [0.05, 0.1, -0.4] },                  // the Frog-Footman on the ground
       { t: T.knocked - 1, dur: 2, pos: [0.25, 0.18, 0.4], look: [-0.05, 0.14, -0.4] },
@@ -110,7 +119,7 @@ export const kitchen = {
     const think = thoughts(group, [{ t0: at('axis') - 1, t1: T.axes, art: axisVignette() }]);
     const DUCHESS = { x: 0.05, z: -0.15 }, COOK = { x: -0.32, z: -0.42 }, ALICE = { x: 0.42, z: 0.12 };
     const duchessA = (t) => {
-      const s = route(t, [[start, DUCHESS], [T.fling + 1, DUCHESS], [T.fling + 4, { x: 0.85, z: 0.5, dir: 1 }]], { phase: t * 3 }); // "she hurried out of the room"
+      const s = route(t, [[start, DUCHESS], [T.fling + 1, DUCHESS], [T.fling + 4, { x: 0.85, z: -0.4, dir: 1 }]], { phase: t * 3 }); // "she hurried out of the room" (behind Alice)
       // Sitting with the baby; tossing it through the lullaby; flinging it; hurrying out.
       const pose = t >= T.fling ? 'run' : t >= T.fling - 0.6 ? 'fling' : t >= T.verse2 - 1 ? 'toss' : 'sit';
       return { ...s, pose, dir: s.moving || pose === 'run' ? 1 : -1, visible: t < T.fling + 4 };
@@ -121,9 +130,12 @@ export const kitchen = {
     };
     const aliceA = (t) => {
       const s = route(t, [[start, { x: 0.78, z: 0.4, dir: -1 }], [start + 3, ALICE]], { phase: t * 2.2 });
-      const terror = t >= T.nose - 6 && t < T.nose + 3 ? Math.abs(Math.sin(t * 8)) * 0.03 : 0; // "jumping up and down in an agony of terror"
-      const sneeze = Math.sin(t * 0.9) > 0.97 ? 0.15 : 0;
-      return { ...s, pose: 'stand', scale: NINE, y: terror, tilt: sneeze };
+      const terrified = t >= T.nose - 6 && t < T.nose + 3;                     // "jumping up and down in an agony of terror"
+      const terror = terrified ? Math.abs(Math.sin(t * 8)) * 0.03 : 0;
+      let pose = Math.sin(t * 0.9) > 0.97 ? 'sneeze' : 'stand';
+      if (terrified) pose = 'terror';
+      if (t >= T.fling) pose = 'catch';                                          // catching the baby, and holding it
+      return { ...s, pose: s.moving ? 'stand' : pose, scale: NINE, y: terror };
     };
     function update(t, cast) {
       // The baby: in the Duchess's lap, tossed in the lullaby, flung to Alice.
@@ -152,11 +164,12 @@ export const kitchen = {
     const camera = cameraTrack([
       { t: start, dur: 0, pos: [0.65, 0.3, 0.65], look: [0, 0.22, -0.4] },                    // a large kitchen full of smoke
       { t: T.cat - 1, dur: 2, pos: [0.2, 0.12, 0.05], look: [0.42, 0.07, K.z0 + 0.12] },          // the cat grinning on the hearth
-      { t: T.pig - 0.5, dur: 1, pos: [0.25, 0.2, 0.35], look: [0.05, 0.17, -0.15] },              // "Pig!"
-      { t: T.irons - 1, dur: 2, pos: [0.45, 0.32, 0.6], look: [-0.1, 0.2, -0.3] },                // a shower of saucepans
-      { t: T.lullaby, dur: 3, pos: [0.25, 0.22, 0.4], look: [0.05, 0.2, -0.15] },                // the lullaby
+      { t: T.cat + 8, dur: 3, pos: [0.75, 0.22, 0.75], look: [0.3, 0.13, -0.2] },                  // Alice, the Cat, the Duchess
+      { t: T.pig - 0.5, dur: 1, pos: [0.6, 0.24, 0.75], look: [0.15, 0.15, -0.15] },              // "Pig!"
+      { t: T.irons - 1, dur: 2, pos: [0.8, 0.3, 0.9], look: [0.0, 0.18, -0.3] },                  // a shower of saucepans
+      { t: T.lullaby, dur: 3, pos: [0.6, 0.24, 0.8], look: [0.2, 0.17, -0.1] },                  // the lullaby
       { t: T.fling - 1, dur: 2, pos: [0.55, 0.25, 0.55], look: [0.2, 0.16, -0.05] },
-      { t: T.fling + 4, dur: 3, pos: [0.55, 0.2, 0.45], look: [ALICE.x, 0.18, ALICE.z] },        // a queer-shaped little creature
+      { t: T.fling + 4, dur: 3, pos: [0.75, 0.22, 0.8], look: [ALICE.x, 0.15, ALICE.z] },        // a queer-shaped little creature
     ]);
     return {
       T, bg: '#d8d0bf', fog: [0.5, 3.2], bounds: null, hotspots: [], camera, update,
@@ -210,7 +223,14 @@ export const wood6 = {
         [T.hare + 1, { x: -2.6, z: -0.4 }], [T.hare + 9, { x: -3.6, z: -1.4 }],
       ], { phase: t * 2.2 });
       const scale = lerp(NINE, 0.38, smooth((t - T.two) / 3)); // "raised herself to about two feet high"
-      return { ...s, pose: 'stand', scale, dir: s.moving ? s.dir : -1 };
+      // Carrying the baby (in her drawing); holding it out as it grows a snout (the separate baby
+      // card); the pig in its clothes; from behind, looking up at the Cat on the bough.
+      let pose = 'stand';
+      if (t < T.snout - 1) pose = 'baby';
+      else if (t < T.pig) pose = 'catch';
+      else if (t < T.trot - 0.5) pose = 'pig';
+      else if (t >= T.bough + 1 && t < T.vanished2 + 6) pose = 'back';         // (the camera is behind her, looking up at the Cat)
+      return { ...s, pose, scale, dir: s.moving ? s.dir : -1 };
     };
     const pigA = (t) => {
       if (t < T.trot - 0.5) return { visible: false };
@@ -219,7 +239,7 @@ export const wood6 = {
     };
     function update(t, cast) {
       // The baby: a star-fish, then a snout, then a pig; set down, and it trots away.
-      babyCard.visible = t < T.trot - 0.5;
+      babyCard.visible = t >= T.snout - 1 && t < T.pig; // otherwise the baby (or the pig) is in Alice's drawing
       const stage = t >= T.pig ? 2 : t >= T.snout - 1 ? 1 : 0;
       babyCard.userData.front.material.map = babyArt[stage];
       if (babyCard.visible) carry(babyCard, cast.alice);
@@ -242,15 +262,34 @@ export const wood6 = {
     // Where the grin is drawn on the second bough's card (about a third across, half-way down).
     const GRIN1 = { x: B1.x + (0.33 - 0.5) * CW, y: B1.y - BOUGH_DROP + CH * 0.52 };
     const aS = aliceA(T.snout);
+    // Camera keys every 8 s that keep Alice in the middle of the picture as she walks.
+    const follow = (t0, t1) => {
+      const keys = [];
+      for (let t = t0; t < t1 - 1; t += 8) { const a = aliceA(t + 4); keys.push({ t, dur: 4, pos: [a.x + 0.35, 0.21, a.z + 0.8], look: [a.x, 0.13, a.z] }); }
+      return keys;
+    };
+    // The Cat close for about 8 s, then Alice and the Cat together for about 16 s, in turn.
+    const talk = (t0, t1) => {
+      const keys = [];
+      for (let t = t0; t < t1 - 4; t += 24) {
+        keys.push({ t, dur: 3, pos: [-0.75, 0.25, 0.35], look: [B0.x, B0.y + 0.05, B0.z] });
+        if (t + 8 < t1 - 4) keys.push({ t: t + 8, dur: 3, pos: [-0.5, 0.18, 0.55], look: [-1.1, 0.3, -0.35] });
+      }
+      return keys;
+    };
     const camera = cameraTrack([
       { t: start, dur: 0, pos: [1.8, 0.25, 1.0], look: [1.0, 0.15, 0.0] },                         // out into the open air
-      { t: start + 4, dur: 20, pos: [0.4, 0.2, 0.9], look: [-0.2, 0.15, 0.0] },
-      { t: T.snout - 2, dur: 2, pos: [aS.x + 0.2, 0.17, aS.z + 0.45], look: [aS.x, 0.14, aS.z] },   // a very turn-up nose (on Alice, wherever she is by then)
-      { t: T.trot - 2, dur: 3, pos: [0.0, 0.25, 0.9], look: [0.0, 0.05, -0.5] },                   // the pig trots away
-      { t: T.bough - 1, dur: 3, pos: [-0.5, 0.18, 0.55], look: [-1.1, 0.3, -0.35] },               // the Cheshire Cat on a bough
-      { t: T.bough + 30, dur: 6, pos: [-0.75, 0.25, 0.35], look: [B0.x, B0.y + 0.05, B0.z] },
-      { t: T.vanished2 + 3, dur: 6, pos: [-2.0, 0.3, 0.45], look: [-2.9, 0.5, -0.7] },
+      // Following Alice as she carries the baby along (she walks slowly from the right).
+      ...follow(start + 4, T.snout - 2), { t: T.snout - 2, dur: 2, pos: [aS.x + 0.2, 0.17, aS.z + 0.45], look: [aS.x, 0.14, aS.z] }, // a very turn-up nose
+      ...follow(T.snout + 6, T.trot - 2),
+      { t: T.trot - 2, dur: 3, pos: [0.0, 0.25, 0.9], look: [-0.1, 0.05, -0.4] },                  // the pig trots away
+      { t: T.bough - 1, dur: 3, pos: [-0.5, 0.18, 0.55], look: [-1.1, 0.3, -0.35] },               // the Cheshire Cat on a bough, Alice below
+      // The long talk with the Cat: closer on the Cat now and then, back to the two of them.
+      ...talk(T.bough + 30, T.vanished2),
+      ...follow(T.vanished2 + 3, T.again - 4),                                                    // walking on toward the March Hare's
+      { t: T.again - 4, dur: 5, pos: [-2.0, 0.3, 0.75], look: [-2.8, 0.3, -0.6] },               // the Cat again, on a branch, Alice below
       { t: T.slowly - 2, dur: 2, pos: [GRIN1.x + 0.12, GRIN1.y + 0.03, B1.z + 0.42], look: [GRIN1.x, GRIN1.y, B1.z] }, // a grin without a cat
+      { t: T.slowly + 8, dur: 3, pos: [-2.0, 0.3, 0.75], look: [-2.75, 0.3, -0.55] },             // Alice and the grin
       { t: T.hare - 1, dur: 4, pos: [-2.4, 0.35, 0.4], look: [-5.0, 0.5, -4.0] },                  // the March Hare's house
     ]);
     return { T, bg: PAPER, fog: [6, 24], bounds: null, hotspots: [], camera, update, actors: (t) => ({ alice: aliceA(t), pig: pigA(t) }) };

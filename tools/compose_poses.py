@@ -74,6 +74,18 @@ DRAWN = {
     "wonder": {"src": "source/ai/alice3_wonder.webp", "h": 700, "bodyX": None, "mirror": True},
     # Chapter I: on tiptoe, arms up (taller than standing: arms above her head).
     "reach": {"src": "source/ai/alice_reach.webp", "h": 800, "bodyX": None, "mirror": True},
+    # Chapter VI (gpt-image-2.5-sunburst, from the model sheet; 2026-10-14). Standing figures are
+    # full height (700); the peep includes the tree's edge, taller than she is; the jump is
+    # drawn at the sneeze's scale.
+    "peep": {"src": "source/ai/alice6_peep.png", "h": 928, "bodyX": None},
+    "laugh": {"src": "source/ai/alice6_laugh.png", "h": 700, "bodyX": None},
+    "knock": {"src": "source/ai/alice6_knock.png", "h": 700, "bodyX": None, "mirror": True},
+    "sneeze": {"src": "source/ai/alice6_sneeze.png", "h": 700, "bodyX": None},
+    "baby": {"src": "source/ai/alice6_baby.png", "h": 700, "bodyX": None},
+    "pig": {"src": "source/ai/alice6_pig.png", "h": 700, "bodyX": None},
+    "terror": {"src": "source/ai/alice6_terror.png", "h": 584, "bodyX": None},
+    "back": {"src": "source/ai/alice6_back.png", "h": 700, "bodyX": None},
+    "catch": {"src": "source/ai/alice6_catch.png", "h": 700, "bodyX": None},
 }
 
 

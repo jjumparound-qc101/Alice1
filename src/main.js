@@ -204,7 +204,7 @@ async function main() {
     pig2: new Puppet({ up: drawn(guineaPig(), 0.32) }, 0.32),
     // Chapter V placeholders.
     // The AI drawing (tools/ch5_art.py): blue, with his hookah, on the scene's own mushroom.
-    caterpillar: new Puppet({ sit: art('ch5/caterpillar_sit', 'ch6/cheshire_bough', 'ch6/cheshire_bough_empty', 'ch6/cheshire_grin', 0.1) }, 0.1),
+    caterpillar: new Puppet({ sit: art('ch5/caterpillar_sit', 0.1) }, 0.1),
     pigeon: new Puppet({ fly: drawn(pigeon('fly'), 0.22), perch: drawn(pigeon('perch'), 0.2) }, 0.2),
     // Chapter VI placeholders.
     // Chapter VI's people: AI drawings, scaled alike by their heights in source pixels (tools/ch6_art.py prints them).
