@@ -10,6 +10,7 @@ import { Explorer } from './explore.js';
 import { PerfMeter } from './perf.js';
 import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { texture } from './ink.js';
+import { COLOUR } from './stage.js';
 
 const $ = (id) => document.getElementById(id);
 const SPEEDS = [1, 1.25, 1.5, 2];
@@ -575,6 +576,7 @@ async function run(book) {
     const al = leadOnScreen();
     layoutThoughts(freeView(), al && al.inside > 0 ? al.px : null);
 
+    COLOUR.value = active.colour ? active.colour(t) : 1; // how much colour shows (scenes that drain it, Carol)
     lightUp(t);
     page.update(t);
     timeline.update(t);
@@ -594,6 +596,7 @@ async function run(book) {
   // so checks can read its scenes before Begin is pressed.
   build(CHAPTERS[0]);
   window.__slice = {
+    colour: COLOUR,
     audio, setMode, setLayout, camera, perf, chapters: CHAPTERS, begin, explorer, cast, lead: LEAD,
     get chapter() { return chapter; },
     get scenes() { return (ch ?? CHAPTERS[0].built).scenes; },

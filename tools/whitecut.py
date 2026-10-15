@@ -10,6 +10,8 @@ Usage:
 --clear also makes the enclosed white regions at these points (source pixels) transparent,
 e.g. the gaps between a lamp's chains.
 --opaque keeps the whole image (no transparency) and only tints it, e.g. for the sky.
+--color keeps the drawing's colours (for watercolour art): its white becomes paper and the rest
+is tinted the same way; without it the drawing becomes ink on paper (grey), as for Tenniel.
 Requires Pillow, NumPy and SciPy.
 """
 import argparse
@@ -29,16 +31,19 @@ def main():
     ap.add_argument("--white", type=int, default=225, help="gray level above which a pixel counts as background")
     ap.add_argument("--seal", type=int, default=2, help="radius in pixels used to close gaps in outlines")
     ap.add_argument("--opaque", action="store_true")
+    ap.add_argument("--color", action="store_true", help="keep the drawing's colours instead of ink on paper")
     ap.add_argument("--clear", default=None, help="x,y;x,y points inside enclosed gaps to make transparent")
     a = ap.parse_args()
 
-    img = Image.open(a.src).convert("L")
+    src = Image.open(a.src).convert("RGB")
     if a.crop:
-        img = img.crop(tuple(int(v) for v in a.crop.split(",")))
+        src = src.crop(tuple(int(v) for v in a.crop.split(",")))
+    img = src.convert("L")
     g = np.asarray(img).astype(np.float32)
 
-    # Paper tint: white becomes our paper colour, ink stays ink.
-    rgb = (g[..., None] / 255.0) * PAPER
+    # Paper tint: white becomes our paper colour, ink stays ink (and colour stays colour with --color).
+    base = np.asarray(src).astype(np.float32) if a.color else g[..., None]
+    rgb = (base / 255.0) * PAPER
 
     if a.opaque:
         Image.fromarray(rgb.astype(np.uint8), "RGB").save(a.dst, optimize=True)
