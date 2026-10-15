@@ -40,6 +40,10 @@ export function buildHall({ group, ai, hallMeta }) {
     const side = new THREE.Mesh(new THREE.PlaneGeometry(HALL_D, H), plain(sideTex));
     side.rotation.y = -s * Math.PI / 2; side.position.set(s * HALL_W / 2, H / 2, 0); group.add(side);
   }
+  // The front wall, facing in (play-through, 2026-10-15: wide shots down the hall saw past its open front). One-sided,
+  // so shots from in front of the hall look straight through it.
+  const front = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, H), plain(wallTex(HALL_W)));
+  front.rotation.y = Math.PI; front.position.set(0, H / 2, HALL_D / 2); group.add(front);
   // "doors all round the hall, but they were all locked": the little door's drawing, frame
   // and leaf, at the old doors' height (owner, 2026-10-11), a little narrower so they fit
   // round the walls. The back wall leaves room for the little door behind its curtain.

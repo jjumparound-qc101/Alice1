@@ -44,7 +44,7 @@ export const teaParty = {
       sisters: at('sisters'), treacle: at('treacle', 1), move: at('move'), milk: at('milk-jug'), pinched: at('pinched', 2), disgust: at('disgust'),
       teapot: at('teapot'), stupidest: at('stupidest'), door: at('door', 1), end: at('hall') - 1.5,
     };
-    outdoors(group, ai, { groundRepeat: 40 });
+    outdoors(group, ai);
     for (const [x, z, h, s] of [[-2.6, -1.8, 3.4, 1], [2.8, -2.2, 3.6, -1], [0.4, -2.6, 3.8, 1], [-4.5, -0.5, 3.4, -1]]) {
       const t = paperFlat(ai.tree.tex, h * ai.tree.aspect, h); t.position.set(x, 0, z); t.scale.x = s; group.add(t);
     }
@@ -221,7 +221,7 @@ export const gardenAtLast = {
   start: (cue) => cue.at('garden', 2) - 2,
   build({ group, ai, cue }) {
     const start = gardenAtLast.start(cue);
-    outdoors(group, ai, { groundRepeat: 40 });
+    outdoors(group, ai);
     // "Among the bright flower-beds and the cool fountains": the Queen's garden of Chapter VIII (AI, 2026-10-15).
     gardenBehind(group, ai, 0, -3.2);
     const FB = ai['ch8/flower_bed'];

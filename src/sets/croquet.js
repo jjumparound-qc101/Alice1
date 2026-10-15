@@ -23,7 +23,7 @@ export function gardenBehind(group, ai, x, z) {
 
 // Builds the garden into `group`. Returns paint(n): show the first n roses red.
 export function buildCroquet({ group, ai }) {
-  outdoors(group, ai, { groundRepeat: 40 });
+  outdoors(group, ai, { ground: 'lawn' });
   // The garden behind (AI, 2026-10-15, after plate 8.2; tools/croquet_art.py): the hedge-wall with its arches, the
   // fountain and the glasshouse dome in the middle, the same hedge without them repeated either side (every
   // other copy mirrored, so the joins match). The hedge is 0.9 m high; long enough that its ends stay out of

@@ -150,10 +150,10 @@ export const gryphonBank = {
     const T = { lazy: at('lazy'), walked: at('walked', 3), rubbed: at('rubbed'), chuckled: at('chuckled'), come: at('come', 3), end: at('distance') - 2 };
     // "a Gryphon, lying fast asleep in the sun": the sunny bank by the sea behind him (AI, after plate 9.2), three
     // copies mirrored; the far treeline left out, as the bank shows the sea beyond.
-    outdoors(group, ai, { groundRepeat: 40, far: false });
+    outdoors(group, ai, { far: false });
     for (const [x, z, h, s] of [[-3.0, -0.9, 2.6, 1], [3.2, -1.2, 2.8, -1], [-3.4, 0.4, 2.4, -1]]) { const t = paperFlat(ai.tree.tex, h * ai.tree.aspect, h); t.position.set(x, 0, z); t.scale.x = s; group.add(t); }
     const BK = ai['ch9/bank_sunny'], BH = 0.45, BW = BH * BK.aspect;
-    for (const k of [-1, 0, 1]) { const b = paperFlat(BK.tex, BW, BH, { edge: false }); b.position.set(k * BW, 0, -1.2); if (k) b.scale.x = -1; group.add(b); }
+    for (let k = -8; k <= 8; k++) { const b = paperFlat(BK.tex, BW, BH, { edge: false }); b.position.set(k * BW, 0, -1.2); if (k % 2) b.scale.x = -1; group.add(b); } // wide enough that its ends never show
     const G = { x: -0.1, z: -0.35 };
     const gryphonA = (t) => {
       const s = route(t, [[start, G], [T.come + 0.5, G], [T.end, { x: -2.2, z: 0.1, dir: -1 }]], { phase: t * 2 });

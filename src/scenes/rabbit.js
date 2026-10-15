@@ -9,8 +9,6 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
-import * as art from '../art.js';
-import { flagstones } from '../props.js';
 import { plainBottle, stick } from '../props4.js';
 import { thoughts } from '../thoughts.js';
 import { panorama } from '../sets/panorama.js';
@@ -27,8 +25,13 @@ const plain = (map, opts = {}) => new THREE.MeshBasicMaterial({ map, ...opts });
 // peeps over the edge on tiptoe; `seat`: where the Caterpillar sits on top. Shared with Chapter V.
 export const MUSH = { w: 0.18 * 1329 / 900, h: 0.18, seat: 0.158 };
 
-export function outdoors(group, ai, { groundRepeat = 14, far: treeline = true } = {}) {
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), plain(texture(art.groundTile(), { repeat: [groundRepeat, groundRepeat] })));
+// The ground (play-through, 2026-10-15: was a code-drawn tile that read as ruled paper): the riverbank's meadow
+// grass with daisies, or the Queen's clipped lawn, both at their real size (1.6 m a tile, as on the riverbank), so
+// the daisies loom larger the smaller Alice is.
+export function outdoors(group, ai, { ground = 'meadow', far: treeline = true } = {}) {
+  const G = ground === 'lawn' ? ai['ch8/garden_lawn'] : ai.bank_grass;
+  const gt = G.tex.clone(); gt.wrapS = gt.wrapT = THREE.RepeatWrapping; gt.repeat.set(40 / 1.6, 40 / 1.6); gt.anisotropy = 8; gt.needsUpdate = true;
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), plain(gt));
   floor.rotation.x = -Math.PI / 2; group.add(floor);
   const sky = paperFlat(tiled(ai.sky.tex, 40 / (14 * ai.sky.aspect)), 40, 14, { edge: false, opaque: true });
   sky.position.set(0, -0.5, -14); group.add(sky);
@@ -146,9 +149,12 @@ export const rabbitHouse = {
     wall('rabbit_room_back', RW, [(ROOM.x0 + ROOM.x1) / 2, ROOM.floor + RH / 2, ROOM.z0], 0);
     const doorWall = wall('rabbit_room_door', RD, [ROOM.x0, ROOM.floor + RH / 2, (ROOM.z0 + ROOM.z1) / 2], Math.PI / 2);
     wall('rabbit_room_fire', RD, [ROOM.x1, ROOM.floor + RH / 2, (ROOM.z0 + ROOM.z1) / 2], -Math.PI / 2);
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(RW, RD), plain(texture(flagstones(), { repeat: [3, 2] })));
+    // The floor: the court's engraved flagstone tile (AI); the ceiling: the hall's (AI) (play-through, 2026-10-15).
+    const tileOf = (a, rx, ry) => { const t = a.tex.clone(); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx, ry); t.anisotropy = 8; t.needsUpdate = true; return t; };
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(RW, RD), plain(tileOf(ai['ch11/court_floor'], RW / 0.9, RD / 0.9)));
     floor.rotation.x = -Math.PI / 2; floor.position.set((ROOM.x0 + ROOM.x1) / 2, ROOM.floor + 0.002, (ROOM.z0 + ROOM.z1) / 2); house.add(floor);
-    const ceil = floor.clone(); ceil.rotation.x = Math.PI / 2; ceil.position.y = ROOM.ceil; house.add(ceil);
+    const ceil = new THREE.Mesh(new THREE.PlaneGeometry(RW, RD), plain(tileOf(ai['walls/hall_ceiling'], RW / 1.2, RD / 1.2)));
+    ceil.rotation.x = Math.PI / 2; ceil.position.set((ROOM.x0 + ROOM.x1) / 2, ROOM.ceil, (ROOM.z0 + ROOM.z1) / 2); house.add(ceil);
     // "a table in the window, and on it (as she had hoped) a fan and two or three pairs of tiny white kid gloves" (AI,
     // 2026-10-15, tools/wood_art.py): with them, then empty once she has taken them up.
     const tableArt = (n) => { const a = ai[`ch4/${n}`], h = 0.375; const f = paperFlat(a.tex, h * a.aspect, h); f.position.set((WIN.x0 + WIN.x1) / 2, ROOM.floor, ROOM.z1 - 0.12); house.add(f); return f; };
@@ -432,7 +438,7 @@ export const wood = {
       round: at('thistle', 2), charges: at('puppy', 5), sat: at('sat'), escape: at('ran', 1, at('sat')), buttercup: at('buttercup'),
       mushroom: at('mushroom', 1), tiptoe: at('tiptoe'), caterpillar: at('caterpillar'), end: cue.end,
     };
-    outdoors(group, ai, { groundRepeat: 60 });
+    outdoors(group, ai);
     // Grass as tall as trees to her, in layers.
     for (const [x, z, h, seed] of [[0, -1.2, 0.45, 1], [-0.5, -2.2, 0.6, 2], [0.6, -3, 0.7, 3], [0, 0.9, 0.3, 4]]) {
       const WG = ai['ch4/wood_grass'], grass = paperFlat(tiled(WG.tex, 10 / (h * WG.aspect)), 10, h, { edge: false }); grass.position.set(x, 0, z); // the tall grass of the wood (AI)

@@ -7,7 +7,7 @@
 // Figures and props not yet drawn are placeholders from props4.js and props5.js.
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
-import { texture, INK, PAPER } from '../ink.js';
+import { texture, canvas, INK, PAPER } from '../ink.js';
 import { nest, plateMount } from '../props5.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
@@ -17,9 +17,25 @@ import { outdoors, tiled, MUSH } from './rabbit.js';
 const TINY = 0.13;       // three inches
 const MU = { x: 0, z: 0, ...MUSH };
 
+// An engraved cylinder's shading as a matcap (x across the tube as seen, y along it).
+function neckShade() {
+  const { c, g } = canvas(256, 256);
+  g.fillStyle = '#f3eee2'; g.fillRect(0, 0, 256, 256);
+  g.strokeStyle = INK;
+  for (let x = 2; x < 256; x += 3) {
+    const u = (x - 128) / 128, edge = Math.abs(u) + (u > 0 ? 0.12 : 0);   // a little heavier on the right
+    const a = Math.max(0, Math.min(1, (edge - 0.45) / 0.5));
+    if (a <= 0) continue;
+    g.globalAlpha = 0.25 + 0.6 * a; g.lineWidth = 0.6 + 1.2 * a;
+    g.beginPath(); g.moveTo(x, 0); g.lineTo(x + (x % 7) * 0.2, 256); g.stroke();
+  }
+  g.globalAlpha = 1;
+  return c;
+}
+
 // The thick wood at three-inch height, with the mushroom (shared with Chapter IV's end).
 function wood(group, ai) {
-  outdoors(group, ai, { groundRepeat: 60 });
+  outdoors(group, ai);
   for (const [x, z, h, seed] of [[0, -1.0, 0.45, 1], [-0.5, -2.0, 0.6, 2], [0.6, -2.8, 0.7, 3], [0, 1.1, 0.3, 4]]) {
     const WG = ai['ch4/wood_grass'], grass = paperFlat(tiled(WG.tex, 10 / (h * WG.aspect)), 10, h, { edge: false }); // the tall grass of the wood (AI)
     grass.userData.front.material.map.offset.x = seed * 0.3; grass.position.set(x, 0, z); group.add(grass);
@@ -162,9 +178,11 @@ export const treetopsScene = {
     const nestCard = paperFlat(texture(nest()), 0.34, 0.19); nestCard.position.set(NEST.x, -0.03, NEST.z); group.add(nestCard);
     const think = thoughts(group, [{ t0: at('egg') - 1, t1: at('egg') + 8, art: ai['vignettes/eggs'].tex }]);
 
-    // The neck: a paper tube with an inked outline, from below the leaves to her head.
+    // The neck: a paper tube with an inked outline, from below the leaves to her head, shaded like an engraved
+    // cylinder (a matcap: fine hatching along its length, closer towards its edges, a little heavier on the right),
+    // so it reads as a neck from any angle rather than a white post (play-through, 2026-10-15).
     const R = 0.034; // the neck's radius, matched to the neck in her head drawing
-    const paperMat = new THREE.MeshBasicMaterial({ color: '#f3eee2' }), inkMat = new THREE.MeshBasicMaterial({ color: INK, side: THREE.BackSide });
+    const paperMat = new THREE.MeshMatcapMaterial({ matcap: texture(neckShade()) }), inkMat = new THREE.MeshBasicMaterial({ color: INK, side: THREE.BackSide });
     const neck = new THREE.Mesh(new THREE.BufferGeometry(), paperMat), outline = new THREE.Mesh(new THREE.BufferGeometry(), inkMat);
     group.add(neck, outline);
     // Her head (AI, 2026-10-15): head and hair, surprised, with the top of the neck ending at 79% of the drawing's
@@ -190,9 +208,9 @@ export const treetopsScene = {
       const pts = [new THREE.Vector3(0, -0.3, 0)];
       for (let i = 1; i <= 6; i++) {
         const k = i / 7;
-        pts.push(new THREE.Vector3(lerp(0, h.x, k) + Math.sin(i * 2.1) * 0.25 * zig, lerp(-0.3, h.y - 0.1, k), lerp(0, h.z, k) + Math.cos(i * 1.7) * 0.15 * zig));
+        pts.push(new THREE.Vector3(lerp(0, h.x, k) + Math.sin(i * 2.1) * 0.25 * zig, lerp(-0.3, h.y - 0.05, k), lerp(0, h.z, k) + Math.cos(i * 1.7) * 0.15 * zig));
       }
-      pts.push(new THREE.Vector3(h.x, h.y - 0.1, h.z));
+      pts.push(new THREE.Vector3(h.x, h.y - 0.05, h.z - 0.005)); // its open top tucked up behind the drawing's neck
       const curve = new THREE.CatmullRomCurve3(pts);
       neck.geometry.dispose(); outline.geometry.dispose();
       neck.geometry = new THREE.TubeGeometry(curve, 48, R, 10, false);

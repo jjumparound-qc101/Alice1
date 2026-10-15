@@ -87,18 +87,6 @@ export function hallWall(doors = 7) {
   return c;
 }
 
-export function flagstones() {
-  const { c, g } = canvas(512, 512);
-  g.fillStyle = PAPER; g.fillRect(0, 0, 512, 512);
-  g.strokeStyle = INK; g.lineWidth = 2.5;
-  for (let y = 0; y <= 512; y += 128) { g.beginPath(); g.moveTo(0, y); g.lineTo(512, y); g.stroke(); }
-  for (let r = 0; r < 4; r++) for (let x = (r % 2) * 128; x <= 512; x += 256) { g.beginPath(); g.moveTo(x, r * 128); g.lineTo(x, r * 128 + 128); g.stroke(); }
-  const all = new Path2D(); all.rect(0, 0, 512, 512);
-  hatch(g, all, { angle: 0.05, gap: 10, width: 0.7, seed: 81, alpha: 0.35 });
-  grain(g, 0.05, 6);
-  return c;
-}
-
 export function lamp() {
   const { c, g } = canvas(160, 420);
   g.strokeStyle = INK; g.lineWidth = 3;

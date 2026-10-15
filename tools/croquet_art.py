@@ -6,6 +6,7 @@ and the cool fountains"; the croquet-ground "all ridges and furrows") and Tennie
   garden_hedge    the same hedge without the fountain and dome (drawn from garden_wall, so the two match
                   edge for edge), repeated either side of it
   croquet_ground  the furrowed lawn, an opaque tile
+  garden_lawn     the clipped lawn of the rest of the garden, an opaque tile (also the ground of outdoors())
   flower_bed, flower_pot, paint_pot   cut-outs (the paint snapped to the painted roses' red)
 
 Usage: python3 tools/croquet_art.py   -> public/art/ai/ch8/<name>.webp
@@ -50,7 +51,8 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     for n in ("garden_wall", "garden_hedge"):
         sky_cut(f"source/ai/{n}.png", WALL_FOOT).save(f"{OUT}/{n}.webp", quality=88)
-    opaque("source/ai/croquet_ground.png").save(f"{OUT}/croquet_ground.webp", quality=88)
+    for n in ("croquet_ground", "garden_lawn"):
+        opaque(f"source/ai/{n}.png").save(f"{OUT}/{n}.webp", quality=88)
     for n in ("flower_bed", "flower_pot", "paint_pot"):
         img = cut(f"source/ai/{n}.png", ROSE_RED)
         img.save(f"{OUT}/{n}.webp", quality=90)
