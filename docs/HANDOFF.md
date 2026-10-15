@@ -139,6 +139,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 - All the art together is ~650 MB on the graphics card; keep new drawings at the sizes the tools save (600-1200 px wide).
 
 ## Camera and motion (owner, 2026-10-14: "simple and smooth")
+- **Stopgap `withAlice`** (Alice eased into the picture every ~12 s) now covers III, VII, VIII, XI, XII. Hand-direct those cameras when their sets are redone (the structures and backgrounds pass).
 - **Calm moves**: `cameraTrack` lengthens any move quicker than 2.2 s, turning faster than 22°/s or travelling faster than 1.6 m/s (centred on the written time). Mark a key `exact: true` when the owner has timed it (the Chapter I opening).
 - **Steady clock**: the picture follows a clock that runs with the frames and is pulled gently to the narration (main.js), so uneven narration timing on some browsers doesn't make motion stutter.
 - **Keep Alice in frame** turns are eased (about 0.6 s), not snapped.

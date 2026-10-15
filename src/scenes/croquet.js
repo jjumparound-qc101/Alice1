@@ -15,7 +15,7 @@ import { buildCroquet, FOOT, ROSE, POT, CROQ, FTREE } from '../sets/croquet.js';
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
 
 const RABBIT = 0.35;                         // the Rabbit's scale beside foot-high Alice
 const CARD_H = 0.28, CHILD_H = 0.2, COURT_H = 0.32;
@@ -219,7 +219,7 @@ export const roseTree = {
     return {
       T, bg: PAPER, fog: [7, 26], bounds: null,
       hotspots: [{ pos: new THREE.Vector3(ROSE.x, 0.3, ROSE.z), title: 'The rose-tree', text: 'the roses growing on it were white, but there were three gardeners at it, busily painting them red' }],
-      camera, update,
+      camera: withAlice(camera, aliceA, [[106, 172], [208, 216], [223, 233], [266, 287], [303, 329]]), update, // (frame_report, 2026-10-15)
       actors: (t) => ({ alice: aliceA(t), two: gardener('two')(t), five: gardener('five')(t), seven: gardener('seven')(t), queen: queenA(t), king: kingA(t), knave: knaveA(t), rabbit: rabbitA(t) }),
     };
   },
@@ -408,7 +408,7 @@ export const croquetGame = {
     return {
       T, bg: PAPER, fog: [7, 26], bounds: { minX: -2.5, maxX: 5.5, minZ: 1.0, maxZ: 3.0 },
       hotspots: [{ pos: new THREE.Vector3(3.0, 0.1, -0.5), title: 'The croquet-ground', text: 'the balls were live hedgehogs, the mallets live flamingoes, and the soldiers had to double themselves up' }],
-      camera, update,
+      camera: withAlice(camera, aliceA, [[386, 416], [652, 670]]), update,
       actors: (t) => ({ alice: aliceA(t), queen: queenA(t), king: kingA(t), executioner: executionerA(t), duchess: duchessA(t) }),
     };
   },

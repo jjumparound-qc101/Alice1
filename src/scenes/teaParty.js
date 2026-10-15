@@ -14,7 +14,7 @@ import { tableCloth, cup, teapot, armchair, dayWatch, treeDoor, flowerBed, raven
 import { buildHall, TABLE, DOOR, KEY } from '../sets/hall.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
 import { outdoors } from './rabbit.js';
 
 const TWO_FEET = 0.4;                       // Alice is about two feet high (Chapter VI's end)
@@ -155,7 +155,9 @@ export const teaParty = {
     return {
       T, bg: PAPER, fog: [7, 26], bounds: { minX: -3, maxX: 2.5, minZ: 0.3, maxZ: 3 },
       hotspots: [{ pos: new THREE.Vector3(0, 0.3, TBL.z), title: 'The tea-table', text: 'the table was a large one, but the three were all crowded together at one corner of it' }],
-      camera, update, actors: (t) => ({ alice: aliceA(t), hatter: hatterA(t), hare: hareA(t) }),
+      // Alice in the picture every ~12 s through the long close shots (frame_report, 2026-10-15) until the sets are redone.
+      camera: withAlice(camera, aliceA, [[69, 97], [172, 207], [255, 267], [503, 572], [782, 804]]), update,
+      actors: (t) => ({ alice: aliceA(t), hatter: hatterA(t), hare: hareA(t) }),
     };
   },
 };
