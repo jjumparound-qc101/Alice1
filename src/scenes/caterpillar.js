@@ -161,15 +161,14 @@ export const treetopsScene = {
     const think = thoughts(group, [{ t0: at('egg') - 1, t1: at('egg') + 8, art: eggsVignette() }]);
 
     // The neck: a paper tube with an inked outline, from below the leaves to her head.
-    const R = 0.045;
+    const R = 0.034; // the neck's radius, matched to the neck in her head drawing
     const paperMat = new THREE.MeshBasicMaterial({ color: '#f3eee2' }), inkMat = new THREE.MeshBasicMaterial({ color: INK, side: THREE.BackSide });
     const neck = new THREE.Mesh(new THREE.BufferGeometry(), paperMat), outline = new THREE.Mesh(new THREE.BufferGeometry(), inkMat);
     group.add(neck, outline);
-    // Her head: the top of the standing drawing (face and hair), on a card.
-    const HEAD_FRAC = 0.2, HEAD_H = 0.3;
-    const hg = new THREE.PlaneGeometry(HEAD_H * ai.alice_stand.aspect / HEAD_FRAC, HEAD_H); // the top fifth of the drawing
-    const uv = hg.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setY(i, 1 - HEAD_FRAC + uv.getY(i) * HEAD_FRAC);
-    const head = new THREE.Mesh(hg, new THREE.MeshBasicMaterial({ map: ai.alice_stand.tex, transparent: true, alphaTest: 0.5, side: THREE.DoubleSide }));
+    // Her head (AI, 2026-10-15): head and hair, surprised, with the top of the neck ending at 79% of the drawing's
+    // height, the neck's centre at 39% of its width; the tube of the neck joins it there.
+    const HD = ai['ch5/alice5_head'], HEAD_H = 0.46, HEAD_W = HEAD_H * HD.aspect;
+    const head = new THREE.Mesh(new THREE.PlaneGeometry(HEAD_W, HEAD_H), new THREE.MeshBasicMaterial({ map: HD.tex, transparent: true, alphaTest: 0.5, side: THREE.DoubleSide }));
     group.add(head);
 
     // Where her head is: rising, swaying, diving in a zigzag, jerking back, crouching, bobbing.
@@ -196,7 +195,7 @@ export const treetopsScene = {
       neck.geometry.dispose(); outline.geometry.dispose();
       neck.geometry = new THREE.TubeGeometry(curve, 48, R, 10, false);
       outline.geometry = new THREE.TubeGeometry(curve, 48, R * 1.18, 10, false);
-      head.position.set(h.x, h.y + HEAD_H / 2 - 0.12, h.z + 0.01);
+      head.position.set(h.x + (0.5 - 0.39) * HEAD_W, h.y - 0.08 + HEAD_H / 2 - 0.21 * HEAD_H, h.z + 0.01); // her neck in the drawing meets the tube's top (h.y - 0.1)
       head.rotation.y = 0.2;
       // The shaking leaves where her hands are.
       leaves.position.y = t >= T.hands && t < T.hands + 8 ? Math.sin(t * 25) * 0.003 : 0;

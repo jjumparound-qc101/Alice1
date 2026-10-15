@@ -81,7 +81,12 @@ export const duchessWalk = {
         [T.followed, { x: 3.2, z: 0.4 }], [T.followed + 5, { x: 2.6, z: -0.05, dir: -1 }], [T.walked, { x: 2.6, z: -0.05 }], [T.end, { x: 1.2, z: 0.3, dir: -1 }],
       ], { phase: t * 2.2 });
       const flinch = (t >= T.startled && t < T.startled + 1) ? Math.sin(t * 30) * 0.04 : 0;
-      return { ...s, pose: 'stand', scale: FOOT, tilt: flinch, dir: s.moving ? s.dir : t >= T.tremble ? 1 : s.dir };
+      // AI poses (2026-10-14): arm in arm with the Duchess, a flamingo under her other arm (after plate 9.1);
+      // stiff and polite with the sharp chin on her shoulder; following the Queen, timidly.
+      let pose = 'stand';
+      if (t < T.gone) pose = 'armin'; // (her 'chin' drawing has no flamingo, so it isn't used while she carries one)
+      if (t >= T.followed && t < T.followed + 5) pose = 'follow9';
+      return { ...s, pose, scale: FOOT, tilt: flinch, dir: s.moving ? s.dir : t >= T.tremble ? 1 : s.dir };
     };
     const duchessA = (t) => {
       // Arm in arm at Alice's side; her chin on Alice's shoulder; trembling; gone in a moment.
@@ -202,7 +207,9 @@ export const mockTurtleRock = {
       const s = route(t, [[start, { x: -2.4, z: 0.35, dir: 1 }], [T.tears - 1, { x: ASEAT.x - 0.05, z: ASEAT.z }], [T.sat - 0.5, ASEAT]], { phase: t * 2.2 });
       const seated = t >= T.sat;
       const sinking = t >= T.sink && t < T.drive + 1 ? smooth((t - T.sink) / 1) * 0.12 : 0; // "ready to sink into the earth"
-      return { ...s, pose: seated ? 'sit' : 'stand', scale: FOOT, sink: sinking, dir: seated ? 1 : s.dir };
+      // Sitting on the sand listening (after plate 9.3); shrinking, embarrassed, "ready to sink into the earth".
+      const pose = !seated ? 'stand' : sinking > 0 ? 'sink' : 'shore';
+      return { ...s, pose, scale: FOOT, sink: sinking * 0.3, dir: seated ? 1 : s.dir };
     };
     const gryphonA = (t) => {
       const s = route(t, [[start, { x: -2.1, z: 0.15, dir: 1 }], [T.tears - 1.5, { x: GSEAT.x - 0.05, z: GSEAT.z }], [T.sat - 0.5, GSEAT]], { phase: t * 2 });

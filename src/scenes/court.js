@@ -82,7 +82,13 @@ export const trial = {
       ], { phase: t * 2.2 });
       const seated = t >= T.hatter + 13;
       const startled = t >= T.alice ? Math.sin((t - T.alice) * 30) * 0.05 * (1 - smooth((t - T.alice) / 1.5)) : 0;
-      return { ...s, pose: seated ? 'sit' : 'stand', scale: scaleAt(t), dir: s.moving ? s.dir : -1, tilt: startled };
+      // AI poses (2026-10-14): looking round the court, whispering to the Gryphon; taking Bill's pencil; squeezed on
+      // the bench as she grows; startled to hear her own name.
+      let pose = seated ? 'bench' : 'stand';
+      if (!s.moving && t < T.pencil) pose = 'court11';
+      if (!s.moving && t >= T.behind + 4 && t < T.lizard + 3) pose = 'pencil';
+      if (t >= T.alice - 0.2) pose = 'named';
+      return { ...s, pose, scale: scaleAt(t), dir: s.moving ? s.dir : pose === 'pencil' ? 1 : -1, tilt: pose === 'named' ? 0 : startled };
     };
     const gryphonA = () => ({ pose: 'sit', x: FRONT.x + 0.32, z: FRONT.z - 0.02, dir: -1, scale: 0.85 });
     const rabbitA = (t) => {

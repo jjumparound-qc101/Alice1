@@ -31,7 +31,7 @@ export const quadrille = {
       sadly: at('sadly', 1), try: at('try', 1), solemnly: at('solemnly', 1), toes: at('toes', 1), whiting: at('whiting', 1), songEnd: at('interesting', 1) - 1,
       whiting3: at('whiting', 3), yawned: at('yawned'), interesting2: at('interesting', 2), close: at('close', 3), stand: at('stand'), got: at('got', 5),
       lobster: at('lobster', 5), face: at('face'), garden: at('garden', 2), owl: at('owl', 1), leave: at('leave'), sighed: at('sighed', 2), soup: at('beautiful', 1),
-      soupEnd: at('beautiful', 10), chorus: at('chorus'), hand: at('hand'), breeze: at('breeze'),
+      soupEnd: at('beautiful', 10), chorus: at('chorus'), hand: at('hand'), breeze: at('breeze'), telling: at('telling'),
     };
     const end = cue.end;
     buildSeashore({ group, ai });
@@ -52,12 +52,19 @@ export const quadrille = {
     const round = (t, phase) => { const a = (t - T.solemnly) * 0.25 + phase; return { x: D.x + Math.cos(a) * 0.3, z: D.z + Math.sin(a) * 0.16 - 0.02, dir: -Math.sin(a) > 0 ? 1 : -1 }; };
     const sitting = (t) => (t >= T.sadly - 1 && t < T.try + 2) || (t >= T.songEnd + 3 && t < T.stand) || (t >= T.face - 0.5 && t < T.garden - 4) || (t >= T.leave + 1 && t < T.hand);
     const aliceA = (t) => {
-      if (t < T.try + 2) return { pose: 'sit', x: ASEAT.x, z: ASEAT.z, scale: FOOT, dir: 1 };
+      if (t < T.try + 2) return { pose: 'shore', x: ASEAT.x, z: ASEAT.z, scale: FOOT, dir: 1 };
       const s = route(t, [[T.try + 2, ASEAT], [T.solemnly - 1, D], [T.hand, D], [T.hand + 1.2, { x: D.x - 0.2, z: D.z + 0.05, dir: -1 }], [T.breeze + 2, { x: -3.2, z: 0.4, dir: -1 }]], { phase: t * 2.6 });
       const trodden = t >= T.toes && t < T.toes + 1 ? Math.sin(t * 30) * 0.05 : 0;       // "treading on her toes"
       const seated = !s.moving && sitting(t) && t >= T.songEnd;
-      const hands = t >= T.face && t < T.garden - 4 ? 0.15 : 0;                        // her face in her hands
-      return { ...s, pose: seated ? 'sit' : 'stand', scale: FOOT, tilt: trodden + hands, dir: s.moving ? s.dir : 1, visible: t < T.breeze + 2 };
+      // AI poses (2026-10-14): standing still while they dance round her; sitting on the sand; telling her adventures;
+      // standing to repeat "'Tis the voice of the Lobster"; her face in her hands; pulled along by the hand.
+      let pose = seated ? 'shore' : 'stand';
+      if (dancing(t) && !s.moving) pose = 'dance10';
+      if (seated && t >= T.telling && t < T.stand) pose = 'tell';
+      if (!s.moving && t >= T.stand + 1 && t < T.face - 0.5) pose = 'recite10';
+      if (seated && t >= T.face - 0.5 && t < T.garden - 4) pose = 'face';
+      if (s.moving && t >= T.hand) pose = 'run10';
+      return { ...s, pose, scale: FOOT, tilt: trodden, dir: s.moving ? s.dir : 1, visible: t < T.breeze + 2 };
     };
     const gryphonA = (t) => {
       if (dancing(t)) return { ...round(t, 0), pose: 'dance', moving: true, phase: t * 1.2, y: Math.abs(Math.sin(t * 2.4)) * 0.01 };

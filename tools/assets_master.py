@@ -62,6 +62,8 @@ DONE_AS = {
     "bill_upside_down": "done as bill_gape; head downwards is Bill's drawing turned over by the game",
     "king_judge_notebook": "done as king_judge_notebook, king_judge_paper",
     "sister_lap": "done as sister_lap, sister_dream",
+    "alice12_lap": "done: the sitting Alice tilted into her sister's lap by the game (the filter refuses lying poses)",
+    "rabbit_room_side": "done as rabbit_room_door, rabbit_room_fire",
     "soldier9_custody": "done as body_soldier_lead (the prisoner is the player's own card)",
 }
 

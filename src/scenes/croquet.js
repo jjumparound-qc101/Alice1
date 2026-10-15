@@ -174,7 +174,12 @@ export const roseTree = {
       ], { phase: t * 2.2 });
       const laughing = t >= T.scream && t < T.scream + 1.5 ? Math.sin(t * 25) * 0.05 : 0;  // "a little scream of laughter"
       const dir = !s.moving && t >= T.queenCry + 3 && t < T.moved ? -1 : s.dir;               // facing the procession, then the Queen
-      return { ...s, dir, pose: 'stand', scale: FOOT, tilt: laughing };
+      // AI poses (2026-10-14): watching the procession, hands behind her back; "Nonsense!"; laughing.
+      let pose = 'stand';
+      if (!s.moving && t >= T.queenCry + 3 && t < T.moved) pose = 'procession';
+      if (t >= T.nonsense - 0.3 && t < T.nonsense + 4) pose = 'nonsense';
+      if (t >= T.scream && t < T.scream + 2) pose = 'laugh';
+      return { ...s, dir, pose, scale: FOOT, tilt: pose === 'laugh' ? 0 : laughing };
     };
     function update(t, cast, camera) {
       // The roses: painted red one by one until the Queen comes.
@@ -290,6 +295,7 @@ export const croquetGame = {
     const HOG = { x: 1.82, z: 0.22 };                         // her hedgehog at first
     const FIGHT = { x: 3.5, z: -0.25 };
     const FLY = { x: FTREE.x - 0.75, y: 0.32, z: FTREE.z + 0.8 };   // under the tree, flapping up at it
+    const holding = (t) => (t >= T.flamingo - 1 && t < T.down) || (t >= T.caught && t < T.crowd + 200);
     const aliceA = (t) => {
       const s = route(t, [
         [start, { x: CROQ.x0 + 0.1, z: 0.3, dir: 1 }], [T.flamingo, { x: 1.65, z: 0.25 }],
@@ -301,7 +307,11 @@ export const croquetGame = {
       const laughing = t >= T.laughing && t < T.laughing + 2 ? Math.sin(t * 25) * 0.05 : 0;
       const swing = t >= T.blow && t < T.blow + 1 ? -Math.sin((t - T.blow) * Math.PI) * 0.15 : 0;
       const dir = !s.moving && t >= T.appearance && t < T.search ? 1 : s.dir;
-      return { ...s, dir, pose: 'stand', scale: FOOT, tilt: laughing + swing };
+      // AI poses (2026-10-14), after Tenniel's plate 8.3: the flamingo tucked under her arm, its neck twisted up
+      // to her face; swinging it at the hedgehog; laughing at it. These drawings hold the flamingo.
+      let pose = 'stand';
+      if (holding(t)) pose = t >= T.blow - 0.2 && t < T.blow + 0.8 ? 'swing8' : t >= T.laughing - 0.3 && t < T.laughing + 3 ? 'laugh8' : 'flamingo8';
+      return { ...s, dir, pose, scale: FOOT, tilt: pose === 'stand' ? laughing + swing : 0 };
     };
     const queenA = (t) => {
       // "went stamping about"; close behind Alice, listening; then away screaming in the distance.
@@ -356,7 +366,7 @@ export const croquetGame = {
       const flying = t >= T.search && t < T.caught;
       for (const f of Object.values(flam)) f.visible = false;
       if (flying) { const f = flam.fly; f.visible = true; f.position.set(FLY.x + Math.sin(t * 1.5) * 0.06, FLY.y + Math.abs(Math.sin(t * 2)) * 0.12, FLY.z); f.rotation.set(0, 0, Math.sin(t * 6) * 0.1); }
-      else if (held) { const f = twist ? flam.twist : flam.held; f.visible = true; carry(f, cast.alice, { drop: (FH * (twist ? 0.02 : 0.32)) / FOOT }); f.scale.x = cast.alice.poses[cast.alice.pose].scale.x; } // its body at her hand
+      else if (held) { /* her drawings with the flamingo hold it (2026-10-14) */ }
       else if (t >= T.down && t < T.search) { const f = flam.held; f.visible = true; f.position.set(SPOT.x - 0.1, FH * 0.2, SPOT.z + 0.05); f.rotation.set(0, 0, -1.4); f.scale.x = 1; } // put down, lying on its side
       // The hedgehogs: rolled up; unrolled and crawling away; two fighting.
       hog.ball.visible = t >= start && t < T.unrolled;

@@ -20,7 +20,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 OUT = "public/art/ai/ch5"
-POSES = ["caterpillar_speak", "caterpillar_rear", "caterpillar_yawn", "caterpillar_crawl", "hookah"]
+POSES = ["caterpillar_speak", "caterpillar_rear", "caterpillar_yawn", "caterpillar_crawl", "hookah", "alice5_head"]
 BLUE = np.array([0x5B, 0x86, 0xC4], np.float32)  # SPOT.blue in src/props.js
 # Source pixels (1024x1536): keep everything above the line where his body meets the cap.
 KEEP = [(0, 0), (1024, 0), (1024, 955), (925, 955), (905, 975), (735, 975), (700, 1050), (600, 1085),
@@ -68,7 +68,7 @@ def main():
             subprocess.run([sys.executable, "tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png", *clear], check=True, stdout=subprocess.DEVNULL)
             cut = Image.open(f"{d}/c.png").convert("RGBA")
         a = np.asarray(cut, np.float32).copy()
-        if n != "hookah":
+        if n not in ("hookah", "alice5_head"):
             tone = a[..., :3].mean(2, keepdims=True) / 230.0
             blue = BLUE * np.clip(tone, 0, 1) ** 0.9 + 255 * 0.12 * np.clip(tone, 0, 1)
             a[..., :3] = a[..., :3] * 0.25 + np.clip(blue, 0, 255) * 0.75

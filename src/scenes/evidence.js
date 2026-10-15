@@ -64,7 +64,14 @@ export const evidence = {
       const s = route(t, [[0, NEAR], [T.tipped + 1, NEAR], [T.pardon + 1, BOX], [T.right + 2, BOX], [T.what, MIDDLE]], { phase: t * 2.2 });
       const picking = t >= T.pardon + 1 && t < T.right + 2;
       const scream = t >= T.scream && t < T.scream + 3 ? Math.sin(t * 22) * 0.07 : 0;
-      return { ...s, pose: t < T.jumped ? 'sit' : 'stand', scale: scaleAt(t), dir: s.moving ? s.dir : -1, tilt: (picking ? 0.25 : 0) + scream };
+      // AI poses (2026-10-14): jumping up, her skirt sweeping the jury-box over (after plate 12.1); picking the
+      // jurors up; "Who cares for you?"; beating off the cards (after plate 12.3).
+      let pose = t < T.jumped ? 'bench' : 'stand';
+      if (t >= T.jumped && t < T.jumped + 2.5) pose = 'jumpup';
+      if (picking && !s.moving) pose = 'pickup';
+      if (t >= T.cares - 0.3 && t < T.air - 0.3) pose = 'defiant';
+      if (t >= T.air - 0.3) pose = 'cards';
+      return { ...s, pose, scale: scaleAt(t), dir: s.moving ? s.dir : -1, tilt: pose === 'cards' ? scream * 0.5 : scream };
     };
     const flown = (t) => t >= T.air + 0.3;   // the court cards have risen into the air
     const kingA = (t) => {
@@ -234,7 +241,8 @@ export const waking = {
       if (t >= T.ran + 7) return { visible: false };
       const s = route(t, [[start, LAP], [T.ran, LAP], [T.ran + 7, { x: 1.8, z: -1.2, dir: 1 }]], { phase: t * 2.4 });
       const asleep = t < T.wake;
-      return { ...s, pose: t < T.ran ? 'sit' : 'stand', dir: t < T.ran ? -1 : s.dir, tilt: asleep ? 0.45 : 0, y: asleep ? -0.05 : 0 };   // her head in her sister's lap
+      const pose = t < T.ran ? 'sit' : s.moving ? 'runhome' : 'stand'; // running in to her tea (AI, 2026-10-14)
+      return { ...s, pose, dir: t < T.ran ? -1 : s.dir, tilt: asleep ? 0.45 : 0, y: asleep ? -0.05 : 0 };   // her head in her sister's lap
     };
     const rabbitA = (t) => {
       if (t < T.rabbit - 0.5 || t > T.rabbit + 5) return { visible: false };

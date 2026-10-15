@@ -99,11 +99,18 @@ export const teaParty = {
       const s = route(t, [
         [0, { x: -2.6, z: 0.9, dir: 1 }], [T.sat - 0.5, ARMCHAIR], [T.move + 1, ARMCHAIR],
         [T.move + 5, { x: SEATS[3] - 0.08, z: TBL.z + TBL.d / 2 + 0.12 }],
-        [T.disgust, { x: SEATS[3] - 0.08, z: TBL.z + TBL.d / 2 + 0.12 }], [T.stupidest, { x: -3.3, z: 0.5, dir: -1 }], [T.door + 3, { x: -3.6, z: 0.22 }],
+        [T.disgust, { x: SEATS[3] - 0.08, z: TBL.z + TBL.d / 2 + 0.12 }], [T.stupidest, { x: -3.3, z: 0.5, dir: -1 }], [T.door - 0.5, { x: -3.75, z: 0.24 }],
       ], { phase: t * 2.2 });
-      const seated = (t >= T.sat && t < T.move + 1) || (t >= T.move + 5 && t < T.disgust);
-      const lookBack = t >= T.disgust + 2 && t < T.teapot + 1 ? 1 : s.dir; // "she looked back once or twice"
-      return { ...s, pose: seated ? 'sit' : 'stand', scale: TWO_FEET, dir: seated ? 1 : lookBack, visible: t < T.door + 3 };
+      const inArmchair = t >= T.sat && t < T.move + 1, atTable = t >= T.move + 5 && t < T.disgust;
+      // AI poses (2026-10-14): in the arm-chair (the drawing has the chair); leaning forward at the March Hare's
+      // old place, listening; walking off in disgust, looking back; at the tree with a door in it.
+      let pose = 'stand';
+      if (inArmchair) pose = 'chair7';
+      if (atTable) pose = 'lean7';
+      if (t >= T.disgust + 2 && t < T.teapot + 1) pose = 'walkoff7';      // "she looked back once or twice"
+      if (t >= T.door - 0.5) pose = 'treedoor';
+      const dir = inArmchair || atTable ? 1 : pose === 'walkoff7' ? -1 : pose === 'treedoor' ? 1 : s.dir;
+      return { ...s, pose, scale: TWO_FEET, dir, visible: t < T.door + 3 };
     };
     function update(t, cast) {
       // The Dormouse: asleep between them as a cushion; awake for the story; into the teapot at last.
@@ -122,6 +129,8 @@ export const teaParty = {
       watch.visible = t >= T.watch && t < T.dipped + 8;
       if (t < T.dipped - 2) carry(watch, cast.hatter);
       else { watch.position.set(seat('hare', t) + 0.05, TBL.h + 0.06 - (t >= T.dipped && t < T.dipped + 2 ? 0.04 : 0), TBL.z + 0.05); watch.rotation.set(0, 0, 0); }
+      chair.visible = aliceA(t).pose !== 'chair7';   // her arm-chair drawing has its own chair
+      tree.visible = aliceA(t).pose !== 'treedoor';  // and the tree with the door is in her drawing there
       const a = aliceA(t);
       think(t, { x: a.x + 0.28, y: 0.62, z: a.z + 0.05 }, 0.28);
     }
@@ -167,7 +176,8 @@ export const hallAgain = {
       const s = route(t, [[start, { x: TABLE.x - 0.6, z: TABLE.z + 0.3, dir: 1 }], [T.key + 0.5, { x: TABLE.x - 0.25, z: TABLE.z + 0.35 }], [T.unlock - 0.5, { x: DOOR.x - 0.3, z: DOOR.z + 0.35 }],
         [T.passage, { x: DOOR.x - 0.3, z: DOOR.z + 0.35 }], [T.passage + 2.5, { x: DOOR.x, z: DOOR.z + 0.05 }]], { phase: t * 2.2 });
       const scale = lerp(0.8, 0.24, smooth((t - T.mushroom) / 3)); // "till she was about a foot high"
-      return { ...s, pose: 'stand', scale, visible: t < T.passage + 2.5 };
+      const pose = t >= T.mushroom - 0.5 && t < T.mushroom + 3 ? 'nibble' : 'stand'; // "nibbling at the mushroom"
+      return { ...s, pose, scale, visible: t < T.passage + 2.5 };
     };
     function update(t, cast) {
       if (t >= T.key) { carry(key, cast.alice, { tilt: -0.6 }); }
@@ -197,7 +207,7 @@ export const gardenAtLast = {
     const back = paperFlat(texture(gardenPicture()), 6, 4.5, { edge: false }); back.position.set(0, 0, -4); group.add(back);
     const bedTex = texture(flowerBed());
     for (const [x, z] of [[-0.8, -0.6], [0.9, -1.3], [-0.2, 0.5]]) { const b = paperFlat(bedTex, 1.8, 0.36); b.position.set(x, 0, z); group.add(b); }
-    const alice = (t) => ({ ...route(t, [[start, { x: 0.9, z: 0.2, dir: -1 }], [start + 5, { x: 0.2, z: -0.1 }]], { phase: t * 2.2 }), pose: 'stand', scale: 0.24 });
+    const alice = (t) => { const s = route(t, [[start, { x: 0.9, z: 0.2, dir: -1 }], [start + 5, { x: 0.2, z: -0.1 }]], { phase: t * 2.2 }); return { ...s, pose: s.moving ? 'stand' : 'garden7', scale: 0.24 }; }; // delighted, among the flower-beds
     const camera = cameraTrack([{ t: start, dur: 0, pos: [0.6, 0.25, 1.4], look: [0.0, 0.3, -1.5] }, { t: start + 2, dur: 6, pos: [0.9, 0.5, 2.2], look: [0, 0.6, -3] }]);
     return { T: {}, bg: PAPER, fog: [8, 30], bounds: null, hotspots: [], camera, actors: (t) => ({ alice: alice(t) }) };
   },

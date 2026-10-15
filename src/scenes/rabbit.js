@@ -174,6 +174,9 @@ export const rabbitHouse = {
     const arm = paperFlat(FA.tex, ARM, ARM / FA.aspect, { anchor: 'center' });
     const armPivot = new THREE.Group(); armPivot.position.set((WIN.x0 + WIN.x1) / 2 - 0.05, (WIN.y0 + WIN.y1) / 2, 0.04); arm.position.x = ARM * 0.5; armPivot.add(arm); group.add(armPivot);
     // Pebbles on the floor, turning into little cakes.
+    // Her foot up the chimney (AI, 2026-10-15): the fireplace with her leg in it, over the fire wall for the kick.
+    const FT = ai['ch4/alice_foot'], foot = paperFlat(FT.tex, 0.62 * FT.aspect, 0.62, { edge: false });
+    foot.position.set(ROOM.x1 - 0.02, ROOM.floor, (ROOM.z0 + ROOM.z1) / 2); foot.rotation.y = -Math.PI / 2; house.add(foot);
     const pebTex = texture(pebble()), cakeTex = texture(littleCake());
     const pebs = Array.from({ length: 9 }, (_, i) => {
       const p = paperFlat(pebTex, 0.05, 0.037), c = paperFlat(cakeTex, 0.05, 0.037);
@@ -293,7 +296,7 @@ export const rabbitHouse = {
       if (t >= T.bottle + 3 && t < T.putDown) carry(bottle, cast.alice, { drop: 0.03 * a.scale });
       else { bottle.position.set((ROOM.x0 + ROOM.x1) / 2, ROOM.floor + RH * 0.47, ROOM.z0 + 0.04); bottle.rotation.set(0, 0, 0); } // on the shelf under the looking-glass
       // The arm: out of the window from "one arm out of the window" until she shrinks; it snatches twice.
-      armPivot.visible = t >= T.arm && t < T.swallowed + 1;
+      armPivot.visible = t >= T.arm && t < T.swallowed + 1 && cutAt(t) !== 'full';
       const snatch = (t0) => Math.max(0, Math.sin(Math.min(1, Math.max(0, (t - t0) / 0.8)) * Math.PI));
       armPivot.rotation.z = -1.1 + 0.6 * (snatch(T.snatch) + snatch(T.snatch2)) + Math.sin(t * 0.7) * 0.03;
       armPivot.scale.setScalar(smooth((t - T.arm) / 1.5));
@@ -307,6 +310,7 @@ export const rabbitHouse = {
         const cake = smooth((t - T.cakes - i * 0.3) / 0.6);
         p.visible = landed && cake < 0.5; c.visible = landed && cake >= 0.5 && !(i === 0 && t >= T.swallowed);
       }
+      foot.visible = t >= T.kick - 4.5 && t < T.kick + 3;
       const cut = cutAt(t);
       front.visible = cut === 'none'; fullCut.visible = cut === 'full'; halfCut.visible = cut === 'half';
       // The house trembles with her.
@@ -328,6 +332,7 @@ export const rabbitHouse = {
       both: IN([0.1, 1.64, 2.7], [-0.05, 1.51, -0.4]),       // her, and the window with her arm out of it
       floor: IN([0.0, 1.54, 1.3], [-0.1, 1.24, -0.6]),       // the pebbles turning into cakes
       lie: IN([0.1, 1.62, 2.5], [0.0, 1.52, -0.5]),          // lying, the arm up to the window
+      fire: { ...IN([0.2, 1.5, 0.9], [0.89, 1.45, -0.55]), full: true }, // her foot up the narrow chimney (front fully cut)
       small: IN([-0.3, 1.31, 0.9], [-0.33, 1.21, -0.6]),     // shrinking
     };
     const OUT = {
@@ -369,6 +374,7 @@ export const rabbitHouse = {
       k(T.heads - 3, 3, OUT.roof), k(T.heads + 4, 0, CUT.near),                      // "Heads below!"
       k(T.downChimney + 3, 0, OUT.roof),                                             // Bill up the ladder to the chimney
       k(T.kick - 9, 0, CUT.her),                                                     // her foot down the chimney
+      k(T.kick - 4, 0, CUT.fire),                                                    // "This is Bill," and one sharp kick
       k(T.kick - 0.5, 0, OUT.sky), k(T.kick + 3.5, 0, OUT.yard),                     // "There goes Bill!" "Catch him, you by the hedge!"
       k(T.feeble + 5.5, 4, OUT.house),                                               // "Hold up his head—Brandy now"
       k(T.feeble + 14, 0, OUT.held), k(T.feeble + 24, 0, CUT.near),                  // Bill's feeble voice; "like a sky-rocket!"
@@ -382,7 +388,8 @@ export const rabbitHouse = {
     ];
     // From outside, the house is whole (only her arm shows, as the Rabbit sees it); from inside, the front is cut away.
     const outside = (t) => { let o = true; for (const sh of shots) { if (sh.t > t) break; o = !!sh.out; } return o; };
-    cutAt = (t) => (outside(t) ? 'none' : t < T.lying - 0.3 ? 'full' : 'half');
+    const fullShot = (t) => { let f = false; for (const sh of shots) { if (sh.t > t) break; f = !!sh.full; } return f; };
+    cutAt = (t) => (outside(t) ? 'none' : t < T.lying - 0.3 || fullShot(t) ? 'full' : 'half');
     const camera = cameraTrack(shots);
     return {
       T, bg: PAPER, fog: [9, 30], bounds: { minX: -2.5, maxX: 2.5, minZ: 0.8, maxZ: 6 },

@@ -25,8 +25,8 @@ CLEAR = {"bill_ladder": "178,226;275,308;374,392;474,478;549,543;811,784"}
 # giant Alice lying in the room after Tenniel's plate 4.1.
 HOUSE_GROUND = 1240
 SETS = {"rabbit_house": None, "rabbit_room_back": "opaque", "rabbit_room_door": "side", "rabbit_room_fire": "side",
-        "cucumber_frames": None, "cucumber_frames_broken": None, "alice4_giant_lying": None}
-OUT_NAME = {"alice4_giant_lying": "alice_lying"}
+        "cucumber_frames": None, "cucumber_frames_broken": None, "alice4_giant_lying": None, "alice4_foot": None}
+OUT_NAME = {"alice4_giant_lying": "alice_lying", "alice4_foot": "alice_foot"}
 
 
 def sets(names):
