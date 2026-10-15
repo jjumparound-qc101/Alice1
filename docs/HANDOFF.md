@@ -1,12 +1,12 @@
 # Handoff: read this first
-Updated: 2026-10-15 (session 4: Chapters IV-VI and VIII-XII art, the White Rabbit on the Chapter I model everywhere, the creatures of III-V and VIII, all characters done; then the structures and backgrounds, starting with the court of Chapters XI-XII, its cameras hand-directed). For the next Claude Code session (or anyone) picking up the work.
+Updated: 2026-10-15, end of session 4 (all 371 images on the master list made and in the game; every place built after the book and Tenniel; every chapter's camera hand-directed; a full play-through with fixes; the first patch note done). For the next Claude Code session (or anyone) picking up the work.
 
 ## The project in one paragraph
 *Alice's Adventures in Wonderland* as an interactive novel for Steam (a "Library of Living Books" title). The book's text is shown in sync with the LibriVox full-cast reading, staged as a 2.5D Victorian toy theater: flat engraving-style cutouts in layered 3D sets, with a moving camera (Watch mode) and free walking with a 150° look arc (Explore mode). Black-and-white ink, except things the text gives a colour (docs/COLOR.md). Engine: three.js + Vite, wrapped in Electron for desktop and Steam (Gate A: docs/GATE_A.md).
 
 ## Where the project stands
 - **The whole book is readable**: all twelve chapters have narration aligned to the text (95–99% of words matched directly).
-- **The whole book is staged (Chapters I–XII)** start to finish as rough cuts, mostly with placeholder art drawn in code. Each has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md`.
+- **The whole book is staged (Chapters I–XII)** start to finish, now with AI art throughout (characters, sets, backgrounds, props, thought vignettes; 2026-10-15). A few small code drawings remain (e.g. the Hatter's shoes, canvas bags, slates, the nest, scroll/trumpet props kept hidden), listed in `src/propsN.js`. Each chapter has a rough-cut note: `docs/CHAPTER_0N_ROUGHCUT.md` (older; this handoff is newer).
 - **A bug fixed 2026-10-14**: since session 3 a bad edit gave the Caterpillar an invalid height (NaN), so he was missing in Chapters IV–V and the smoke test logged an error. Fixed; run the smoke test after every batch.
 - **The asset master list** (`docs/ASSETS_MASTER.md`, rebuilt by `tools/assets_master.py`, never edited by hand): 2026-10-15, **all 371 images done** (characters, sets, backgrounds, props and thought vignettes). Entries made under another name or ruled out by the owner are ticked through `DONE_AS` in the script, with a note; add to it whenever a drawing is made under a different name.
 - **Phones and tablets** are supported (book layout upright, picture-first sideways, touch controls), and **Explore** has a 150° look arc and a walking stick on touch screens.
@@ -40,7 +40,6 @@ Updated: 2026-10-15 (session 4: Chapters IV-VI and VIII-XII art, the White Rabbi
   - **Play-through fixes, 2026-10-15** (30 screenshots of every chapter reviewed): the outdoor ground (lane, wood, mushroom, Duchess's house and wood, tea party, garden, Gryphon) is now the riverbank's AI meadow at its real size (1.6 m a tile), the Queen's garden an AI clipped lawn (`outdoors(group, ai, { ground })` in rabbit.js; the code-drawn ground tile is gone); the kitchen and the Rabbit's room have the court's engraved flagstones (and the room the hall's ceiling); the long neck in Chapter V is shaded like an engraved cylinder (a matcap) and joins her drawn neck; the hall has a front wall facing in (one-sided), so shots down the hall no longer see past it; the Gryphon's bank is wide enough that its ends never show; the herald and King shots in XI-XII no longer have a guard filling the frame; in Explore, the seashore's sides now carry the far sea (out to the shore) and the sunny bank's dunes (beyond it), so the coast runs on instead of ending at a wall of sky (explore_edges checked VII-XI).
   - **Patch note (owner, 2026-10-15): Alice walked through the glass table at 6:27 in Chapter I.** The table stays where it is; her walks now curve round its near side on an arc (`routeAround()`/`detour()` in hall.js, `CLEAR` = table radius + 0.6 m), at a walking pace (she reaches it as "a tiny golden key" is read), and the two shots of those walks are taken from above and in front so the whole path is seen. No walk comes nearer than her standing place beside it.
   - Characters: all done 2026-10-15 (the remaining list is props, sets, backgrounds and thought vignettes). **Next: prompt the owner about structures and backgrounds** (owner's request). Previously listed: the jurors (XI: twelve on slates; the jury-box already uses the AI drawings of the Dodo, Duck, Lory, Bill, Eaglet, Owl, Magpie, Canary, Crab and guinea-pig; the Mouse is still a code drawing), the court crowd, and Alice's poses for VII–XII.
-  - The rest of the book is placeholder art drawn in code.
 - **The White Rabbit (owner, 2026-10-14): the Chapter I model (`source/ai/rabbit_sheet.webp`) is the standard in every scene.** Every pose after Chapter I is drawn from that sheet (`tools/rabbit_art.py`: cut out, white, pink eye; one scale `RB` in main.js): II trotting with gloves and fan, starting, scurrying away; IV looking about, pointing, into the cucumber-frame, giving orders; VIII peeping up at Alice, on tiptoe; XI-XII the herald (after plate 11.1: tabard, ruff), the trumpet, the scroll, reading the paper in spectacles. The old Tenniel 'watch' engraving pose is no longer used anywhere. Any new Rabbit pose: attach the sheet.
 - **Alice's walk**: two matching steps from one drawing (`alice_walk_pair`); keep it. **Do not generate the walk cycle** (owner, 2026-10-13: the owner will make it later; the API attempts got the arms and legs wrong).
 - **Chapter I's audio starts with 4.14 s of added silence** (owner, 2026-10-14: a 5 s hold in the theatre seat before "CHAPTER I"; `lead_silence` in ch01_words.json, all times shifted). If `tools/narration.py`/`forced_align.py` is ever rerun for Chapter I, add the silence and the shift again (original audio: `ffmpeg -ss 4.14`).
@@ -62,15 +61,14 @@ Updated: 2026-10-15 (session 4: Chapters IV-VI and VIII-XII art, the White Rabbi
 | XII Alice's Evidence | CHAPTER_12_ASSETS.md | ✓ | `evidence.js`: `evidence`, `waking` (court and riverbank sets) |
 
 ## Open decisions for the owner
-- **Structures and backgrounds (owner, 2026-10-15: "go with your recommendations")**: place by place, reading the book and using Tenniel's plate where there is one, showing the owner the first pictures, then re-directing that place's camera. Order: the court, the croquet-ground, the tea party, the seashore, the wood and mushroom (all done 2026-10-15), then the ~30 thought vignettes and small props.
-- The Tenniel frontispiece was found 2026-10-15 on Project Gutenberg: ebook 114 (*The Tenniel Illustrations*), `https://www.gutenberg.org/files/114/114-h/images/alice01a.gif` (all 42 plates are there as `aliceNNa.gif`, small). Ebook 28885 is Arthur Rackham's 1907 edition, not Tenniel: don't use it. commons.wikimedia.org stays blocked.
+- None open. Decided this session (2026-10-15): structures and backgrounds place by place with the owner shown the first pictures (done); the Chapter I tailpiece on the end card under the last line (done); Alice walks round the glass table, the table stays put (done).
+- The Tenniel plates are all on Project Gutenberg ebook 114 (*The Tenniel Illustrations*), `https://www.gutenberg.org/files/114/114-h/images/aliceNNa.gif` (01 = the trial frontispiece, kept as `source/plates/tenniel_frontispiece_trial_gutenberg.png`; small images). Ebook 28885 is Arthur Rackham's 1907 edition, not Tenniel: don't use it. commons.wikimedia.org stays blocked.
 
 ## Next steps, in order
-1. **The master list is complete and every chapter's camera is hand-directed (2026-10-15).** A full play-through was done 2026-10-15 (fixes above). Next: the owner's patch notes; later (owner's decision) the walk cycle, low-end hardware test, code signing, high-resolution Tenniel scans. Generate by API (see "Generating art directly"), show the owner the first pictures; or drop in art the owner sends (see "When art arrives").
-2. **Re-direct each chapter's camera as its sets arrive** (Alice in frame every 10–15 s; `tools/frame_report.mjs`, `tools/shot_check.mjs`). Hand-directed: III and VI-XII (the others had no long gaps).
-3. Work through the owner's patch notes as they come.
-4. Regeneration list (owner: "later"): `alice3_wonder` (should look down at the tail), optional closer `alice3_ring` (from behind) and `alice3_bow` (facing right, taking the thimble).
-5. Later (owner's decision): low-end hardware test, code signing, high-resolution Tenniel scans.
+1. **Work through the owner's patch notes** as they come (the first, 2026-10-15: Alice walking through the glass table, fixed). For each: find the moment (`node tools/chapter_shots.mjs URL OUT chapter t1,t2`), fix, check with screenshots, `frame_report.mjs` and `jerk_report.mjs` for that chapter, run the smoke test, commit, push, republish, and tell the owner briefly.
+2. Keep Alice in the picture at least every 10–15 s when anything moves (`tools/frame_report.mjs`; compose new shots with `tools/shot_check.mjs` before trying them).
+3. Regeneration list (owner: "later"): `alice3_wonder` (should look down at the tail), optional closer `alice3_ring` (from behind) and `alice3_bow` (facing right, taking the thimble).
+4. Later (owner's decision): the walk cycle (the owner makes it), low-end hardware test, code signing, high-resolution Tenniel scans.
 
 ## How a chapter is done (the owner's process)
 1. Read the chapter (`source/text/chNN.txt`) and its Tenniel plates (Victorian Web `…/tenniel/alice/N.M.html`; download the `.jpg` to look).
@@ -104,7 +102,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 
 ## Where things are
 - **Repo**: `jjumparound-qc101/Alice1`, branch `claude/literary-game-experience-1de414`. Commit and push there. No PR has been asked for.
-- **Playable web link** (private artifact, updated on each milestone): https://claude.ai/artifact/Run3pVwccFBgcP6AHgktXj. To republish: `npx vite build --base ./ --outDir <scratch>/dist`, strip `<!doctype>/<html>/<head>/<body>/<meta>` from `dist/index.html` into a page file, publish it with `root` = dist and the changed files in `files` (new hashed JS bundle, any new art/audio); remove the old hashed bundle with `null`.
+- **Playable web link** (private artifact, updated on each milestone): https://claude.ai/artifact/Run3pVwccFBgcP6AHgktXj. To republish: `npx vite build --base ./ --outDir <scratch>/dist`, strip `<!doctype>/<html>/<head>/<body>/<meta>` from `dist/index.html` into a page file, publish it with `root` = dist and the changed files in `files` (new hashed JS bundle, any new art/audio); remove the old hashed bundle with `null`. Last published: version 91 (JS `assets/index-x9h4b6At.js`, CSS `assets/index-DOQYxkrI.css`). The publish refuses to touch a published file this session hasn't read or published (e.g. an old CSS bundle): leave such files out of `files` rather than setting them to `null`. Run the smoke test (`node tools/smoke.mjs URL`, ~15 min, in the background) before each publish.
 - **Windows build**: every push runs `.github/workflows/desktop.yml`; the owner downloads "Alice-windows-x64" from the latest Actions run (includes `steam_appid.txt` = 480 for Steam testing).
 - **Art to generate**: `docs/ASSETS_MASTER.md`. **Why each asset**: `docs/CHAPTER_NN_ASSETS.md`. **Decisions**: `docs/AMENDMENTS.md` (newest first). **Colours**: `docs/COLOR.md`. **Asset sources and AI disclosure**: `PROVENANCE.md`.
 
@@ -123,12 +121,12 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 | File | What |
 |---|---|
 | `src/main.js` | Book engine: loads shared art, the cast of puppets (`cast`), opens a chapter (builds its sets on first open; points narration, text, timeline and end card at it), picks the active scene by narration time, scene turns (`paper`/`dark`), Watch/Explore, saves the place per chapter, contents menu, text layouts, speed, chapter end |
-| `src/chapters.js` | The twelve chapters: `NARRATED`, `STAGED`, `TINTS` (colour words in poems and songs) |
+| `src/chapters.js` | The twelve chapters: `NARRATED`, `STAGED`, `TINTS` (colour words in poems and songs), `TAILPIECES` (a picture on a chapter's end card under its last line; Chapter I's watch) |
 | `src/scenes/*.js` | One file per chapter (see the table). A scene: `start(cue)`, optional `parts(cue)` (named marks for the contents/timeline/Shift+arrows), `turn`, and `build()` → `{ T, bg, fog, bounds, hotspots, camera(t), actors(t), update?(t, cast) }`. `placeholder.js`: the title page |
-| `src/sets/hall.js` | The hall set, shared by Chapters I, II, III, VII |
-| `src/sets/croquet.js` | The Queen's garden: rose-tree, flower-pot, croquet-ground (Chapters VIII, IX) |
-| `src/sets/seashore.js` | The seashore: sand, sea, the Mock Turtle's rock and ledge (Chapters IX, X) |
-| `src/sets/court.js` | The court: throne, Knave, tarts, jury-box and jurors, witness stand, crowds, door (Chapters XI, XII) |
+| `src/sets/hall.js` | The hall set, shared by Chapters I, II, III, VII (a one-sided front wall facing in). Alice's walks round the glass table: `routeAround()`/`detour()` in `scenes/hall.js` |
+| `src/sets/croquet.js` | The Queen's garden: hedge-wall with fountain (`gardenBehind()`, also VII's garden), lawn, rose-tree, flower-pot, croquet-ground (Chapters VII-IX) |
+| `src/sets/seashore.js` | The seashore: sand, sea, surf, the far sea at its horizon, the Mock Turtle's rock and ledge (`LEDGE`), the coast along both sides (Chapters IX, X) |
+| `src/sets/court.js` | The court: walls, floor, ceiling, throne on its dais, tarts, jury-box and jurors (front piece before them), witness-box, crowds, door; `SEAT` (Alice's bench) (Chapters XI, XII) |
 | `src/crowd.js` | Scene-only puppets ("extras": processions, crowds), posed in a scene's `update(t, cast, camera)` |
 | `src/props.js` … `props12.js` | Placeholder art drawn in code, per chapter (props.js = Chapter I and shared helpers: `vignette`, `shape`, `line`, `cat`, `SPOT` colours) |
 | `src/puppet.js` | Paper-cutout puppets: poses swapped by name; `x z y scale tilt dir`, walking by distance (`walk_a`/`walk_b`), `idle`, `float` (swimmers); `handPoint()` and `carry(obj, puppet)` for held props |
@@ -142,6 +140,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 | `electron/` | Desktop wrapper (Steam via steamworks.js) |
 | `godot/` | Gate A comparison only; not maintained |
 
+**Tools added 2026-10-15**: `court_art.py`, `croquet_art.py`, `tea_art.py`, `seashore_art.py`, `wood_art.py`, `vignettes_art.py` (process each place's AI drawings; see their headers), `shot_check.mjs` (where figures land on screen for one camera key). `outdoors(group, ai, { ground, far })` in `scenes/rabbit.js` lays the meadow (or the garden lawn) under every outdoor scene.
 **Tools**: `bank_art.py` (riverbank ground), `ch9_art.py` (Duchess, Mock Turtle, Gryphon), `gen_image.py` (OpenAI images), `frame_report.mjs` (Alice out of the picture), `white_rabbit.py` (the Rabbit white, pink eyes), `jar_colour.py`, `walls.py` (walls, floors, ceilings), `ch5_art.py`, `ch6_art.py`, `forced_align.py` (re-times every chapter's words against the narration with a wav2vec2 model and marks words the readers leave out, `"x": 1`, shown faint and explained under Contents → "Why are some words faint?"; model files from huggingface.co/Xenova/wav2vec2-base-960h in `$W2V_DIR`; run it after `narration.py`), `ch1_art.py`, `ch2_art.py` (process those chapters' AI drawings), `mobile_shots.mjs` (phone and tablet screenshots), `explore_edges.mjs` (every explorable scene at the edges of its walkable area, looking to the limits of the 150° arc: run it after changing a set), `narration.py` (prepare a chapter's narration: text, alignment, trimmed audio), `transcribe.py`, `align.py`, `assets_master.py`, `whitecut.py`, `cutout.py` (Tenniel scans, spot colour), `compose_poses.py`, `hall_props.py`, `shaft_strip.py`, `smoke.mjs` (all chapters; fails on console errors), `chapter_shots.mjs` (screenshots of one chapter), `walk_report.mjs` (Alice's steps per second; keep under ~4), `electron_smoke.mjs`.
 
 ## Memory and reloads (owner, 2026-10-14: "the story sends me back to the menu")
@@ -149,7 +148,7 @@ Works on Windows, with VS Code and GitHub; not a programmer. Prefers brief, kind
 - All the art together is ~650 MB on the graphics card; keep new drawings at the sizes the tools save (600-1200 px wide).
 
 ## Camera and motion (owner, 2026-10-14: "simple and smooth")
-- **Stopgap `withAlice`** (Alice eased into the picture every ~12 s) now covers III, VII, VIII, XI, XII. Hand-direct those cameras when their sets are redone (the structures and backgrounds pass).
+- **Every chapter's camera is hand-directed** (2026-10-15). `withAlice` (Alice eased into the picture every ~12 s) stays in track.js but no scene uses it; prefer adding a shot with Alice in it. In XII, where she is a giant in the middle of the court, moves to and from close shots are cuts (dur 0) so the camera never passes through her.
 - **Calm moves**: `cameraTrack` lengthens any move quicker than 2.2 s, turning faster than 22°/s or travelling faster than 1.6 m/s (centred on the written time). Mark a key `exact: true` when the owner has timed it (the Chapter I opening).
 - **Steady clock**: the picture follows a clock that runs with the frames and is pulled gently to the narration (main.js), so uneven narration timing on some browsers doesn't make motion stutter.
 - **Keep Alice in frame** turns are eased (about 0.6 s), not snapped.
@@ -174,6 +173,7 @@ A wrong count throws "cue word not found" when the chapter opens; the scene's ca
 - Python tools: a scratch venv with `pillow scipy numpy` (`faster-whisper` for transcription; already done for every chapter, transcripts in `source/audio/`).
 
 ## Environment quirks (cloud container)
+- **The Vite dev server stops** now and then (the tools then fail with ERR_CONNECTION_REFUSED): restart it with `(nohup npx vite --port 5173 > <scratch>/vite.log 2>&1 &)`. Tools that page through a whole chapter crash if a source file changes mid-run (Vite reloads the page): rerun them after edits. Playwright scripts import `playwright-core` and must sit inside the repo (e.g. `tools/`) to find it.
 - **Use the right environment.** On 2026-10-13 a session started in the owner's new environment "GPT and ElevenLabs", which allowed only the OpenAI and ElevenLabs APIs: victorianweb.org, pypi.org and registry.npmjs.org were refused, so plates couldn't be fetched, scipy couldn't be installed and the game couldn't run (no screenshots, no web link update). Earlier sessions ran in "Default" (trusted network). The owner was asked to give the GPT environment the same network access (see the list in the session's reply), or to start sessions in an environment that has both.
 - **pip and npm go through the proxy explicitly**: pypi.org and registry.npmjs.org are on the container's no-proxy list but don't resolve directly. Use `NO_PROXY=localhost,127.0.0.1 no_proxy=localhost,127.0.0.1 pip install --break-system-packages scipy` and `ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm ci --ignore-scripts --proxy "$HTTPS_PROXY" --https-proxy "$HTTPS_PROXY" --noproxy localhost` (2026-10-14; the GPT and ElevenLabs environment now allows victorianweb.org and package managers).
 - **OpenAI API**: the key is in the environment (`OPENAI_API_KEY`); api.openai.com is allowed. Requests must stream (the proxy cuts any request silent for ~30 s).
@@ -182,9 +182,8 @@ A wrong count throws "cue word not found" when the chapter opens; the scene's ca
 - Files sent to the owner directly are limited to 30 MB; big builds go through GitHub Actions.
 
 ## Known gaps (across chapters)
-- Almost every character and set is a placeholder; the rough-cut notes list each chapter's.
+- The art is all AI now; a few small props are still code drawings (see `src/propsN.js`).
 - The walk is two matching steps from one drawing (`source/ai/alice_walk_pair.webp`, 2026-10-13); a four-frame cycle (#43) would be smoother but is optional.
-- Giant Alice (Chapters II, IV) is a scaled standing/sitting figure until the giant poses arrive.
 - At tiny scale the hall floor's cracks look very large.
 - Chapter I leftovers from Notes 1.0: the leaf heap (note 4), the garden behind the little door (note 8), the Rabbit's hop (note 6) wait on their art.
 - The flying pack, the dream figures and the procession are extras that slide; drawn poses will improve them.
