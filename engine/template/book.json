@@ -1,0 +1,9 @@
+{
+  "title": "{{Book Title}}",
+  "text": "source/text/pg{{gutenberg number}}_full.txt",
+  "chapters": ["I", "II", "III"],
+  "heading": "\nCHAPTER {roman}.",
+  "end": "*** END OF THE PROJECT GUTENBERG",
+  "heading_paragraphs": 1,
+  "typeset": { "elisions": ["em", "tis", "twas"] }
+}
