@@ -20,7 +20,7 @@ const MU = { x: 0, z: 0, ...MUSH };
 // An engraved cylinder's shading as a matcap (x across the tube as seen, y along it).
 function neckShade() {
   const { c, g } = canvas(256, 256);
-  g.fillStyle = '#f3eee2'; g.fillRect(0, 0, 256, 256);
+  g.fillStyle = '#eee7da'; g.fillRect(0, 0, 256, 256);   // the paper of her head drawing
   g.strokeStyle = INK;
   for (let x = 2; x < 256; x += 3) {
     const u = (x - 128) / 128, edge = Math.abs(u) + (u > 0 ? 0.12 : 0);   // a little heavier on the right
@@ -181,15 +181,38 @@ export const treetopsScene = {
     // The neck: a paper tube with an inked outline, from below the leaves to her head, shaded like an engraved
     // cylinder (a matcap: fine hatching along its length, closer towards its edges, a little heavier on the right),
     // so it reads as a neck from any angle rather than a white post (play-through, 2026-10-15).
-    const R = 0.034; // the neck's radius, matched to the neck in her head drawing
+    // Her head (AI, 2026-10-15): head and hair, surprised; the drawn neck's cut edge is at 79% of the drawing's
+    // height (21% up from its foot), 195 px of 685 wide, centred at 39.3% of its width. Above the cut the drawn
+    // neck fades out (tools/ch5_art.py), and the tube runs up behind it, as wide as the drawn neck, flattened
+    // against the drawing so it never shows in front of it: the two join without a seam (owner, 2026-10-15).
+    const HD = ai['ch5/alice5_head'], HEAD_H = 0.46, HEAD_W = HEAD_H * HD.aspect, HEAD_TURN = 0.2;
+    const NECK_U = 0.393, NECK_CUT = 0.21;
+    const R = HEAD_W * (195 / 685) / 2 / 1.085; // half the drawn neck's width, less the ink outline (0.046 m)
     const paperMat = new THREE.MeshMatcapMaterial({ matcap: texture(neckShade()) }), inkMat = new THREE.MeshBasicMaterial({ color: INK, side: THREE.BackSide });
     const neck = new THREE.Mesh(new THREE.BufferGeometry(), paperMat), outline = new THREE.Mesh(new THREE.BufferGeometry(), inkMat);
     group.add(neck, outline);
-    // Her head (AI, 2026-10-15): head and hair, surprised, with the top of the neck ending at 79% of the drawing's
-    // height, the neck's centre at 39% of its width; the tube of the neck joins it there.
-    const HD = ai['ch5/alice5_head'], HEAD_H = 0.46, HEAD_W = HEAD_H * HD.aspect;
-    const head = new THREE.Mesh(new THREE.PlaneGeometry(HEAD_W, HEAD_H), new THREE.MeshBasicMaterial({ map: HD.tex, transparent: true, alphaTest: 0.5, side: THREE.DoubleSide }));
+    const head = new THREE.Mesh(new THREE.PlaneGeometry(HEAD_W, HEAD_H), new THREE.MeshBasicMaterial({ map: HD.tex, transparent: true, alphaTest: 0.02, side: THREE.DoubleSide }));
+    head.rotation.y = HEAD_TURN;
     group.add(head);
+    const FACING = new THREE.Vector3(Math.sin(HEAD_TURN), 0, Math.cos(HEAD_TURN)); // the drawing's front
+    const SEGS = 48, SIDES = 12;
+    // Squash the tube's top towards the drawing's plane (depth only, so it looks the same from the front;
+    // its normals stay round, so the shading does too): flat from the cut up, round again 0.1 m below.
+    function flatten(geo, curve, cutY) {
+      const p = geo.attributes.position, c = new THREE.Vector3(), v = new THREE.Vector3();
+      for (let i = 0; i <= SEGS; i++) {
+        curve.getPointAt(i / SEGS, c);
+        const s = lerp(1, 0.25, smooth((c.y - cutY + 0.1) / 0.1));
+        if (s === 1) continue;
+        for (let j = 0; j <= SIDES; j++) {
+          const k = i * (SIDES + 1) + j;
+          v.fromBufferAttribute(p, k).sub(c);
+          v.addScaledVector(FACING, v.dot(FACING) * (s - 1)).add(c);
+          p.setXYZ(k, v.x, v.y, v.z);
+        }
+      }
+      p.needsUpdate = true;
+    }
 
     // Where her head is: rising, swaying, diving in a zigzag, jerking back, crouching, bobbing.
     function headAt(t) {
@@ -205,18 +228,22 @@ export const treetopsScene = {
       nestCard.visible = cast.pigeon.pose !== 'nest'; // the nesting drawing brings its own nest
       const h = headAt(t);
       const zig = smooth((t - T.serpent + 1) / 6) * (1 - smooth((t - T.hiss) / 0.5)) + 0.6 * smooth((t - T.crouched) / 3);
+      // The drawing's cut edge sits at h.y - 0.08; the neck's centre there (N), on the drawing's plane.
+      head.position.set(h.x + (0.5 - NECK_U) * HEAD_W, h.y - 0.08 + HEAD_H / 2 - NECK_CUT * HEAD_H, h.z + 0.01);
+      const N = new THREE.Vector3((NECK_U - 0.5) * HEAD_W, 0, 0).applyAxisAngle(THREE.Object3D.DEFAULT_UP, HEAD_TURN);
+      N.add(head.position).setY(h.y - 0.08);
+      const top = N.clone().addScaledVector(FACING, -0.016); // just behind the drawing
       const pts = [new THREE.Vector3(0, -0.3, 0)];
       for (let i = 1; i <= 6; i++) {
         const k = i / 7;
-        pts.push(new THREE.Vector3(lerp(0, h.x, k) + Math.sin(i * 2.1) * 0.25 * zig, lerp(-0.3, h.y - 0.05, k), lerp(0, h.z, k) + Math.cos(i * 1.7) * 0.15 * zig));
+        pts.push(new THREE.Vector3(lerp(0, top.x, k) + Math.sin(i * 2.1) * 0.25 * zig, lerp(-0.3, top.y - 0.12, k), lerp(0, top.z, k) + Math.cos(i * 1.7) * 0.15 * zig));
       }
-      pts.push(new THREE.Vector3(h.x, h.y - 0.05, h.z - 0.005)); // its open top tucked up behind the drawing's neck
+      pts.push(top.clone().setY(top.y - 0.05), top.clone().setY(top.y + 0.045)); // straight up into the drawn neck, its open top hidden behind it
       const curve = new THREE.CatmullRomCurve3(pts);
       neck.geometry.dispose(); outline.geometry.dispose();
-      neck.geometry = new THREE.TubeGeometry(curve, 48, R, 10, false);
-      outline.geometry = new THREE.TubeGeometry(curve, 48, R * 1.18, 10, false);
-      head.position.set(h.x + (0.5 - 0.39) * HEAD_W, h.y - 0.08 + HEAD_H / 2 - 0.21 * HEAD_H, h.z + 0.01); // her neck in the drawing meets the tube's top (h.y - 0.1)
-      head.rotation.y = 0.2;
+      neck.geometry = new THREE.TubeGeometry(curve, SEGS, R, SIDES, false);
+      outline.geometry = new THREE.TubeGeometry(curve, SEGS, R * 1.085, SIDES, false);
+      flatten(neck.geometry, curve, N.y); flatten(outline.geometry, curve, N.y);
       // The shaking leaves where her hands are.
       leaves.position.y = t >= T.hands && t < T.hands + 8 ? Math.sin(t * 25) * 0.003 : 0;
       think(t, { x: h.x - 0.35, y: h.y + 0.15, z: h.z }, 0.35);

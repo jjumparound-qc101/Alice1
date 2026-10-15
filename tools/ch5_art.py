@@ -8,6 +8,10 @@
 - caterpillar_speak, _rear, _yawn, _crawl (2026-10-14): drawn without the hookah, coloured blue all over;
   hookah: the hookah alone, uncoloured.
 
+- alice5_head: her head on the long neck (2026-10-15). The bottom of the drawn neck fades out above its
+  cut edge (NECK_FADE), so the scene's tube of a neck shows through and the two join without a seam
+  (owner's patch note, 2026-10-15).
+
 Usage: python3 tools/ch5_art.py   -> public/art/ai/ch5/*.webp
 Requires Pillow, NumPy and SciPy.
 """
@@ -28,6 +32,12 @@ KEEP = [(0, 0), (1024, 0), (1024, 955), (925, 955), (905, 975), (735, 975), (700
 # His body and arms (the hookah to the right of it stays uncoloured).
 BODY = [(330, 120), (440, 40), (560, 120), (620, 330), (690, 560), (700, 760), (690, 960), (640, 1060),
         (420, 1095), (260, 1075), (170, 980), (160, 820), (250, 600), (330, 400)]
+# alice5_head, in the saved drawing's pixels (685x900): the drawn neck between her hair, down to its cut
+# edge at y 713 (x 170-368: 39.3% of the width is its centre, NECK_U in scenes/caterpillar.js). Inside
+# it the drawing fades out from y 655 to the cut, ink line and all; the hair either side stays.
+NECK_COLUMN = [(200, 600), (200, 700), (170, 712), (168, 722), (370, 722), (368, 712), (357, 680), (330, 647),
+               (313, 613), (308, 600)]
+NECK_FADE = (655, 713)
 
 
 def mask(poly, size, blur=2):
@@ -75,6 +85,13 @@ def main():
         print(f"{n}: px {cut.height} aspect {cut.width / cut.height:.3f}")
         img = Image.fromarray(a.astype(np.uint8), "RGBA")
         img.thumbnail((900, 900))
+        if n == "alice5_head":
+            b = np.asarray(img, np.float32).copy()
+            y0, y1 = NECK_FADE
+            k = np.clip((np.arange(b.shape[0], dtype=np.float32) - y0) / (y1 - y0), 0, 1)
+            fade = (k * k * (3 - 2 * k))[:, None]
+            b[..., 3] *= 1 - mask(NECK_COLUMN, img.size, 3) * fade
+            img = Image.fromarray(b.astype(np.uint8), "RGBA")
         img.save(f"{OUT}/{n}.webp", quality=90, method=6)
 
 
