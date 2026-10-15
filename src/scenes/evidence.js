@@ -12,7 +12,6 @@ import { crowdCard } from '../cards.js';
 import { paperFlat, buildStage } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { card, cardBack, SOLDIERS, COURTIERS, CHILDREN, GUESTS, OFFICERS } from '../props8.js';
-import { verses, noteBook, inkstand, deadLeaf, goldfishVignette, countryVignette, grownAliceVignette } from '../props12.js';
 import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, JURY, SEAT, BILL } from '../sets/court.js';
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
@@ -48,10 +47,13 @@ export const evidence = {
     const { jury, jurors } = buildCourt({ group, ai });
     const BG = ai['ch12/bill_gape'], billGape = paperFlat(BG.tex, 0.14 * BG.aspect, 0.14); // gazing up into the roof (AI, 2026-10-14)
     billGape.position.copy(jurors[BILL].home); billGape.rotation.y = JURY.turn; billGape.visible = false; group.add(billGape);
-    const think = thoughts(group, [{ t0: T.goldfish - 1, t1: T.goldfish + 12, art: goldfishVignette() }]);
-    const note = paperFlat(texture(noteBook()), 0.05, 0.0375, { anchor: 'center' });
-    const paper = paperFlat(texture(verses()), 0.05, 0.065, { anchor: 'center' });
-    const ink = paperFlat(texture(inkstand()), 0.05, 0.043, { anchor: 'center' });
+    const think = thoughts(group, [{ t0: T.goldfish - 1, t1: T.goldfish + 12, art: ai['vignettes/goldfish'].tex }]);
+    // The King's note-book, the paper of verses, the inkstand (AI, one drawing split in three: tools/vignettes_art.py).
+    const paperArt = (k, w) => paperFlat(ai[`props/court_paper_${k}`].tex, w, w / ai[`props/court_paper_${k}`].aspect, { anchor: 'center' });
+    const note = paperArt(1, 0.05), paper = paperArt(2, 0.05), ink = paperArt(3, 0.05);
+    // The jury-box tipped over (AI), in place of the box once it has gone over.
+    const JT = ai['props/jury_box_tipped'], boxTipped = paperFlat(JT.tex, 0.8, 0.8 / JT.aspect);
+    boxTipped.position.set(JURY.x + 0.08, 0, JURY.z + 0.12); boxTipped.rotation.y = JURY.turn; boxTipped.visible = false; group.add(boxTipped);
     group.add(note, paper, ink);
     const guards = extras(group, [soldier(ai)(SOLDIERS[4]), soldier(ai)(SOLDIERS[5]), ...OFFICERS.map(soldier(ai))]);
 
@@ -127,6 +129,7 @@ export const evidence = {
       // The jury-box tips over with the edge of her skirt, and is set up again.
       const tip = smooth((t - T.tipped) / 0.6) * (1 - smooth((t - T.pardon) / 1.5));
       jury.rotation.x = -1.4 * tip;
+      boxTipped.visible = tip > 0.6; jury.visible = !boxTipped.visible;
       jurors.forEach((j, i) => {
         const out = smooth((t - T.tipped) / 1.2), back = smooth((t - backAt(i)) / 1.0);
         const k = out * (1 - back);
@@ -251,11 +254,11 @@ export const waking = {
     const end = cue.end;
     const set = buildStage(group, ai);
     const think = thoughts(group, [
-      { t0: T.bells - 1, t1: T.lastly, art: countryVignette() },
-      { t0: T.lastly + 3, t1: end + 5, art: grownAliceVignette() },
+      { t0: T.bells - 1, t1: T.lastly, art: ai['vignettes/country_sounds'].tex },
+      { t0: T.lastly + 3, t1: end + 5, art: ai['vignettes/grown_alice'].tex },
     ]);
     // Dead leaves fluttering down upon her face.
-    const leaves = [0, 1, 2, 3].map((k) => { const l = paperFlat(texture(deadLeaf(k)), 0.08, 0.053, { anchor: 'center', edge: false }); group.add(l); return l; });
+    const leaves = [0, 1, 2, 3].map((k) => { const D = ai[`props/dead_leaf_${k + 1}`], l = paperFlat(D.tex, 0.07, 0.07 / D.aspect, { anchor: 'center', edge: false }); group.add(l); return l; }); // AI
     // The creatures of the dream, faint, each as the text names it; they fade back into the
     // sounds of the countryside: the teacups into sheep-bells, the Queen into the shepherd boy,
     // the baby and the Gryphon into the farm-yard, the Mock Turtle into the lowing cattle.

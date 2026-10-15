@@ -11,7 +11,7 @@ import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import * as art from '../art.js';
 import { flagstones } from '../props.js';
-import { plainBottle, stick, dinahNurseVignette, bookVignette } from '../props4.js';
+import { plainBottle, stick } from '../props4.js';
 import { thoughts } from '../thoughts.js';
 import { panorama } from '../sets/panorama.js';
 import { carry } from '../puppet.js';
@@ -192,8 +192,8 @@ export const rabbitHouse = {
       return { p, c, i };
     });
     const think = thoughts(group, [
-      { t0: T.dinah - 6, t1: T.dinah + 3, art: dinahNurseVignette() },
-      { t0: T.book - 1, t1: T.book + 11, art: bookVignette() },
+      { t0: T.dinah - 6, t1: T.dinah + 3, art: ai['vignettes/dinah_nurse'].tex },
+      { t0: T.book - 1, t1: T.book + 11, art: ai['vignettes/book'].tex },
     ]);
 
     // --- Alice: maid-sized, then giant, then tiny ---------------------------------

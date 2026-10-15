@@ -106,22 +106,3 @@ export function hatterStand(pose = 'cup') {
   return c;
 }
 
-// --- Thought vignettes ------------------------------------------------------------
-export function refreshmentsVignette() {
-  return vignette('and hand round the refreshments!', (g) => {
-    const tray = ellipse(256, 230, 180, 50); fillPaper(g, tray); outline(g, tray, 4); outline(g, ellipse(256, 230, 150, 38), 1.5);
-    for (let k = 0; k < 7; k++) { const x = 150 + (k % 4) * 66 + (k > 3 ? 33 : 0), y = k > 3 ? 210 : 236; const t = ellipse(x, y, 28, 12); fillPaper(g, t); outline(g, t, 2); const jam = ellipse(x, y - 2, 14, 6); hatch(g, jam, { gap: 2, seed: 2311 + k }); outline(g, jam, 1.5); }
-    line(g, 6, [[80, 260], [110, 240]]); line(g, 6, [[432, 260], [402, 240]]); // hands
-  });
-}
-export function slatesVignette() {
-  return vignette('"stupid things!" on their slates', (g) => {
-    const words = ['stupid things!', 'stupid things!', 'stoopid?', 'stupid thing'];
-    words.forEach((w, k) => {
-      const x = 70 + (k % 2) * 200, y = 90 + Math.floor(k / 2) * 120;
-      const f = rect(x, y, 170, 100); fillPaper(g, f); outline(g, f, 3);
-      const s = rect(x + 10, y + 10, 150, 80); g.fillStyle = INK; g.fill(s);
-      g.fillStyle = PAPER; g.font = FONT(22, true); g.textAlign = 'center'; g.fillText(w, x + 85, y + 58);
-    });
-  });
-}

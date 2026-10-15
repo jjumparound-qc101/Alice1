@@ -10,7 +10,7 @@ import * as THREE from 'three';
 import { crowdCard } from '../cards.js';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
-import { card, cardBack, cardArch, SOLDIERS, COURTIERS, CHILDREN, GUESTS, tulipVignette } from '../props8.js';
+import { card, cardBack, cardArch, SOLDIERS, COURTIERS, CHILDREN, GUESTS } from '../props8.js';
 import { buildCroquet, FOOT, ROSE, POT, CROQ, FTREE } from '../sets/croquet.js';
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
@@ -54,7 +54,7 @@ export const roseTree = {
       timid: at('timid'), tiptoe: at('tiptoe'), scream: at('scream'), end: at('get', 2) - 1,
     };
     const { paint } = buildCroquet({ group, ai });
-    const think = thoughts(group, [{ t0: T.tulip - 1, t1: T.tulip + 7, art: tulipVignette() }]);
+    const think = thoughts(group, [{ t0: T.tulip - 1, t1: T.tulip + 7, art: ai['vignettes/tulips'].tex }]);
     const A = { x: -1.35, z: 0.1 };                      // where Alice stands and watches
     // The three gardeners: where each paints, where each lies flat, and in the pot.
     const G = { two: { x: -2.48, z: -0.6, dir: 1, rank: 2 }, five: { x: -1.95, z: -0.6, dir: -1, rank: 5 }, seven: { x: -2.22, z: -0.52, dir: -1, rank: 7 } };

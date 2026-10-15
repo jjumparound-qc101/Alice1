@@ -8,7 +8,7 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, INK, PAPER } from '../ink.js';
-import { nest, plateMount, chrysalisVignette, eggsVignette } from '../props5.js';
+import { nest, plateMount } from '../props5.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
@@ -62,7 +62,7 @@ export const mushroomTalk = {
     const bit = (k) => paperFlat(ai[`ch5/mushroom_bit_${k}`].tex, 0.024, 0.024 / ai[`ch5/mushroom_bit_${k}`].aspect, { anchor: 'center' }); // AI
     const bitL = bit(1), bitR = bit(2);
     group.add(bitL, bitR);
-    const think = thoughts(group, [{ t0: T.butterfly - 6, t1: T.butterfly + 6, art: chrysalisVignette() }]);
+    const think = thoughts(group, [{ t0: T.butterfly - 6, t1: T.butterfly + 6, art: ai['vignettes/chrysalis'].tex }]);
 
     const SPOT_A = { x: MU.x + 0.1, z: MU.z + 0.09 };
     function alice(t) {
@@ -160,7 +160,7 @@ export const treetopsScene = {
     const sky = paperFlat(tiled(ai.sky.tex, 40 / (14 * ai.sky.aspect)), 40, 14, { edge: false, opaque: true }); sky.position.set(0, -2, -14); group.add(sky);
     const NEST = { x: 0.9, z: -0.7 };
     const nestCard = paperFlat(texture(nest()), 0.34, 0.19); nestCard.position.set(NEST.x, -0.03, NEST.z); group.add(nestCard);
-    const think = thoughts(group, [{ t0: at('egg') - 1, t1: at('egg') + 8, art: eggsVignette() }]);
+    const think = thoughts(group, [{ t0: at('egg') - 1, t1: at('egg') + 8, art: ai['vignettes/eggs'].tex }]);
 
     // The neck: a paper tube with an inked outline, from below the leaves to her head.
     const R = 0.034; // the neck's radius, matched to the neck in her head drawing

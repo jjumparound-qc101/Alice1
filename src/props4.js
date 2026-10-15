@@ -169,20 +169,3 @@ export function caterpillar() {
 }
 export function stick() { const { c, g } = canvas(400, 60); g.strokeStyle = INK; line(g, 10, [[10, 40], [390, 20]]); line(g, 6, [[260, 26], [300, 4]]); return c; }
 
-// --- Thought vignettes ------------------------------------------------------------
-export function dinahNurseVignette() {
-  return vignette('“Miss Alice! Come here directly…”', (g) => {
-    cat(g, 200, 320, 1.6, 881);
-    const cap = new Path2D(); cap.ellipse(168, 140, 34, 14, 0, 0, Math.PI * 2); fillPaper(g, cap); outline(g, cap, 2);
-    const girl = ellipse(370, 210, 30, 36); fillPaper(g, girl); outline(g, girl, 3);
-    const dress = new Path2D(); dress.moveTo(345, 240); dress.lineTo(320, 340); dress.lineTo(420, 340); dress.lineTo(395, 240); dress.closePath(); shape(g, dress, 882);
-  });
-}
-export function bookVignette() {
-  return vignette('a book written about me', (g) => {
-    const book = new Path2D(); book.moveTo(130, 120); book.lineTo(330, 100); book.lineTo(350, 320); book.lineTo(150, 340); book.closePath();
-    fillPaper(g, book); hatch(g, book, { angle: 0.1, gap: 6, seed: 891, alpha: 0.4 }); outline(g, book, 4);
-    g.save(); g.translate(240, 220); g.rotate(-0.1); g.fillStyle = INK; g.textAlign = 'center'; g.font = FONT(40); g.fillText('ALICE', 0, 0); g.restore();
-    g.strokeStyle = INK; line(g, 4, [[380, 300], [440, 180]]); // a pen
-  });
-}

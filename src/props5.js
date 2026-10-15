@@ -59,18 +59,3 @@ export function plateMount(w, h) {
   return c;
 }
 
-// --- Thought vignettes ------------------------------------------------------------
-export function chrysalisVignette() {
-  return vignette('a chrysalis — and then a butterfly', (g) => {
-    line(g, 5, [[60, 90], [460, 110]]);
-    const ch = new Path2D(); ch.moveTo(170, 98); ch.quadraticCurveTo(220, 180, 170, 290); ch.quadraticCurveTo(120, 180, 170, 98); ch.closePath();
-    fillPaper(g, ch); hatch(g, ch, { angle: 0.1, gap: 6, seed: 951 }); outline(g, ch, 3);
-    for (const s of [-1, 1]) for (const [dy, r] of [[-30, 70], [40, 50]]) { const wgt = ellipse(340 + s * 60, 220 + dy, r, r * 0.7, s * 0.4); fillPaper(g, wgt); hatch(g, wgt, { angle: s, gap: 7, seed: 952 + dy, alpha: 0.4 }); outline(g, wgt, 3); }
-    line(g, 4, [[340, 170], [340, 290]]); line(g, 2, [[340, 170], [320, 130]]); line(g, 2, [[340, 170], [360, 130]]);
-  });
-}
-export function eggsVignette() {
-  return vignette('you never tasted an egg!', (g) => {
-    const n = nest(); g.drawImage(n, 76, 120, 360, 200);
-  });
-}

@@ -10,7 +10,6 @@ import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, INK, PAPER } from '../ink.js';
 import { gardenBehind } from '../sets/croquet.js';
-import { dayWatch, ravenVignette, concertVignette, batVignette, treacleVignette } from '../props7.js';
 import { buildHall, TABLE, DOOR, KEY } from '../sets/hall.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
@@ -68,16 +67,16 @@ export const teaParty = {
     const pot = art('teapot', 0.16); pot.position.set(SEATS[2] - 0.02, TBL.h + 0.008, TBL.z + 0.02); group.add(pot);
     // The arm-chair at the end of the table, the same chair as in Alice's drawing sitting in it.
     const chair = art('tea_armchair', 0.45 * ai['ch7/tea_armchair'].aspect); chair.position.set(TBL.x0 - 0.14, 0, TBL.z + 0.08); chair.rotation.y = 0.9; group.add(chair);
-    const watch = paperFlat(texture(dayWatch()), 0.04, 0.045, { anchor: 'center' }); group.add(watch);
+    const W = ai['props/hatter_watch_close'], watch = paperFlat(W.tex, 0.04, 0.04 / W.aspect, { anchor: 'center' }); group.add(watch); // the days of the month, a little butter on it (AI)
     const dA = ai['ch7/dormouse_sleep'], dB = ai['ch7/dormouse_talk']; const dor = paperFlat(dA.tex, 0.11, 0.11 / dA.aspect); const dorTalk = paperFlat(dB.tex, 0.11, 0.11 / dB.aspect); // AI (tools/ch7_art.py) group.add(dor, dorTalk);
     const DT = ai['ch7/dormouse_teapot']; const potDor = paperFlat(DT.tex, 0.19, 0.19 / DT.aspect); group.add(potDor); // the Dormouse in the teapot (AI, after plate 7.3)
     potDor.position.set(SEATS[2] - 0.02, TBL.h + 0.008, TBL.z + 0.02);
     const tree = art('tree_door', 1.47 * ai['ch7/tree_door'].aspect); tree.position.set(-3.6, 0, 0.2); group.add(tree); // the same tree as in her drawing at its door
     const think = thoughts(group, [
-      { t0: T.raven - 0.5, t1: T.raven + 12, art: ravenVignette() },
-      { t0: T.concert - 1, t1: T.twinkle, art: concertVignette() },
-      { t0: T.twinkle, t1: T.pinch + 2, art: batVignette() },
-      { t0: T.sisters - 1, t1: T.treacle + 10, art: treacleVignette() },
+      { t0: T.raven - 0.5, t1: T.raven + 12, art: ai['vignettes/raven'].tex },
+      { t0: T.concert - 1, t1: T.twinkle, art: ai['vignettes/concert'].tex },
+      { t0: T.twinkle, t1: T.pinch + 2, art: ai['vignettes/bat'].tex },
+      { t0: T.sisters - 1, t1: T.treacle + 10, art: ai['vignettes/treacle'].tex },
     ]);
 
     // Who sits where: the Hatter, the Dormouse and the March Hare crowded at one corner;

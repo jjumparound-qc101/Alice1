@@ -114,15 +114,6 @@ export function mouseWalk() {
   return c;
 }
 
-// --- Props ------------------------------------------------------------------------
-export function comfitBox() {
-  const { c, g } = canvas(200, 140);
-  const box = new Path2D(); box.ellipse(100, 90, 80, 30, 0, 0, Math.PI * 2); box.rect(20, 60, 160, 30);
-  fillPaper(g, box); hatch(g, box, { angle: Math.PI / 2, gap: 5, seed: 601, alpha: 0.6 }); outline(g, box, 3);
-  const lid = ellipse(100, 60, 80, 28); fillPaper(g, lid); outline(g, lid, 3);
-  for (const [x, y] of [[80, 56], [100, 64], [120, 54], [95, 48]]) { const s = ellipse(x, y, 9, 6); fillPaper(g, s); outline(g, s, 2); }
-  return c;
-}
 export function thimble() {
   const { c, g } = canvas(120, 140);
   const t = new Path2D(); t.moveTo(20, 130); t.lineTo(28, 40); t.quadraticCurveTo(60, 0, 92, 40); t.lineTo(100, 130); t.closePath();
@@ -151,36 +142,3 @@ export function mouseTale() {
   return c;
 }
 
-// --- Thought vignettes ------------------------------------------------------------
-// "the position in which you usually see Shakespeare, in the pictures of him"
-export function shakespeareVignette() {
-  return vignette('as in the pictures of Shakespeare', (g) => {
-    const head = ellipse(256, 170, 62, 80); fillPaper(g, head); outline(g, head, 3);
-    const brow = new Path2D(); brow.ellipse(256, 120, 60, 40, 0, Math.PI, 0); hatch(g, brow, { gap: 4, seed: 611, alpha: 0.3 });
-    const ruff = new Path2D(); ruff.ellipse(256, 270, 110, 34, 0, 0, Math.PI * 2); shape(g, ruff, 612);
-    const coat = new Path2D(); coat.moveTo(150, 290); coat.lineTo(120, 370); coat.lineTo(392, 370); coat.lineTo(362, 290); coat.closePath(); fillPaper(g, coat); hatch(g, coat, { gap: 4, seed: 613 }); outline(g, coat, 3);
-    line(g, 6, [[340, 330], [300, 220], [280, 140]]); // arm up, one finger to the forehead
-    dot(g, 230, 170, 4); dot(g, 282, 170, 4); line(g, 2, [[240, 220], [272, 220]]);
-  });
-}
-// "'A knot!' said Alice … 'Oh, do let me help to undo it!'"
-export function knotVignette() {
-  return vignette('A knot!', (g) => {
-    g.strokeStyle = INK; g.lineWidth = 9; g.lineCap = 'round';
-    g.beginPath(); g.moveTo(40, 300); g.bezierCurveTo(160, 340, 200, 140, 260, 170);
-    g.bezierCurveTo(330, 210, 250, 300, 220, 230); g.bezierCurveTo(200, 170, 320, 120, 380, 200);
-    g.bezierCurveTo(420, 250, 460, 230, 480, 180); g.stroke();
-    g.strokeStyle = PAPER; g.lineWidth = 4; g.stroke();
-  });
-}
-// "she'll eat a little bird as soon as look at it!"
-export function dinahBirdsVignette() {
-  return vignette('Dinah after the birds', (g) => {
-    cat(g, 200, 330, 1.5, 621);
-    for (const [x, y, s] of [[360, 140, 1], [420, 200, 0.7]]) {
-      const b = ellipse(x, y, 30 * s, 20 * s); fillPaper(g, b); outline(g, b, 3);
-      line(g, 3, [[x - 20 * s, y - 5], [x - 50 * s, y - 30 * s], [x - 10 * s, y - 14]]); // a wing
-      dot(g, x + 18 * s, y - 6, 3);
-    }
-  });
-}

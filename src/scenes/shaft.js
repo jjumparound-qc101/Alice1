@@ -25,8 +25,11 @@ export const shaft = {
     const think = thoughts(group, [
       { t0: at('brave') - 1.5, t1: at('true') + 1, art: ai['vignettes/stairs'].tex },          // "How brave they'll all think me at home!"
       { t0: at('thousand') - 1.5, t1: at('longitude', 2) + 2, art: ai['vignettes/globe'].tex }, // "four thousand miles down … Latitude or Longitude"
-      { t0: T.dinah - 0.5, t1: T.cats - 0.4, art: ai['vignettes/dinah'].tex },     // AI drawings (tools/ch1_art.py)
+      { t0: at('downward') - 1, t1: at('somewhere', 1, at('downward')) + 1.5, art: ai['vignettes/antipodes'].tex }, // "the people that walk with their heads downward" (2026-10-15)
+      { t0: T.dinah - 0.5, t1: at('wish') - 0.3, art: ai['vignettes/dinah'].tex },     // AI drawings (tools/ch1_art.py)
+      { t0: at('wish') - 0.3, t1: T.cats - 0.4, art: ai['vignettes/dinah_down'].tex }, // "I wish you were down here with me!" (2026-10-15)
       { t0: T.cats - 0.4, t1: T.batsEatCats + 2, art: ai['vignettes/bats'].tex },
+      { t0: at('dream') - 1, t1: T.thump - 0.3, art: ai['vignettes/dream'].tex },      // "walking hand in hand with Dinah" (2026-10-15)
     ]);
 
     // Back wall: the shelves, maps and cupboards from the AI master drawings.

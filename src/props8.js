@@ -254,16 +254,3 @@ export const GUESTS = [{ suit: 'clubs', rank: 'king' }, { suit: 'clubs', rank: '
   { suit: 'spades', rank: 'king' }, { suit: 'spades', rank: 'queen' }, { suit: 'spades', rank: 'knave' }];
 export const OFFICERS = [{ suit: 'spades', rank: 3 }, { suit: 'spades', rank: 4 }];   // "the officers of the court" (Chapter XI)
 
-// --- Thought vignettes ------------------------------------------------------------
-// "it was for bringing the cook tulip-roots instead of onions"
-export function tulipVignette() {
-  return vignette('tulip-roots instead of onions', (g) => {
-    const basket = new Path2D(); basket.moveTo(130, 230); basket.lineTo(160, 330); basket.lineTo(350, 330); basket.lineTo(380, 230); basket.closePath(); fillPaper(g, basket); hatch(g, basket, { angle: 0.8, gap: 6, seed: 1731 }); hatch(g, basket, { angle: -0.8, gap: 6, seed: 1732 }); outline(g, basket, 3);
-    for (const [x, y] of [[190, 210], [250, 200], [310, 212]]) {
-      const bulb = ellipse(x, y, 30, 26); fillPaper(g, bulb); shadeEdge(g, bulb, { size: 40, dx: 0.2, dy: 0.2, angle: 0.7, gap: 4, seed: 1733 + x }); outline(g, bulb, 3);
-      for (let k = -2; k <= 2; k++) line(g, 1.5, [[x + k * 6, y + 24], [x + k * 9, y + 46]]); // roots
-      line(g, 3, [[x, y - 26], [x - 4, y - 70]]);
-    }
-    g.font = FONT(26, true); g.textAlign = 'center'; g.fillStyle = INK; g.fillText('not onions!', 256, 120);
-  });
-}

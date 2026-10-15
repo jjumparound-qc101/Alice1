@@ -9,7 +9,7 @@ import { crowdCard } from '../cards.js';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER, canvas, INK } from '../ink.js';
 import { card, OFFICERS } from '../props8.js';
-import { trumpet, scroll, canvasBag, shoe, refreshmentsVignette, slatesVignette } from '../props11.js';
+import { trumpet, scroll, canvasBag, shoe } from '../props11.js';
 import { FOOT } from '../sets/croquet.js';
 import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, TARTS, JURY, WITNESS, DOOR, FRONT, SEAT, BILL } from '../sets/court.js';
 import { drawnPose, extras } from '../crowd.js';
@@ -47,8 +47,8 @@ export const trial = {
     const end = cue.end;
     const { jurors, toWorld } = buildCourt({ group, ai });
     const think = thoughts(group, [
-      { t0: T.tarts + 2, t1: T.tarts + 12, art: refreshmentsVignette() },
-      { t0: T.stupid2 - 1, t1: T.stupid2 + 10, art: slatesVignette() },
+      { t0: T.tarts + 2, t1: T.tarts + 12, art: ai['vignettes/refreshments'].tex },
+      { t0: T.stupid2 - 1, t1: T.stupid2 + 10, art: ai['vignettes/slates'].tex },
     ]);
     // Props: the herald's trumpet and scroll, the squeaky pencil, the Hatter's shoes, the canvas bags, the Dormouse.
     const trump = paperFlat(texture(trumpet()), 0.1, 0.04, { anchor: 'center' });

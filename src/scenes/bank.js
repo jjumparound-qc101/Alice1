@@ -8,7 +8,7 @@ import { paperFlat } from '../stage.js';
 import { texture } from '../ink.js';
 import { buildHall, DOOR } from '../sets/hall.js';
 import { water, tear } from '../props2.js';
-import { comfitBox, thimble, mouseTale, shakespeareVignette, knotVignette, dinahBirdsVignette } from '../props3.js';
+import { mouseTale } from '../props3.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
@@ -82,16 +82,16 @@ export const bank = {
     group.add(course);
 
     // Props: the comfits, the thimble, Alice's tears, and the Mouse's tale.
-    const box = paperFlat(texture(comfitBox()), 0.035, 0.025, { anchor: 'center' });
-    const thim = paperFlat(texture(thimble()), 0.014, 0.016, { anchor: 'center' });
+    const prop = (n, w) => paperFlat(ai[`props/${n}`].tex, w, w / ai[`props/${n}`].aspect, { anchor: 'center' }); // AI (tools/vignettes_art.py)
+    const box = prop('comfits', 0.035), thim = prop('thimble', 0.013);
     const dropTex = texture(tear());
     const drops = Array.from({ length: 6 }, () => { const d = paperFlat(dropTex, 1, 1.5, { anchor: 'center', edge: false }); group.add(d); return d; });
     const tale = paperFlat(texture(mouseTale()), 0.17, 0.34, { anchor: 'center' });
     group.add(box, thim, tale);
     const think = thoughts(group, [
-      { t0: T.finger - 1, t1: T.everybody, art: shakespeareVignette() },
-      { t0: T.knot - 0.3, t1: T.walking - 1, art: knotVignette() },
-      { t0: T.bird - 4, t1: T.sensation + 2, art: dinahBirdsVignette() },
+      { t0: T.finger - 1, t1: T.everybody, art: ai['vignettes/shakespeare'].tex },
+      { t0: T.knot - 0.3, t1: T.walking - 1, art: ai['vignettes/knot'].tex },
+      { t0: T.bird - 4, t1: T.sensation + 2, art: ai['vignettes/dinah_birds'].tex },
     ]);
 
     // --- Where everyone is -------------------------------------------------------

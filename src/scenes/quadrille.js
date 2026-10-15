@@ -6,7 +6,7 @@
 // The Mock Turtle and the Gryphon are Chapter IX's placeholders; vignettes from props10.js.
 import * as THREE from 'three';
 import { PAPER } from '../ink.js';
-import { lobstersSeaVignette, whitingSnailVignette, whitingsVignette, lobsterGlassVignette, owlPantherVignette, soupVignette } from '../props10.js';
+
 import { FOOT } from '../sets/croquet.js';
 import { buildSeashore, ROCK, LEDGE_AT } from '../sets/seashore.js';
 import { thoughts } from '../thoughts.js';
@@ -36,12 +36,12 @@ export const quadrille = {
     const end = cue.end;
     buildSeashore({ group, ai });
     const think = thoughts(group, [
-      { t0: T.lobsters - 0.5, t1: T.capering + 4, art: lobstersSeaVignette() },
-      { t0: T.whiting - 1, t1: T.whiting + 40, art: whitingSnailVignette() },
-      { t0: T.whiting3 + 22, t1: T.interesting2, art: whitingsVignette() },
-      { t0: T.lobster - 1, t1: T.lobster + 14, art: lobsterGlassVignette() },
-      { t0: T.owl - 1.5, t1: T.owl + 18, art: owlPantherVignette() },
-      { t0: T.soup - 1, t1: T.soup + 40, art: soupVignette() },
+      { t0: T.lobsters - 0.5, t1: T.capering + 4, art: ai['vignettes/lobsters_sea'].tex },
+      { t0: T.whiting - 1, t1: T.whiting + 40, art: ai['vignettes/whiting_snail'].tex },
+      { t0: T.whiting3 + 22, t1: T.interesting2, art: ai['vignettes/whitings'].tex },
+      { t0: T.lobster - 1, t1: T.lobster + 14, art: ai['vignettes/lobster_glass'].tex },
+      { t0: T.owl - 1.5, t1: T.owl + 18, art: ai['vignettes/owl_panther'].tex },
+      { t0: T.soup - 1, t1: T.soup + 40, art: ai['vignettes/soup'].tex },
     ]);
     // Where everyone is: as Chapter IX left them, then on the open sand for the dance.
     const ASEAT = { x: LEDGE_AT.x - 0.32, z: ROCK.z + 0.42 }, GSEAT = { x: LEDGE_AT.x - 0.62, z: ROCK.z + 0.25 };

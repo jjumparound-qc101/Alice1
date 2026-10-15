@@ -11,7 +11,7 @@ import { crowdCard } from '../cards.js';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { card, cardArch, GUESTS, COURTIERS, CHILDREN } from '../props8.js';
-import { tempersVignette, pigsFlyVignette, seaSchoolVignette, mastersVignette } from '../props9.js';
+
 import { buildCroquet, FOOT, CROQ, FTREE } from '../sets/croquet.js';
 import { buildSeashore, ROCK, LEDGE_AT } from '../sets/seashore.js';
 import { drawnPose, extras } from '../crowd.js';
@@ -44,8 +44,8 @@ export const duchessWalk = {
     };
     buildCroquet({ group, ai });
     const think = thoughts(group, [
-      { t0: T.pepper - 1, t1: T.startled - 2, art: tempersVignette() },
-      { t0: T.pigs - 0.5, t1: T.pigs + 3, art: pigsFlyVignette() },
+      { t0: T.pepper - 1, t1: T.startled - 2, art: ai['vignettes/tempers'].tex },
+      { t0: T.pigs - 0.5, t1: T.pigs + 3, art: ai['vignettes/pigs_fly'].tex },
     ]);
     // The arches and the players: resting in the shade while the Queen is away; back to the game;
     // taken into custody one by one until only the King, the Queen and Alice are left.
@@ -202,8 +202,8 @@ export const mockTurtleRock = {
     };
     buildSeashore({ group, ai });
     const think = thoughts(group, [
-      { t0: T.school - 0.5, t1: T.dull - 1, art: seaSchoolVignette() },
-      { t0: T.conger - 1, t1: T.crab + 8, art: mastersVignette() },
+      { t0: T.school - 0.5, t1: T.dull - 1, art: ai['vignettes/sea_school'].tex },
+      { t0: T.conger - 1, t1: T.crab + 8, art: ai['vignettes/masters'].tex },
     ]);
     const ASEAT = { x: LEDGE_AT.x - 0.32, z: ROCK.z + 0.42 }, GSEAT = { x: LEDGE_AT.x - 0.62, z: ROCK.z + 0.25 };
     const aliceA = (t) => {
