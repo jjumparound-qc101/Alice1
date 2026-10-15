@@ -365,6 +365,7 @@ async function main() {
     timeline.set(ch.cue.end + 0.9, c.marks);
     const next = CHAPTERS[c.n];
     $('endQuote').textContent = `“${ch.lastSentence.replace(/^[“"]|[”"]$/g, '')}”`;
+    $('endTail').hidden = !c.tailpiece; if (c.tailpiece) $('endTail').src = c.tailpiece; // under the chapter's last line
     $('endTitle').textContent = `Chapter ${c.roman} complete`;
     $('endSub').textContent = c.title;
     const last = ch.scenes[ch.scenes.length - 1];

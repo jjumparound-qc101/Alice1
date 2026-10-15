@@ -27,6 +27,10 @@ button:hover { background: var(--ink); color: var(--paper); }
 #endCard { background: transparent; color: var(--paper); z-index: 4; font-size: 1.4rem; }
 #endCard h2 { font-weight: normal; font-size: clamp(1.6rem, 4vw, 2.4rem); margin: 0.8em 0 0; letter-spacing: 0.03em; }
 #endCard .quote { font-style: italic; max-width: 30em; margin: 0; }
+/* A chapter's tailpiece under its last line (owner, 2026-10-15; Chapter I: the Rabbit's watch), the engraving
+   shown light on the dark card. */
+#endTail { height: clamp(3.5rem, 12vh, 7rem); width: auto; max-width: 70vw; margin: 0.6em 0 0; filter: invert(0.88); opacity: 0.9; }
+#endTail[hidden] { display: none; }
 #endCard button { background: transparent; color: var(--paper); border-color: var(--paper); }
 #endCard button:hover:not(:disabled) { background: var(--paper); color: var(--ink); }
 #endCard button:disabled:hover { background: transparent; color: var(--paper); }
