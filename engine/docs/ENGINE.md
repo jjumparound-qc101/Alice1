@@ -47,6 +47,9 @@ export const BOOK = {
 - A **scene** is `{ id, title, start(cue), parts?(cue), turn?, build({ group, ai, cue, ...extras }) }`; `build` returns `{ T, bg, fog, bounds, hotspots, camera(t), actors(t), update?(t, cast, camera) }`. A chapter without scenes yet uses `placeholder(ch, { note })` from `@engine/scenes/placeholder.js`.
 - Engine modules for scenes: `@engine/track.js` (camera tracks, paths, `withLead`), `@engine/cues.js` (cue words; `cue.start` is the first word's time), `@engine/puppet.js`, `@engine/stage.js` (`paperFlat`, `halo`), `@engine/ink.js` (engraving helpers), `@engine/thoughts.js` (thought vignettes), `@engine/theatre.js` (the theatre opening, below).
 
+## Colour
+How much of the drawings' colour shows is set per scene (Carol 2026-10-15, its docs/COLOR.md): a scene's `build()` may return `colour(t)`, 0 (ink on paper: each drawing's brightness mapped from the engine's ink to its paper) to 1 (as drawn); without it, 1. It applies to every `paperFlat` (and so every puppet); a flat made with `paperFlat(tex, w, h, { keepColour: true })` keeps its colour (fire, candles, a glowing face). Meshes a scene makes with its own materials are not affected. `window.__slice.colour` is the shared value (for checks).
+
 ## The theatre opening
 Every book opens the same way (owner, Alice 2026-10-14; Carol 2026-10-15): from a seat in the stalls of a Victorian theatre (the series' auditorium and row of audience, `art/`), looking at the book's own toy-theatre front with the stage beyond; a hold of about five seconds, then the camera rises up the aisle over the heads and into the first scene as the reading begins.
 1. The book's front: an AI drawing of a toy-theatre proscenium with a blank banner (Alice's and Carol's share one layout; give the generator the last book's `source/ai/proscenium.png` as reference), processed with `engine/tools/proscenium.py` (cuts out the stage opening, letters the title, writes the opening's size to a `.json`).

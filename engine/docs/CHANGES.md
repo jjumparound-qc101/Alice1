@@ -1,5 +1,13 @@
 # Engine changes (newest first)
 
+## 2026-10-15: colour per scene
+- `stage.js`: `COLOUR` (shared), a shader step on every paper flat that maps the drawing to ink on paper by `1 - COLOUR`; `paperFlat(..., { keepColour: true })` for lights. `main.js` sets it each frame from the active scene's `colour(t)` (1 when a scene has none, so Alice, Pride and Prejudice and every scene without it look exactly as before).
+- Checked against: Carol1 (Stave I's title page at 1, 0.5 and 0.1, screenshots; no console errors).
+
+## 2026-10-15: colour cut-outs
+- `tools/whitecut.py --color`: keeps a watercolour drawing's colours (white still becomes paper, the same tint as before). Without the flag nothing changes (checked: identical output).
+- Checked against: Pride and Prejudice (pp1; Elizabeth cut out, smoke test). Alice and the Carol need no update (they don't use the flag).
+
 ## 2026-10-15: older saves
 - `book.storage.upgrade()` (optional): the reader's place from an older save format when the book's current key is empty (Alice's 'alice.place.v1', Chapter I only).
 
