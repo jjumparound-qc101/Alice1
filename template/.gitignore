@@ -1,0 +1,8 @@
+node_modules/
+dist/
+smoke-shots/
+release/
+__pycache__/
+# The LibriVox originals (~175 MB) are downloaded, not committed (see README.md).
+source/audio/*.mp3
+models/
