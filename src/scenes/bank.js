@@ -11,7 +11,7 @@ import { water, tear } from '../props2.js';
 import { mouseTale } from '../props3.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
+import { smooth, lerp, route, cameraTrack } from '../track.js';
 
 const TINY = 0.13;
 const WATER_Y = 0.1;
@@ -243,6 +243,9 @@ export const bank = {
     // --- Camera: at a mouse's eye level -------------------------------------------
     const S = (name) => slot(PARTY[name].deg);
     const cam = (t, dur, pos, look) => ({ t, dur, pos, look });
+    // Hand-directed (2026-10-15): the ring seen past Alice (RING_A), and Alice before the Mouse's tale (TALE_A), keep
+    // her in the picture between the close shots of the speakers.
+    const RING_A = [[0.3, 0.1, -0.05], [-0.12, 0.03, -0.55]], TALE_A = [[0.45, 0.16, 0.25], [-0.12, 0.1, -0.5]];
     const camera = cameraTrack([
       cam(0, 0, [0.75, 0.24, 0.3], [0.22, 0.06, -0.58]),                                              // the party on the bank
       cam(T.sulky - 6, 3, [-0.3, 0.12, -0.3], [0.2, 0.07, -0.66]),                                   // Alice and the sulky Lory
@@ -250,23 +253,28 @@ export const bank = {
       cam(T.ring, 4, [0.13, 0.14, -0.02], [RC.x, 0.06, RC.z]),                                       // in a ring, from behind Alice
       cam(T.ahem, 3, [0.14, 0.08, -0.4], [RC.x, 0.06, RC.z]),                                       // "Ahem!"
       cam(T.ugh - 0.5, 1.5, [0.02, 0.1, -0.4], [S('lory').x, 0.07, S('lory').z]),                    // the Lory shivers
-      cam(T.ugh + 4, 2, [0.14, 0.08, -0.4], [RC.x, 0.06, RC.z]),
+      cam(68.5, 2, ...RING_A),                                                                        // William the Conqueror
+      cam(T.ugh + 4, 2, ...RING_A),
       cam(T.foundWhat - 0.5, 1.5, [0.05, 0.1, -0.4], [S('duck').x, 0.07, S('duck').z]),              // "Found what?"
-      cam(T.foundWhat + 8, 2, [0.14, 0.08, -0.4], [RC.x, 0.06, RC.z]),
+      cam(T.foundWhat + 8, 2, ...RING_A),
       cam(T.wet - 1, 2, [0.1, 0.11, -0.2], [slot(90).x, 0.08, slot(90).z]),                          // "As wet as ever"
       cam(T.rising - 1, 2, [0.08, 0.12, -0.38], [S('dodo').x, 0.1, S('dodo').z]),                    // the Dodo rises
       cam(T.english - 0.5, 1.5, [0.02, 0.1, -0.45], [S('eaglet').x, 0.07, S('eaglet').z]),           // "Speak English!"
+      cam(169.8, 1.5, ...RING_A),                                                                      // "I don't know the meaning of half those long words"
       cam(T.smile + 3, 2, [0.08, 0.12, -0.38], [S('dodo').x, 0.1, S('dodo').z]),
+      cam(190.6, 1.5, ...RING_A),                                                                      // "What is a Caucus-race?"
+      cam(201.6, 1.5, [0.08, 0.12, -0.38], [S('dodo').x, 0.1, S('dodo').z]),                         // "the best way to explain it is to do it"
       cam(T.course - 1, 4, [RC.x + 0.35, 0.42, RC.z + 0.55], [RC.x, 0.0, RC.z]),                     // the race-course, from above
       cam(T.running, 6, [RC.x + 0.55, 0.22, RC.z + 0.45], [RC.x, 0.05, RC.z]),                       // the Caucus-race
       cam(T.over, 3, [DODO_AT.x + 0.3, 0.13, DODO_AT.z + 0.25], [DODO_AT.x, 0.08, DODO_AT.z]),        // crowded round the Dodo
+      cam(246, 2.5, [0.3, 0.2, 0.0], [-0.05, 0.05, -0.55]),                                          // the Dodo thinking, Alice among them
       cam(T.pointing, 3, [ALICE_RACE_END.x + 0.25, 0.14, ALICE_RACE_END.z + 0.3], [ALICE_RACE_END.x - 0.05, 0.08, ALICE_RACE_END.z - 0.05]),
       cam(T.comfits - 1, 2, [ALICE_RACE_END.x + 0.12, 0.11, ALICE_RACE_END.z + 0.2], [ALICE_RACE_END.x, 0.08, ALICE_RACE_END.z]), // the comfits
       cam(T.presented - 2, 3, [ALICE_RACE_END.x + 0.2, 0.11, ALICE_RACE_END.z + 0.22], [ALICE_RACE_END.x - 0.05, 0.09, ALICE_RACE_END.z - 0.03]), // the thimble
       cam(T.eat - 1, 3, [RC.x + 0.35, 0.2, RC.z + 0.55], [RC.x, 0.05, RC.z]),                        // eating the comfits
       cam(T.ringAgain + 1, 3, [0.13, 0.14, -0.02], [RC.x, 0.06, RC.z]),
       cam(T.sad - 1, 2, [0.12, 0.09, -0.3], [RC.x + 0.03, 0.06, RC.z + 0.1]),                         // "a long and a sad tale"
-      cam(T.tale - 1, 2, [RC.x + 0.05, 0.2, RC.z + 0.5], [RC.x + 0.02, 0.2, RC.z + 0.12]),           // the tale, as she pictures it
+      cam(T.tale - 1, 2, ...TALE_A),                                                                   // the tale, as she pictures it
       cam(T.attending - 0.5, 2, [0.12, 0.09, -0.3], [RC.x + 0.03, 0.06, RC.z + 0.1]),
       cam(T.walking, 4, [0.2, 0.16, -0.25], [-0.6, 0.05, -0.85]),                                     // the Mouse walks away
       cam(T.pity - 1, 3, [0.2, 0.11, -0.25], [S('crab').x, 0.04, S('crab').z]),                       // the Crabs
@@ -285,7 +293,7 @@ export const bank = {
         { pos: new THREE.Vector3(RC.x, 0.1, RC.z), title: 'The race-course', text: 'First it marked out a race-course, in a sort of circle, (“the exact shape doesn’t matter,” it said,)' },
         { pos: new THREE.Vector3(POOL.x, 0.2, POOL.z), title: 'The pool of tears', text: 'They were indeed a queer-looking party that assembled on the bank' },
       ],
-      camera: withAlice(camera, alice, [[61, 151], [160, 213], [237, 267], [367, 403]]), update,
+      camera, update,
       actors: (t) => ({ alice: alice(t), mouse: mouse(t), ...Object.fromEntries(Object.entries(crowd).map(([n, f]) => [n, f(t)])) }),
     };
   },
