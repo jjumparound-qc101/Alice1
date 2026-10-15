@@ -64,7 +64,7 @@ export const hall = {
     ]);
 
     // --- Alice -----------------------------------------------------------------
-    const AT_TABLE = { x: TABLE.x - 0.6, z: TABLE.z + 0.2 };
+    const AT_TABLE = { x: TABLE.x - 0.75, z: TABLE.z + 0.35 };   // beside the table, her drawing clear of its top
     const AT_DOOR = { x: DOOR.x - 0.55, z: DOOR.z + 0.45 };
     // At the foot of the table leg nearest the camera (the second of the three, src/sets/hall.js),
     // just in front of it: she tries to climb this leg.
@@ -72,29 +72,52 @@ export const hall = {
     const BY_LEG = { x: LEG_FOOT.x + 0.05, z: LEG_FOOT.z + 0.05 };
     const scaleAt = (t) => lerp(1, 0.2, smooth((t - T.telescope) / 3.6)); // "now only ten inches high"
 
-    // Walks go round the glass table, never through it (owner, 2026-10-14): a leg whose straight
-    // line passes within CLEAR of the table's centre gets an extra waypoint on the near side.
-    const CLEAR = TABLE.r + 0.3;
-    const aroundTable = (pts) => pts.flatMap((p, i) => {
-      if (i === 0) return [p];
-      const [t0, a] = pts[i - 1], [t1, b] = p;
+    // Walks go round the glass table, never through it (owner, 2026-10-14; a wider path, owner 2026-10-15): a leg
+    // whose straight line passes within CLEAR of the table's centre (the table's radius, half the width of her
+    // drawing and a margin) curves round the near side of the table (toward the camera, so she is never seen
+    // through the glass and never looks as if she were in it) on an arc, as one unbroken walk eased at its ends.
+    // Once she is small enough to walk under the glass top she goes straight.
+    const CLEAR = TABLE.r + 0.6;
+    const detour = (a, b) => {
       const dx = b.x - a.x, dz = b.z - a.z, L2 = dx * dx + dz * dz;
-      if (!L2) return [p];
+      if (!L2) return null;
       const k = Math.max(0, Math.min(1, ((TABLE.x - a.x) * dx + (TABLE.z - a.z) * dz) / L2));
-      const cx = a.x + k * dx, cz = a.z + k * dz;
-      if (Math.hypot(cx - TABLE.x, cz - TABLE.z) >= CLEAR || k <= 0.05 || k >= 0.95) return [p];
-      // Round the near side (toward the camera, +z) of the table.
-      const ang = Math.atan2(Math.max(cz - TABLE.z, 0.2), cx - TABLE.x);
-      const w = { x: TABLE.x + Math.cos(ang) * CLEAR, z: TABLE.z + Math.sin(ang) * CLEAR };
-      return [[t0 + (t1 - t0) * k, w], p];
-    });
-    const walk = (t) => route(t, aroundTable([
+      if (Math.hypot(a.x + k * dx - TABLE.x, a.z + k * dz - TABLE.z) >= CLEAR) return null;
+      // From a's bearing to b's bearing round the table, the way that passes its near side (bearing +90°).
+      const A = Math.atan2(a.z - TABLE.z, a.x - TABLE.x), B = Math.atan2(b.z - TABLE.z, b.x - TABLE.x);
+      const TAU = Math.PI * 2, wrap = (v) => ((v % TAU) + TAU) % TAU;
+      const ccw = wrap(B - A), viaNear = wrap(Math.PI / 2 - A) <= ccw;
+      const arc = viaNear ? ccw : ccw - TAU;
+      const n = Math.max(2, Math.ceil(Math.abs(arc) / (Math.PI / 8)));
+      const R = CLEAR / Math.cos(Math.abs(arc) / n / 2);          // chords between the points stay outside CLEAR
+      const pts = [a];
+      for (let i = 0; i <= n; i++) { const g = A + (arc * i) / n; pts.push({ x: TABLE.x + Math.cos(g) * R, z: TABLE.z + Math.sin(g) * R }); }
+      pts.push(b);
+      return pts;
+    };
+    // route(), with any leg that would cross the table walked along its detour instead.
+    const routeAround = (t, points, extra) => {
+      for (let i = 1; i < points.length; i++) {
+        const [t1, b] = points[i];
+        if (t >= t1) continue;
+        const [t0, a] = points[i - 1];
+        const poly = t > t0 && scaleAt(t0) > 0.6 ? detour(a, b) : null;
+        if (!poly) break;
+        const segs = poly.slice(1).map((q, j) => Math.hypot(q.x - poly[j].x, q.z - poly[j].z)), L = segs.reduce((u, v) => u + v, 0);
+        let d = smooth((t - t0) / (t1 - t0)) * L, j = 0;
+        while (j < segs.length - 1 && d > segs[j]) { d -= segs[j]; j++; }
+        const p = poly[j], q = poly[j + 1], f = segs[j] ? d / segs[j] : 0;
+        return { x: lerp(p.x, q.x, f), z: lerp(p.z, q.z, f), moving: true, dir: Math.sign(q.x - p.x) || -1, dist: smooth((t - t0) / (t1 - t0)) * L, ...extra };
+      }
+      return route(t, points, extra);
+    };
+    const walk = (t) => routeAround(t, [
       [start, { x: -5.4, z: 0.6, dir: 1 }],
       [T.doors, { x: -4, z: -2.3 }],          // "doors all round the hall, but they were all locked"
       [T.doors + 4, { x: -2, z: -2.3 }],
       [T.doors + 8, { x: 0.5, z: -2.3 }],
       [T.doors + 12, { x: 2.5, z: -2.3 }],
-      [T.table + 1.5, AT_TABLE],
+      [T.key - 0.5, AT_TABLE],                // round the front of the table, at a walk (owner, 2026-10-15)
       [T.tryKey, AT_TABLE],
       [T.tryKey + 3, { x: -2.5, z: -2.4 }],    // tries the key in the doors
       [T.curtain, { x: AT_DOOR.x - 0.4, z: AT_DOOR.z }],
@@ -106,7 +129,7 @@ export const hall = {
       [T.forgotten + 6.5, BY_LEG],
       [T.box, BY_LEG],
       [T.box + 2.5, { x: TABLE.x - 0.05, z: TABLE.z + 0.45 }],
-    ]), { phase: t * 2.2 });
+    ], { phase: t * 2.2 });
 
     function alice(t) {
       const s = walk(t);
@@ -166,8 +189,10 @@ export const hall = {
       { t: start, dur: 0, pos: [-3.0, 1.3, 3.4], look: [-5.0, 0.8, -0.4] },
       { t: T.lamps - 0.5, dur: 3, pos: [-2.6, 1.25, 3.4], look: [-4.2, 1.5, -1.2] },  // the lamps, and Alice
       { t: T.doors, dur: 3, pos: [-2.4, 1.2, 1.4], look: [-3.0, 0.7, -2.3] },        // along the locked doors, with her               // the locked doors
-      { t: T.doors + 5, dur: 7, pos: [0.2, 1.2, 1.2], look: [0.5, 0.8, -2.6] },
-      { t: T.table - 0.5, dur: 2.5, pos: [1.6, 1.25, 0.7], look: [TABLE.x, 0.85, TABLE.z] },
+      { t: T.doors + 5, dur: 5, pos: [0.2, 1.2, 1.2], look: [0.5, 0.8, -2.6] },
+      // Her walk round the near side of the glass table, whole, from above and in front (owner, 2026-10-15: she
+      // walked through the table; her wider path came too close to the old camera).
+      { t: T.doors + 10.5, dur: 2.5, pos: [0.7, 1.6, 2.9], look: [TABLE.x, 0.2, TABLE.z + 0.2] },
       // The key, the doors, the little door (owner, 2026-10-14: Alice kept whole in the picture). Full-figure
       // shots are about 2.4 m from her, looking at her middle, so she stands clear of the text strip.
       { t: T.key - 1, dur: 2.5, pos: [AT_TABLE.x + 0.8, 1.0, AT_TABLE.z + 2.3], look: [AT_TABLE.x + 0.2, 0.55, AT_TABLE.z] }, // Alice with the golden key, at the glass table
@@ -177,7 +202,7 @@ export const hall = {
       { t: T.knelt, dur: 3, pos: [DOOR.x - 0.02, 0.22, DOOR.z + 0.55], look: [DOOR.x, 0.2, DOOR.z - 0.5] }, // the garden, as she sees it
       { t: T.knelt + 6, dur: 3, pos: [AT_DOOR.x - 0.75, 0.75, AT_DOOR.z + 1.6], look: [DOOR.x - 0.25, 0.35, DOOR.z + 0.1] }, // over her shoulder: Alice kneeling, the garden beyond
       { t: T.waiting - 6, dur: 3, pos: [DOOR.x - 1.2, 1.0, 0.1], look: [DOOR.x - 0.2, 0.5, DOOR.z] },
-      { t: T.waiting, dur: 4, pos: [1.7, 1.2, 0.6], look: [TABLE.x + 0.3, 0.9, TABLE.z] },
+      { t: T.waiting, dur: 3, pos: [0.7, 1.6, 2.9], look: [TABLE.x, 0.2, TABLE.z + 0.2] },        // back round the table
       { t: T.bottle - 1, dur: 2, pos: [1.3, 1.1, -0.2], look: [TABLE.x - 0.2, 0.95, TABLE.z] }, // DRINK ME
       { t: T.bottle + 2, dur: 3, pos: [0.9, 1.0, 0.75], look: [AT_TABLE.x + 0.05, 0.72, AT_TABLE.z] }, // the bottle in her hand
       { t: T.label - 0.8, dur: 1.2, pos: [AT_TABLE.x + 0.3, 1.02, AT_TABLE.z + 0.45], look: [AT_TABLE.x + 0.25, 1.0, AT_TABLE.z] }, // close: "DRINK ME" on the label
