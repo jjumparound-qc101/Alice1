@@ -31,6 +31,15 @@ export function buildSeashore({ group, ai }) {
   const surf = paperFlat(tile(ai, 'ch9/surf', 40 / SURF_W, 1, true), 40, SURF_H, { edge: false, opaque: true });
   surf.position.set(0, 0, SHORE_Z); group.add(surf);
   panorama(group, ai, { x: 16, z0: -16, z1: 20, trees: false });
+  // The sides, for Explore's look arc (play-through, 2026-10-15): the far sea along each side out to the shore, and
+  // beyond the shore the dunes of the sunny bank (its own strip of sea above them), so the coast runs on.
+  const BK = ai['ch9/bank_sunny'], DUNE_H = 1.2;
+  for (const side of [-1, 1]) {
+    const seaLen = SHORE_Z + 16, sea = paperFlat(tile(ai, 'ch9/seashore', seaLen / (HORIZON * SEA.aspect), 1, true), seaLen, HORIZON, { edge: false, opaque: true });
+    sea.rotation.y = -side * Math.PI / 2; sea.position.set(side * 15.9, 0, (SHORE_Z - 16) / 2); group.add(sea);
+    const duneLen = 20 - SHORE_Z, dunes = paperFlat(tile(ai, 'ch9/bank_sunny', duneLen / (DUNE_H * BK.aspect), 1, true), duneLen, DUNE_H, { edge: false });
+    dunes.rotation.y = -side * Math.PI / 2; dunes.position.set(side * 15.9, 0, (SHORE_Z + 20) / 2); group.add(dunes);
+  }
   const R = ai['ch9/rock_ledge'];
   const rock = paperFlat(R.tex, ROCK.w, ROCK.h); rock.position.set(ROCK.x, 0, ROCK.z); group.add(rock);
   // A few smaller rocks along the shore (the same rock, smaller and squatter).
