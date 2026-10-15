@@ -24,12 +24,13 @@ export const JURY = { x: -1.45, z: -0.85, w: 0.9, h: 0.9 * 460 / 1496, rail: 0.9
 export const WITNESS = { x: 1.25, z: -0.95, w: 0.24, h: 0.24 * 771 / 876, rail: 0.24 * 771 / 876 * 0.8, turn: -0.45 };
 export const DOOR = { x: 2.6, z: -0.4 };
 export const FRONT = { x: 0.95, z: 0.4 };                                  // Alice and the Gryphon, at the front of the crowd
+export const SEAT = { x: -0.8, z: -0.35 };                                 // Alice's bench by the jury-box (XI), where XII begins
 
-// The twelve jurors, left to right, back row then front row; Bill the Lizard is the fourth.
-// The jurors: AI drawings of the creatures (2026-10-14).
-const JURORS = ['ch2/dodo_stand', 'ch2/duck_stand', 'ch2/lory_stand', 'ch4/bill_stand', 'ch2/eaglet_stand', 'ch3/owl3', 'ch3/magpie3', 'ch3/canary3', 'ch3/mouse3_lecture',
+// The twelve jurors, left to right, back row then front row: AI drawings of the creatures (2026-10-14).
+// Bill the Lizard sits at the end of the back row, so Alice can get behind him beside the box.
+const JURORS = ['ch2/dodo_stand', 'ch2/duck_stand', 'ch2/lory_stand', 'ch2/eaglet_stand', 'ch3/owl3', 'ch4/bill_stand', 'ch3/magpie3', 'ch3/canary3', 'ch3/mouse3_lecture',
   'ch3/crab', 'ch8/hedgehog_crawl', 'ch4/guinea_stand'];
-export const BILL = 3;
+export const BILL = 5;
 
 // The dais's top: boards, lightly hatched.
 function boards() {
@@ -77,7 +78,7 @@ export function buildCourt({ group, ai }) {
   const TB = ai['ch11/court_table'];
   const table = paperFlat(TB.tex, TARTS.w, TARTS.w / TB.aspect); table.position.set(TARTS.x, 0, TARTS.z); group.add(table);
   // The crowd: little birds and beasts and the pack of cards behind rails on either side and behind the bar.
-  for (const [x, z, turn, w, seed] of [[-2.05, -1.6, 0.9, 1.4, 2251], [2.05, -1.65, -0.9, 1.4, 2252], [-1.3, 0.75, 0.25, 1.6, 2253]]) {
+  for (const [x, z, turn, w, seed] of [[-2.05, -1.6, 0.9, 1.4, 2251], [2.05, -1.65, -0.9, 1.4, 2252], [-1.45, 1.25, 0.25, 1.6, 2253]]) {
     // The gallery, packed with birds, beasts and cards (AI, 2026-10-14; was drawn in code): the drawing twice
     // along each rail (the second mirrored), so the spectators are about the size of the jurors.
     const C = ai['ch8/crowd_court'], tw = w / 2;

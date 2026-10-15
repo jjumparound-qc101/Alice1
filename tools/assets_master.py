@@ -17,6 +17,11 @@ RECEIVED_DIR = "source/ai"
 
 # Entries made under another name, or ruled out by the owner (2026-10-14): ticked with this note.
 DONE_AS = {
+    "court_wall": "done: AI court set 2026-10-15 (the canopy is in the throne's drawing; tools/court_art.py)",
+    "throne": "done as court_throne (with its canopy of hearts)",
+    "jury_box": "done as court_jury_box",
+    "tarts_table": "done as court_table",
+    "witness_box": "done as court_witness_box",
     "alice_walk_cycle": "not needed now: the owner will make the walk cycle",
     "creatures3": "done as owl3, magpie3, canary3, crabs3",
     "alice4_hunt": "not needed: the stooping pose is used (the filter refused bending poses)",

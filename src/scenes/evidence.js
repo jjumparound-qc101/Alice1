@@ -14,7 +14,7 @@ import { texture, PAPER } from '../ink.js';
 import { card, cardBack, SOLDIERS, COURTIERS, CHILDREN, GUESTS, OFFICERS } from '../props8.js';
 import { teapot } from '../props7.js';
 import { verses, noteBook, inkstand, deadLeaf, goldfishVignette, countryVignette, grownAliceVignette } from '../props12.js';
-import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, JURY, BILL } from '../sets/court.js';
+import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, JURY, SEAT, BILL } from '../sets/court.js';
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
@@ -58,7 +58,7 @@ export const evidence = {
 
     // Alice: seated by the jury-box, grown large; jumps up; picks up the jurors; walks out
     // before the throne; full size by "Who cares for you?"
-    const NEAR = { x: -0.85, z: -0.4 }, BOX = { x: JURY.x + 0.45, z: JURY.z + 0.45 }, MIDDLE = { x: 0.4, z: -0.15 };
+    const NEAR = SEAT, BOX = { x: JURY.x + 0.45, z: JURY.z + 0.45 }, MIDDLE = { x: 0.4, z: -0.15 };
     const scaleAt = (t) => lerp(0.5, 0.65, smooth((t - T.mile + 6) / 8)) + smooth((t - T.large + 4) / 6) * 0.15 + smooth((t - T.purple) / 9) * 0.2;
     const aliceA = (t) => {
       const s = route(t, [[0, NEAR], [T.tipped + 1, NEAR], [T.pardon + 1, BOX], [T.right + 2, BOX], [T.what, MIDDLE]], { phase: t * 2.2 });
@@ -71,7 +71,7 @@ export const evidence = {
       if (picking && !s.moving) pose = 'pickup';
       if (t >= T.cares - 0.3 && t < T.air - 0.3) pose = 'defiant';
       if (t >= T.air - 0.3) pose = 'cards';
-      return { ...s, pose, scale: scaleAt(t), dir: s.moving ? s.dir : -1, tilt: pose === 'cards' ? scream * 0.5 : scream };
+      return { ...s, pose, scale: scaleAt(t), dir: s.moving ? s.dir : pose === 'bench' ? 1 : -1, tilt: pose === 'cards' ? scream * 0.5 : scream };
     };
     const flown = (t) => t >= T.air + 0.3;   // the court cards have risen into the air
     const kingA = (t) => {
@@ -105,7 +105,7 @@ export const evidence = {
     const gryphonA = (t) => ({ pose: 'sit', x: 1.3, z: 0.45, dir: -1, scale: 0.85 });
     const guardStates = (t) => (flown(t) ? [] : [
       { pose: 'stand', x: KNAVE.x - 0.2, z: KNAVE.z, dir: 1, idle: t }, { pose: 'stand', x: KNAVE.x + 0.2, z: KNAVE.z, dir: -1, idle: t + 0.7 },
-      { pose: 'stand', x: -0.9, z: 0.3, dir: 1, idle: t + 0.3 }, { pose: 'stand', x: -1.15, z: 0.35, dir: 1, idle: t + 1.1 },
+      { pose: 'stand', x: -1.95, z: 0.75, dir: 1, idle: t + 0.3 }, { pose: 'stand', x: -2.17, z: 0.75, dir: 1, idle: t + 1.1 },
     ]);
     // The jurors: tipped out onto the heads of the crowd below; put back one by one (Bill head
     // downwards at first); the box set right.
@@ -168,24 +168,67 @@ export const evidence = {
       });
       think(t, { x: a.x - 0.2, y: 0.8, z: a.z - 0.3 }, 0.32);
     }
-    const W = [-0.2, 0.3, -0.6];
+    // The camera (hand-directed 2026-10-15 for the AI court): Alice in the picture at least every ~12 s. She is a
+    // giant here, by the jury-box and then in the middle of the court, so her shots stand further back and higher.
+    const shot = (pos, look) => ({ pos, look });
+    const OPEN = shot([0.3, 0.5, 1.0], [-1.1, 0.2, -0.6]);                       // "Here!": Alice by the jury-box
+    const SPRAWL = shot([0.6, 0.7, 1.4], [-1.2, 0.15, -0.4]);                    // the jurymen sprawling, Alice over them
+    const PICK = shot([-0.1, 0.5, 0.9], [-1.15, 0.2, -0.6]);                     // picking them up again
+    const BILL_A = shot([-0.15, 0.6, 1.0], [-1.25, 0.1, -1.0]);                  // the Lizard head downwards, Alice
+    const JURY_S = shot([-0.9, 0.3, 0.0], [-1.45, 0.1, -0.85]);                  // the jury-box
+    const BILL_S = shot([-0.7, 0.3, -0.45], [-1.1, 0.12, -1.2]);                 // Bill
+    const JURY_A = shot([1.6, 0.6, 1.6], [-0.9, 0.06, -0.8]);                    // the jury-box, Alice over it
+    const MID_L = shot([-0.25, 0.62, 2.25], [0.15, 0.2, -1.3]);                  // Alice before the throne, from the left
+    const MID_R = shot([2.1, 0.6, 1.6], [-0.4, 0.18, -1.4]);                     // the same, from the right
+    const KING_S = shot([-0.02, 0.36, -1.2], [-0.12, 0.26, -1.83]);              // the King
+    const QUEEN_S = shot([0.25, 0.36, -1.25], [0.16, 0.27, -1.83]);              // the Queen
+    const THRONE_S = shot([0.0, 0.38, -1.15], [0.0, 0.28, -1.83]);               // the King and Queen together
+    const HERALD_S = shot([-0.2, 0.3, -0.95], [-0.6, 0.16, -1.6]);               // the White Rabbit
+    const KING_R = shot([-0.1, 0.32, -0.85], [-0.42, 0.22, -1.7]);               // the King and the Rabbit
+    const KNAVE_S = shot([0.5, 0.3, -0.3], [0.02, 0.16, -1.3]);                  // the Knave
+    const FULL = shot([1.7, 0.95, 3.0], [0.25, 0.5, -0.5]);                      // Alice at her full size
+    const PACK = shot([1.7, 1.0, 3.0], [0.3, 0.75, -0.5]);                       // the pack flying down upon her
+    // Once she stands in the middle of the court, a move between her and the throne would pass through her:
+    // the close shots (and the way back from them) are cuts.
+    const CLOSE = [KING_S, QUEEN_S, THRONE_S, HERALD_S, KING_R, KNAVE_S, JURY_S, BILL_S];
+    let prev = OPEN;
+    const key = (t, s, dur = 2) => { const cut = t > T.what && (CLOSE.includes(s) || CLOSE.includes(prev)); prev = s; return { t, dur: cut ? 0 : dur, ...s }; };
     const camera = cameraTrack([
-      { t: 0, dur: 0, pos: [-0.4, 0.5, 0.8], look: [JURY.x + 0.2, 0.18, JURY.z] },                       // "Here!"
-      { t: T.tipped + 0.5, dur: 2, pos: [-0.9, 0.7, 1.3], look: [-1.5, 0.1, -0.4] },                       // the jurymen sprawling
-      { t: T.downwards - 1, dur: 2, pos: [-1.75, 0.45, 0.05], look: [JURY.x, 0.2, JURY.z] },              // Bill head downwards
-      { t: T.what, dur: 4, pos: [0.6, 0.6, 1.2], look: [0.1, 0.35, -1.2] },                                // "What do you know about this business?"
-      { t: T.silence - 1, dur: 2, pos: [0.0, 0.45, -0.9], look: [KING.x, 0.3, KING.z] },                    // Rule Forty-two
-      { t: T.mile + 4, dur: 3, pos: [0.9, 0.6, 1.4], look: [0.3, 0.45, -0.4] },                            // everybody looked at Alice
-      { t: T.pale - 0.5, dur: 1.5, pos: [-0.05, 0.42, -1.1], look: [KING.x, 0.32, KING.z] },               // the King turned pale
-      { t: T.paper - 2, dur: 3, pos: [-0.3, 0.4, -0.95], look: [HERALD.x, 0.22, HERALD.z] },               // the paper picked up
-      { t: T.read + 4, dur: 50, pos: [0.7, 0.7, 1.6], look: W },                                           // the verses
-      { t: T.inkstand - 2, dur: 2, pos: [-0.8, 0.5, 0.3], look: [JURY.x + 0.1, 0.2, JURY.z] },             // the inkstand at Bill
-      { t: T.sentence - 1, dur: 2, pos: [0.25, 0.45, -1.0], look: [QUEEN.x, 0.32, QUEEN.z] },              // "Sentence first"
-      { t: T.cares - 1, dur: 3, pos: [1.3, 1.0, 2.6], look: [0.4, 0.85, -0.2] },                            // full size
-      { t: T.air, dur: 4, pos: [0.9, 1.0, 1.5], look: [0.4, 0.9, -0.3] },                                  // the whole pack rose up into the air
+      { t: 0, dur: 0, ...OPEN },                                                 // "Here!"
+      key(T.tipped + 0.5, SPRAWL, 2), key(T.pardon, PICK, 2.5),                  // the jurymen sprawling; "I beg your pardon!"
+      key(37, KING_S, 1.5), key(45, PICK, 2),                                    // "The trial cannot proceed"
+      key(52, BILL_A, 2), key(64, PICK, 2),                                      // the Lizard head downwards; "not that it signifies much"
+      key(72.2, JURY_A, 3), key(T.roof - 1, BILL_S, 1.5),                        // Alice walks out into the court; Bill gazing up into the roof
+      key(88.6, KING_S, 1.2), key(92.5, MID_R, 2),                               // "What do you know about this business?" "Nothing."
+      key(100, KING_S, 1.2), key(103.5, HERALD_S, 1.2), key(110, MID_L, 2),      // "very important"; the Rabbit interrupts
+      key(116.5, KING_S, 1.2), key(122.5, MID_R, 2), key(129.8, JURY_S, 1.5),    // the King tries the words; the jury writes
+      key(133.8, JURY_A, 2),                                                     // Alice looks over their slates
+      key(140.8, KING_S, 1.2), key(150.5, MID_R, 2.5),                           // "Silence!" Rule Forty-two; everybody looked at Alice
+      key(160.3, KING_S, 1), key(162.5, QUEEN_S, 1), key(165.4, MID_L, 1.5),     // "You are"; "Nearly two miles high"; "I shan't go"
+      key(173.7, KING_S, 1), key(177.6, MID_R, 1.5), key(180.5, KING_S, 1),      // the oldest rule; "Number One"; the King turned pale
+      key(188.4, HERALD_S, 1.2), key(192.3, MID_R, 2), key(197, QUEEN_S, 1), key(199.2, HERALD_S, 1),  // "this paper has just been picked up"
+      key(203, MID_L, 2), key(207.7, KING_S, 1), key(214.5, JURY_S, 1.2),        // "a letter"; "Who is it directed to?"
+      key(218.2, HERALD_S, 1), key(220.8, MID_R, 2), key(224.3, HERALD_S, 1), key(231.5, JURY_A, 1.5),        // "a set of verses"; the prisoner's handwriting?
+      key(235.3, HERALD_S, 1), key(240.1, JURY_S, 1), key(242, KING_S, 1),     // the jury puzzled; "imitated somebody else's hand"
+      key(247, JURY_S, 1), key(249, KNAVE_S, 1.2), key(252.3, MID_L, 2),         // the jury brightened; the Knave: "I didn't write it"
+      key(258.4, KING_S, 1), key(266.5, MID_R, 2), key(274.2, QUEEN_S, 1),       // "like an honest man"; clapping; "proves his guilt"
+      key(276.9, MID_L, 1.5), key(282.5, KING_S, 1), key(284.6, HERALD_S, 1.2),  // "It proves nothing of the sort!"; "Read them"
+      key(289, MID_R, 1.5), key(291, KING_S, 1), key(295, MID_L, 2.5),                               // "Begin at the beginning"
+      key(305.5, HERALD_S, 2.5), key(315, JURY_A, 3), key(326, HERALD_S, 2.5),   // the verses
+      key(336, MID_L, 3), key(346, THRONE_S, 2.5), key(354, MID_R, 2.5),
+      key(359.8, KING_S, 1.2), key(367, MID_L, 2),                               // "the most important piece of evidence"; "If any one of them can explain it"
+      key(378.8, JURY_S, 1.2), key(385.7, KING_S, 1.2), key(390, MID_R, 2),      // the jury writes; "that saves a world of trouble"
+      key(395.5, KING_S, 1.2), key(400.5, MID_R, 1.5), key(404, KING_S, 1), key(408.2, KNAVE_S, 1.2), key(413, MID_L, 2),   // the verses on his knee; "you can't swim, can you?"; cardboard
+      key(418.3, KING_S, 1.2), key(427, MID_R, 2.5),                             // muttering over the verses
+      key(435.7, MID_L, 1.5), key(440.4, KING_S, 1), key(445.2, MID_R, 2),       // "they all returned"; "there they are!" (the tarts)
+      key(447.3, THRONE_S, 1.2), key(451.5, MID_L, 1.5), key(455.3, QUEEN_S, 0.8), key(458.3, BILL_S, 1), // "you never had fits"; "Never!" the inkstand at the Lizard
+      key(462.5, JURY_A, 2), key(470.3, KING_S, 1), key(475.4, MID_R, 2),        // the ink; the pun; a dead silence
+      key(482, MID_L, 2), key(487.5, QUEEN_S, 1), key(492.7, MID_R, 1.2),        // "Let the jury consider"; "Sentence first"; "Stuff and nonsense!"
+      key(499, QUEEN_S, 0.8), key(502.4, MID_L, 1), key(504.7, QUEEN_S, 0.8),    // "Hold your tongue!" purple; "I won't!"; "Off with her head!"
+      key(508.5, FULL, 3), key(T.air - 0.5, PACK, 2.5),                          // nobody moved; full size; the pack rises
     ]);
     return {
-      T, bg: PAPER, fog: [7, 26], bounds: null, hotspots: [], camera: withAlice(camera, aliceA, [[69, 92], [145, 159], [181, 335], [457, 512]]), update,
+      T, bg: PAPER, fog: [7, 26], bounds: null, hotspots: [], camera, update,
       actors: (t) => ({ alice: aliceA(t), king: kingA(t), queen: queenA(t), knave: knaveA(t), rabbit: rabbitA(t), gryphon: gryphonA(t) }),
     };
   },
