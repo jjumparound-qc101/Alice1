@@ -25,7 +25,7 @@ PAPER = np.array([0xEF, 0xE9, 0xDA], np.float32)
 
 def whitecut(name, *args, max_side=1024):
     with tempfile.TemporaryDirectory() as d:
-        subprocess.run([sys.executable, "tools/whitecut.py", f"{SRC}/{name}.webp", f"{d}/out.png", *args], check=True)
+        subprocess.run([sys.executable, "engine/tools/whitecut.py", f"{SRC}/{name}.webp", f"{d}/out.png", *args], check=True)
         img = Image.open(f"{d}/out.png")
         img.load()
     k = min(1, max_side / max(img.size))

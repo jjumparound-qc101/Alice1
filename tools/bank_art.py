@@ -42,7 +42,7 @@ def main():
         .save("public/art/ai/bank_grass.webp", quality=88, method=6)
     print("public/art/ai/bank_grass.webp")
     with tempfile.TemporaryDirectory() as d:
-        subprocess.run([sys.executable, "tools/whitecut.py", "source/ai/bank_edge.png", f"{d}/c.png", "--seal", "1"], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run([sys.executable, "engine/tools/whitecut.py", "source/ai/bank_edge.png", f"{d}/c.png", "--seal", "1"], check=True, stdout=subprocess.DEVNULL)
         cut = np.asarray(Image.open(f"{d}/c.png").convert("RGBA"), np.float32)
     cut = wrap(cut, 1, 60)
     img = Image.fromarray(cut.astype(np.uint8), "RGBA")
@@ -56,7 +56,7 @@ def main():
     for name, box in (("cloud_a", (20, 250, 930, 660)), ("cloud_b", (990, 420, 1515, 640))):
         with tempfile.TemporaryDirectory() as d:
             Image.open("source/ai/clouds_two.png").convert("RGB").crop(box).save(f"{d}/c.png")
-            subprocess.run([sys.executable, "tools/whitecut.py", f"{d}/c.png", f"public/art/ai/{name}.png"], check=True, stdout=subprocess.DEVNULL)
+            subprocess.run([sys.executable, "engine/tools/whitecut.py", f"{d}/c.png", f"public/art/ai/{name}.png"], check=True, stdout=subprocess.DEVNULL)
         Image.open(f"public/art/ai/{name}.png").save(f"public/art/ai/{name}.webp", quality=90, method=6)
         os.remove(f"public/art/ai/{name}.png")
         print(f"public/art/ai/{name}.webp")

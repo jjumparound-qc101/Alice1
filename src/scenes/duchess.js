@@ -6,11 +6,11 @@
 //              until only the grin is left; the March Hare's house.
 // Figures and props not yet drawn are placeholders from props6.js.
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
-import { texture, PAPER } from '../ink.js';
-import { thoughts } from '../thoughts.js';
-import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture, PAPER } from '@engine/ink.js';
+import { thoughts } from '@engine/thoughts.js';
+import { carry } from '@engine/puppet.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 import { outdoors } from './rabbit.js';
 
 const NINE = 0.18;   // "nine inches high"

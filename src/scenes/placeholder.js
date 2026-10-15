@@ -1,7 +1,7 @@
 // A chapter whose scenes aren't built yet: its title page, engraved on paper, with a
 // slow drift of the camera, so the chapter can still be read and heard in full.
-import { paperFlat } from '../stage.js';
-import { canvas, texture, hatch, grain, INK, PAPER } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { canvas, texture, hatch, grain, INK, PAPER } from '@engine/ink.js';
 
 function titlePage(ch) {
   const { c, g } = canvas(1600, 1000);

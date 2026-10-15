@@ -32,7 +32,7 @@ OUT_NAME = {"alice4_giant_lying": "alice_lying", "alice4_foot": "alice_foot"}
 def sets(names):
     for n in names:
         with tempfile.TemporaryDirectory() as d:
-            cmd = [sys.executable, "tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png"]
+            cmd = [sys.executable, "engine/tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png"]
             if SETS[n]:
                 cmd += ["--opaque"]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL)
@@ -53,7 +53,7 @@ def main():
     sets([n for n in SETS if not pick or n in pick])
     for n in [n for n in NAMES if not pick or n in pick]:
         with tempfile.TemporaryDirectory() as d:
-            cmd = [sys.executable, "tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png"]
+            cmd = [sys.executable, "engine/tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png"]
             if n in CLEAR:
                 cmd += ["--clear", CLEAR[n]]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL)

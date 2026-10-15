@@ -47,7 +47,7 @@ def main():
             src = os.path.join(tmp, f"{name}.png")
             im.crop(box).save(src)
             png = os.path.join(tmp, f"{name}_cut.png")
-            subprocess.run([py, "-I", "tools/whitecut.py", src, png, "--seal", "1"], check=True, stdout=subprocess.DEVNULL)
+            subprocess.run([py, "-I", "engine/tools/whitecut.py", src, png, "--seal", "1"], check=True, stdout=subprocess.DEVNULL)
             Image.open(png).save(os.path.join(OUT, f"{name}.webp"), quality=90, method=6)
             w, h = Image.open(png).size
             print(f"{name}: {w}x{h}")

@@ -36,7 +36,7 @@ def main():
         out = f"public/art/ai/{NAMES[n]}"
         os.makedirs(out, exist_ok=True)
         with tempfile.TemporaryDirectory() as d:
-            cmd = [sys.executable, "tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png"]
+            cmd = [sys.executable, "engine/tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png"]
             if n in CLEAR:
                 cmd += ["--clear", CLEAR[n]]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL)

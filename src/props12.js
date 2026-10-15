@@ -1,7 +1,7 @@
 // Placeholder art for Chapter XII, "Alice's Evidence", drawn in code until the AI drawings
 // arrive (docs/CHAPTER_12_ASSETS.md). Colours: the King's face pale and the Queen's purple
 // (props8.js card faces); card suits red and black (owner, 2026-10-11). Everything else ink.
-import { canvas, hatch, outline, fillPaper, shadeEdge, INK, PAPER } from './ink.js';
+import { canvas, hatch, outline, fillPaper, shadeEdge, INK, PAPER } from '@engine/ink.js';
 import { vignette, line, shape } from './props.js';
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;

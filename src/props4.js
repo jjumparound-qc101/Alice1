@@ -2,7 +2,7 @@
 // the AI drawings arrive (docs/CHAPTER_04_ASSETS.md). Figures stand on the bottom edge of
 // their image and face left. Colours: the brass plate (owner, 2026-10-10) and the blue
 // Caterpillar (docs/COLOR.md); everything else is ink.
-import { canvas, hatch, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from './ink.js';
+import { canvas, hatch, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from '@engine/ink.js';
 import { SPOT, vignette, line, shape, cat } from './props.js';
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;

@@ -9,14 +9,15 @@
 // Figures and props not yet drawn are placeholders (props12.js and earlier chapters').
 import * as THREE from 'three';
 import { crowdCard } from '../cards.js';
-import { paperFlat, buildStage } from '../stage.js';
-import { texture, PAPER } from '../ink.js';
+import { buildStage } from '../sets/riverbank.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture, PAPER } from '@engine/ink.js';
 import { card, cardBack, SOLDIERS, COURTIERS, CHILDREN, GUESTS, OFFICERS } from '../props8.js';
 import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, JURY, SEAT, BILL } from '../sets/court.js';
 import { drawnPose, extras } from '../crowd.js';
-import { thoughts } from '../thoughts.js';
-import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { thoughts } from '@engine/thoughts.js';
+import { carry } from '@engine/puppet.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 
 const RABBIT = 0.38;
 const soldier = (ai) => (who) => ({ poses: { stand: crowdCard(ai, who, 0.28) }, height: 0.28 });

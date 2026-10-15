@@ -2,7 +2,7 @@
 // being painted red, the large flower-pot, and the croquet-ground, "all ridges and furrows",
 // with the garden wall behind. Built at foot-high Alice's scale (she is about 0.3 m here).
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
+import { paperFlat } from '@engine/stage.js';
 import { ROSE_TREE_PX } from '../props8.js';
 import { outdoors } from '../scenes/rabbit.js';
 

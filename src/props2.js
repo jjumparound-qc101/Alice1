@@ -1,7 +1,7 @@
 // Placeholder art for Chapter II, "The Pool of Tears", drawn in code in the engraving
 // style of props.js until the AI drawings arrive (docs/CHAPTER_02_ASSETS.md). Swimmers are
 // drawn down to the waterline only: the bottom edge of each image is the water's surface.
-import { canvas, hatch, flicks, outline, fillPaper, shadeEdge, grain, INK, PAPER } from './ink.js';
+import { canvas, hatch, flicks, outline, fillPaper, shadeEdge, grain, INK, PAPER } from '@engine/ink.js';
 import { SPOT, vignette, line, shape, cat } from './props.js';
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;

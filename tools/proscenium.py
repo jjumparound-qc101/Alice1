@@ -27,7 +27,7 @@ def main():
     d = ImageDraw.Draw(rgb)
     x0, y0, x1, y1 = BANNER
     # One line, low on the banner (the Cat's paws rest on its top edge).
-    font = ImageFont.truetype("public/fonts/IMFeENrm28P.ttf", 21)
+    font = ImageFont.truetype("engine/fonts/IMFeENrm28P.ttf", 21)
     d.text(((x0 + x1) / 2, 172), "ALICE’S ADVENTURES IN WONDERLAND", font=font, fill=INK, anchor="mm")
     out = rgb.convert("RGBA"); out.putalpha(alpha)
     out.save("public/art/ai/proscenium.webp", quality=90, method=6)
@@ -50,7 +50,7 @@ def house():
     alpha = Image.fromarray(((~hole) * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.8))
     out = Image.fromarray((g[..., None] / 255 * PAPER).astype(np.uint8), "RGB").convert("RGBA"); out.putalpha(alpha)
     out.save("public/art/ai/theatre_house.webp", quality=88, method=6)
-    subprocess.run([sys.executable, "tools/whitecut.py", "source/ai/theatre_seats.png", "/tmp/_seats.png"], check=True, stdout=subprocess.DEVNULL)
+    subprocess.run([sys.executable, "engine/tools/whitecut.py", "source/ai/theatre_seats.png", "/tmp/_seats.png"], check=True, stdout=subprocess.DEVNULL)
     Image.open("/tmp/_seats.png").save("public/art/ai/theatre_seats.webp", quality=88, method=6)
     print("public/art/ai/theatre_house.webp, theatre_seats.webp")
 

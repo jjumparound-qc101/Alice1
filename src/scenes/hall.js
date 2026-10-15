@@ -2,12 +2,12 @@
 // the doors, the glass table and golden key, the curtain and little door, the garden,
 // "DRINK ME", shrinking, the forgotten key, crying, and "EAT ME".
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
-import { texture, PAPER } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture, PAPER } from '@engine/ink.js';
 import { buildHall, TABLE, DOOR, KEY } from '../sets/hall.js';
-import { thoughts } from '../thoughts.js';
-import { carry } from '../puppet.js';
-import { smooth, lerp, route, step, cameraTrack } from '../track.js';
+import { thoughts } from '@engine/thoughts.js';
+import { carry } from '@engine/puppet.js';
+import { smooth, lerp, route, step, cameraTrack } from '@engine/track.js';
 
 export const hall = {
   id: 'hall',

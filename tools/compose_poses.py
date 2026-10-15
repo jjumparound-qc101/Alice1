@@ -162,7 +162,7 @@ def drawn(spec):
             unscreenshot(src, spec["screenshot"], f"{d}/clean.png")
             src = f"{d}/clean.png"
         crop = ["--crop", ",".join(map(str, spec["crop"]))] if "crop" in spec else []
-        subprocess.run([sys.executable, "tools/whitecut.py", src, f"{d}/cut.png", *crop], check=True)
+        subprocess.run([sys.executable, "engine/tools/whitecut.py", src, f"{d}/cut.png", *crop], check=True)
         if "torso" in spec:  # where the body's centre line falls in the cut-out (cropped to the figure)
             import numpy as np
             g = np.asarray(Image.open(src).convert("L").crop(spec["crop"])) < 225

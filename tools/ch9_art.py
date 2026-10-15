@@ -33,7 +33,7 @@ DUCHESS = ["duchess_nurse", "duchess_toss", "duchess_fling", "duchess9_arm", "du
 def cut(name, out, width=600):
     src = f"source/ai/{name}.png"
     with tempfile.TemporaryDirectory() as d:
-        subprocess.run([sys.executable, "tools/whitecut.py", src, f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run([sys.executable, "engine/tools/whitecut.py", src, f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
         img = Image.open(f"{d}/c.png").convert("RGBA")
     a = np.asarray(img)[..., 3] > 128
     h = img.height

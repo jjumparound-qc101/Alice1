@@ -59,7 +59,7 @@ def shrink(img, m=MAX):
 
 def whitecut(path, *args):
     with tempfile.TemporaryDirectory() as d:
-        subprocess.run([sys.executable, "tools/whitecut.py", path, f"{d}/o.png", *args], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run([sys.executable, "engine/tools/whitecut.py", path, f"{d}/o.png", *args], check=True, stdout=subprocess.DEVNULL)
         img = Image.open(f"{d}/o.png")
         img.load()
     return img

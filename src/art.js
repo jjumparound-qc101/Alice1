@@ -1,7 +1,7 @@
 // Placeholder flats and figures for the riverbank set. Each function returns a
 // canvas; stage.js turns them into paper cutouts. Swap these for the master
 // drawings when they arrive; the stage layout doesn't depend on what's drawn.
-import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, PAPER, INK } from './ink.js';
+import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, PAPER, INK } from '@engine/ink.js';
 
 export function sky() {
   const { c, g } = canvas(2048, 720);

@@ -1,7 +1,7 @@
 // Placeholder art for the fall, the passage and the hall, drawn in code in the
 // engraving style of src/art.js. Spot colours follow docs/COLOR.md: only things
 // the text gives a colour are coloured.
-import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, PAPER, INK } from './ink.js';
+import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, PAPER, INK } from '@engine/ink.js';
 
 export const SPOT = {
   gold: '#ebb420',    // "a tiny golden key"

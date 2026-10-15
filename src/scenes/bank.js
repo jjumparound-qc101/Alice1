@@ -4,14 +4,14 @@
 // prizes, the Mouse's long tale, and the party leaving Alice alone.
 // Figures and props not yet drawn are placeholders from props2.js and props3.js.
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
-import { texture } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture } from '@engine/ink.js';
 import { buildHall, DOOR } from '../sets/hall.js';
 import { water, tear } from '../props2.js';
 import { mouseTale } from '../props3.js';
-import { thoughts } from '../thoughts.js';
-import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { thoughts } from '@engine/thoughts.js';
+import { carry } from '@engine/puppet.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 
 const TINY = 0.13;
 const WATER_Y = 0.1;

@@ -1,7 +1,7 @@
 // Extras: puppets that belong to one scene (a procession, a crowd, a jury) rather than to the
 // shared cast. They live in the scene's group and are posed in its update(t, cast, camera).
-import { Puppet } from './puppet.js';
-import { texture } from './ink.js';
+import { Puppet } from '@engine/puppet.js';
+import { texture } from '@engine/ink.js';
 
 // A pose drawn in code, its texture made once and shared by every extra that wears it.
 const made = new Map();

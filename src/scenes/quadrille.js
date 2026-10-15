@@ -5,12 +5,12 @@
 // "Beautiful Soup"; "The trial's beginning!" and the Gryphon hurries Alice off by the hand.
 // The Mock Turtle and the Gryphon are Chapter IX's placeholders; vignettes from props10.js.
 import * as THREE from 'three';
-import { PAPER } from '../ink.js';
+import { PAPER } from '@engine/ink.js';
 
 import { FOOT } from '../sets/croquet.js';
 import { buildSeashore, ROCK, LEDGE_AT } from '../sets/seashore.js';
-import { thoughts } from '../thoughts.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { thoughts } from '@engine/thoughts.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 
 export const quadrille = {
   id: 'quadrille',

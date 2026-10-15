@@ -1,0 +1,20 @@
+{
+  "title": "Alice's Adventures in Wonderland",
+  "text": "source/text/pg11_full.txt",
+  "chapters": [
+    "I",
+    "II",
+    "III",
+    "IV",
+    "V",
+    "VI",
+    "VII",
+    "VIII",
+    "IX",
+    "X",
+    "XI",
+    "XII"
+  ],
+  "heading": "\nCHAPTER {roman}.\n",
+  "end": "\nTHE END"
+}
