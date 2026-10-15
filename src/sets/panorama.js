@@ -2,7 +2,7 @@
 // finds the edge of the world: sky and a far treeline on both sides, facing in, like the wings
 // of a toy theater carried all the way back. The fog softens them into the distance.
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
+import { paperFlat } from '@engine/stage.js';
 
 const tiled = (t, rx) => { t = t.clone(); t.wrapS = THREE.MirroredRepeatWrapping; t.repeat.set(rx, 1); t.needsUpdate = true; return t; };
 

@@ -2,7 +2,7 @@
 // until the AI drawings arrive (docs/CHAPTER_10_ASSETS.md). The Mock Turtle and the Gryphon
 // are Chapter IX's (props9.js). Colours (COLOR.md rule 6, words in the poems and songs): the
 // Lobster "baked … too brown", and the soup "so rich and green".
-import { hatch, outline, fillPaper, shadeEdge, INK, PAPER } from './ink.js';
+import { hatch, outline, fillPaper, shadeEdge, INK, PAPER } from '@engine/ink.js';
 import { SPOT, vignette, line } from './props.js';
 
 const ellipse = (x, y, rx, ry, rot = 0) => { const p = new Path2D(); p.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); return p; };

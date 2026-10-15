@@ -11,8 +11,8 @@
     "smoke": "node tools/smoke.mjs",
     "build:app": "vite build --base ./",
     "app": "npm run build:app && electron .",
-    "package:win": "npm run build:app && electron-packager . Alice --platform=win32 --arch=x64 --out=release --overwrite --prune=true --asar.unpack=\"*.{node,dll,so,dylib}\" --ignore=\"^/(src|public|source|godot|docs|tools|release|smoke-shots|index\\.html|README\\.md|PROVENANCE\\.md)\"",
-    "package:linux": "npm run build:app && electron-packager . Alice --platform=linux --arch=x64 --out=release --overwrite --prune=true --asar.unpack=\"*.{node,dll,so,dylib}\" --ignore=\"^/(src|public|source|godot|docs|tools|release|smoke-shots|index\\.html|README\\.md|PROVENANCE\\.md)\""
+    "package:win": "npm run build:app && electron-packager . Alice --platform=win32 --arch=x64 --out=release --overwrite --prune=true --asar.unpack=\"*.{node,dll,so,dylib}\" --ignore=\"^/(src|public|source|godot|docs|tools|release|smoke-shots|index\\.html|README\\.md|PROVENANCE\\.md|CLAUDE\\.md|book\\.json|vite\\.config\\.js|engine/(src|tools|docs|template|fonts|art|README\\.md|CLAUDE\\.md))\"",
+    "package:linux": "npm run build:app && electron-packager . Alice --platform=linux --arch=x64 --out=release --overwrite --prune=true --asar.unpack=\"*.{node,dll,so,dylib}\" --ignore=\"^/(src|public|source|godot|docs|tools|release|smoke-shots|index\\.html|README\\.md|PROVENANCE\\.md|CLAUDE\\.md|book\\.json|vite\\.config\\.js|engine/(src|tools|docs|template|fonts|art|README\\.md|CLAUDE\\.md))\""
   },
   "dependencies": {
     "steamworks.js": "^0.4.0"
@@ -24,5 +24,6 @@
     "vite": "^8.3.4",
     "three": "^0.186.1"
   },
-  "main": "electron/main.cjs"
+  "main": "engine/electron/main.cjs",
+  "productName": "Alice's Adventures in Wonderland"
 }

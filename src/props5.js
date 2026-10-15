@@ -2,7 +2,7 @@
 // drawings arrive (docs/CHAPTER_05_ASSETS.md). The Father William pictures are Tenniel's own
 // plates (public/art/tenniel/). Colours: the blue Caterpillar, and the green treetops seen
 // from Alice's long neck (docs/COLOR.md).
-import { canvas, hatch, flicks, outline, fillPaper, grain, INK, PAPER } from './ink.js';
+import { canvas, hatch, flicks, outline, fillPaper, grain, INK, PAPER } from '@engine/ink.js';
 import { SPOT, vignette, line, shape } from './props.js';
 
 const ellipse = (x, y, rx, ry, rot = 0) => { const p = new Path2D(); p.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); return p; };

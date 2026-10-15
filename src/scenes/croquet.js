@@ -8,14 +8,14 @@
 // Figures and props not yet drawn are placeholders from props8.js.
 import * as THREE from 'three';
 import { crowdCard } from '../cards.js';
-import { paperFlat } from '../stage.js';
-import { texture, PAPER } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture, PAPER } from '@engine/ink.js';
 import { card, cardBack, cardArch, SOLDIERS, COURTIERS, CHILDREN, GUESTS } from '../props8.js';
 import { buildCroquet, FOOT, ROSE, POT, CROQ, FTREE } from '../sets/croquet.js';
 import { drawnPose, extras } from '../crowd.js';
-import { thoughts } from '../thoughts.js';
-import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { thoughts } from '@engine/thoughts.js';
+import { carry } from '@engine/puppet.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 
 const RABBIT = 0.35;                         // the Rabbit's scale beside foot-high Alice
 const CARD_H = 0.28, CHILD_H = 0.2, COURT_H = 0.32;

@@ -35,7 +35,7 @@ GRIN = (418, 462, 582, 512)  # the mouth, in source pixels
 def cut_full(path):
     """whitecut, pasted back on the source's full canvas (whitecut crops to the drawing)."""
     with tempfile.TemporaryDirectory() as d:
-        subprocess.run([sys.executable, "tools/whitecut.py", path, f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run([sys.executable, "engine/tools/whitecut.py", path, f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
         cut = Image.open(f"{d}/c.png").convert("RGBA")
     src = Image.open(path).convert("L")
     ys, xs = np.nonzero(np.asarray(src) < 225)
@@ -70,23 +70,23 @@ def main():
                     ("frog_footman_sit", 700), ("footmen_bow", 1000), ("cook_stir", 700), ("cook_throw", 600),
                     ("baby_starfish", 500), ("baby_snout", 500), ("pig_trot", 500)):
         with tempfile.TemporaryDirectory() as d:
-            subprocess.run([sys.executable, "tools/whitecut.py", f"source/ai/{name}.png", f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
+            subprocess.run([sys.executable, "engine/tools/whitecut.py", f"source/ai/{name}.png", f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
             img = Image.open(f"{d}/c.png").convert("RGBA")
             print(f"  {name}: px {img.height}")
             save(img, name, w)
     with tempfile.TemporaryDirectory() as d:
         Image.open("source/ai/kitchen_back.png").convert("RGB").crop((0, 30, 1536, 894)).save(f"{d}/k.png")
-        subprocess.run([sys.executable, "tools/whitecut.py", f"{d}/k.png", f"{OUT}/kitchen_back.png", "--opaque"], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run([sys.executable, "engine/tools/whitecut.py", f"{d}/k.png", f"{OUT}/kitchen_back.png", "--opaque"], check=True, stdout=subprocess.DEVNULL)
     Image.open(f"{OUT}/kitchen_back.png").save(f"{OUT}/kitchen_back.webp", quality=88, method=6)
     os.remove(f"{OUT}/kitchen_back.png")
     print(f"{OUT}/kitchen_back.webp")
     for name, w in (("little_house", 800), ("march_hare_house", 1000)):
         with tempfile.TemporaryDirectory() as d:
-            subprocess.run([sys.executable, "tools/whitecut.py", f"source/ai/{name}.png", f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
+            subprocess.run([sys.executable, "engine/tools/whitecut.py", f"source/ai/{name}.png", f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
             save(Image.open(f"{d}/c.png").convert("RGBA"), name, w)
     with tempfile.TemporaryDirectory() as d:
         Image.open("source/ai/kitchen_side.png").convert("RGB").crop((0, 0, 1536, 830)).save(f"{d}/k.png")
-        subprocess.run([sys.executable, "tools/whitecut.py", f"{d}/k.png", f"{d}/o.png", "--opaque"], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run([sys.executable, "engine/tools/whitecut.py", f"{d}/k.png", f"{d}/o.png", "--opaque"], check=True, stdout=subprocess.DEVNULL)
         Image.open(f"{d}/o.png").save(f"{OUT}/kitchen_side.webp", quality=88, method=6)
     pieces = {"irons": (53, 39, 533, 595), "saucepan": (575, 43, 1107, 402), "saucepan2": (1063, 90, 1513, 439),
               "pan": (536, 437, 1179, 672), "plate": (1133, 494, 1499, 723), "plate2": (73, 599, 421, 880),
@@ -94,7 +94,7 @@ def main():
     for name, box in pieces.items():
         with tempfile.TemporaryDirectory() as d:
             Image.open("source/ai/thrown_things.png").convert("RGB").crop(box).save(f"{d}/c.png")
-            subprocess.run([sys.executable, "tools/whitecut.py", f"{d}/c.png", f"{d}/o.png"], check=True, stdout=subprocess.DEVNULL)
+            subprocess.run([sys.executable, "engine/tools/whitecut.py", f"{d}/c.png", f"{d}/o.png"], check=True, stdout=subprocess.DEVNULL)
             Image.open(f"{d}/o.png").save(f"{OUT}/thrown_{name}.webp", quality=88, method=6)
     print("little_house, march_hare_house, kitchen_side, thrown_* done")
 

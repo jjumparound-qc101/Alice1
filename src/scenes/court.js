@@ -6,16 +6,16 @@
 // Figures and props not yet drawn are placeholders (props11.js and earlier chapters').
 import * as THREE from 'three';
 import { crowdCard } from '../cards.js';
-import { paperFlat } from '../stage.js';
-import { texture, PAPER, canvas, INK } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture, PAPER, canvas, INK } from '@engine/ink.js';
 import { card, OFFICERS } from '../props8.js';
 import { trumpet, scroll, canvasBag, shoe } from '../props11.js';
 import { FOOT } from '../sets/croquet.js';
 import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, TARTS, JURY, WITNESS, DOOR, FRONT, SEAT, BILL } from '../sets/court.js';
 import { drawnPose, extras } from '../crowd.js';
-import { thoughts } from '../thoughts.js';
-import { carry } from '../puppet.js';
-import { smooth, route, cameraTrack } from '../track.js';
+import { thoughts } from '@engine/thoughts.js';
+import { carry } from '@engine/puppet.js';
+import { smooth, route, cameraTrack } from '@engine/track.js';
 
 const RABBIT = 0.38, PIG = 0.32;          // the Rabbit's and the guinea-pigs' scale in the court
 const officer = (ai) => (who) => ({ poses: { stand: crowdCard(ai, who, 0.28), bag: crowdCard(ai, { ...who, body: 'bag' }, 0.28) }, height: 0.28 });

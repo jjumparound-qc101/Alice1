@@ -1,7 +1,8 @@
 // Scene 1: the riverbank, from "Alice was beginning…" to "…how in the world she was to get out again."
-import { buildStage, paperFlat } from '../stage.js';
-import { path, hop, cameraTrack } from '../track.js';
-import { PAPER } from '../ink.js';
+import { buildStage } from '../sets/riverbank.js';
+import { paperFlat } from '@engine/stage.js';
+import { path, hop, cameraTrack } from '@engine/track.js';
+import { PAPER } from '@engine/ink.js';
 
 export const riverbank = {
   id: 'riverbank',

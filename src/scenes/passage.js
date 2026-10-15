@@ -1,9 +1,9 @@
 // Scene 3: the landing and the long passage, from "thump! thump!" to the corner,
 // where "the Rabbit was no longer to be seen".
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
-import { PAPER } from '../ink.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { paperFlat } from '@engine/stage.js';
+import { PAPER } from '@engine/ink.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 
 const LEN = 22, HALF_W = 1.4, H = 2.6, CORNER_Z = -17;
 

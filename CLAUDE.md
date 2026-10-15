@@ -2,6 +2,7 @@
 
 - **Start by reading `docs/HANDOFF.md`** and follow it.
 - **Branch**: all work goes on `claude/literary-game-experience-1de414`. If the session was set up on another branch, check out this one (`git fetch origin claude/literary-game-experience-1de414 && git checkout claude/literary-game-experience-1de414`), commit there and push there.
+- **The engine** is shared by every Library of Living Books title: `engine/` is a pinned copy of `jjumparound-qc101/LoLBookEngine` (read `engine/docs/ENGINE.md`). Don't change files in `engine/` without sending the change to LoLBookEngine (ENGINE.md, "Changing the engine while working on a book"); everything Alice-specific stays outside `engine/` (`src/book.js` holds the art list and the cast). Engine tools run as `engine/tools/<tool>`.
 - **The owner** is not a programmer: brief, kind, factual replies in plain ASCII text, honest pushback, and every decision put to them with a recommendation.
 
 ## When the owner asks for a handoff

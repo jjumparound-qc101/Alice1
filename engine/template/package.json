@@ -1,0 +1,29 @@
+{
+  "name": "{{npm-name}}",
+  "productName": "{{Book Title}}",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "{{Book Title}} by {{Author}}: a 2.5D toy-theater reading with the LibriVox full-cast recording.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "smoke": "node engine/tools/smoke.mjs",
+    "build:app": "vite build --base ./",
+    "app": "npm run build:app && electron .",
+    "package:win": "npm run build:app && electron-packager . {{Short}} --platform=win32 --arch=x64 --out=release --overwrite --prune=true --asar.unpack=\"*.{node,dll,so,dylib}\" --ignore=\"^/(src|public|source|docs|tools|release|smoke-shots|index\\.html|README\\.md|PROVENANCE\\.md|CLAUDE\\.md|book\\.json|vite\\.config\\.js|engine/(src|tools|docs|template|fonts|README\\.md|CLAUDE\\.md))\"",
+    "package:linux": "npm run build:app && electron-packager . {{Short}} --platform=linux --arch=x64 --out=release --overwrite --prune=true --asar.unpack=\"*.{node,dll,so,dylib}\" --ignore=\"^/(src|public|source|docs|tools|release|smoke-shots|index\\.html|README\\.md|PROVENANCE\\.md|CLAUDE\\.md|book\\.json|vite\\.config\\.js|engine/(src|tools|docs|template|fonts|README\\.md|CLAUDE\\.md))\""
+  },
+  "dependencies": {
+    "steamworks.js": "^0.4.0"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^44.7.0",
+    "playwright-core": "^1.64.0",
+    "vite": "^8.3.4",
+    "three": "^0.186.1"
+  },
+  "main": "engine/electron/main.cjs"
+}

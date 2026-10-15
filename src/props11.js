@@ -3,7 +3,7 @@
 // of their image and face left. Colours: the Hatter "turned pale" (a pale face, briefly);
 // the card people are coloured like real cards, and so are the court's hearts: the canopy,
 // the throne and the herald's banner (owner, 2026-10-11).
-import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from './ink.js';
+import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from '@engine/ink.js';
 import { SPOT, vignette, line, shape } from './props.js';
 import { suit, suitColour } from './props8.js';
 

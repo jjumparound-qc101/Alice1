@@ -39,7 +39,7 @@ const TAILPIECES = { 1: 'art/ai/props/chapter1_end.webp' };
 
 export const CHAPTERS = TITLES.map((title, i) => {
   const n = i + 1, nn = String(n).padStart(2, '0');
-  const ch = { n, roman: ROMAN[i], title, narrated: NARRATED.has(n), audio: `audio/ch${nn}.mp3`, words: `data/ch${nn}_words.json` };
+  const ch = { n, label: 'Chapter', roman: ROMAN[i], title, narrated: NARRATED.has(n), audio: `audio/ch${nn}.mp3`, words: `data/ch${nn}_words.json` };
   ch.scenes = STAGED[n] ?? [placeholder(ch)];
   ch.tints = TINTS[n] ?? [];
   ch.tailpiece = TAILPIECES[n] ?? null;

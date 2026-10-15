@@ -7,13 +7,13 @@
 //   garden   — "she found herself at last in the beautiful garden".
 // Figures and props not yet drawn are placeholders from props7.js.
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
-import { texture, INK, PAPER } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture, INK, PAPER } from '@engine/ink.js';
 import { gardenBehind } from '../sets/croquet.js';
 import { buildHall, TABLE, DOOR, KEY } from '../sets/hall.js';
-import { thoughts } from '../thoughts.js';
-import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { thoughts } from '@engine/thoughts.js';
+import { carry } from '@engine/puppet.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 import { outdoors } from './rabbit.js';
 
 const TWO_FEET = 0.4;                       // Alice is about two feet high (Chapter VI's end)

@@ -5,13 +5,13 @@
 // The art is the AI drawings (tools/compose_poses.py for Alice, tools/ch2_art.py for the
 // rest); tears are still drawn in code (props2.js).
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
-import { texture } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture } from '@engine/ink.js';
 import { buildHall, TABLE, DOOR, KEY, H } from '../sets/hall.js';
 import { tear } from '../props2.js';
-import { thoughts } from '../thoughts.js';
-import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { thoughts } from '@engine/thoughts.js';
+import { carry } from '@engine/puppet.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 
 const GIANT = 2.55;       // "more than nine feet high": her head reaches the roof
 const TWO_FEET = 0.48;

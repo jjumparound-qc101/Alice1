@@ -1,7 +1,7 @@
 // Placeholder art for Chapter VII, "A Mad Tea-Party", drawn in code until the AI drawings
 // arrive (docs/CHAPTER_07_ASSETS.md). Seated figures are drawn from the waist up, standing
 // on the bottom edge of their image, to sit behind the tea-table's cloth. Ink only.
-import { canvas, hatch, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from './ink.js';
+import { canvas, hatch, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from '@engine/ink.js';
 import { vignette, line, shape } from './props.js';
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;

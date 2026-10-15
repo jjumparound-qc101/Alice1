@@ -49,7 +49,7 @@ def mask(poly, size, blur=2):
 def main():
     os.makedirs(OUT, exist_ok=True)
     with tempfile.TemporaryDirectory() as d:
-        subprocess.run([sys.executable, "tools/whitecut.py", "source/ai/caterpillar_sit.png", f"{d}/c.png",
+        subprocess.run([sys.executable, "engine/tools/whitecut.py", "source/ai/caterpillar_sit.png", f"{d}/c.png",
                         "--clear", "760,500;720,1000"],  # inside the hookah hose loop; beside his base
                        check=True, stdout=subprocess.DEVNULL)
         cut = Image.open(f"{d}/c.png").convert("RGBA")
@@ -75,7 +75,7 @@ def main():
     for n in POSES:
         with tempfile.TemporaryDirectory() as d:
             clear = ["--clear", "582,387;365,1241"] if n == "hookah" else []  # inside the loops of the hose
-            subprocess.run([sys.executable, "tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png", *clear], check=True, stdout=subprocess.DEVNULL)
+            subprocess.run([sys.executable, "engine/tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png", *clear], check=True, stdout=subprocess.DEVNULL)
             cut = Image.open(f"{d}/c.png").convert("RGBA")
         a = np.asarray(cut, np.float32).copy()
         if n not in ("hookah", "alice5_head"):

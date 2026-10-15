@@ -2,7 +2,7 @@
 // edge, and the tall rock with the little ledge where the Mock Turtle sits. Built at foot-high
 // Alice's scale. AI drawings after Tenniel's plates 9.3 and 10.1 (2026-10-15, tools/seashore_art.py).
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
+import { paperFlat } from '@engine/stage.js';
 import { panorama } from './panorama.js';
 
 // The rock (rock_ledge, 993 x 1474): the ledge's top at LEDGE (fractions from the drawing's top left),

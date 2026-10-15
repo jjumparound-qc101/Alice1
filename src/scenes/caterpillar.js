@@ -6,12 +6,12 @@
 //   clearing — her right size again, the little house four feet high, and down to nine inches.
 // Figures and props not yet drawn are placeholders from props4.js and props5.js.
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
-import { texture, canvas, INK, PAPER } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture, canvas, INK, PAPER } from '@engine/ink.js';
 import { nest, plateMount } from '../props5.js';
-import { thoughts } from '../thoughts.js';
-import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { thoughts } from '@engine/thoughts.js';
+import { carry } from '@engine/puppet.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 import { outdoors, tiled, MUSH } from './rabbit.js';
 
 const TINY = 0.13;       // three inches

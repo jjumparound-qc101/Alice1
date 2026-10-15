@@ -3,8 +3,8 @@
 // middle, the jury-box with its twelve creatures and their slates, the witness stand, the
 // crowd behind the gallery rails, and the door the witnesses come in by.
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
-import { texture, canvas, hatch, PAPER } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture, canvas, hatch, PAPER } from '@engine/ink.js';
 import { slate } from '../props11.js';
 
 // The set is AI drawings after the book and Tenniel's frontispiece (2026-10-15, tools/court_art.py):

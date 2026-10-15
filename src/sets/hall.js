@@ -2,8 +2,8 @@
 // doors, flagstone floor, hanging lamps, the glass table with the golden key, and the little
 // door behind the low curtain, with the garden seen through it.
 import * as THREE from 'three';
-import { paperFlat, halo } from '../stage.js';
-import { texture, canvas, INK } from '../ink.js';
+import { paperFlat, halo } from '@engine/stage.js';
+import { texture, canvas, INK } from '@engine/ink.js';
 import { SPOT } from '../props.js';
 
 export const HALL_W = 12, HALL_D = 6, H = 3.2;

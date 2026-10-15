@@ -1,7 +1,7 @@
 // Placeholder art for Chapter VI, "Pig and Pepper", drawn in code until the AI drawings
 // arrive (docs/CHAPTER_06_ASSETS.md). Figures stand on the bottom edge of their image and
 // face left. No colours: Chapter VI names none.
-import { canvas, hatch, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from './ink.js';
+import { canvas, hatch, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from '@engine/ink.js';
 import { vignette, line, shape } from './props.js';
 
 const FONT = (size, italic = false) => `${italic ? 'italic ' : ''}${size}px "IM Fell English", Georgia, serif`;

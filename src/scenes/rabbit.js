@@ -7,13 +7,13 @@
 //           blue Caterpillar on top.
 // Figures and props not yet drawn are placeholders from props4.js.
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
-import { texture, PAPER } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture, PAPER } from '@engine/ink.js';
 import { plainBottle, stick } from '../props4.js';
-import { thoughts } from '../thoughts.js';
+import { thoughts } from '@engine/thoughts.js';
 import { panorama } from '../sets/panorama.js';
-import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { carry } from '@engine/puppet.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 
 const MAID = 0.5;    // Alice's size here: small enough to be taken for the Rabbit's housemaid
 const TINY = 0.13;   // after the little cakes: about three inches

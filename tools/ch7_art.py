@@ -22,7 +22,7 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     for n in sys.argv[1:] or NAMES:
         with tempfile.TemporaryDirectory() as d:
-            subprocess.run([sys.executable, "tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
+            subprocess.run([sys.executable, "engine/tools/whitecut.py", f"source/ai/{n}.png", f"{d}/c.png"], check=True, stdout=subprocess.DEVNULL)
             img = Image.open(f"{d}/c.png").convert("RGBA")
         print(f"{n}: px {img.height}")
         img.resize((600, round(img.height * 600 / img.width)), Image.LANCZOS).save(f"{OUT}/{n}.webp", quality=90, method=6)

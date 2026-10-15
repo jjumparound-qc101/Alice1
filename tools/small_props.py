@@ -30,7 +30,7 @@ GOLD_LIGHT = np.array([0xff, 0xe2, 0x7a], np.float32)
 
 def whitecut(name, *args, max_side=768):
     with tempfile.TemporaryDirectory() as d:
-        subprocess.run([sys.executable, "tools/whitecut.py", f"{SRC}/{name}.webp", f"{d}/out.png", *args], check=True)
+        subprocess.run([sys.executable, "engine/tools/whitecut.py", f"{SRC}/{name}.webp", f"{d}/out.png", *args], check=True)
         img = Image.open(f"{d}/out.png").convert("RGBA")
         img.load()
     k = min(1, max_side / max(img.size))

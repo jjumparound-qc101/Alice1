@@ -3,7 +3,7 @@
 // image and face left. Colours (docs/COLOR.md): the roses are white, being painted red; the
 // cushion under the King's crown is crimson; the Queen's face flushes crimson. The card people
 // are coloured like real cards: red hearts and diamonds, black clubs and spades (owner, 2026-10-11).
-import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from './ink.js';
+import { canvas, hatch, blob, flicks, outline, fillPaper, grain, shadeEdge, INK, PAPER } from '@engine/ink.js';
 import { SPOT, vignette, line, shape } from './props.js';
 import { cheshire } from './props6.js';
 

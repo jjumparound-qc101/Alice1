@@ -8,15 +8,15 @@
 // Figures and props not yet drawn are placeholders from props9.js (and props8.js).
 import * as THREE from 'three';
 import { crowdCard } from '../cards.js';
-import { paperFlat } from '../stage.js';
-import { texture, PAPER } from '../ink.js';
+import { paperFlat } from '@engine/stage.js';
+import { texture, PAPER } from '@engine/ink.js';
 import { card, cardArch, GUESTS, COURTIERS, CHILDREN } from '../props8.js';
 
 import { buildCroquet, FOOT, CROQ, FTREE } from '../sets/croquet.js';
 import { buildSeashore, ROCK, LEDGE_AT } from '../sets/seashore.js';
 import { drawnPose, extras } from '../crowd.js';
-import { thoughts } from '../thoughts.js';
-import { smooth, lerp, route, cameraTrack } from '../track.js';
+import { thoughts } from '@engine/thoughts.js';
+import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
 import { outdoors } from './rabbit.js';
 
 const DUCHESS = 0.75;   // the Duchess's scale: "exactly the right height to rest her chin upon Alice's shoulder"

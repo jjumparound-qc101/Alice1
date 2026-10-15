@@ -1,9 +1,9 @@
 // Scene 2: the fall, from "The rabbit-hole went straight on like a tunnel…" to "thump! thump!"
 // Alice drifts down the middle of the shaft; the walls scroll upward past her.
 import * as THREE from 'three';
-import { paperFlat } from '../stage.js';
-import { thoughts } from '../thoughts.js';
-import { smooth, lerp, cameraTrack } from '../track.js';
+import { paperFlat } from '@engine/stage.js';
+import { thoughts } from '@engine/thoughts.js';
+import { smooth, lerp, cameraTrack } from '@engine/track.js';
 
 const FALL = 0.35; // metres per second the walls pass by ("she fell very slowly")
 const WALL_W = 3.2, WALL_H = 9;
