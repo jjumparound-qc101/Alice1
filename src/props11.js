@@ -14,62 +14,6 @@ const dot = (g, x, y, r, c = INK) => { g.fillStyle = c; g.beginPath(); g.arc(x, 
 const panel = (g, p, seed, angle = Math.PI / 2, gap = 5, alpha = 0.7) => { fillPaper(g, p); hatch(g, p, { angle, gap, seed, alpha }); outline(g, p, 3); };
 export const PALE_FACE = SPOT.paleFace; // "turned pale": the face drained to a cold paper-white
 
-// The back wall of the court: panelling, a canopy of hearts over the throne, high windows.
-export function courtWall(w = 3000, h = 1000) {
-  const { c, g } = canvas(w, h);
-  g.fillStyle = PAPER; g.fillRect(0, 0, w, h);
-  hatch(g, rect(0, 0, w, h), { angle: Math.PI / 2, gap: 9, width: 0.8, seed: 2201, alpha: 0.4 });
-  for (let x = 120; x < w; x += 480) { // high windows
-    const win = new Path2D(); win.moveTo(x, 420); win.lineTo(x, 160); win.arc(x + 90, 160, 90, Math.PI, 0); win.lineTo(x + 180, 420); win.closePath();
-    fillPaper(g, win); outline(g, win, 4); line(g, 2, [[x + 90, 70], [x + 90, 420]]); line(g, 2, [[x, 260], [x + 180, 260]]);
-  }
-  const dado = rect(0, h - 300, w, 300); fillPaper(g, dado); hatch(g, dado, { angle: 0.7, gap: 6, seed: 2202, alpha: 0.5 }); outline(g, dado, 3);
-  for (let x = 0; x < w; x += 150) g.strokeRect(x + 15, h - 280, 120, 250);
-  // The canopy over the throne, in the middle, hung with hearts.
-  const cx = w / 2;
-  const can = new Path2D(); can.moveTo(cx - 420, 120); can.lineTo(cx + 420, 120); can.lineTo(cx + 380, 330); for (let k = 0; k <= 8; k++) can.quadraticCurveTo(cx + 380 - k * 95 - 47, 380, cx + 380 - (k + 1) * 95, 330); can.closePath();
-  fillPaper(g, can); outline(g, can, 4);
-  g.fillStyle = suitColour('hearts'); for (let k = 0; k < 9; k++) g.fill(suit('hearts', cx - 360 + k * 90, 220, 22));
-  for (const s of [-1, 1]) { const curtain = new Path2D(); curtain.moveTo(cx + s * 380, 330); curtain.quadraticCurveTo(cx + s * 470, 600, cx + s * 400, h - 300); curtain.lineTo(cx + s * 330, h - 300); curtain.quadraticCurveTo(cx + s * 400, 600, cx + s * 330, 330); curtain.closePath(); panel(g, curtain, 2203 + s, Math.PI / 2, 5, 0.6); }
-  grain(g, 0.03, 2204);
-  return c;
-}
-// A throne for two on a low dais, decorated with hearts.
-export function throne() {
-  const { c, g } = canvas(800, 600);
-  const dais = rect(20, 520, 760, 80); fillPaper(g, dais); hatch(g, dais, { angle: 0.1, gap: 6, seed: 2211, alpha: 0.5 }); outline(g, dais, 3);
-  const back = new Path2D(); back.moveTo(110, 520); back.lineTo(110, 120); back.quadraticCurveTo(400, 0, 690, 120); back.lineTo(690, 520); back.closePath();
-  fillPaper(g, back); hatch(g, back, { angle: Math.PI / 2, gap: 7, seed: 2212, alpha: 0.35 }); outline(g, back, 4);
-  g.fillStyle = suitColour('hearts'); for (const x of [250, 400, 550]) g.fill(suit('hearts', x, 120, 26));
-  for (const x of [60, 690]) { const arm = rect(x, 360, 50, 160); panel(g, arm, 2213 + x, 0.3, 5, 0.6); }
-  const seat = rect(110, 400, 580, 50); panel(g, seat, 2215, 0.1, 6, 0.4);
-  return c;
-}
-// The jury-box: a low railed box, two rows, seen from the front.
-export function juryBox() {
-  const { c, g } = canvas(900, 260);
-  const box = rect(10, 90, 880, 170); fillPaper(g, box); hatch(g, box, { angle: Math.PI / 2, gap: 6, seed: 2221, alpha: 0.45 }); outline(g, box, 4);
-  const rail = rect(0, 70, 900, 26); fillPaper(g, rail); hatch(g, rail, { gap: 4, seed: 2222, alpha: 0.6 }); outline(g, rail, 3);
-  for (let x = 60; x < 900; x += 120) { g.strokeRect(x - 40, 120, 80, 110); }
-  return c;
-}
-// The table in the middle of the court with a large dish of tarts.
-export function tartsTable() {
-  const { c, g } = canvas(400, 300);
-  for (const x of [60, 340]) line(g, 10, [[x, 150], [x, 296]]);
-  const top = rect(20, 130, 360, 24); fillPaper(g, top); hatch(g, top, { gap: 4, seed: 2231, alpha: 0.6 }); outline(g, top, 3);
-  const dish = ellipse(200, 120, 140, 26); fillPaper(g, dish); outline(g, dish, 3);
-  for (let k = 0; k < 9; k++) { const x = 100 + (k % 5) * 50 + (k > 4 ? 25 : 0), y = k > 4 ? 92 : 112; const t = ellipse(x, y, 22, 10); fillPaper(g, t); outline(g, t, 2); const jam = ellipse(x, y - 2, 11, 5); hatch(g, jam, { gap: 2, seed: 2232 + k }); outline(g, jam, 1.5); }
-  return c;
-}
-// The witness stand: a small railed box; a figure stands behind it.
-export function witnessBox() {
-  const { c, g } = canvas(300, 260);
-  const box = rect(20, 60, 260, 200); fillPaper(g, box); hatch(g, box, { angle: Math.PI / 2, gap: 6, seed: 2241, alpha: 0.5 }); outline(g, box, 4);
-  const rail = rect(6, 44, 288, 22); fillPaper(g, rail); hatch(g, rail, { gap: 4, seed: 2242, alpha: 0.6 }); outline(g, rail, 3);
-  g.strokeRect(50, 90, 200, 140);
-  return c;
-}
 // The crowd: rows of little birds and beasts and cards behind the gallery rail (a backdrop).
 export function crowdGallery(w = 2400, h = 500, seed = 2251) {
   const { c, g } = canvas(w, h);
