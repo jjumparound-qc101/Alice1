@@ -11,7 +11,7 @@ import { crowdCard } from '../cards.js';
 import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { card, cardArch, GUESTS, COURTIERS, CHILDREN } from '../props8.js';
-import { sunnyBank, tempersVignette, pigsFlyVignette, seaSchoolVignette, mastersVignette } from '../props9.js';
+import { tempersVignette, pigsFlyVignette, seaSchoolVignette, mastersVignette } from '../props9.js';
 import { buildCroquet, FOOT, CROQ, FTREE } from '../sets/croquet.js';
 import { buildSeashore, ROCK, LEDGE_AT } from '../sets/seashore.js';
 import { drawnPose, extras } from '../crowd.js';
@@ -148,9 +148,12 @@ export const gryphonBank = {
     const at = cue.at;
     const start = gryphonBank.start(cue);
     const T = { lazy: at('lazy'), walked: at('walked', 3), rubbed: at('rubbed'), chuckled: at('chuckled'), come: at('come', 3), end: at('distance') - 2 };
-    outdoors(group, ai, { groundRepeat: 40 });
-    for (const [x, z, h, s] of [[-1.6, -1.6, 2.6, 1], [1.8, -2.0, 2.8, -1], [-3.4, -0.6, 2.4, -1]]) { const t = paperFlat(ai.tree.tex, h * ai.tree.aspect, h); t.position.set(x, 0, z); t.scale.x = s; group.add(t); }
-    const bank = paperFlat(texture(sunnyBank()), 2.4, 0.54); bank.position.set(0, 0, -0.75); group.add(bank);
+    // "a Gryphon, lying fast asleep in the sun": the sunny bank by the sea behind him (AI, after plate 9.2), three
+    // copies mirrored; the far treeline left out, as the bank shows the sea beyond.
+    outdoors(group, ai, { groundRepeat: 40, far: false });
+    for (const [x, z, h, s] of [[-3.0, -0.9, 2.6, 1], [3.2, -1.2, 2.8, -1], [-3.4, 0.4, 2.4, -1]]) { const t = paperFlat(ai.tree.tex, h * ai.tree.aspect, h); t.position.set(x, 0, z); t.scale.x = s; group.add(t); }
+    const BK = ai['ch9/bank_sunny'], BH = 0.45, BW = BH * BK.aspect;
+    for (const k of [-1, 0, 1]) { const b = paperFlat(BK.tex, BW, BH, { edge: false }); b.position.set(k * BW, 0, -1.2); if (k) b.scale.x = -1; group.add(b); }
     const G = { x: -0.1, z: -0.35 };
     const gryphonA = (t) => {
       const s = route(t, [[start, G], [T.come + 0.5, G], [T.end, { x: -2.2, z: 0.1, dir: -1 }]], { phase: t * 2 });
@@ -235,8 +238,8 @@ export const mockTurtleRock = {
     const L = [LEDGE_AT.x, LEDGE_AT.y + 0.12, LEDGE_AT.z];
     const mid = [(ASEAT.x + LEDGE_AT.x) / 2 - 0.1, 0.2, ROCK.z + 0.2];
     const camera = cameraTrack([
-      { t: start, dur: 0, pos: [-1.4, 0.35, 1.6], look: [ROCK.x - 0.3, 0.25, ROCK.z] },              // the Mock Turtle in the distance
-      { t: start + 3, dur: T.tears - start - 3, pos: [-0.5, 0.3, 1.1], look: [ROCK.x - 0.1, 0.25, ROCK.z] },
+      { t: start, dur: 0, pos: [-3.5, 0.5, 1.9], look: [-0.8, 0.1, -0.4] },                          // the Mock Turtle in the distance, Alice and the Gryphon walking to him
+      { t: start + 18, dur: T.tears - start - 18, pos: [-0.5, 0.3, 1.1], look: [ROCK.x - 0.1, 0.25, ROCK.z] },
       { t: T.tears - 1, dur: 2, pos: [0.15, 0.36, 0.25], look: L },                                  // large eyes full of tears
       { t: T.tears + 8, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },                                  // Alice and the Gryphon with him (Alice in frame every ~10 s)
       { t: T.sat, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },                                        // they sat down

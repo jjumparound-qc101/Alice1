@@ -95,60 +95,6 @@ export function mockTurtle(pose = 'sit') {
   if (pose === 'sob' || pose === 'hide') { const hk = new Path2D(); hk.moveTo(hx - 40, hy + 10); hk.lineTo(hx + 10, hy + 20); hk.lineTo(hx - 10, hy + 70); hk.lineTo(hx - 50, hy + 50); hk.closePath(); fillPaper(g, hk); outline(g, hk, 2); } // handkerchief
   return c;
 }
-
-// The seashore backdrop: a flat sea to a far horizon, a little surf, sky with light clouds.
-export function seaBackdrop(w = 4096, h = 900) {
-  const { c, g } = canvas(w, h);
-  g.fillStyle = PAPER; g.fillRect(0, 0, w, h);
-  for (let band = 0; band < 5; band++) hatch(g, rect(0, 0, w, 260 - band * 45), { angle: 0, gap: 8 + band * 2, width: 0.8, seed: 1931 + band, alpha: 0.3 });
-  for (const [x, y, rx, ry] of [[500, 230, 260, 60], [1700, 180, 320, 70], [2900, 250, 240, 55], [3700, 200, 280, 60]]) { const cl = blob(x, y, rx, ry, 1936 + x, 11, 0.25); fillPaper(g, cl); outline(g, cl, 1.4); }
-  const sea = rect(0, 440, w, h - 440);
-  hatch(g, sea, { angle: 0, gap: 5, width: 0.9, seed: 1940, alpha: 0.6 });
-  g.strokeStyle = INK; g.lineWidth = 2; g.beginPath(); g.moveTo(0, 440); g.lineTo(w, 440); g.stroke(); // the horizon
-  for (let k = 0; k < 160; k++) { const x = (k * 263) % w, y = 470 + ((k * 97) % 380); line(g, 1.5, [[x, y], [x + 30 + (k % 3) * 10, y - 4], [x + 60, y]]); }
-  for (let x = 0; x < w; x += 70) { g.lineWidth = 2; g.beginPath(); g.arc(x + 35, h - 18, 34, Math.PI, 0); g.stroke(); } // the surf
-  grain(g, 0.03, 1941);
-  return c;
-}
-// The sea seen from the shore, laid flat: wavelets in rows (tiles both ways).
-export function seaTile() {
-  const { c, g } = canvas(512, 512);
-  g.fillStyle = PAPER; g.fillRect(0, 0, 512, 512);
-  hatch(g, rect(0, 0, 512, 512), { angle: 0, gap: 6, width: 0.9, seed: 1945, alpha: 0.55 });
-  g.strokeStyle = INK;
-  for (let k = 0; k < 40; k++) { const x = (k * 137) % 512, y = (k * 71) % 512; line(g, 1.6, [[x, y], [x + 18, y - 5], [x + 36, y]]); }
-  return c;
-}
-// Sand: a pale ground tile with pebbles and shells.
-export function sandTile() {
-  const { c, g } = canvas(512, 512);
-  g.fillStyle = PAPER; g.fillRect(0, 0, 512, 512);
-  hatch(g, rect(0, 0, 512, 512), { angle: 0.15, gap: 11, width: 0.6, seed: 1951, alpha: 0.22 });
-  for (let k = 0; k < 900; k++) dot(g, (k * 151) % 512, (k * 89 + (k % 7) * 31) % 512, 0.9);
-  for (let k = 0; k < 16; k++) { const x = (k * 197) % 480 + 16, y = (k * 113) % 480 + 16; const p = ellipse(x, y, 7 + (k % 3) * 3, 5 + (k % 2) * 2, k); fillPaper(g, p); outline(g, p, 1.5); if (k % 4 === 0) for (let r = 0; r < 3; r++) line(g, 1, [[x, y + 4], [x - 6 + r * 6, y - 5]]); }
-  grain(g, 0.04, 1952);
-  return c;
-}
-// The tall rock with a little ledge to sit on. LEDGE: the ledge's top, as fractions of the image.
-export const ROCK_PX = { w: 600, h: 800 }, LEDGE = { u: 0.62, v: 0.55 };
-export function rockLedge() {
-  const { c, g } = canvas(ROCK_PX.w, ROCK_PX.h);
-  const r = new Path2D(); r.moveTo(40, 800); r.lineTo(90, 300); r.lineTo(170, 60); r.lineTo(260, 20); r.lineTo(320, 140); r.lineTo(330, 430); r.lineTo(560, 440); r.lineTo(590, 800); r.closePath();
-  fillPaper(g, r); shadeEdge(g, r, { size: 260, dx: 0.3, dy: 0, angle: 1.3, gap: 4, seed: 1961 }); hatch(g, r, { angle: 1.4, gap: 9, seed: 1962, alpha: 0.35 }); outline(g, r, 4);
-  for (let k = 0; k < 9; k++) line(g, 2, [[100 + k * 25, 120 + k * 60], [140 + k * 18, 160 + k * 66]]); // cracks
-  const top = new Path2D(); top.moveTo(330, 430); top.lineTo(560, 440); top.lineTo(570, 470); top.lineTo(330, 462); top.closePath(); fillPaper(g, top); outline(g, top, 3); // the ledge
-  for (let k = 0; k < 12; k++) { const p = ellipse(60 + k * 46, 785 - (k % 3) * 6, 18, 9); fillPaper(g, p); outline(g, p, 2); } // stones at the foot
-  grain(g, 0.03, 1963);
-  return c;
-}
-// The sunny bank where the Gryphon lies asleep: a low grassy rise.
-export function sunnyBank() {
-  const { c, g } = canvas(1600, 360);
-  const b = new Path2D(); b.moveTo(0, 360); b.quadraticCurveTo(300, 140, 800, 120); b.quadraticCurveTo(1300, 130, 1600, 360); b.closePath();
-  fillPaper(g, b); hatch(g, b, { angle: 0.1, gap: 7, seed: 1971, alpha: 0.35 }); flicks(g, b, { count: 700, len: 12, seed: 1972, up: true }); outline(g, b, 3);
-  return c;
-}
-
 // --- Thought vignettes ------------------------------------------------------------
 export function tempersVignette() {
   return vignette('pepper, vinegar, camomile, barley-sugar', (g) => {

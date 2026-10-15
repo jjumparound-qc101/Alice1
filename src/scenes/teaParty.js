@@ -9,12 +9,12 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, INK, PAPER } from '../ink.js';
-import { garden as gardenPicture } from '../props.js';
-import { tableCloth, cup, teapot, armchair, dayWatch, treeDoor, flowerBed, ravenVignette, concertVignette, batVignette, treacleVignette } from '../props7.js';
+import { gardenBehind } from '../sets/croquet.js';
+import { dayWatch, ravenVignette, concertVignette, batVignette, treacleVignette } from '../props7.js';
 import { buildHall, TABLE, DOOR, KEY } from '../sets/hall.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
+import { smooth, lerp, route, cameraTrack } from '../track.js';
 import { outdoors } from './rabbit.js';
 
 const TWO_FEET = 0.4;                       // Alice is about two feet high (Chapter VI's end)
@@ -55,17 +55,24 @@ export const teaParty = {
     const top = new THREE.Mesh(topGeo, new THREE.MeshBasicMaterial({ color: '#f6f2e8' }));
     top.add(new THREE.LineSegments(new THREE.EdgesGeometry(topGeo), new THREE.LineBasicMaterial({ color: INK })));
     top.position.set((TBL.x0 + TBL.x1) / 2, TBL.h, TBL.z); group.add(top);
-    const cloth = paperFlat(texture(tableCloth()), TBL.x1 - TBL.x0, TBL.h); cloth.position.set((TBL.x0 + TBL.x1) / 2, 0, TBL.z + TBL.d / 2 + 0.003); group.add(cloth);
-    // "it's laid for a great many more than three"
-    const cupTex = texture(cup());
-    for (let i = 0; i < 14; i++) { const c = paperFlat(cupTex, 0.06, 0.04); c.position.set(lerp(TBL.x0 + 0.1, TBL.x1 - 0.1, i / 13), TBL.h + 0.008, TBL.z + (i % 2 ? 0.1 : -0.1)); group.add(c); }
-    const pot = paperFlat(texture(teapot()), 0.14, 0.11); pot.position.set(SEATS[2] - 0.02, TBL.h + 0.008, TBL.z + 0.02); group.add(pot);
-    const chair = paperFlat(texture(armchair()), 0.32, 0.38); chair.position.set(TBL.x0 - 0.14, 0, TBL.z + 0.08); chair.rotation.y = 0.9; group.add(chair);
+    // The tea things (AI, 2026-10-15, tools/tea_art.py, after plates 7.1-7.3): the hanging cloth repeated along the
+    // table; "it's laid for a great many more than three": cups and saucers, plates of bread-and-butter, the
+    // milk-jug by the March Hare (he upsets it into his plate), the teapot (the Dormouse's, plate 7.3).
+    const CL = ai['ch7/tea_cloth'], clothTex = CL.tex.clone(), clothTile = TBL.h * CL.aspect;
+    clothTex.wrapS = THREE.RepeatWrapping; clothTex.repeat.set((TBL.x1 - TBL.x0) / clothTile, 1); clothTex.needsUpdate = true;
+    const cloth = paperFlat(clothTex, TBL.x1 - TBL.x0, TBL.h, { edge: false, opaque: true }); cloth.position.set((TBL.x0 + TBL.x1) / 2, 0, TBL.z + TBL.d / 2 + 0.003); group.add(cloth);
+    const art = (n, w, opts) => { const a = ai[`ch7/${n}`]; return paperFlat(a.tex, w, w / a.aspect, opts); };
+    for (let i = 0; i < 14; i++) { const c = art('teacup', 0.07); c.position.set(lerp(TBL.x0 + 0.1, TBL.x1 - 0.1, i / 13), TBL.h + 0.008, TBL.z + (i % 2 ? 0.1 : -0.1)); group.add(c); }
+    for (const x of [-0.95, -0.35, 0.85]) { const p = art('plate_bread', 0.09); p.position.set(x, TBL.h + 0.008, TBL.z + 0.14); group.add(p); }
+    const jug = art('milk_jug', 0.065); jug.position.set(SEATS[3] + 0.1, TBL.h + 0.008, TBL.z + 0.04); group.add(jug);
+    const pot = art('teapot', 0.16); pot.position.set(SEATS[2] - 0.02, TBL.h + 0.008, TBL.z + 0.02); group.add(pot);
+    // The arm-chair at the end of the table, the same chair as in Alice's drawing sitting in it.
+    const chair = art('tea_armchair', 0.45 * ai['ch7/tea_armchair'].aspect); chair.position.set(TBL.x0 - 0.14, 0, TBL.z + 0.08); chair.rotation.y = 0.9; group.add(chair);
     const watch = paperFlat(texture(dayWatch()), 0.04, 0.045, { anchor: 'center' }); group.add(watch);
     const dA = ai['ch7/dormouse_sleep'], dB = ai['ch7/dormouse_talk']; const dor = paperFlat(dA.tex, 0.11, 0.11 / dA.aspect); const dorTalk = paperFlat(dB.tex, 0.11, 0.11 / dB.aspect); // AI (tools/ch7_art.py) group.add(dor, dorTalk);
     const DT = ai['ch7/dormouse_teapot']; const potDor = paperFlat(DT.tex, 0.19, 0.19 / DT.aspect); group.add(potDor); // the Dormouse in the teapot (AI, after plate 7.3)
     potDor.position.set(SEATS[2] - 0.02, TBL.h + 0.008, TBL.z + 0.02);
-    const tree = paperFlat(texture(treeDoor()), 0.5, 1.12); tree.position.set(-3.6, 0, 0.2); group.add(tree);
+    const tree = art('tree_door', 1.47 * ai['ch7/tree_door'].aspect); tree.position.set(-3.6, 0, 0.2); group.add(tree); // the same tree as in her drawing at its door
     const think = thoughts(group, [
       { t0: T.raven - 0.5, t1: T.raven + 12, art: ravenVignette() },
       { t0: T.concert - 1, t1: T.twinkle, art: concertVignette() },
@@ -129,34 +136,45 @@ export const teaParty = {
       watch.visible = t >= T.watch && t < T.dipped + 8;
       if (t < T.dipped - 2) carry(watch, cast.hatter);
       else { watch.position.set(seat('hare', t) + 0.05, TBL.h + 0.06 - (t >= T.dipped && t < T.dipped + 2 ? 0.04 : 0), TBL.z + 0.05); watch.rotation.set(0, 0, 0); }
+      // "the March Hare had just upset the milk-jug into his plate"
+      jug.rotation.z = smooth((t - T.milk + 1) / 0.6) * 1.3; jug.position.x = seat('hare', t) + 0.1;
       chair.visible = aliceA(t).pose !== 'chair7';   // her arm-chair drawing has its own chair
       tree.visible = aliceA(t).pose !== 'treedoor';  // and the tree with the door is in her drawing there
       const a = aliceA(t);
       think(t, { x: a.x + 0.28, y: 0.62, z: a.z + 0.05 }, 0.28);
     }
     const S = (x, y = 0.38) => [x, y, TBL.z];
+    // Hand-directed with the AI tea things (2026-10-15): the whole party with Alice in her arm-chair (PARTY) between
+    // the close shots, at her own lines, so she is in the picture at least every ~12 s.
+    const PARTY = { pos: [-0.5, 0.55, 1.6], look: [-0.5, 0.18, -0.45] };
+    const key = (t, s, dur = 2) => ({ t, dur, ...s });
     const camera = cameraTrack([
       { t: 0, dur: 0, pos: [-2.4, 0.5, 2.4], look: [0, 0.3, -0.5] },                                  // the table under the tree
       { t: T.room - 1, dur: 2, pos: [0.9, 0.55, 1.1], look: S(0.3) },                                   // "No room! No room!"
       { t: T.sat, dur: 3, pos: [-0.1, 0.6, 1.4], look: S(-0.4, 0.32) },                               // Alice in the arm-chair
       { t: T.hair - 1, dur: 2, pos: [0.2, 0.5, 0.7], look: S(SEATS[1], 0.42) },                      // "Your hair wants cutting"
+      key(76.5, PARTY, 2.5),                                                                          // "You should learn not to make personal remarks"
       { t: T.raven + 6, dur: 3, pos: [-0.1, 0.6, 1.4], look: S(-0.2, 0.34) },
       { t: T.watch - 1, dur: 2, pos: [0.45, 0.5, 0.65], look: S(SEATS[1] + 0.1, 0.4) },                 // the watch
+      key(178.6, PARTY), key(182.3, { pos: [0.45, 0.5, 0.65], look: S(SEATS[1] + 0.1, 0.4) }, 1.5),   // "The fourth."; "Two days wrong!"
+      key(189, PARTY),                                                                                // "It was the best butter"
       { t: T.dipped - 1, dur: 2, pos: [0.5, 0.5, 0.65], look: S(SEATS[3], 0.38) },                      // dipped into his tea
       { t: T.poured - 1, dur: 2, pos: [0.35, 0.48, 0.6], look: S(SEATS[2], 0.3) },                     // hot tea on the Dormouse's nose
-      { t: T.poured + 8, dur: 4, pos: [-0.1, 0.65, 1.5], look: S(0, 0.36) },
+      { t: T.poured + 2.5, dur: 3, pos: [-0.1, 0.65, 1.5], look: S(0, 0.36) },
       { t: T.wake - 1, dur: 2, pos: [0.3, 0.48, 0.6], look: S(SEATS[2], 0.3) },                      // the Dormouse's story
+      key(512.8, PARTY, 1.5),                        key(530.8, { pos: [0.3, 0.48, 0.6], look: S(SEATS[2], 0.3) }, 1.5),      // "Yes, please do!"; "Once upon a time"
+      key(541.4, PARTY, 1.5), key(547, { pos: [0.3, 0.48, 0.6], look: S(SEATS[2], 0.3) }, 1.5),        // "What did they live on?"; "treacle"
+      key(552, PARTY, 1.5),                                                                           // "they'd have been ill" 
       { t: T.treacle + 20, dur: 4, pos: [-0.1, 0.65, 1.5], look: S(0, 0.36) },
       { t: T.move - 1, dur: 3, pos: [0.4, 0.75, 1.4], look: S(0.1, 0.3) },                            // one place on
-      { t: T.disgust - 1, dur: 3, pos: [-1.4, 0.55, 1.5], look: [-2.4, 0.3, 0.3] },                   // walking off
+      { t: T.disgust + 1, dur: 3, pos: [-0.9, 0.5, 1.9], look: [-2.1, 0.15, 0.2] },                   // walking off, looking back
       { t: T.teapot - 3, dur: 2, pos: [0.1, 0.55, 0.7], look: S(SEATS[2], 0.3) },                     // into the teapot
-      { t: T.stupidest - 1, dur: 4, pos: [-2.9, 0.5, 1.5], look: [-3.6, 0.4, 0.2] },                  // a door into a tree
+      { t: T.teapot + 1, dur: 3, pos: [-2.6, 0.5, 2.3], look: [-3.4, 0.25, 0.1] },                    // "the stupidest tea-party"; a door into a tree
     ]);
     return {
       T, bg: PAPER, fog: [7, 26], bounds: { minX: -3, maxX: 2.5, minZ: 0.3, maxZ: 3 },
       hotspots: [{ pos: new THREE.Vector3(0, 0.3, TBL.z), title: 'The tea-table', text: 'the table was a large one, but the three were all crowded together at one corner of it' }],
-      // Alice in the picture every ~12 s through the long close shots (frame_report, 2026-10-15) until the sets are redone.
-      camera: withAlice(camera, aliceA, [[69, 97], [172, 207], [255, 267], [503, 572], [782, 804]]), update,
+      camera, update,
       actors: (t) => ({ alice: aliceA(t), hatter: hatterA(t), hare: hareA(t) }),
     };
   },
@@ -205,10 +223,10 @@ export const gardenAtLast = {
   build({ group, ai, cue }) {
     const start = gardenAtLast.start(cue);
     outdoors(group, ai, { groundRepeat: 40 });
-    // A placeholder garden: Chapter I's drawing as the backdrop, and flower-beds in front.
-    const back = paperFlat(texture(gardenPicture()), 6, 4.5, { edge: false }); back.position.set(0, 0, -4); group.add(back);
-    const bedTex = texture(flowerBed());
-    for (const [x, z] of [[-0.8, -0.6], [0.9, -1.3], [-0.2, 0.5]]) { const b = paperFlat(bedTex, 1.8, 0.36); b.position.set(x, 0, z); group.add(b); }
+    // "Among the bright flower-beds and the cool fountains": the Queen's garden of Chapter VIII (AI, 2026-10-15).
+    gardenBehind(group, ai, 0, -3.2);
+    const FB = ai['ch8/flower_bed'];
+    for (const [x, z, s] of [[-0.9, -0.7, 1], [0.9, -1.4, -1], [-1.3, 0.4, -1]]) { const b = paperFlat(FB.tex, 1.0, 1.0 / FB.aspect); b.position.set(x, 0, z); b.scale.x = s; group.add(b); }
     const alice = (t) => { const s = route(t, [[start, { x: 0.9, z: 0.2, dir: -1 }], [start + 5, { x: 0.2, z: -0.1 }]], { phase: t * 2.2 }); return { ...s, pose: s.moving ? 'stand' : 'garden7', scale: 0.24 }; }; // delighted, among the flower-beds
     const camera = cameraTrack([{ t: start, dur: 0, pos: [0.6, 0.25, 1.4], look: [0.0, 0.3, -1.5] }, { t: start + 2, dur: 6, pos: [0.9, 0.5, 2.2], look: [0, 0.6, -3] }]);
     return { T: {}, bg: PAPER, fog: [8, 30], bounds: null, hotspots: [], camera, actors: (t) => ({ alice: alice(t) }) };

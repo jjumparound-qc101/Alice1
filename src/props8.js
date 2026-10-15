@@ -188,55 +188,6 @@ export function rose(red = false) {
   g.lineWidth = 2; g.beginPath(); g.arc(48, 48, 7, 0.4, 5.2); g.stroke();
   return c;
 }
-// The paint-pot, its paint red.
-export function paintPot() {
-  const { c, g } = canvas(160, 160);
-  const pot = new Path2D(); pot.moveTo(20, 40); pot.lineTo(32, 156); pot.lineTo(128, 156); pot.lineTo(140, 40); pot.closePath(); panel(g, pot, 1681, Math.PI / 2, 6, 0.5);
-  const top = ellipse(80, 40, 60, 14); g.fillStyle = SPOT.rose; g.fill(top); outline(g, top, 3);
-  const drip = new Path2D(); drip.moveTo(40, 40); drip.quadraticCurveTo(36, 70, 42, 80); drip.quadraticCurveTo(48, 70, 50, 42); drip.closePath(); g.fillStyle = SPOT.rose; g.fill(drip); outline(g, drip, 1.5);
-  line(g, 4, [[22, 44], [80, 4], [138, 44]]);
-  return c;
-}
-// "a large flower-pot that stood near": big enough to hide three cards.
-export function flowerPot() {
-  const { c, g } = canvas(500, 460);
-  const pot = new Path2D(); pot.moveTo(20, 60); pot.lineTo(80, 460); pot.lineTo(420, 460); pot.lineTo(480, 60); pot.closePath();
-  fillPaper(g, pot); shadeEdge(g, pot, { size: 260, dx: 0.25, dy: 0, angle: 1.0, gap: 5, seed: 1691 }); outline(g, pot, 4);
-  const rim = rect(6, 30, 488, 60); fillPaper(g, rim); hatch(g, rim, { angle: 0.1, gap: 6, seed: 1692, alpha: 0.4 }); outline(g, rim, 4);
-  for (let x = 60; x < 460; x += 60) line(g, 1.5, [[x, 110], [x + (x - 250) * 0.12, 440]]);
-  return c;
-}
-// The garden wall, with arches and trees showing over it: the croquet-ground's backdrop.
-export function gardenWall(w = 4096, h = 700) {
-  const { c, g } = canvas(w, h);
-  for (let x = 160; x < w; x += 520) { // trees over the wall
-    const t = blob(x, 150, 200, 110, 1700 + x, 13, 0.22);
-    fillPaper(g, t); flicks(g, t, { count: 260, len: 10, seed: 1701 + x }); outline(g, t, 2);
-  }
-  const wall = new Path2D(); wall.rect(0, 220, w, h - 220);
-  fillPaper(g, wall); hatch(g, wall, { angle: 0, gap: 7, seed: 1702, alpha: 0.35 });
-  for (let y = 250; y < h; y += 50) for (let x = ((y / 50) % 2) * 60; x < w; x += 120) { g.strokeStyle = INK; g.lineWidth = 1; g.strokeRect(x, y, 120, 50); }
-  outline(g, wall, 3);
-  for (let x = 300; x < w; x += 900) { // arches through the wall
-    const a = new Path2D(); a.moveTo(x - 110, h); a.lineTo(x - 110, 400); a.arc(x, 400, 110, Math.PI, 0); a.lineTo(x + 110, h); a.closePath();
-    fillPaper(g, a); hatch(g, a, { angle: 0.3, gap: 10, seed: 1703 + x, alpha: 0.25 }); outline(g, a, 4);
-  }
-  const cope = rect(0, 210, w, 22); fillPaper(g, cope); hatch(g, cope, { gap: 3, seed: 1704, alpha: 0.6 }); outline(g, cope, 3);
-  grain(g, 0.03, 1705);
-  return c;
-}
-// The croquet-ground, "all ridges and furrows": a ground tile with ploughed stripes.
-export function furrows() {
-  const { c, g } = canvas(512, 512);
-  g.fillStyle = PAPER; g.fillRect(0, 0, 512, 512);
-  for (let y = 0; y < 512; y += 64) {
-    const f = rect(0, y + 34, 512, 26); hatch(g, f, { angle: 0.05, gap: 5, seed: 1711 + y, alpha: 0.35 });
-    g.strokeStyle = INK; g.lineWidth = 1.2; g.beginPath(); g.moveTo(0, y + 30); for (let x = 0; x <= 512; x += 32) g.lineTo(x, y + 30 + Math.sin(x / 40 + y) * 3); g.stroke();
-  }
-  flicks(g, rect(0, 0, 512, 512), { count: 300, len: 7, seed: 1712, up: true });
-  grain(g, 0.05, 1713);
-  return c;
-}
 // A live flamingo used as a mallet. pose: 'held' (neck straight, head down), 'twist' (its neck
 // twisted round to look up at Alice), 'fly' (trying to fly up into a tree).
 export function flamingo(pose = 'held') {

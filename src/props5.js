@@ -9,24 +9,6 @@ const ellipse = (x, y, rx, ry, rot = 0) => { const p = new Path2D(); p.ellipse(x
 const dot = (g, x, y, r, c = INK) => { g.fillStyle = c; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); };
 function feathered(g, p, seed, count = 200) { shape(g, p, seed); flicks(g, p, { count, len: 10, seed: seed + 1, width: 1 }); outline(g, p, 3); }
 
-// "a sea of green leaves": rounded tree crowns packed together, tinted green; tiles both ways.
-export function treetops() {
-  const { c, g } = canvas(512, 512);
-  g.fillStyle = SPOT.leafDark; g.fillRect(0, 0, 512, 512);
-  let seed = 901;
-  for (let y = -40; y < 560; y += 70) for (let x = -40 + ((y / 70) % 2) * 45; x < 560; x += 90) {
-    const r = 48 + ((x * 7 + y * 3) % 17);
-    for (const [dx, dy] of [[0, 0], [512, 0], [-512, 0], [0, 512], [0, -512]]) {
-      const crown = ellipse(x + dx, y + dy, r, r * 0.8);
-      g.fillStyle = SPOT.leaf; g.fill(crown);
-      g.save(); g.clip(crown); hatch(g, crown, { angle: 0.7, gap: 6, seed: seed++, alpha: 0.35 });
-      flicks(g, crown, { count: 40, len: 9, seed: seed++, width: 1 }); g.restore();
-      g.strokeStyle = INK; g.lineWidth = 2; g.stroke(crown);
-    }
-  }
-  grain(g, 0.04, 3);
-  return c;
-}
 // The Pigeon: 'fly' (wings spread, straight at you) or 'perch' (ruffled, on a branch).
 export function pigeon(pose = 'fly') {
   const { c, g } = canvas(420, 300);
@@ -52,13 +34,6 @@ export function nest() {
   const n = new Path2D(); n.moveTo(20, 110); n.quadraticCurveTo(180, 230, 340, 110); n.quadraticCurveTo(180, 170, 20, 110); n.closePath();
   fillPaper(g, n); hatch(g, n, { angle: 0.4, gap: 4, seed: 921 }); hatch(g, n, { angle: -0.5, gap: 6, seed: 922, alpha: 0.6 }); outline(g, n, 3);
   g.strokeStyle = INK; for (let k = 0; k < 14; k++) line(g, 2, [[30 + k * 22, 110 + (k % 3) * 8], [50 + k * 22, 140 - (k % 2) * 10]]);
-  return c;
-}
-// A bit broken off the edge of the mushroom.
-export function mushroomBit() {
-  const { c, g } = canvas(120, 80);
-  const b = new Path2D(); b.moveTo(10, 60); b.quadraticCurveTo(60, -10, 110, 60); b.lineTo(80, 70); b.lineTo(40, 70); b.closePath();
-  fillPaper(g, b); hatch(g, b, { angle: 0.4, gap: 5, seed: 931, alpha: 0.5 }); outline(g, b, 3);
   return c;
 }
 // "a little house in it about four feet high" (the Duchess's house, Chapter VI).

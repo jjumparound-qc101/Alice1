@@ -15,7 +15,7 @@ import { buildCroquet, FOOT, ROSE, POT, CROQ, FTREE } from '../sets/croquet.js';
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
+import { smooth, lerp, route, cameraTrack } from '../track.js';
 
 const RABBIT = 0.35;                         // the Rabbit's scale beside foot-high Alice
 const CARD_H = 0.28, CHILD_H = 0.2, COURT_H = 0.32;
@@ -194,14 +194,27 @@ export const roseTree = {
       think(t, { x: a.x - 0.25, y: 0.42, z: a.z }, 0.24);
     }
     const L = (x, y = 0.18, z = -0.3) => [x, y, z];
+    // Hand-directed (2026-10-15, with the AI garden): Alice in the picture at least every ~12 s. While the
+    // procession passes she is watched from behind, the groups it is made of seen beyond her or close.
+    const BEHIND_A = { pos: [-0.7, 0.22, 1.15], look: [-2.0, 0.12, -0.4] };      // over Alice: the procession passing
+    const BEHIND_L = { pos: [-0.6, 0.22, 1.05], look: [-2.8, 0.08, -0.3] };      // over Alice: the end of the procession, further off
+    const ALICE_C = { pos: [-0.9, 0.22, 0.75], look: [-1.35, 0.1, 0.1] };        // Alice
+    const KNEEL = { pos: [-0.85, 0.28, 1.05], look: [-2.1, 0.08, -0.5] };        // over Alice: the Queen and the gardeners
+    const key = (t, s, dur = 2.5) => ({ t, dur, ...s });
     const camera = cameraTrack([
       { t: 0, dur: 0, pos: [-1.3, 0.45, 1.5], look: [ROSE.x, 0.28, ROSE.z] },                         // the rose-tree near the entrance
       { t: T.nearer, dur: 4, pos: [-1.6, 0.36, 0.7], look: [ROSE.x + 0.15, 0.26, ROSE.z] },                // the gardeners at work
       { t: T.five - 1, dur: 3, pos: [-1.75, 0.3, 0.45], look: [ROSE.x + 0.15, 0.22, ROSE.z + 0.15] },
       { t: T.ask - 1, dur: 3, pos: [-1.3, 0.34, 0.85], look: [-2.0, 0.2, -0.4] },                   // "why you are painting those roses?"
       { t: T.queenCry - 1, dur: 3, pos: [-1.2, 0.45, 1.4], look: [-2.1, 0.12, -0.4] },                // flat upon their faces
-      { t: T.soldiers - 3, dur: 4, pos: [-1.5, 0.3, 1.0], look: L(-2.3) },                             // the procession passes
-      { t: T.kings - 6, dur: 4, pos: [-1.8, 0.3, 0.75], look: L(-2.4, 0.2) },                          // the Knave, the King and Queen
+      key(101, BEHIND_A, 3),                                                                          // Alice looks round for the Queen
+      { t: T.soldiers - 0.5, dur: 3, pos: [-1.5, 0.3, 1.0], look: L(-2.3) },                          // ten soldiers carrying clubs
+      key(113, BEHIND_A), key(119.3, { pos: [-1.8, 0.28, 0.75], look: L(-2.6) }),                     // the courtiers; the royal children
+      key(124, BEHIND_A), key(128.8, BEHIND_L),                                                       // hand in hand; the guests and the Rabbit
+      key(134.2, { pos: [-2.8, 0.25, 0.4], look: [-3.3, 0.12, -0.2] }, 2),                            // the Rabbit, smiling at everything
+      key(140, BEHIND_L, 2),                                                                          // the Knave with the crown, over Alice
+      key(144.6, { pos: [-2.0, 0.3, 0.5], look: [-2.5, 0.18, -0.25] }, 2),                            // THE KING AND QUEEN OF HEARTS
+      key(149.8, ALICE_C, 2.5), key(157.6, BEHIND_A, 3),                                              // doubtful; "what would be the use of a procession"
       { t: T.opposite - 1, dur: 3, pos: [-1.2, 0.3, 0.85], look: [-1.6, 0.18, -0.15] },               // opposite to Alice
       // "the pattern on their backs was the same as the rest of the pack": looking down at the three backs.
       { t: T.backs - 1.5, dur: 2.5, pos: [-2.05, 0.75, 0.25], look: [-2.2, 0.0, -0.62] },
@@ -210,16 +223,18 @@ export const roseTree = {
       { t: T.nonsense - 0.3, dur: 1.5, pos: [-1.15, 0.25, 0.65], look: [A.x - 0.1, 0.2, 0.0] },       // "Nonsense!"
       { t: T.turn - 1, dur: 3, pos: [-1.5, 0.45, 1.1], look: [-2.0, 0.1, -0.45] },                    // "Turn them over!"
       { t: T.leave + 2, dur: 4, pos: [-1.7, 0.35, 0.7], look: [ROSE.x, 0.28, ROSE.z] },               // examining the roses
+      key(271.6, KNEEL, 2.5),                                                                         // Two down on one knee
       { t: T.moved - 1, dur: 3, pos: [-1.1, 0.4, 1.2], look: [-1.5, 0.15, -0.4] },                    // the procession moves on
       { t: T.pot - 2, dur: 2, pos: [-1.15, 0.3, 0.6], look: [POT.x, 0.15, POT.z] },                   // into the flower-pot
-      { t: T.marched - 1, dur: 4, pos: [-0.9, 0.35, 1.1], look: [-0.3, 0.15, -0.3] },                 // the soldiers march off
+      { t: T.marched - 1, dur: 4, pos: [-0.4, 0.3, 1.4], look: [-0.7, 0.12, -0.3] },                  // the soldiers march off; Alice by the pot
+      key(316.8, ALICE_C, 2), key(321.2, { pos: [-0.4, 0.3, 1.4], look: [-0.7, 0.12, -0.3] }, 2),     // the soldiers look at Alice; "Yes!"
       { t: T.joined, dur: 3, pos: [-1.0, 0.32, 0.9], look: [-1.1, 0.2, 0.1] },                        // Alice joins the procession
       { t: T.timid, dur: T.end - T.timid, pos: [CROQ.x0 + 0.3, 0.32, 1.0], look: [CROQ.x0, 0.2, 0.2] }, // walking with the Rabbit
     ]);
     return {
       T, bg: PAPER, fog: [7, 26], bounds: null,
       hotspots: [{ pos: new THREE.Vector3(ROSE.x, 0.3, ROSE.z), title: 'The rose-tree', text: 'the roses growing on it were white, but there were three gardeners at it, busily painting them red' }],
-      camera: withAlice(camera, aliceA, [[106, 172], [208, 216], [223, 233], [266, 287], [303, 329]]), update, // (frame_report, 2026-10-15)
+      camera, update,
       actors: (t) => ({ alice: aliceA(t), two: gardener('two')(t), five: gardener('five')(t), seven: gardener('seven')(t), queen: queenA(t), king: kingA(t), knave: knaveA(t), rabbit: rabbitA(t) }),
     };
   },
@@ -389,8 +404,8 @@ export const croquetGame = {
       });
     }
     const camera = cameraTrack([
-      { t: start, dur: 0, pos: [1.4, 0.7, 2.2], look: [2.8, 0.0, -0.5] },                             // "Get to your places!"
-      { t: T.settled, dur: 10, pos: [3.0, 0.6, 1.8], look: [3.0, 0.0, -0.6] },                         // all ridges and furrows
+      { t: start, dur: 0, pos: [0.2, 0.32, 1.5], look: [2.4, 0.1, -0.6] },                            // "Get to your places!", over Alice
+      { t: T.settled, dur: 8, pos: [1.8, 0.55, 2.1], look: [2.5, 0.0, -0.6] },                         // all ridges and furrows
       { t: T.flamingo - 1, dur: 3, pos: [1.95, 0.24, 0.8], look: [1.65, 0.18, 0.2] },                 // managing her flamingo
       { t: T.unrolled - 1, dur: 2, pos: [2.0, 0.25, 0.85], look: [2.1, 0.06, 0.05] },                 // the hedgehog crawls away
       { t: T.allOnce, dur: 4, pos: [2.8, 0.6, 2.0], look: [3.0, 0.1, -0.5] },                         // all played at once
@@ -398,7 +413,7 @@ export const croquetGame = {
       { t: T.appearance, dur: 4, pos: [1.75, 0.3, 1.3], look: [2.15, 0.27, 0.15] },                  // a curious appearance in the air, and Alice
       { t: T.whole + 8, dur: 4, pos: [1.75, 0.3, 1.0], look: [2.15, 0.3, 0.12] },                     // talking to the Cat
       { t: T.close - 3, dur: 3, pos: [1.85, 0.36, 1.25], look: [2.15, 0.25, 0.1] },                   // the Queen close behind
-      { t: T.hurried + 1, dur: 3, pos: [3.0, 0.5, 1.6], look: [3.4, 0.1, -0.3] },
+      { t: T.hurried + 1, dur: 3, pos: [1.3, 0.35, 1.5], look: [3.2, 0.1, -0.4] },                  // back to the game; the hedgehogs fighting
       { t: T.tree - 2, dur: 3, pos: [4.3, 0.42, 0.6], look: [FLY.x + 0.15, 0.42, FLY.z] },              // the flamingo and the tree
       { t: T.caught + 3, dur: 4, pos: [3.1, 0.45, 1.5], look: [3.2, 0.12, -0.2] },
       { t: T.crowd - 2, dur: 4, pos: [2.0, 0.4, 1.3], look: [CAT.x, 0.25, CAT.z] },                   // a crowd round the Cat
@@ -408,7 +423,7 @@ export const croquetGame = {
     return {
       T, bg: PAPER, fog: [7, 26], bounds: { minX: -2.5, maxX: 5.5, minZ: 1.0, maxZ: 3.0 },
       hotspots: [{ pos: new THREE.Vector3(3.0, 0.1, -0.5), title: 'The croquet-ground', text: 'the balls were live hedgehogs, the mallets live flamingoes, and the soldiers had to double themselves up' }],
-      camera: withAlice(camera, aliceA, [[386, 416], [652, 670]]), update,
+      camera, update,
       actors: (t) => ({ alice: aliceA(t), queen: queenA(t), king: kingA(t), executioner: executionerA(t), duchess: duchessA(t) }),
     };
   },

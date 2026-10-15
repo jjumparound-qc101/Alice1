@@ -12,13 +12,12 @@ import { crowdCard } from '../cards.js';
 import { paperFlat, buildStage } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import { card, cardBack, SOLDIERS, COURTIERS, CHILDREN, GUESTS, OFFICERS } from '../props8.js';
-import { teapot } from '../props7.js';
 import { verses, noteBook, inkstand, deadLeaf, goldfishVignette, countryVignette, grownAliceVignette } from '../props12.js';
 import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, JURY, SEAT, BILL } from '../sets/court.js';
 import { drawnPose, extras } from '../crowd.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
-import { smooth, lerp, route, cameraTrack, withAlice } from '../track.js';
+import { smooth, lerp, route, cameraTrack } from '../track.js';
 
 const RABBIT = 0.38;
 const soldier = (ai) => (who) => ({ poses: { stand: crowdCard(ai, who, 0.28) }, height: 0.28 });
@@ -270,7 +269,7 @@ export const waking = {
     const reality = (k) => lerp(T.bells, T.cattle, k);
     const ghosts = [
       ghost(ai['ch3/mouse3_away'], 0.3, -2.3, -2.2, T.mouse, reality(0.9)),
-      ghost(ai['ch7/hatter_sit_stare'], 0.9, -0.9, -2.9, T.teacups, T.bells), ghost(ai['ch7/marchhare_sit'], 0.85, -0.3, -3.0, T.teacups, T.bells), ghost(teapot(), 0.35, -0.6, -2.6, T.teacups, T.bells),
+      ghost(ai['ch7/hatter_sit_stare'], 0.9, -0.9, -2.9, T.teacups, T.bells), ghost(ai['ch7/marchhare_sit'], 0.85, -0.3, -3.0, T.teacups, T.bells), ghost(ai['ch7/teapot'], 0.3, -0.6, -2.6, T.teacups, T.bells),
       ghost(ai['ch8/queen_point'], 1.1, 0.5, -2.6, T.queen, reality(0.3)),
       ghost(ai['ch6/duchess_nurse'], 1.1, -4.3, -2.5, T.pig, reality(0.55)), ghost(ai['ch6/baby_snout'], 0.35, -3.9, -2.3, T.pig, reality(0.55)),
       ghost(ai['ch9/gryphon_walk'], 0.75, -1.6, -3.3, T.gryphon, reality(0.6)),
@@ -316,7 +315,7 @@ export const waking = {
       { t: T.children, dur: Math.max(4, end - T.children), pos: [-1.2, 1.6, 1.4], look: [SISTER.x + 0.6, 1.0, SISTER.z] },
     ]);
     return {
-      T, bg: PAPER, fog: [9, 34], bounds: set.bounds, hotspots: set.hotspots, camera: withAlice(camera, aliceA, [[69, 92], [145, 159], [181, 335], [457, 512]]), update,
+      T, bg: PAPER, fog: [9, 34], bounds: set.bounds, hotspots: set.hotspots, camera, update,
       // The sister (AI poses, 2026-10-14): Alice's head in her lap, brushing away the leaves; then alone, her head on her hand, dreaming.
       actors: (t) => ({ alice: aliceA(t), rabbit: rabbitA(t), sister: { pose: t < T.ran ? 'lap' : t >= T.ran + 4 ? 'dream' : 'read', x: SISTER.x, z: SISTER.z, dir: 1 } }),
     };

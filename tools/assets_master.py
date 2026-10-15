@@ -17,6 +17,17 @@ RECEIVED_DIR = "source/ai"
 
 # Entries made under another name, or ruled out by the owner (2026-10-14): ticked with this note.
 DONE_AS = {
+    "crown_cushion": "not needed: the crown on its cushion is in the Knave's drawing (knave_carry)",
+    "tea_table": "done as tea_cloth (repeated along the table) with teacup, plate_bread, milk_jug and teapot on it",
+    "armchair": "done as tea_armchair (the chair of Alice's alice7_chair drawing)",
+    "tea_things": "done as teacup, teapot, milk_jug, plate_bread",
+    "tea_tree": "not needed: the shared tree drawing shades the table",
+    "table_gloves": "done as table_gloves and table_empty (the bottle stands by the looking-glass, as the book says)",
+    "ladders": "done (two ladders tied end to end)",
+    "pebbles_cakes": "done as pebble_1-5 and cake_1-5 (tools/wood_art.py splits pebbles.png and little_cakes.png)",
+    "wood_grass": "done (tall grass, no trunks, repeated in rows)",
+    "mushroom_top": "not needed: the Caterpillar sits on the side-view mushroom's cap",
+    "mushroom_bits": "done as mushroom_bit_1 and _2",
     "court_wall": "done: AI court set 2026-10-15 (the canopy is in the throne's drawing; tools/court_art.py)",
     "throne": "done as court_throne (with its canopy of hearts)",
     "jury_box": "done as court_jury_box",

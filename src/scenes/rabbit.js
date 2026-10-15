@@ -11,10 +11,7 @@ import { paperFlat } from '../stage.js';
 import { texture, PAPER } from '../ink.js';
 import * as art from '../art.js';
 import { flagstones } from '../props.js';
-import {
-  windowTable, plainBottle, ladder, barrow, pebble, littleCake,
-  thistle, buttercup, mushroom, stick, dinahNurseVignette, bookVignette,
-} from '../props4.js';
+import { plainBottle, stick, dinahNurseVignette, bookVignette } from '../props4.js';
 import { thoughts } from '../thoughts.js';
 import { panorama } from '../sets/panorama.js';
 import { carry } from '../puppet.js';
@@ -26,13 +23,19 @@ export const tiled = (t, rx, ry = 1) => { t = t.clone(); t.wrapS = t.wrapT = THR
 const plain = (map, opts = {}) => new THREE.MeshBasicMaterial({ map, ...opts });
 
 // Ground, sky and far trees for the two outdoor scenes.
-export function outdoors(group, ai, { groundRepeat = 14 } = {}) {
+// The mushroom (AI, after plate 5.1; tools/wood_art.py): its cap's rim at three-inch Alice's eye level, so she
+// peeps over the edge on tiptoe; `seat`: where the Caterpillar sits on top. Shared with Chapter V.
+export const MUSH = { w: 0.18 * 1329 / 900, h: 0.18, seat: 0.158 };
+
+export function outdoors(group, ai, { groundRepeat = 14, far: treeline = true } = {}) {
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), plain(texture(art.groundTile(), { repeat: [groundRepeat, groundRepeat] })));
   floor.rotation.x = -Math.PI / 2; group.add(floor);
   const sky = paperFlat(tiled(ai.sky.tex, 40 / (14 * ai.sky.aspect)), 40, 14, { edge: false, opaque: true });
   sky.position.set(0, -0.5, -14); group.add(sky);
-  const far = paperFlat(tiled(ai.treeline.tex, 34 / (3.2 * ai.treeline.aspect)), 34, 3.2, { edge: false });
-  far.position.set(0, 0, -12); group.add(far);
+  if (treeline) {
+    const far = paperFlat(tiled(ai.treeline.tex, 34 / (3.2 * ai.treeline.aspect)), 34, 3.2, { edge: false });
+    far.position.set(0, 0, -12); group.add(far);
+  }
   panorama(group, ai);
 }
 
@@ -146,7 +149,10 @@ export const rabbitHouse = {
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(RW, RD), plain(texture(flagstones(), { repeat: [3, 2] })));
     floor.rotation.x = -Math.PI / 2; floor.position.set((ROOM.x0 + ROOM.x1) / 2, ROOM.floor + 0.002, (ROOM.z0 + ROOM.z1) / 2); house.add(floor);
     const ceil = floor.clone(); ceil.rotation.x = Math.PI / 2; ceil.position.y = ROOM.ceil; house.add(ceil);
-    const table = paperFlat(texture(windowTable()), 0.5, 0.375); table.position.set((WIN.x0 + WIN.x1) / 2, ROOM.floor, ROOM.z1 - 0.12); house.add(table); // "a table in the window"
+    // "a table in the window, and on it (as she had hoped) a fan and two or three pairs of tiny white kid gloves" (AI,
+    // 2026-10-15, tools/wood_art.py): with them, then empty once she has taken them up.
+    const tableArt = (n) => { const a = ai[`ch4/${n}`], h = 0.375; const f = paperFlat(a.tex, h * a.aspect, h); f.position.set((WIN.x0 + WIN.x1) / 2, ROOM.floor, ROOM.z1 - 0.12); house.add(f); return f; };
+    const table = tableArt('table_gloves'), tableEmpty = tableArt('table_empty');
     const bottle = paperFlat(texture(plainBottle()), 0.04, 0.08); house.add(bottle);
     // The dollhouse view (2026-10-14): the room is seen from in front of the house, with the front
     // cut away over it, so the whole of her is in the picture however large she grows. Once her arm is
@@ -166,8 +172,8 @@ export const rabbitHouse = {
     const fr = (n) => paperFlat(ai[`ch4/${n}`].tex, 1.3, 1.3 / ai[`ch4/${n}`].aspect); // AI (2026-10-14)
     const framesWhole = fr('cucumber_frames'), framesBroken = fr('cucumber_frames_broken');
     for (const f of [framesWhole, framesBroken]) { f.position.set(FRAMES.x, 0, FRAMES.z); group.add(f); }
-    const lad = paperFlat(texture(ladder()), 0.5, ROOM.ceil + 0.4); // two ladders tied together, up to the eaves lad.position.set(HW / 2 - 0.25, 0, 0.25); lad.rotation.x = -0.08; group.add(lad);
-    const bar = paperFlat(texture(barrow()), 0.6, 0.33); bar.position.set(1.75, 0, 0.75); group.add(bar);
+    const LD = ai['ch4/ladders'], lad = paperFlat(LD.tex, (ROOM.ceil + 0.4) * LD.aspect, ROOM.ceil + 0.4); // two ladders tied together, up to the eaves lad.position.set(HW / 2 - 0.25, 0, 0.25); lad.rotation.x = -0.08; group.add(lad);
+    const CB = ai['ch4/cart_barrow'], bar = paperFlat(CB.tex, 0.75, 0.75 / CB.aspect); bar.position.set(1.75, 0, 0.75); group.add(bar); // the hand-cart and the barrow of pebbles (AI)
     // Her arm out of the window, hanging down the front of the house: the same arm that reaches up to the
     // window inside (forearm and hand from the model sheet drawing, sized to the lying Alice's arm).
     const FA = ai['ch4/alice_forearm'], ARM = 0.55;
@@ -177,9 +183,10 @@ export const rabbitHouse = {
     // Her foot up the chimney (AI, 2026-10-15): the fireplace with her leg in it, over the fire wall for the kick.
     const FT = ai['ch4/alice_foot'], foot = paperFlat(FT.tex, 0.62 * FT.aspect, 0.62, { edge: false });
     foot.position.set(ROOM.x1 - 0.02, ROOM.floor, (ROOM.z0 + ROOM.z1) / 2); foot.rotation.y = -Math.PI / 2; house.add(foot);
-    const pebTex = texture(pebble()), cakeTex = texture(littleCake());
+    // AI pebbles and the little cakes of the same shapes (five of each, tools/wood_art.py).
     const pebs = Array.from({ length: 9 }, (_, i) => {
-      const p = paperFlat(pebTex, 0.05, 0.037), c = paperFlat(cakeTex, 0.05, 0.037);
+      const k = (i % 5) + 1, P = ai[`ch4/pebble_${k}`], K = ai[`ch4/cake_${k}`];
+      const p = paperFlat(P.tex, 0.05, 0.05 / P.aspect), c = paperFlat(K.tex, 0.05, 0.05 / K.aspect);
       const x = lerp(ROOM.x0 + 0.2, ROOM.x1 - 0.2, (i * 0.37) % 1), z = lerp(ROOM.z0 + 0.15, ROOM.z1 - 0.1, (i * 0.61) % 1);
       p.position.set(x, ROOM.floor, z); c.position.copy(p.position); house.add(p, c);
       return { p, c, i };
@@ -290,6 +297,7 @@ export const rabbitHouse = {
 
     function update(t, cast) {
       const a = alice(t);
+      table.visible = t < T.room + 2; tableEmpty.visible = !table.visible;    // she takes up the fan and gloves
       // The bottle near the looking-glass; in her hand when she drinks; put down.
       bottle.visible = t >= T.room && t < T.swallowed;
       if (a.pose === 'drink') bottle.visible = false; // the drinking drawing has the bottle at her lips
@@ -427,17 +435,17 @@ export const wood = {
     outdoors(group, ai, { groundRepeat: 60 });
     // Grass as tall as trees to her, in layers.
     for (const [x, z, h, seed] of [[0, -1.2, 0.45, 1], [-0.5, -2.2, 0.6, 2], [0.6, -3, 0.7, 3], [0, 0.9, 0.3, 4]]) {
-      const grass = paperFlat(tiled(ai.grass.tex, 10 / (h * ai.grass.aspect)), 10, h, { edge: false }); grass.position.set(x, 0, z);
-      grass.material = grass.userData.front.material; grass.userData.front.material.map.offset.x = seed * 0.3; group.add(grass);
+      const WG = ai['ch4/wood_grass'], grass = paperFlat(tiled(WG.tex, 10 / (h * WG.aspect)), 10, h, { edge: false }); grass.position.set(x, 0, z); // the tall grass of the wood (AI)
+      grass.userData.front.material.map.offset.x = seed * 0.3; group.add(grass);
     }
     const TH = { x: 0.15, z: -0.35 };
-    const th = paperFlat(texture(thistle()), 0.42, 0.75); th.position.set(TH.x, 0, TH.z); group.add(th);
+    const TA = ai['ch4/thistle'], th = paperFlat(TA.tex, 0.75 * TA.aspect, 0.75); th.position.set(TH.x, 0, TH.z); group.add(th); // after plate 4.4 (AI)
     const BC = { x: -1.3, z: -0.2 };
-    const bc = paperFlat(texture(buttercup()), 0.14, 0.33); bc.position.set(BC.x, 0, BC.z); group.add(bc);
+    const BA = ai['ch4/buttercup'], bc = paperFlat(BA.tex, 0.33 * BA.aspect, 0.33); bc.position.set(BC.x, 0, BC.z); group.add(bc);
     const MU = { x: -1.65, z: -0.45 };
-    const mu = paperFlat(texture(mushroom()), 0.17, 0.177); mu.position.set(MU.x, 0, MU.z); group.add(mu);
+    const mu = paperFlat(ai['ch5/mushroom'].tex, MUSH.w, MUSH.h); mu.position.set(MU.x, 0, MU.z); group.add(mu);
     const C = ai['ch5/caterpillar_sit']; // the AI drawing (tools/ch5_art.py), as in Chapter V
-    const cat = paperFlat(C.tex, 0.1 * C.aspect, 0.1); cat.position.set(MU.x + 0.01, 0.132, MU.z + 0.005); group.add(cat);
+    const cat = paperFlat(C.tex, 0.1 * C.aspect, 0.1); cat.position.set(MU.x + 0.01, MUSH.seat, MU.z + 0.005); group.add(cat);
     const st = paperFlat(texture(stick()), 0.1, 0.015, { anchor: 'center' }); group.add(st);
 
     function alice(t) {

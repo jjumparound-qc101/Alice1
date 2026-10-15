@@ -8,24 +8,23 @@
 import * as THREE from 'three';
 import { paperFlat } from '../stage.js';
 import { texture, INK, PAPER } from '../ink.js';
-import { mushroom } from '../props4.js';
-import { treetops, nest, mushroomBit, plateMount, chrysalisVignette, eggsVignette } from '../props5.js';
+import { nest, plateMount, chrysalisVignette, eggsVignette } from '../props5.js';
 import { thoughts } from '../thoughts.js';
 import { carry } from '../puppet.js';
 import { smooth, lerp, route, cameraTrack } from '../track.js';
-import { outdoors, tiled } from './rabbit.js';
+import { outdoors, tiled, MUSH } from './rabbit.js';
 
 const TINY = 0.13;       // three inches
-const MU = { x: 0, z: 0, h: 0.177, w: 0.17 };
+const MU = { x: 0, z: 0, ...MUSH };
 
 // The thick wood at three-inch height, with the mushroom (shared with Chapter IV's end).
 function wood(group, ai) {
   outdoors(group, ai, { groundRepeat: 60 });
   for (const [x, z, h, seed] of [[0, -1.0, 0.45, 1], [-0.5, -2.0, 0.6, 2], [0.6, -2.8, 0.7, 3], [0, 1.1, 0.3, 4]]) {
-    const grass = paperFlat(tiled(ai.grass.tex, 10 / (h * ai.grass.aspect)), 10, h, { edge: false });
+    const WG = ai['ch4/wood_grass'], grass = paperFlat(tiled(WG.tex, 10 / (h * WG.aspect)), 10, h, { edge: false }); // the tall grass of the wood (AI)
     grass.userData.front.material.map.offset.x = seed * 0.3; grass.position.set(x, 0, z); group.add(grass);
   }
-  const mu = paperFlat(texture(mushroom()), MU.w, MU.h); mu.position.set(MU.x, 0, MU.z); group.add(mu);
+  const mu = paperFlat(ai['ch5/mushroom'].tex, MU.w, MU.h); mu.position.set(MU.x, 0, MU.z); group.add(mu); // after plate 5.1 (AI)
 }
 
 // --- 1. On the mushroom --------------------------------------------------------------
@@ -60,7 +59,8 @@ export const mushroomTalk = {
       return card;
     });
     const verses = [T.v1, T.v2, T.v3, T.v4, T.notRight];
-    const bitL = paperFlat(texture(mushroomBit()), 0.02, 0.013, { anchor: 'center' }), bitR = bitL.clone();
+    const bit = (k) => paperFlat(ai[`ch5/mushroom_bit_${k}`].tex, 0.024, 0.024 / ai[`ch5/mushroom_bit_${k}`].aspect, { anchor: 'center' }); // AI
+    const bitL = bit(1), bitR = bit(2);
     group.add(bitL, bitR);
     const think = thoughts(group, [{ t0: T.butterfly - 6, t1: T.butterfly + 6, art: chrysalisVignette() }]);
 
@@ -93,14 +93,14 @@ export const mushroomTalk = {
         if (t >= T.rearing - 0.5 && t < T.rearing + 4) pose = 'rear';            // "rearing itself upright as it spoke"
         if (t >= T.yawned - 0.3 && t < T.yawned + 2.5) pose = 'yawn';            // "yawned once or twice, and shook itself"
         const shake = pose === 'yawn' ? Math.sin(t * 20) * 0.04 : 0;
-        return { pose, x: MU.x + 0.01 + (pose === 'sit' ? 0 : -0.012), z: MU.z + 0.005, y: MU.h - 0.045, dir: -1, tilt: shake };
+        return { pose, x: MU.x + 0.01 + (pose === 'sit' ? 0 : -0.012), z: MU.z + 0.005, y: MU.seat, dir: -1, tilt: shake };
       }
       const k = smooth((t - T.crawled) / 5);
-      return { pose: 'crawl', x: MU.x + 0.01 + k * 0.4, z: MU.z - k * 0.2, y: (MU.h - 0.045) * (1 - smooth((t - T.crawled) / 1.5)), dir: 1, visible: t < T.sight + 1 };
+      return { pose: 'crawl', x: MU.x + 0.01 + k * 0.4, z: MU.z - k * 0.2, y: MU.seat * (1 - smooth((t - T.crawled) / 1.5)), dir: 1, visible: t < T.sight + 1 };
     }
     // The hookah, standing on the mushroom beside him when it isn't in his drawing.
     const H = ai['ch5/hookah'], hookah = paperFlat(H.tex, 0.058 * H.aspect, 0.058);
-    hookah.position.set(MU.x + 0.04, MU.h - 0.045, MU.z - 0.002); group.add(hookah);
+    hookah.position.set(MU.x + 0.04, MU.seat, MU.z - 0.002); group.add(hookah);
     function update(t, cast) {
       hookah.visible = cast.caterpillar.pose !== 'sit';
       const k = verses.findIndex((v, i) => t >= v - 0.3 && t < verses[i + 1] - 0.3);
@@ -153,7 +153,9 @@ export const treetopsScene = {
     const T = { free: at('free'), green: at('green', 1), hands: at('hands', 1, at('free')), serpent: at('serpent', 1), hiss: at('hiss'), screamed: at('serpent', 2),
       eggs: at('eggs', 1), nest: at('nest'), crouched: at('crouched'), nibbling: at('nibbling', 1), end: at('right', 1, at('nibbling')) - 2 };
     // The leaves, far below, and sky.
-    const leaves = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ map: texture(treetops(), { repeat: [40, 40] }) }));
+    // "a sea of green leaves" (AI tile, coloured green: COLOR.md), 1.5 m a tile.
+    const TT = ai['ch5/treetops'].tex.clone(); TT.wrapS = TT.wrapT = THREE.RepeatWrapping; TT.repeat.set(40, 40); TT.needsUpdate = true;
+    const leaves = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ map: TT }));
     leaves.rotation.x = -Math.PI / 2; group.add(leaves);
     const sky = paperFlat(tiled(ai.sky.tex, 40 / (14 * ai.sky.aspect)), 40, 14, { edge: false, opaque: true }); sky.position.set(0, -2, -14); group.add(sky);
     const NEST = { x: 0.9, z: -0.7 };

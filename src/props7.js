@@ -56,41 +56,7 @@ export function dormouse(pose = 'sleep') {
   for (const x of [pose === 'sleep' ? 72 : 82, pose === 'sleep' ? 50 : 118]) { const e = ellipse(x, pose === 'sleep' ? 70 : 24, 14, 12); fillPaper(g, e); outline(g, e, 2); }
   return c;
 }
-// The tea-table's cloth, seen from the front: hangs over the legs of everyone sitting behind.
-export function tableCloth(w = 2400, h = 240) {
-  const { c, g } = canvas(w, h);
-  const cloth = new Path2D(); cloth.moveTo(0, 0); cloth.lineTo(w, 0); cloth.lineTo(w, h - 30);
-  for (let x = w; x > 0; x -= 80) cloth.quadraticCurveTo(x - 40, h, x - 80, h - 30);
-  cloth.closePath();
-  fillPaper(g, cloth);
-  for (let x = 40; x < w; x += 80) { const fold = rect(x, 0, 14, h); g.save(); g.clip(cloth); hatch(g, fold, { angle: Math.PI / 2, gap: 4, seed: 1231 + x, alpha: 0.5 }); g.restore(); }
-  outline(g, cloth, 3);
-  return c;
-}
-// A cup and saucer; a teapot; the arm-chair; the Hatter's watch.
-export function cup() {
-  const { c, g } = canvas(120, 80);
-  const s = ellipse(60, 66, 54, 10); fillPaper(g, s); outline(g, s, 2);
-  const cp = new Path2D(); cp.moveTo(28, 20); cp.lineTo(36, 62); cp.lineTo(84, 62); cp.lineTo(92, 20); cp.closePath(); fillPaper(g, cp); hatch(g, cp, { angle: Math.PI / 2, gap: 6, seed: 1241, alpha: 0.3 }); outline(g, cp, 2.5);
-  g.lineWidth = 3; g.strokeStyle = INK; g.beginPath(); g.arc(98, 38, 12, -1.2, 1.2); g.stroke();
-  return c;
-}
-export function teapot() {
-  const { c, g } = canvas(300, 240);
-  const b = ellipse(150, 140, 100, 90); fillPaper(g, b); shadeEdge(g, b, { size: 160, dx: -0.2, dy: -0.1, angle: 0.6, gap: 4, seed: 1251 }); outline(g, b, 4);
-  for (let k = 0; k < 10; k++) { const f = ellipse(100 + (k * 41) % 110, 100 + (k * 29) % 90, 8, 6); outline(g, f, 1.5); }
-  const lid = ellipse(150, 52, 50, 14); fillPaper(g, lid); outline(g, lid, 3); dot(g, 150, 38, 8);
-  line(g, 8, [[52, 130], [8, 80]]); g.lineWidth = 8; g.beginPath(); g.arc(255, 140, 34, -1.3, 1.3); g.stroke();
-  return c;
-}
-export function armchair() {
-  const { c, g } = canvas(300, 360);
-  const back = new Path2D(); back.moveTo(40, 200); back.quadraticCurveTo(30, 20, 150, 10); back.quadraticCurveTo(270, 20, 260, 200); back.closePath(); panel(g, back, 1261, 0.7, 6, 0.5);
-  for (const x of [20, 230]) { const arm = rect(x, 180, 50, 90); panel(g, arm, 1262 + x, 0.2, 5, 0.6); }
-  const seat = rect(40, 250, 220, 40); panel(g, seat, 1264, 0.1, 6, 0.4);
-  for (const x of [50, 240]) line(g, 8, [[x, 290], [x, 356]]);
-  return c;
-}
+// The Hatter's watch, which tells the day of the month.
 export function dayWatch() {
   const { c, g } = canvas(160, 180);
   line(g, 4, [[80, 0], [80, 22]]); const ring = ellipse(80, 26, 10, 8); outline(g, ring, 3);
@@ -101,28 +67,6 @@ export function dayWatch() {
   const smear = ellipse(100, 130, 16, 8, 0.4); g.save(); g.globalAlpha = 0.5; hatch(g, smear, { gap: 2, seed: 1271 }); g.restore(); // the butter
   return c;
 }
-// "one of the trees had a door leading right into it"
-export function treeDoor() {
-  const { c, g } = canvas(400, 900);
-  const trunk = new Path2D(); trunk.moveTo(120, 900); trunk.quadraticCurveTo(150, 500, 130, 0); trunk.lineTo(280, 0); trunk.quadraticCurveTo(260, 500, 300, 900); trunk.closePath();
-  fillPaper(g, trunk); hatch(g, trunk, { angle: Math.PI / 2 + 0.05, gap: 5, seed: 1281, alpha: 0.7 }); outline(g, trunk, 4);
-  const door = new Path2D(); door.moveTo(160, 880); door.lineTo(160, 680); door.arc(210, 680, 50, Math.PI, 0); door.lineTo(260, 880); door.closePath();
-  fillPaper(g, door); hatch(g, door, { angle: Math.PI / 2, gap: 4, seed: 1282, alpha: 0.9 }); outline(g, door, 4); dot(g, 245, 790, 7);
-  return c;
-}
-// A flower-bed for the garden at last: "the bright flower-beds" (bright is not a colour: ink).
-export function flowerBed() {
-  const { c, g } = canvas(1200, 240);
-  const bed = new Path2D(); bed.ellipse(600, 200, 590, 50, 0, 0, Math.PI * 2); fillPaper(g, bed); hatch(g, bed, { angle: 0.1, gap: 6, seed: 1291, alpha: 0.5 }); outline(g, bed, 3);
-  for (let k = 0; k < 60; k++) {
-    const x = 40 + (k * 97) % 1120, y = 70 + (k * 53) % 120, r = 10 + (k % 4) * 4;
-    line(g, 2, [[x, y], [x + 3, 210]]);
-    for (let p = 0; p < 6; p++) { const a = p / 6 * Math.PI * 2; const pet = ellipse(x + Math.cos(a) * r, y + Math.sin(a) * r, r * 0.6, r * 0.35, a); fillPaper(g, pet); outline(g, pet, 1.5); }
-  }
-  grain(g, 0.03, 9);
-  return c;
-}
-
 // --- Thought vignettes ------------------------------------------------------------
 export function ravenVignette() {
   return vignette('Why is a raven like a writing-desk?', (g) => {

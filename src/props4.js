@@ -73,15 +73,6 @@ export function roomWall(kind) {
   return c;
 }
 
-// "a table in the window, and on it … a fan and two or three pairs of tiny white kid gloves"
-export function windowTable() {
-  const { c, g } = canvas(400, 300);
-  const top = rect(20, 100, 360, 26); panel(g, top, 721, 0.2, 5);
-  for (const x of [40, 340]) { const l = rect(x, 126, 20, 170); panel(g, l, 722 + x, Math.PI / 2, 4); }
-  for (const [x, r] of [[110, -0.3], [160, 0.2], [220, -0.1]]) { g.save(); g.translate(x, 92); g.rotate(r); const gl = ellipse(0, 0, 26, 9); g.fillStyle = '#fbf8f0'; g.fill(gl); g.strokeStyle = INK; g.lineWidth = 2; g.stroke(gl); g.restore(); }
-  const fan = new Path2D(); fan.moveTo(300, 98); fan.arc(300, 98, 50, Math.PI * 1.1, Math.PI * 1.9); fan.closePath(); panel(g, fan, 725, 1.2, 6, 0.45);
-  return c;
-}
 // "a little bottle that stood near the looking-glass. There was no label this time"
 export function plainBottle() {
   const { c, g } = canvas(120, 240);
@@ -118,29 +109,6 @@ export function cucumberFrames(broken = false) {
   }
   return c;
 }
-export function ladder() {
-  const { c, g } = canvas(160, 1000);
-  g.strokeStyle = INK; line(g, 8, [[30, 0], [30, 1000]]); line(g, 8, [[130, 0], [130, 1000]]);
-  for (let y = 40; y < 1000; y += 80) line(g, 6, [[30, y], [130, y]]);
-  g.lineWidth = 3; g.strokeRect(20, 470, 120, 40); // the rope tying the two together
-  return c;
-}
-export function barrow() {
-  const { c, g } = canvas(360, 200);
-  const tray = new Path2D(); tray.moveTo(60, 70); tray.lineTo(300, 70); tray.lineTo(260, 140); tray.lineTo(100, 140); tray.closePath(); panel(g, tray, 761, 0.3, 5);
-  for (let k = 0; k < 14; k++) { const p = ellipse(110 + (k * 37) % 170, 60 + (k % 3) * 6, 12, 8); fillPaper(g, p); outline(g, p, 2); } // pebbles
-  g.strokeStyle = INK; line(g, 6, [[300, 90], [355, 60]]); line(g, 6, [[110, 140], [100, 196]]);
-  const wheel = ellipse(240, 160, 34, 34); fillPaper(g, wheel); outline(g, wheel, 4);
-  return c;
-}
-// A pebble, and the little cake it turns into.
-export function pebble() { const { c, g } = canvas(64, 48); const p = ellipse(32, 26, 26, 18); fillPaper(g, p); hatch(g, p, { gap: 4, seed: 771, alpha: 0.5 }); outline(g, p, 3); return c; }
-export function littleCake() {
-  const { c, g } = canvas(64, 48);
-  const side = rect(8, 18, 48, 22); panel(g, side, 772, Math.PI / 2, 4); const top = ellipse(32, 18, 24, 8); fillPaper(g, top); outline(g, top, 2);
-  return c;
-}
-
 // --- New figures ---------------------------------------------------------------------
 // Bill the Lizard: `pose` 'stand' (upright, as Tenniel draws him) or 'fly' (stretched out).
 export function lizard(pose = 'stand') {
@@ -184,41 +152,6 @@ export function puppy(pose = 'stand') {
     dot(g, 150, 265, 14);
   }
   for (const s of [-1, 1]) { const ear = ellipse(pose === 'sit' ? 220 + s * 95 : 150 + s * 95, pose === 'sit' ? 100 : 160, 30, 55, s * 0.5); fur(g, ear, 821 + s, 50); }
-  return c;
-}
-// "a great thistle"
-export function thistle() {
-  const { c, g } = canvas(500, 900);
-  g.strokeStyle = INK; line(g, 10, [[250, 900], [250, 150]]);
-  for (let k = 0; k < 6; k++) {
-    const y = 800 - k * 110, s = k % 2 ? 1 : -1;
-    const leaf = new Path2D(); leaf.moveTo(250, y); leaf.quadraticCurveTo(250 + s * 120, y - 120, 250 + s * 230, y - 60);
-    for (let i = 0; i < 5; i++) leaf.lineTo(250 + s * (200 - i * 40), y - 20 + (i % 2) * 30);
-    leaf.closePath(); fillPaper(g, leaf); hatch(g, leaf, { angle: 0.7, gap: 5, seed: 831 + k, alpha: 0.7 }); outline(g, leaf, 3);
-    for (let i = 0; i < 6; i++) line(g, 2, [[250 + s * (60 + i * 30), y - 40 - i * 5], [250 + s * (75 + i * 30), y - 70 - i * 5]]); // prickles
-  }
-  for (const [x, y] of [[250, 110], [190, 190], [320, 170]]) {
-    const head = ellipse(x, y + 20, 34, 40); panel(g, head, 840 + x, 0.8, 4);
-    for (let i = -4; i <= 4; i++) line(g, 2, [[x, y], [x + i * 8, y - 50]]);
-  }
-  return c;
-}
-// "she leant against a buttercup" (the text gives it no colour) and a leaf to fan with.
-export function buttercup() {
-  const { c, g } = canvas(300, 700);
-  g.strokeStyle = INK; line(g, 7, [[150, 700], [150, 150]]);
-  for (const [y, s] of [[520, -1], [380, 1]]) { const l = ellipse(150 + s * 70, y, 70, 22, s * 0.4); fillPaper(g, l); hatch(g, l, { gap: 5, seed: 850 + y, alpha: 0.5 }); outline(g, l, 3); }
-  for (let k = 0; k < 5; k++) { const a = (k / 5) * Math.PI * 2; const p = ellipse(150 + Math.cos(a) * 52, 120 + Math.sin(a) * 40, 48, 36, a); fillPaper(g, p); outline(g, p, 3); }
-  const mid = ellipse(150, 120, 26, 22); hatch(g, mid, { gap: 3, seed: 855 }); outline(g, mid, 2);
-  return c;
-}
-export function mushroom() {
-  const { c, g } = canvas(500, 520);
-  const stalk = new Path2D(); stalk.moveTo(200, 520); stalk.quadraticCurveTo(220, 300, 210, 180); stalk.lineTo(290, 180); stalk.quadraticCurveTo(280, 300, 300, 520); stalk.closePath();
-  fillPaper(g, stalk); shadeEdge(g, stalk, { size: 120, dx: -0.2, dy: 0, angle: 1.4, gap: 4, seed: 861 }); outline(g, stalk, 3);
-  const cap = new Path2D(); cap.moveTo(10, 210); cap.quadraticCurveTo(250, -60, 490, 210); cap.quadraticCurveTo(250, 250, 10, 210); cap.closePath();
-  fillPaper(g, cap); shadeEdge(g, cap, { size: 300, dx: -0.1, dy: -0.15, angle: 0.4, gap: 4, seed: 862 }); outline(g, cap, 4);
-  g.strokeStyle = INK; for (let x = 40; x < 470; x += 22) line(g, 1.5, [[x, 212], [250 + (x - 250) * 0.5, 226]]); // gills
   return c;
 }
 // "a large blue caterpillar … with its arms folded, quietly smoking a long hookah"
