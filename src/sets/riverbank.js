@@ -113,12 +113,25 @@ export function buildStage(scene, ai = {}) {
       house.position.set((768 - (502 + 1035) / 2) * k2, y0 - (1024 - 822) * k2, 2.3);
       scene.add(house);
       // The row in front of our seat: hat-tops at about the lower third of the opening shot.
-      const seatsW = 4.6, seatsH = seatsW / ai.theatre_seats.aspect, seats = paperFlat(ai.theatre_seats.tex, seatsW, seatsH, { edge: false });
+      const row = ai.theatre_seats_row ?? ai.theatre_seats;
+      const seatsW = 4.6, seatsH = seatsW / row.aspect, seats = paperFlat(row.tex, seatsW, seatsH, { edge: false });
       seats.position.set(-0.5, 1.22 - (1 - 233 / 793) * seatsH, 14.2); // the child (shortest) straight ahead, so the stage shows over her
       scene.add(seats);
-      // The same row again at each end (mirrored), for tall phone screens.
-      const more = [-1, 1].map((d) => { const m = paperFlat(ai.theatre_seats.tex, seatsW, seatsH, { edge: false }); m.scale.x = -1; m.position.set(seats.position.x + d * seatsW, seats.position.y, 14.2); scene.add(m); return m; });
-      [[house, 50], [seats, 60], ...more.map((m) => [m, 60])].forEach(([o, r]) => o.traverse((m) => { if (m.material) { m.material.depthTest = false; m.material.transparent = true; m.material.fog = false; m.renderOrder = r; } }));
+      // The row runs on at each end in empty chairs, for wide screens (owner, 2026-10-16: no mirror-image
+      // guests). The empty chair is the drawing's own, from its post at x 222 to the next at 525 (of 1536 px;
+      // tools/theatre_seats.py); the first at each end lies over the row's half-cut end chair (its last whole
+      // posts are at 222 and 1368), so the guests there sit in whole chairs.
+      const more = [];
+      if (ai.theatre_seat_empty) {
+        const px = seatsW / 1536, chairW = 303 * px, x0 = seats.position.x - seatsW / 2;
+        for (let k = 0; k < 6; k++) {
+          for (const left of [222 - 303 * (k + 1), 1368 + 303 * k]) {
+            const m = paperFlat(ai.theatre_seat_empty.tex, chairW, seatsH, { edge: false });
+            m.position.set(x0 + (left + 151.5) * px, seats.position.y, 14.2); scene.add(m); more.push(m);
+          }
+        }
+      }
+      [[house, 50], [seats, 60], ...more.map((m) => [m, 61])].forEach(([o, r]) => o.traverse((m) => { if (m.material) { m.material.depthTest = false; m.material.transparent = true; m.material.fog = false; m.renderOrder = r; } }));
     }
   }
   scene.add(pros);

@@ -4,7 +4,7 @@
 import { CHAPTERS } from './chapters.js';
 
 // Interim AI master drawings (PROVENANCE.md), shared by every chapter.
-const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'bank_grass', 'bank_edge', 'proscenium', 'cloud_a', 'cloud_b', 'theatre_house', 'theatre_seats', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar_orange',
+const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'bank_grass', 'bank_edge', 'proscenium', 'cloud_a', 'cloud_b', 'theatre_house', 'theatre_seats_row', 'theatre_seat_empty', 'alice_stand', 'alice_sit', 'sister_read', 'shaft_strip', 'jar_orange',
   'hall/floor', 'hall/lamp', 'hall/curtain', 'hall/door_frame', 'hall/door_leaf',
   'props/key', 'props/bottle', 'props/cake', 'props/box', 'props/fan', // tools/small_props.py
   ...['comfits', 'thimble', 'hatter_watch_close', 'jury_box_tipped', 'chapter1_end', 'court_paper_1', 'court_paper_2', 'court_paper_3', 'dead_leaf_1', 'dead_leaf_2', 'dead_leaf_3', 'dead_leaf_4'].map((n) => `props/${n}`), // tools/vignettes_art.py
