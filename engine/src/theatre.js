@@ -59,6 +59,18 @@ export function theatre(group, pros, { open = { w: 8.4, cy: 2.55 }, z = 2.2, hou
     hall.position.set(x + (HOUSE.w / 2 - (HOUSE.opening[0] + HOUSE.opening[2]) / 2) * k2, y0 - (HOUSE.h - HOUSE.opening[3]) * k2, z + 0.1);
     group.add(hall);
     layers.push([hall, 50]);
+    // One more row of empty chairs below the auditorium's nearest row, running on past its foot: on
+    // upright phones, rising up the aisle past the row in front, the drawing's bottom edge showed as a
+    // band of blank paper (owner, Alice 2026-10-17). Chairs a little larger than that row (nearer), half
+    // a chair along from it, the tops of their backs over its lower half (975 px down the drawing).
+    const cw = 182 * k2, ch = cw * 793 / CHAIR.w, chairTex = load(CHAIR.url);
+    const backTop = hall.position.y + (HOUSE.h - 975) * k2;
+    for (let px0 = -400; px0 < HOUSE.w + 400; px0 += 182) {
+      const m = paperFlat(chairTex, cw, ch, { edge: false });
+      m.position.set(hall.position.x + (px0 + 91 - HOUSE.w / 2) * k2, backTop - ch * (793 - 285) / 793, z + 0.09);
+      group.add(m);
+      layers.push([m, 55]);
+    }
     const sw = 4.6 * s, sh = sw * SEATS.h / SEATS.w, [rx, ry, sz] = at(-0.5, 1.22, SEAT.pos[2] - 3.3);
     // The shortest figure straight ahead, so the stage shows over her; empty chairs on at each end, for
     // wide screens (drawn over the row: the first at each end covers its half-cut end chair).

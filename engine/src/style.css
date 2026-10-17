@@ -185,6 +185,11 @@ body[data-form="portrait"][data-mode="watch"] #page {
   font-size: clamp(1.15rem, 2.6vw, 1.5rem); line-height: 1.55; /* larger on a tablet held upright */
 }
 body[data-form="portrait"] #controls { bottom: calc(40px + env(safe-area-inset-bottom)); }
+/* A tablet held upright: the start screen, the end card and the contents grow with the reading text
+   (they kept their computer-sized text; round 5, Alice 2026-10-17). */
+@media (min-width: 700px) {
+  body[data-form="portrait"] #intro > *, body[data-form="portrait"] #endCard > *, body[data-form="portrait"] #sceneMenu { zoom: 1.3; }
+}
 body[data-form="portrait"] #prompt { bottom: calc(100px + env(safe-area-inset-bottom)); }
 
 /* Landscape phone: a two-line strip low down, controls hidden while reading. */

@@ -1,5 +1,10 @@
 # Engine changes (newest first)
 
+## 2026-10-17: the theatre's stalls reach the bottom of upright phones; bigger menus on upright tablets
+- `theatre.js`: one more row of empty chairs below the auditorium's nearest row. On an upright phone, as the camera rose up the aisle past the row in front, the auditorium drawing's bottom edge showed for about a second as a band of blank paper (owner, Alice 2026-10-17). Wide screens are unchanged (the new row stays below the picture).
+- `style.css`: on a tablet held upright, the start screen, the end card and the contents menu are 1.3 times larger, to match the reading text enlarged earlier.
+- Checked against: Alice1 (its own copy of the theatre: the zoom frame by frame on four screen shapes; menus on phone, tablet and computer; full smoke test) and A Christmas Carol (a local copy on this engine: the opening zoom on an upright phone, no page errors). Books to take it: all.
+
 ## 2026-10-17: a walk seen from behind
 - `puppet.js`: a figure that also has `back_a`..`back_d` (a four-drawing walk seen from behind) shows it while it walks away from the camera: within about 40 degrees of straight away, judged from its motion since the last frame, and back to the side view past about 55 degrees, so a curving path doesn't flicker. A scene can force it either way with `away: true/false` in the figure's state. A pose with `facesLeft: null` (a back or front view) is never mirrored.
 - Why (owner, Alice: the walk plan's step (f)): walking away down the passage or into the garden, the side view slid sideways into the distance.
