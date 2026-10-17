@@ -217,7 +217,7 @@ export const roseTree = {
       key(149.8, ALICE_C, 2.5), key(157.6, BEHIND_A, 3),                                              // doubtful; "what would be the use of a procession"
       { t: T.opposite - 1, dur: 3, pos: [-1.2, 0.3, 0.85], look: [-1.6, 0.18, -0.15] },               // opposite to Alice
       // "the pattern on their backs was the same as the rest of the pack": looking down at the three backs.
-      { t: T.backs - 1.5, dur: 2.5, pos: [-2.05, 0.75, 0.25], look: [-2.2, 0.0, -0.62] },
+      { t: T.backs - 1.5, dur: 2.5, pos: [-2.2, 0.75, 0.25], look: [-2.35, 0.0, -0.62] },    // (the procession kept out of the edge)
       { t: T.backs + 5, dur: 2.5, pos: [-1.2, 0.3, 0.85], look: [-1.6, 0.18, -0.15] },
       { t: T.crimson - 1, dur: 2, pos: [-1.55, 0.29, 0.45], look: [QSTOP, 0.26, LANE[0]] },            // "Off with her head!"
       { t: T.nonsense - 0.3, dur: 1.5, pos: [-1.15, 0.25, 0.65], look: [A.x - 0.1, 0.2, 0.0] },       // "Nonsense!"

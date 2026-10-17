@@ -109,7 +109,7 @@ export const mushroomTalk = {
         if (t >= T.rearing - 0.5 && t < T.rearing + 4) pose = 'rear';            // "rearing itself upright as it spoke"
         if (t >= T.yawned - 0.3 && t < T.yawned + 2.5) pose = 'yawn';            // "yawned once or twice, and shook itself"
         const shake = pose === 'yawn' ? Math.sin(t * 20) * 0.04 : 0;
-        return { pose, x: MU.x + 0.01 + (pose === 'sit' ? 0 : -0.012), z: MU.z + 0.005, y: MU.seat, dir: -1, tilt: shake };
+        return { pose, x: MU.x + 0.01 + (pose === 'sit' ? 0 : -0.012), z: MU.z + 0.03, y: MU.seat, dir: -1, tilt: shake }; // far enough in front of the mushroom that, turned to the camera, he doesn't cut into it
       }
       const k = smooth((t - T.crawled) / 5);
       return { pose: 'crawl', x: MU.x + 0.01 + k * 0.4, z: MU.z - k * 0.2, y: MU.seat * (1 - smooth((t - T.crawled) / 1.5)), dir: 1, visible: t < T.sight + 1 };
@@ -171,7 +171,16 @@ export const treetopsScene = {
     // The leaves, far below, and sky.
     // "a sea of green leaves" (AI tile, coloured green: COLOR.md), 1.5 m a tile.
     const TT = ai['ch5/treetops'].tex.clone(); TT.wrapS = TT.wrapT = THREE.RepeatWrapping; TT.repeat.set(40, 40); TT.needsUpdate = true;
-    const leaves = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshBasicMaterial({ map: TT }));
+    // The tile sampled twice, the second turned and scaled, and the two mixed by a slow wave, so its repeats don't
+    // show as a grid from high above (2026-10-17).
+    const leafMat = new THREE.MeshBasicMaterial({ map: TT });
+    leafMat.onBeforeCompile = (shader) => {
+      shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `
+        vec2 uvB = mat2(0.8, -0.6, 0.6, 0.8) * vMapUv * 0.71 + vec2(0.31, 0.57);
+        float wave = 0.5 + 0.5 * sin(vMapUv.x * 0.43 + 2.0 * sin(vMapUv.y * 0.27)) * sin(vMapUv.y * 0.39 + 1.7 * sin(vMapUv.x * 0.21));
+        diffuseColor *= mix(texture2D(map, vMapUv), texture2D(map, uvB), smoothstep(0.3, 0.7, wave));`);
+    };
+    const leaves = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), leafMat);
     leaves.rotation.x = -Math.PI / 2; group.add(leaves);
     const sky = paperFlat(tiled(ai.sky.tex, 40 / (14 * ai.sky.aspect)), 40, 14, { edge: false, opaque: true }); sky.position.set(0, -2, -14); group.add(sky);
     const NEST = { x: 0.9, z: -0.7 };

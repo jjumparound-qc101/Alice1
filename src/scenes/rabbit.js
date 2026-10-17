@@ -495,8 +495,8 @@ export const wood = {
       { t: start, dur: 0, pos: [0.9, 0.12, 0.7], look: [0.4, 0.15, -0.5] },                   // among grass taller than she is
       { t: T.bark - 0.5, dur: 1.5, pos: [0.7, 0.07, 0.35], look: [0.8, 0.45, -0.8] },          // "a little sharp bark just over her head"
       { t: T.stick, dur: 3, pos: [0.15, 0.18, 0.8], look: [0.6, 0.25, -0.5] },
-      { t: T.thistle - 1, dur: 3, pos: [0.2, 0.25, 1.1], look: [0.4, 0.25, -0.5] },             // the thistle and the puppy
-      { t: T.sat, dur: 4, pos: [0.0, 0.2, 1.2], look: [0.7, 0.25, -0.9] },
+      { t: T.thistle - 1, dur: 3, pos: [0.35, 0.1, 0.8], look: [0.5, 0.22, -0.6] },             // the thistle and the puppy (in front of the near grass, so she shows)
+      { t: T.sat, dur: 4, pos: [0.3, 0.11, 0.8], look: [0.6, 0.22, -0.75] },
       { t: T.escape, dur: 6, pos: [-0.6, 0.15, 0.6], look: [-1.2, 0.08, -0.2] },               // running till she was quite tired
       { t: T.buttercup - 1, dur: 3, pos: [-1.05, 0.12, 0.25], look: [BC.x, 0.12, BC.z] },       // leaning against a buttercup
       { t: T.mushroom - 1, dur: 4, pos: [-1.35, 0.11, 0.2], look: [MU.x, 0.1, MU.z] },          // the mushroom
