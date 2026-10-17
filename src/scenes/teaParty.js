@@ -146,25 +146,29 @@ export const teaParty = {
     // Hand-directed with the AI tea things (2026-10-15): the whole party with Alice in her arm-chair (PARTY) between
     // the close shots, at her own lines, so she is in the picture at least every ~12 s.
     const PARTY = { pos: [-0.5, 0.55, 1.6], look: [-0.5, 0.18, -0.45] };
+    // Alice in her arm-chair, near; and over her shoulder down the long table to the three at the far corner
+    // (2026-10-17: the wide shot left her a small head at the edge for most of ten minutes).
+    const ALICE_C = { pos: [-0.75, 0.42, 0.55], look: [-1.25, 0.3, -0.35] };
+    const OVER = { pos: [-2.1, 0.7, 0.75], look: [0.1, 0.32, -0.45] };
     const key = (t, s, dur = 2) => ({ t, dur, ...s });
     const camera = cameraTrack([
       { t: 0, dur: 0, pos: [-2.4, 0.5, 2.4], look: [0, 0.3, -0.5] },                                  // the table under the tree
       { t: T.room - 1, dur: 2, pos: [0.9, 0.55, 1.1], look: S(0.3) },                                   // "No room! No room!"
-      { t: T.sat, dur: 3, pos: [-0.1, 0.6, 1.4], look: S(-0.4, 0.32) },                               // Alice in the arm-chair
+      { t: T.sat, dur: 3, ...ALICE_C },                                                                  // Alice in the arm-chair
       { t: T.hair - 1, dur: 2, pos: [0.2, 0.5, 0.7], look: S(SEATS[1], 0.42) },                      // "Your hair wants cutting"
       key(76.5, PARTY, 2.5),                                                                          // "You should learn not to make personal remarks"
-      { t: T.raven + 6, dur: 3, pos: [-0.1, 0.6, 1.4], look: S(-0.2, 0.34) },
+      { t: T.raven + 6, dur: 3, ...OVER },
       { t: T.watch - 1, dur: 2, pos: [0.45, 0.5, 0.65], look: S(SEATS[1] + 0.1, 0.4) },                 // the watch
       key(178.6, PARTY), key(182.3, { pos: [0.45, 0.5, 0.65], look: S(SEATS[1] + 0.1, 0.4) }, 1.5),   // "The fourth."; "Two days wrong!"
       key(189, PARTY),                                                                                // "It was the best butter"
       { t: T.dipped - 1, dur: 2, pos: [0.5, 0.5, 0.65], look: S(SEATS[3], 0.38) },                      // dipped into his tea
       { t: T.poured - 1, dur: 2, pos: [0.35, 0.48, 0.6], look: S(SEATS[2], 0.3) },                     // hot tea on the Dormouse's nose
-      { t: T.poured + 2.5, dur: 3, pos: [-0.1, 0.65, 1.5], look: S(0, 0.36) },
+      { t: T.poured + 2.5, dur: 3, ...ALICE_C },
       { t: T.wake - 1, dur: 2, pos: [0.3, 0.48, 0.6], look: S(SEATS[2], 0.3) },                      // the Dormouse's story
       key(512.8, PARTY, 1.5),                        key(530.8, { pos: [0.3, 0.48, 0.6], look: S(SEATS[2], 0.3) }, 1.5),      // "Yes, please do!"; "Once upon a time"
       key(541.4, PARTY, 1.5), key(547, { pos: [0.3, 0.48, 0.6], look: S(SEATS[2], 0.3) }, 1.5),        // "What did they live on?"; "treacle"
       key(552, PARTY, 1.5),                                                                           // "they'd have been ill" 
-      { t: T.treacle + 20, dur: 4, pos: [-0.1, 0.65, 1.5], look: S(0, 0.36) },
+      { t: T.treacle + 20, dur: 4, ...OVER },
       { t: T.move - 1, dur: 3, pos: [0.4, 0.75, 1.4], look: S(0.1, 0.3) },                            // one place on
       { t: T.disgust + 1, dur: 3, pos: [-0.9, 0.5, 1.9], look: [-2.1, 0.15, 0.2] },                   // walking off, looking back
       { t: T.teapot - 3, dur: 2, pos: [0.1, 0.55, 0.7], look: S(SEATS[2], 0.3) },                     // into the teapot
