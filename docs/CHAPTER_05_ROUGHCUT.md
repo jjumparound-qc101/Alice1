@@ -12,6 +12,9 @@ Status: Plays start to finish (12 minutes) in three scenes (`src/scenes/caterpil
 | A little house (`clearing`) | "her right size again" | Her right size among trees; the little house four feet high; down to nine inches |
 
 ## Placeholders still in use
+
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
 The Caterpillar (one drawing, rearing by scale), the Pigeon (flying and perched), the nest, the treetops, the mushroom bits, the little house, two vignettes (chrysalis, eggs). The head on the long neck is the top of her standing drawing on a card; the neck is drawn as a tube.
 
 ## Known gaps

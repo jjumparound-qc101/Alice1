@@ -2,6 +2,9 @@
 Date: 2026-10-10
 Status: Plays start to finish (11 minutes) in the Chapter I hall, with placeholder figures and props drawn in code where the AI art hasn't arrived (list and prompts: CHAPTER_02_ASSETS.md, ART_PROMPTS.md).
 
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
+
 ## How it's built
 - One scene, `src/scenes/pool.js`, in the shared hall set (`src/sets/hall.js`, also used by Chapter I). Its named **parts** show in the contents and the timeline, and Shift+←/→ jumps between them: Nine feet high, A pool of tears, The White Rabbit returns, Who in the world am I?, Shrinking again, Splash!, The Mouse, The birds and animals.
 - Narration: `public/audio/ch02.mp3` and `public/data/ch02_words.json`, made with `tools/narration.py 2 …` (98.8% of words matched directly).

@@ -12,6 +12,9 @@ Status: Plays start to finish (14 minutes) in three scenes (`src/scenes/teaParty
 Thought vignettes: the raven and the writing-desk, the Queen's concert, "Twinkle, twinkle, little bat", the three sisters in the treacle-well.
 
 ## Placeholders still in use
+
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
 The Hatter (staring, riddle, watch), the March Hare (sitting, dipping the watch), the Dormouse (asleep, talking), the table and cloth, cups, the teapot, the arm-chair, the day-of-the-month watch, the tree with a door, the flower-beds, and the four vignettes. The seated figures are waist-up drawings behind the cloth.
 
 ## Known gaps

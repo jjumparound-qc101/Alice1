@@ -13,6 +13,9 @@ Thought vignettes: the globe of goldfish; the countryside sounds; Alice grown up
 Colour (COLOR.md): the King's face pale and the Queen's purple (rule 3); the card people red and black (owner, 2026-10-11); the Rabbit's pink eyes.
 
 ## Placeholders still in use
+
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
 Everything in the court (Chapter XI's), the note-book, the verses, the inkstand, the flying cards (card faces and backs), the dead leaves, the dream figures (earlier chapters' placeholders, shown faint), the three vignettes. Alice has no lying-down pose: she sits leaning against her sister.
 
 ## Known gaps

@@ -10,6 +10,9 @@ Status: Plays start to finish (15 minutes) in three scenes (`src/scenes/duchess.
 | Pig (`wood6`) | "she carried it out into the open air" | The baby in her arms gains a snout, then is a pig; set down, it trots away. The Cheshire Cat on a bough; it vanishes and reappears; on a second bough it fades slowly from the tail until only the grin is left (a clipping plane; the grin is a separate card). The March Hare's house; Alice grows to two feet. Parts: The Cheshire Cat, A grin without a cat |
 
 ## Placeholders still in use
+
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
 The Footmen, the great letter, the plate, the Duchess (sitting and standing), the Cook (stirring and throwing), the baby (three stages), the pig, the thrown things, the kitchen wall, the Cheshire Cat and its grin, the boughs, the March Hare's house, and two vignettes (the earth on its axis, children as pigs). The little house is Chapter V's.
 
 ## Known gaps

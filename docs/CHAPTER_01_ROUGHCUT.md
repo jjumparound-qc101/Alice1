@@ -2,6 +2,9 @@
 Date: 2026-10-10
 Status: The whole chapter plays start to finish (about 12 minutes). Riverbank art is the interim AI masters; the fall, the passage and the hall are mostly placeholders.
 
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
+
 ## How it's built
 - **One narration file for the chapter** (`public/audio/ch01.mp3`) with word timings (`public/data/ch01_words.json`). The page text follows the voice through the whole chapter.
 - **Scenes** (`src/scenes/`): each has its own set and stages its camera and actors from **cue words** in the text (`src/cues.js`), e.g. `at('thump')` or `at('telescope', 1, at('ventured'))`. The engine (`src/main.js`) shows the scene whose start time has passed, with a quick fade through paper between scenes, or a fade through black (`turn: 'dark'`, into the hall).

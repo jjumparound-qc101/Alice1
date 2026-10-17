@@ -13,6 +13,9 @@ Thought vignettes: lobsters thrown out to sea; the whiting, the snail and the po
 New this chapter: words in poems and songs are coloured in the text strip once spoken (COLOR.md rule 6), set per chapter in `src/chapters.js` (`TINTS`): "pale", "brown", "green" here. Added at the same time for earlier chapters: "golden" (Chapter II, "every golden scale") and "grey" (Chapter V, "grey locks"). "white" (Chapter V) is left as it is: white text would not read on the paper.
 
 ## Placeholders still in use
+
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
 The Mock Turtle and the Gryphon (Chapter IX's; no dancing, singing or running drawings yet: the dance uses the paws-up and flapper poses), and the six vignettes.
 
 ## Known gaps

@@ -19,6 +19,9 @@ Status: Plays start to finish (9½ minutes) with placeholder figures drawn in co
 | Dinah, and everyone leaves | Thought vignette of Dinah and a bird; the birds hurry off; Alice sits alone and cries; footsteps |
 
 ## Placeholders still in use
+
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
 The Mouse (upright and walking), the Dodo, Duck, Lory, Eaglet, an owl, the Magpie, the Canary with chicks, the two Crabs, the comfit box, the thimble, and three vignettes (Shakespeare, the knot, Dinah and the birds). Alice uses her standing, sitting and walking poses.
 
 ## Known gaps

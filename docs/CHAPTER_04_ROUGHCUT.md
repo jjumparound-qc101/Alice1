@@ -19,6 +19,9 @@ Status: Plays start to finish (13 minutes) in three scenes, with placeholders dr
 The brass plate (`SPOT.brass`) and the blue Caterpillar (`SPOT.blue`), per docs/COLOR.md.
 
 ## Placeholders still in use
+
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
 The house front and room walls, the table, bottle, arm, cucumber-frames, ladders, barrow, pebbles and cakes; Bill, Pat, the guinea-pigs, the puppy (standing and sitting), the thistle, buttercup, mushroom, Caterpillar, stick; two vignettes. The crowd outside reuses Chapter III's creatures.
 
 ## Known gaps

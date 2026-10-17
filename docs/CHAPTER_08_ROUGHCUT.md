@@ -16,6 +16,9 @@ Colour (docs/COLOR.md): the roses (white, painted red), the crimson cushion, the
 Alice stays "about a foot high" from the end of Chapter VII; the cards are about her height and the garden is built around them.
 
 ## Placeholders still in use
+
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
 Every card: Two, Five and Seven (painting, bowing, kneeling, running, lying face down and face up), the Queen (standing, pointing, crimson, stamping), the King, the Knave with the cushion, the executioner, the soldiers, courtiers, children and guests; the soldier-arch; the rose-tree and roses, paint-pot, large flower-pot, garden wall and ridged ground; the flamingo (held, twisting, flying), the hedgehog (rolled, crawling); the Cat's head (cut from Chapter VI's placeholder Cat); the vignette. Scene-only figures (the procession and the players) are "extras" (`src/crowd.js`).
 
 ## Known gaps

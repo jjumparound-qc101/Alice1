@@ -14,6 +14,9 @@ Thought vignettes: pepper, vinegar, camomile and barley-sugar; pigs flying; scho
 Colour: none (the chapter names no colours).
 
 ## Placeholders still in use
+
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
 The Gryphon (asleep, sitting, walking, paws up, hiding its face), the Mock Turtle (sitting, sobbing, counting, hiding), the Queen with arms folded (new card pose), the rock and ledge, the sand and sea, the sunny bank, the four vignettes. The Duchess is Chapter VI's placeholder, scaled down.
 
 ## Known gaps

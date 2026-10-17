@@ -15,6 +15,9 @@ Colour (COLOR.md): the Hatter's face turns pale (rule 3); the Rabbit's pink eyes
 Alice is a foot high at first. From "she was beginning to grow larger again" she grows to about twice that by the end of the chapter (Chapter XII continues: "how large she had grown").
 
 ## Placeholders still in use
+
+*Update 2026-10-17: everything below has since been replaced by AI drawings. What is still drawn in code, in the whole book, is listed in `docs/HANDOFF.md` ("Still drawn in code").*
+
 The court (wall, canopy, throne, jury-box, witness stand, crowds, tarts table), the King as judge (wig, spectacles, arms folded), the Queen's spectacles, the Knave in chains, the standing Hatter (teacup, pale, bite, trembling, kneeling, running), trumpet, scroll, slates, pencil, shoes, canvas bags, the jurors (earlier chapters' placeholder birds and beasts), the two vignettes. The March Hare is his Chapter VII waist-up drawing; the cook is Chapter VI's.
 
 ## Known gaps
