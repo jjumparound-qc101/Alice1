@@ -81,6 +81,10 @@ export const doorstep = {
       { t: T.knocked - 1, dur: 2, pos: [0.25, 0.18, 0.4], look: [-0.05, 0.14, -0.4] },
       { t: T.plate - 1, dur: 1, pos: [0.55, 0.22, 0.5], look: [0.3, 0.2, -0.7] },              // the plate
       { t: T.plate + 3, dur: 2, pos: [0.25, 0.18, 0.4], look: [-0.05, 0.14, -0.4] },
+      // The talk with the Frog-Footman on the doorstep, from one side and then the other (2026-10-17: two minutes on one camera).
+      ...Array.from({ length: Math.max(0, Math.floor((T.kitchen - 1 - (T.plate + 3) - 12) / 16)) }, (_, n) => ({
+        t: T.plate + 15 + n * 16, dur: 6, ...(n % 2 ? { pos: [0.25, 0.18, 0.4], look: [-0.05, 0.14, -0.4] } : { pos: [-0.3, 0.2, 0.5], look: [0.0, 0.13, -0.45] }),
+      })),
     ]);
     return { T, bg: PAPER, fog: [6, 24], bounds: null, hotspots: [], camera, update, actors: (t) => ({ alice: alice(t), fish: fish(t), frog: frog(t) }) };
   },

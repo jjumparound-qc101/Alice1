@@ -136,7 +136,19 @@ export const mushroomTalk = {
     // (2026-10-14) Framed a little higher, so her feet are above the text strip, and both she and the
     // Caterpillar are in the conversation shot.
     const TALK = { pos: [0.25, 0.11, 0.48], look: [0.02, 0.1, 0] };
-    const camera = cameraTrack([
+    // Long holds on the two of them drift slowly between two nearby angles (2026-10-17: one camera for minutes).
+    const TALK_B = { pos: [0.31, 0.12, 0.4], look: [0.05, 0.115, 0] };
+    const drift = (keys) => {
+      const out = [];
+      keys.forEach((k, i) => {
+        out.push(k);
+        const next = keys[i + 1]?.t ?? T.end;
+        if (k.pos !== TALK.pos) return;
+        for (let t = k.t + k.dur + 14, n = 0; t + 12 < next - 4; t += 18, n++) out.push({ t, dur: 12, ...(n % 2 ? TALK : TALK_B) });
+      });
+      return out;
+    };
+    const camera = cameraTrack(drift([
       { t: 0, dur: 0, pos: [0.3, 0.13, 0.5], look: [0.04, 0.1, 0] },                           // looking at each other in silence
       { t: 8, dur: 4, ...TALK },                                                               // "Who are you?"
       { t: T.gravely - 1, dur: 2, pos: [0.34, 0.11, 0.42], look: [0.08, 0.1, 0.05] },
@@ -149,7 +161,7 @@ export const mushroomTalk = {
       { t: T.crawled - 1, dur: 4, pos: [0.3, 0.12, 0.45], look: [0.15, 0.06, -0.05] },
       { t: T.broke - 2, dur: 3, pos: [0.14, 0.12, 0.28], look: [0.02, 0.08, 0.03] },            // a bit of the edge with each hand
       { t: T.blow - 0.3, dur: 1, pos: [0.1, 0.05, 0.2], look: [0.04, 0.03, 0.05] },             // chin against her foot
-    ]);
+    ]));
     return {
       T, bg: PAPER, fog: [6, 24], bounds: null, hotspots: [],
       camera, update, actors: (t) => ({ alice: alice(t), caterpillar: cat(t) }),
