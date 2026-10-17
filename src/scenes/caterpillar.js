@@ -259,12 +259,20 @@ export const treetopsScene = {
       if (t >= T.nest) { const k = smooth((t - T.nest) / 2); return { pose: 'perch', x: lerp(h.x + 0.3, NEST.x, k), z: lerp(h.z + 0.1, NEST.z + 0.02, k), y: lerp(h.y - 0.1, 0, k), dir: -1 }; }
       return { pose: 'perch', x: h.x + 0.3, z: h.z + 0.1, y: h.y - 0.1 + Math.sin(t * 2) * 0.02, dir: -1, tilt: Math.sin(t * 3) * 0.06 };
     }
+    // The camera follows her head steadied (an average over a second and a half), and eases between the
+    // wide, close and leaves shots rather than cutting (2026-10-17: it switched five times in 30 s, and lurched
+    // when her head jerked back).
+    const steady = (t) => { const v = new THREE.Vector3(); for (let k = -3; k <= 3; k++) v.add(headAt(t + k * 0.25)); return v.divideScalar(7); };
+    const span = (t, a, b, e = 1.2) => smooth((t - a) / e) * (1 - smooth((t - b) / e));
     const camera = (t) => {
-      const h = headAt(t);
-      const wide = t < T.free + 2 || (t >= T.green && t < T.green + 8);
-      const pos = wide ? [h.x + 1.3, h.y + 0.4, h.z + 2.6] : [h.x + 0.3, h.y + 0.05, h.z + 0.85];
-      if (t >= T.hands && t < T.hands + 7) return { pos: [h.x + 0.4, 0.45, h.z + 1.4], look: [0, 0.0, 0] };                // the distant leaves shaking
-      return { pos, look: [h.x + 0.15, wide ? h.y * 0.6 : h.y - 0.02, h.z] };
+      const h = steady(t);
+      const wide = Math.max(1 - smooth((t - T.free - 2) / 1.5), span(t, T.green - 0.6, T.green + 8));
+      const leaves = span(t, T.hands - 0.6, T.hands + 7);
+      const mix = (a, b, k) => a.map((v, i) => lerp(v, b[i], k));
+      let pos = mix([h.x + 0.3, h.y + 0.05, h.z + 0.85], [h.x + 1.3, h.y + 0.4, h.z + 2.6], wide);
+      let look = mix([h.x + 0.15, h.y - 0.02, h.z], [h.x + 0.15, h.y * 0.6, h.z], wide);
+      pos = mix(pos, [h.x + 0.4, 0.45, h.z + 1.4], leaves); look = mix(look, [0, 0.0, 0], leaves);      // the distant leaves shaking
+      return { pos, look };
     };
     return {
       T, bg: PAPER, fog: [10, 40], bounds: null, hotspots: [],

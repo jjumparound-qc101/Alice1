@@ -53,7 +53,7 @@ export const quadrille = {
     const sitting = (t) => (t >= T.sadly - 1 && t < T.try + 2) || (t >= T.songEnd + 3 && t < T.stand) || (t >= T.face - 0.5 && t < T.garden - 4) || (t >= T.leave + 1 && t < T.hand);
     const aliceA = (t) => {
       if (t < T.try + 2) return { pose: 'shore', x: ASEAT.x, z: ASEAT.z, scale: FOOT, dir: 1 };
-      const s = route(t, [[T.try + 2, ASEAT], [T.solemnly - 1, D], [T.hand, D], [T.hand + 1.2, { x: D.x - 0.2, z: D.z + 0.05, dir: -1 }], [T.breeze + 2, { x: -3.2, z: 0.4, dir: -1 }]], { phase: t * 2.6 });
+      const s = route(t, [[T.try + 2, ASEAT], [T.solemnly - 1, D], [T.hand, D], [T.hand + 1.2, { x: D.x - 0.2, z: D.z + 0.3, dir: -1 }], [T.breeze + 2, { x: -3.2, z: 0.4, dir: -1 }]], { phase: t * 2.6 });
       const trodden = t >= T.toes && t < T.toes + 1 ? Math.sin(t * 30) * 0.05 : 0;       // "treading on her toes"
       const seated = !s.moving && sitting(t) && t >= T.songEnd;
       // AI poses (2026-10-14): standing still while they dance round her; sitting on the sand; telling her adventures;
@@ -69,7 +69,7 @@ export const quadrille = {
     const gryphonA = (t) => {
       if (dancing(t)) return { ...round(t, 0), pose: 'dance', moving: true, phase: t * 1.2, y: Math.abs(Math.sin(t * 2.4)) * 0.01 };
       if (t >= T.hand) {
-        const s = route(t, [[T.hand, R], [T.hand + 1.2, { x: D.x - 0.05, z: D.z + 0.02, dir: -1 }], [T.breeze + 2, { x: -3.0, z: 0.35, dir: -1 }]], { phase: t * 2.4 });
+        const s = route(t, [[T.hand, R], [T.hand + 1.2, { x: D.x - 0.05, z: D.z + 0.24, dir: -1 }]  /* in front of the Mock Turtle, not on top of him */, [T.breeze + 2, { x: -3.0, z: 0.35, dir: -1 }]], { phase: t * 2.4 });
         return { ...s, pose: s.moving ? 'run' : 'walk', visible: t < T.breeze + 2 }; // hurrying off, pulling her by the hand
       }
       // Thumping the Mock Turtle on the back; leaping about as they describe the dance.
@@ -124,7 +124,7 @@ export const quadrille = {
       { t: T.close, dur: 4, pos: [-0.35, 0.24, 0.5], look: [D.x, 0.12, D.z] },                          // so close to her, one on each side
       { t: T.stand, dur: 3, pos: [-0.3, 0.26, 0.6], look: [D.x, 0.16, D.z] },                           // "Stand up and repeat"
       { t: T.leave, dur: 4, pos: [-0.35, 0.3, 0.75], look: DC },
-      { t: T.sighed, dur: 4, pos: [-0.2, 0.22, 0.45], look: [L.x, 0.14, L.z] },                         // Beautiful Soup
+      { t: T.sighed, dur: 4, pos: [-0.1, 0.27, 0.8], look: [L.x + 0.1, 0.2, L.z] },                    // Beautiful Soup (his head in the picture)
       { t: T.chorus, dur: 2, pos: [-0.35, 0.34, 0.9], look: DC },                                       // "The trial's beginning!"
       { t: T.hand + 2, dur: Math.max(2, end - T.hand - 2), pos: [-0.1, 0.25, 0.6], look: [L.x, 0.14, L.z] }, // the melancholy words, more and more faintly
     ]);

@@ -202,32 +202,33 @@ export const evidence = {
       key(37, KING_S, 1.5), key(45, PICK, 2),                                    // "The trial cannot proceed"
       key(52, BILL_A, 2), key(64, PICK, 2),                                      // the Lizard head downwards; "not that it signifies much"
       key(72.2, JURY_A, 3), key(T.roof - 1, BILL_S, 1.5),                        // Alice walks out into the court; Bill gazing up into the roof
+      // Every shot held at least about 4 s (2026-10-17: some cuts came 2 s apart); quick exchanges between the
+      // King and the Rabbit are one shot of both (KING_R), and short answers are heard over the speaker's shot.
       key(88.6, KING_S, 1.2), key(92.5, MID_R, 2),                               // "What do you know about this business?" "Nothing."
-      key(100, KING_S, 1.2), key(103.5, HERALD_S, 1.2), key(110, MID_L, 2),      // "very important"; the Rabbit interrupts
-      key(116.5, KING_S, 1.2), key(122.5, MID_R, 2), key(129.8, JURY_S, 1.5),    // the King tries the words; the jury writes
-      key(133.8, JURY_A, 2),                                                     // Alice looks over their slates
+      key(100, KING_R, 1.2), key(110, MID_L, 2),                                 // "very important"; the Rabbit interrupts
+      key(116.5, KING_S, 1.2), key(122.5, MID_R, 2), key(129.8, JURY_A, 2),     // the King tries the words; the jury writes, Alice looks over their slates
       key(140.8, KING_S, 1.2), key(150.5, MID_R, 2.5),                           // "Silence!" Rule Forty-two; everybody looked at Alice
-      key(160.3, KING_S, 1), key(162.5, QUEEN_S, 1), key(165.4, MID_L, 1.5),     // "You are"; "Nearly two miles high"; "I shan't go"
-      key(173.7, KING_S, 1), key(177.6, MID_R, 1.5), key(180.5, KING_S, 1),      // the oldest rule; "Number One"; the King turned pale
-      key(188.4, HERALD_S, 1.2), key(192.3, MID_R, 2), key(197, QUEEN_S, 1), key(199.2, HERALD_S, 1),  // "this paper has just been picked up"
-      key(203, MID_L, 2), key(207.7, KING_S, 1), key(214.5, JURY_S, 1.2),        // "a letter"; "Who is it directed to?"
-      key(218.2, HERALD_S, 1), key(220.8, MID_R, 2), key(224.3, HERALD_S, 1), key(231.5, JURY_A, 1.5),        // "a set of verses"; the prisoner's handwriting?
-      key(235.3, HERALD_S, 1), key(240.1, JURY_S, 1), key(242, KING_S, 1),     // the jury puzzled; "imitated somebody else's hand"
-      key(247, JURY_S, 1), key(249, KNAVE_S, 1.2), key(252.3, MID_L, 2),         // the jury brightened; the Knave: "I didn't write it"
-      key(258.4, KING_S, 1), key(266.5, MID_R, 2), key(274.2, QUEEN_S, 1),       // "like an honest man"; clapping; "proves his guilt"
-      key(276.9, MID_L, 1.5), key(282.5, KING_S, 1), key(284.6, HERALD_S, 1.2),  // "It proves nothing of the sort!"; "Read them"
-      key(289, MID_R, 1.5), key(291, KING_S, 1), key(295, MID_L, 2.5),                               // "Begin at the beginning"
+      key(160.3, THRONE_S, 1), key(165.4, MID_L, 1.5),                           // "You are"; "Nearly two miles high"; "I shan't go"
+      key(173.7, KING_S, 1),                                                     // the oldest rule; "Number One"; the King turned pale
+      key(188.4, HERALD_S, 1.2), key(192.3, MID_R, 2), key(197.5, KING_R, 1.2),  // "this paper has just been picked up"; "a letter"
+      key(207.7, KING_S, 1), key(214.5, JURY_S, 1.2), key(218.5, HERALD_S, 1),   // "Who is it directed to?"; "a set of verses"
+      key(224.3, MID_R, 2), key(231.5, JURY_A, 1.5),                             // the prisoner's handwriting?
+      key(236, KING_R, 1), key(242, KING_S, 1),                                  // the jury puzzled; "imitated somebody else's hand"
+      key(249, KNAVE_S, 1.2),                                                    // the jury brightened; the Knave: "I didn't write it"
+      key(258.4, KING_S, 1), key(266.5, MID_R, 2),                               // "like an honest man"; clapping; "proves his guilt"
+      key(276.9, MID_L, 1.5), key(282.5, KING_R, 1.2),                           // "It proves nothing of the sort!"; "Read them"
+      key(289, MID_R, 2), key(295, MID_L, 2.5),                                  // "Begin at the beginning"
       key(305.5, HERALD_S, 2.5), key(315, JURY_A, 3), key(326, HERALD_S, 2.5),   // the verses
       key(336, MID_L, 3), key(346, THRONE_S, 2.5), key(354, MID_R, 2.5),
       key(359.8, KING_S, 1.2), key(367, MID_L, 2),                               // "the most important piece of evidence"; "If any one of them can explain it"
       key(378.8, JURY_S, 1.2), key(385.7, KING_S, 1.2), key(390, MID_R, 2),      // the jury writes; "that saves a world of trouble"
-      key(395.5, KING_S, 1.2), key(400.5, MID_R, 1.5), key(404, KING_S, 1), key(408.2, KNAVE_S, 1.2), key(413, MID_L, 2),   // the verses on his knee; "you can't swim, can you?"; cardboard
+      key(395.5, KING_S, 1.2), key(400.5, MID_R, 1.5), key(408.2, KNAVE_S, 1.2), key(413, MID_L, 2),   // the verses on his knee; "you can't swim, can you?"; cardboard
       key(418.3, KING_S, 1.2), key(427, MID_R, 2.5),                             // muttering over the verses
-      key(435.7, MID_L, 1.5), key(440.4, KING_S, 1), key(445.2, MID_R, 2),       // "they all returned"; "there they are!" (the tarts)
-      key(447.3, THRONE_S, 1.2), key(451.5, MID_L, 1.5), key(455.3, QUEEN_S, 0.8), key(458.3, BILL_S, 1), // "you never had fits"; "Never!" the inkstand at the Lizard
+      key(435.7, MID_L, 1.5), key(440.4, KING_S, 1),                             // "they all returned"; "there they are!" (the tarts)
+      key(447.3, THRONE_S, 1.2), key(458.3, BILL_S, 1),                          // "you never had fits"; "Never!" the inkstand at the Lizard
       key(462.5, JURY_A, 2), key(470.3, KING_S, 1), key(475.4, MID_R, 2),        // the ink; the pun; a dead silence
       key(482, MID_L, 2), key(487.5, QUEEN_S, 1), key(492.7, MID_R, 1.2),        // "Let the jury consider"; "Sentence first"; "Stuff and nonsense!"
-      key(499, QUEEN_S, 0.8), key(502.4, MID_L, 1), key(504.7, QUEEN_S, 0.8),    // "Hold your tongue!" purple; "I won't!"; "Off with her head!"
+      key(499, QUEEN_S, 0.8),                                                    // "Hold your tongue!" purple; "I won't!"; "Off with her head!"
       key(508.5, FULL, 3), key(T.air - 0.5, PACK, 2.5),                          // nobody moved; full size; the pack rises
     ]);
     return {

@@ -221,8 +221,8 @@ export const rabbitHouse = {
         const s = route(t, [[start, { x: DOORX - 1.6, z: 1.6, dir: 1 }], [T.upstairs - 1.5, { x: DOORX, z: 0.15 }]], { phase: t * 2.2 });
         return { ...s, pose: 'stand', scale, visible: t < T.upstairs - 1.2 };
       }
-      if (t >= T.ranOut) { // out of the door, small, and away "as hard as she could"
-        const s = route(t, [[T.ranOut, { x: DOORX, z: 0.15, dir: 1 }], [T.held - 1, { x: DOORX + 0.05, z: 0.45 }], [T.ranOff, { x: DOORX + 0.05, z: 0.45 }], [T.ranOff + 3, { x: -3.5, z: 1.6, dir: -1 }]], { phase: t * 3 });
+      if (t >= T.ranOut - 0.5) { // out of the door, small, and away "as hard as she could" (from the cut outside, so she doesn't jump in view)
+        const s = route(t, [[T.ranOut - 0.5, { x: DOORX, z: 0.15, dir: 1 }], [T.held - 1, { x: DOORX + 0.05, z: 0.45 }], [T.ranOff, { x: DOORX + 0.05, z: 0.45 }], [T.ranOff + 3, { x: -3.5, z: 1.6, dir: -1 }]], { phase: t * 3 });
         return { ...s, pose: 'stand', scale, y: 0 };
       }
       // Inside: in at the door (thinking of Dinah), to the table, to the looking-glass, then growing.

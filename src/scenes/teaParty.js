@@ -189,25 +189,30 @@ export const hallAgain = {
     const at = cue.at;
     const start = hallAgain.start(cue);
     const T = { key: at('key'), unlock: at('door', 2), mushroom: at('mushroom'), passage: at('passage') };
+    T.atDoor = Math.min(T.unlock + 3, T.mushroom - 0.3);
     const { key, hinge, curt } = buildHall({ group, ai, hallMeta });
     curt.position.set(DOOR.x + 0.85, 0, DOOR.z + 0.03);
     const alice = (t) => {
-      const s = route(t, [[start, { x: TABLE.x - 0.6, z: TABLE.z + 0.3, dir: 1 }], [T.key + 0.5, { x: TABLE.x - 0.25, z: TABLE.z + 0.35 }], [T.unlock - 0.5, { x: DOOR.x - 0.3, z: DOOR.z + 0.35 }],
+      // Round the table to the door (2026-10-17: she used to dash straight through it in a second), so the door
+      // opens as she reaches it (T.atDoor), a little after the words.
+      const s = route(t, [[start, { x: TABLE.x - 0.6, z: TABLE.z + 0.3, dir: 1 }], [T.key + 0.4, { x: TABLE.x - 0.25, z: TABLE.z + 0.35 }],
+        [T.key + 0.9, { x: TABLE.x + 0.15, z: TABLE.z + 0.65 }], [T.key + 1.5, { x: TABLE.x + 0.65, z: TABLE.z + 0.5 }], [T.atDoor, { x: DOOR.x - 0.3, z: DOOR.z + 0.35 }],
         [T.passage, { x: DOOR.x - 0.3, z: DOOR.z + 0.35 }], [T.passage + 2.5, { x: DOOR.x, z: DOOR.z + 0.05 }]], { phase: t * 2.2 });
       const scale = lerp(0.8, 0.24, smooth((t - T.mushroom) / 3)); // "till she was about a foot high"
-      const pose = t >= T.mushroom - 0.5 && t < T.mushroom + 3 ? 'nibble' : 'stand'; // "nibbling at the mushroom"
+      const pose = t >= Math.max(T.mushroom - 0.5, T.atDoor + 0.2) && t < T.mushroom + 3 ? 'nibble' : 'stand'; // "nibbling at the mushroom"
       return { ...s, pose, scale, visible: t < T.passage + 2.5 };
     };
     function update(t, cast) {
       if (t >= T.key) { carry(key, cast.alice, { tilt: -0.6 }); }
       else { key.position.set(TABLE.x + 0.12, TABLE.top + 0.015 + KEY.h / 2, TABLE.z + 0.08); key.rotation.set(0, 0, 0); }
-      key.visible = t < T.unlock + 1;
-      hinge.rotation.y = -1.7 * smooth((t - T.unlock) / 1.2);
+      key.visible = t < T.atDoor + 0.8;
+      hinge.rotation.y = -1.7 * smooth((t - T.atDoor + 0.3) / 1.2);
     }
     const camera = cameraTrack([
       { t: start, dur: 0, pos: [-1.0, 1.1, 1.2], look: [TABLE.x, 0.8, TABLE.z] },
       { t: T.key - 1, dur: 2, pos: [TABLE.x + 0.6, 1.1, TABLE.z + 1.0], look: [TABLE.x, 0.9, TABLE.z] },     // the little golden key
-      { t: T.unlock - 1, dur: 2, pos: [DOOR.x - 0.6, 0.45, DOOR.z + 1.2], look: [DOOR.x, 0.25, DOOR.z] },    // unlocking the door
+      { t: T.key + 0.6, dur: 2, pos: [2.6, 1.3, 1.6], look: [1.2, 0.25, -1.5] },                               // round the table to the door
+      { t: T.atDoor - 0.6, dur: 2, pos: [1.3, 1.0, -0.3], look: [2.4, 0.35, -2.9] },                             // unlocking the door; nibbling
       { t: T.passage - 0.5, dur: 2, pos: [DOOR.x + 0.1, 0.18, DOOR.z + 0.7], look: [DOOR.x, 0.15, DOOR.z] },
     ]);
     return { T, bg: PAPER, fog: [8, 20], bounds: null, hotspots: [], camera, update, actors: (t) => ({ alice: alice(t) }) };
