@@ -94,7 +94,10 @@ export function buildHall({ group, ai, hallMeta }) {
     const curve = new THREE.CatmullRomCurve3([
       pt(R, base), pt(R * 0.96, base * 0.75), pt(R * 1.0, base * 0.4), pt(R * 1.18, base * 0.12), pt(R * 1.4, 0.015),
     ]);
-    table.add(glass(new THREE.TubeGeometry(curve, 24, 0.02, 8, false)));
+    // A leg is a pale rod with an inked outline on either side (a slightly larger tube showing only its
+    // inside, behind it), not glass(): the edges of its eight faces read as stray wavy lines (audit, 2026-10-17).
+    table.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.02, 10, false), new THREE.MeshBasicMaterial({ color: '#e4ebe8' })));
+    table.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.0255, 10, false), new THREE.MeshBasicMaterial({ color: INK, side: THREE.BackSide })));
     const collar = glass(new THREE.CylinderGeometry(0.035, 0.028, 0.03, 12));
     collar.position.copy(pt(R, base)); table.add(collar);
   }

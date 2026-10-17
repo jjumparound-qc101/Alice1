@@ -17,7 +17,7 @@ const AI_ART = ['sky', 'treeline', 'tree', 'hedge', 'grass', 'bank_grass', 'bank
   // Chapter II (tools/ch2_art.py): the Rabbit, the Mouse, the birds, props, the pool and the thoughts.
   ...['rabbit2_trot', 'rabbit2_start', 'rabbit2_away', 'mouse_swim', 'mouse_leap', 'mouse_bristle', 'mouse_away',
     'duck_swim', 'duck_stand', 'dodo_swim', 'dodo_stand', 'lory_swim', 'lory_stand', 'eaglet_swim', 'eaglet_stand',
-    'kid_gloves', 'splash', 'pool_water', 'pool_rim'].map((n) => `ch2/${n}`),
+    'kid_gloves', 'splash', 'pool_water', 'pool_rim', 'tear'].map((n) => `ch2/${n}`),
   ...['foot_parcel', 'ada_mabel', 'crocodile', 'seaside', 'walrus', 'dinah_fire', 'terrier'].map((n) => `vignettes/${n}`)];
 
 export const BOOK = {

@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { paperFlat } from '@engine/stage.js';
 import { texture } from '@engine/ink.js';
 import { buildHall, DOOR } from '../sets/hall.js';
-import { water, tear } from '../props2.js';
+import { water } from '../props2.js';
 import { mouseTale } from '../props3.js';
 import { thoughts } from '@engine/thoughts.js';
 import { carry } from '@engine/puppet.js';
@@ -84,8 +84,8 @@ export const bank = {
     // Props: the comfits, the thimble, Alice's tears, and the Mouse's tale.
     const prop = (n, w) => paperFlat(ai[`props/${n}`].tex, w, w / ai[`props/${n}`].aspect, { anchor: 'center' }); // AI (tools/vignettes_art.py)
     const box = prop('comfits', 0.035), thim = prop('thimble', 0.013);
-    const dropTex = texture(tear());
-    const drops = Array.from({ length: 6 }, () => { const d = paperFlat(dropTex, 1, 1.5, { anchor: 'center', edge: false }); group.add(d); return d; });
+    const dropArt = ai['ch2/tear']; // the engraved drop of Chapter II (tools/ch2_art.py)
+    const drops = Array.from({ length: 6 }, () => { const d = paperFlat(dropArt.tex, 1, 1 / dropArt.aspect, { anchor: 'center', edge: false }); group.add(d); return d; });
     const tale = paperFlat(texture(mouseTale()), 0.17, 0.34, { anchor: 'center' });
     group.add(box, thim, tale);
     const think = thoughts(group, [

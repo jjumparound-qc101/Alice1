@@ -1,4 +1,6 @@
-# Alice polish list, round 4 (for approval)
+# Alice polish list, round 4
+
+Status (2026-10-17, session 6): put to the owner; working on the recommended option (approve all) until they answer. Done: 1, 2, 3, 4, 5, 6, 7. Left in Part A: 8 (the floor's cracks at tiny size), 9 (tidy-up).
 
 Ranked top-down. Strike any numbers you don't want. I'll work the rest in this order and update the web link after each batch. Times are minutes:seconds into the chapter.
 

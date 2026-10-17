@@ -106,13 +106,6 @@ export function fan() {
   dot(g, 160, 186, 8);
   return c;
 }
-// One tear, falling.
-export function tear() {
-  const { c, g } = canvas(48, 72);
-  const p = new Path2D(); p.moveTo(24, 4); p.quadraticCurveTo(44, 44, 24, 66); p.quadraticCurveTo(4, 44, 24, 4); p.closePath();
-  g.fillStyle = '#f7f3ea'; g.fill(p); outline(g, p, 2.5);
-  return c;
-}
 // The pool's surface, in Tenniel's horizontal engraved water lines; tiles both ways.
 export function water() {
   const { c, g } = canvas(512, 512);

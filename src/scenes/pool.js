@@ -3,12 +3,10 @@
 // White Rabbit into dropping his gloves and fan, wonders who she is, shrinks again, slips
 // into her own tears, and swims with the Mouse until the birds and animals arrive.
 // The art is the AI drawings (tools/compose_poses.py for Alice, tools/ch2_art.py for the
-// rest); tears are still drawn in code (props2.js).
+// rest, the tears included).
 import * as THREE from 'three';
 import { paperFlat } from '@engine/stage.js';
-import { texture } from '@engine/ink.js';
 import { buildHall, TABLE, DOOR, KEY, H } from '../sets/hall.js';
-import { tear } from '../props2.js';
 import { thoughts } from '@engine/thoughts.js';
 import { carry } from '@engine/puppet.js';
 import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
@@ -65,10 +63,11 @@ export const pool = {
     group.add(pond);
     const spread = (t) => smooth((t - T.cry) / (T.hall - T.cry));
 
-    // Tears, falling while she cries; drops thrown up when she falls in.
-    const dropTex = texture(tear());
+    // Tears, falling while she cries; drops thrown up when she falls in: an engraved drop
+    // (AI drawing, tools/ch2_art.py; replaced the code-drawn white drop 2026-10-17).
+    const dropArt = ai['ch2/tear'];
     const drops = Array.from({ length: 10 }, () => {
-      const d = paperFlat(dropTex, 1, 1.5, { anchor: 'center', edge: false });
+      const d = paperFlat(dropArt.tex, 1, 1 / dropArt.aspect, { anchor: 'center', edge: false });
       group.add(d);
       return d;
     });
@@ -137,9 +136,9 @@ export const pool = {
       [T.fanning, TALKING],
       [T.table - 0.5, TALKING],
       [T.two + 1, MEASURE],                                        // "went to the table to measure herself"
-      [T.ran, MEASURE],
-      [T.ran + 3.5, { x: 1.5, z: -1.9 }],                          // "ran with all speed back to the little door"
-      [T.shut - 0.5, AT_DOOR],
+      [T.ran - 1.6, MEASURE],                                      // "and now for the garden!"
+      [T.ran + 0.6, { x: 1.2, z: -0.5 }],                          // "ran with all speed back to the little door",
+      [T.shut - 0.3, AT_DOOR],                                     // round the table, there as it is "shut again"
       [T.keyOnTable + 4, AT_DOOR],
       [T.slipped, EDGE],
     ], { phase: t * 2.2 });
@@ -239,7 +238,7 @@ export const pool = {
           const ph = ((t * 1.2 + i / drops.length) % 1);
           const eye = eyes[i % eyes.length];
           d.visible = true;
-          d.scale.setScalar(0.035 * scale);
+          d.scale.setScalar(0.02 * scale);
           // Down the cheek first, then falling to the floor.
           d.position.set(eye.x, lerp(eye.y, WATER_Y, ph * ph), eye.z + 0.01);
         } else if (t >= T.splash && t < T.splash + 1) {
@@ -317,10 +316,10 @@ export const pool = {
       return { ...s, pose, float: !leaping, moving: s.moving, y: WATER_Y - 0.004 + hop, tilt: quiver };
     }
     const BIRDS = {
-      duck: [{ x: 5.7, z: -1.3 }, { x: 4.7, z: -1.15 }, { x: 1.4, z: -0.9 }],
-      dodo: [{ x: 5.8, z: -0.4 }, { x: 4.6, z: -0.25 }, { x: 1.6, z: -0.2 }],
-      lory: [{ x: 5.9, z: 0.1 }, { x: 4.9, z: 0.15 }, { x: 1.9, z: 0.1 }],
-      eaglet: [{ x: 6.0, z: -0.9 }, { x: 5.1, z: -0.75 }, { x: 2.1, z: -0.7 }],
+      duck: [{ x: 5.3, z: -1.0 }, { x: 4.7, z: -1.15 }, { x: 1.4, z: -0.9 }],
+      dodo: [{ x: 5.4, z: -0.4 }, { x: 4.6, z: -0.25 }, { x: 1.6, z: -0.2 }],
+      lory: [{ x: 5.5, z: 0.0 }, { x: 4.9, z: 0.15 }, { x: 1.9, z: 0.1 }],
+      eaglet: [{ x: 5.6, z: -0.7 }, { x: 5.1, z: -0.75 }, { x: 2.1, z: -0.7 }],
     };
     function bird(name, t, i) {
       const [p0, p1, p2] = BIRDS[name];
@@ -340,23 +339,25 @@ export const pool = {
       { t: 0, dur: 0, pos: [TABLE.x + 0.6, 0.45, TABLE.z + 1.5], look: [TABLE.x, 0.15, TABLE.z + 0.3] },
       { t: 1.5, dur: T.telescope, pos: [0.7, 1.5, 2.9], look: [A0.x, 1.9, A0.z] },          // "opening out like the largest telescope"
       { t: T.feet - 1, dur: 3, pos: [1.0, 0.35, 1.2], look: [A0.x, 0.1, A0.z] },            // "Good-bye, feet!"
-      { t: T.feet + 6, dur: 4, pos: [0.9, 1.7, 2.9], look: [A0.x, 2.3, A0.z] },             // her face, far above
+      { t: T.feet + 6, dur: 4, pos: [0.6, 1.5, 3.0], look: [A0.x, 1.35, A0.z] },            // all nine feet of her, head to hem above the text
       { t: T.struck - 1, dur: 1.5, pos: [0.4, 1.0, 2.9], look: [A0.x, 2.7, A0.z - 0.2] },   // her head strikes the roof
       { t: T.key - 1, dur: 2, pos: [1.0, 1.4, 1.4], look: [TABLE.x + 0.1, 1.0, TABLE.z] },  // the key
       { t: T.hurried, dur: 3, pos: [0.4, 1.6, 2.2], look: [BY_DOOR.x + 0.4, 1.0, D.z + 0.4] },
       { t: T.lying - 0.5, dur: 3, pos: [1.0, 0.6, -0.9], look: [D.x, 0.35, D.z] },         // one eye to the little door
       { t: T.sat - 0.5, dur: 4, pos: [-0.6, 1.6, 2.7], look: [CRYING.x, 1.0, CRYING.z] },  // crying
       { t: T.cry + 8, dur: 12, pos: [-1.6, 2.6, 2.7], look: [POOL.x, 0, POOL.z] },          // the pool spreads
-      { t: T.pattering - 1, dur: 3, pos: [2.8, 1.1, 1.8], look: [-3.0, 0.4, 0.6] },        // pattering feet, far off
-      { t: T.near - 8, dur: 6, pos: [0.2, 1.0, 2.9], look: [STOP.x, 0.7, 0.3] },
+      { t: T.pattering - 1, dur: 3, pos: [5.5, 1.6, 2.0], look: [-1.0, 0.7, -0.8] },       // pattering feet, far off, over her shoulder
+      { t: T.near - 8, dur: 6, pos: [0.2, 0.4, 4.0], look: [2.0, 0.55, -0.6] },             // low, so the Rabbit stands clear of the text
       { t: T.please - 1, dur: 1.5, pos: [0.9, 0.55, 2.5], look: [STOP.x, 0.4, STOP.z] },    // "If you please, sir—"
       { t: T.skurried, dur: 2, pos: [1.6, 0.9, 1.9], look: [-3.5, 0.4, 0.6] },              // into the darkness
       { t: T.took - 1, dur: 2.5, pos: [0.3, 1.5, 2.9], look: [TALKING.x, 1.7, TALKING.z] },
       { t: T.lap - 1, dur: 3, pos: [0.5, 1.2, 2.9], look: [TALKING.x, 1.2, TALKING.z] },    // saying her lessons
+      { t: T.crocodile - 2, dur: 10, pos: [1.4, 1.05, 2.6], look: [TALKING.x, 1.25, TALKING.z] }, // a slow drift round her as she recites
+      { t: T.notRight + 2, dur: 10, pos: [0.2, 1.3, 2.75], look: [TALKING.x, 1.2, TALKING.z] },
       { t: T.hands - 1, dur: 2.5, pos: [0.9, 1.7, 2.95], look: [TALKING.x, 2.1, TALKING.z] }, // the glove on her hand
       { t: T.table - 1, dur: 4, pos: [-1.2, 0.9, 1.9], look: [MEASURE.x, 0.4, MEASURE.z] },  // measuring by the table
       { t: T.two + 1, dur: 3, pos: [-0.5, 0.3, 0.6], look: [MEASURE.x, 0.08, MEASURE.z] },
-      { t: T.ran - 0.5, dur: 3, pos: [1.6, 0.4, 0.4], look: [1.2, 0.08, -1.7] },          // back to the little door
+      { t: T.ran - 1.8, dur: 3, pos: [1.6, 0.4, 0.4], look: [1.2, 0.08, -1.7] },          // back to the little door
       { t: T.shut - 1, dur: 2, pos: [D.x - 0.1, 0.25, D.z + 1.3], look: [D.x, 0.15, D.z] },  // shut again
       { t: T.keyOnTable - 0.5, dur: 2, pos: [TABLE.x + 0.5, 1.15, TABLE.z + 1.0], look: [TABLE.x + 0.12, 0.93, TABLE.z] },
       { t: T.keyOnTable + 3, dur: 3, pos: [2.0, 0.35, -0.6], look: [EDGE.x, 0.06, EDGE.z] },
@@ -384,10 +385,19 @@ export const pool = {
         // stays in the picture: low over the water, on the near side, framing them all.
         const base = track(t);
         if (t < T.swam) return base;
-        const who = [alice(t), mouse(t), ...['duck', 'dodo', 'lory', 'eaglet'].map((n, i) => bird(n, t, i))].filter((s) => s.visible !== false);
-        let x0 = Infinity, x1 = -Infinity, cz = 0;
-        for (const s of who) { x0 = Math.min(x0, s.x); x1 = Math.max(x1, s.x); cz += s.z; }
-        cz /= who.length;
+        // A swimmer who has just appeared is taken in over 1.5 s (drawn from Alice's place to its
+        // own), so the framing widens smoothly instead of snapping wide (audit, 2026-10-17).
+        const me = alice(t);
+        const who = [
+          [me, 1], [mouse(t), smooth((t - T.splashing - 1.5) / 1.5)],
+          ...['duck', 'dodo', 'lory', 'eaglet'].map((n, i) => [bird(n, t, i), smooth((t - T.crowded + 2 - i * 0.6) / 1.5)]),
+        ].filter(([s]) => s.visible !== false);
+        let x0 = Infinity, x1 = -Infinity, cz = 0, n = 0;
+        for (const [s, w] of who) {
+          const x = lerp(me.x, s.x, w);
+          x0 = Math.min(x0, x); x1 = Math.max(x1, x); cz += lerp(me.z, s.z, w); n++;
+        }
+        cz /= n;
         const cx = (x0 + x1) / 2, back = Math.max(0.28, (x1 - x0) * 0.8 + 0.12);
         const follow = { pos: [cx, 0.135 + back * 0.05, cz + back], look: [cx, 0.11, cz] };
         const k = smooth((t - T.swam) / 2);   // blend in from the shot after the splash

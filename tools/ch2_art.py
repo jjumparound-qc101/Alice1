@@ -31,7 +31,7 @@ BROWN = np.array([0x9A, 0x62, 0x32], np.float32)  # SPOT.brown in src/props.js
 CUT = ["mouse_swim", "mouse_leap", "mouse_bristle", "mouse_away",
        "duck_swim", "duck_stand", "dodo_swim", "dodo_stand",
        "lory_swim", "lory_stand", "eaglet_swim", "eaglet_stand",
-       "kid_gloves", "splash"]
+       "kid_gloves", "splash", "tear"]
 OPAQUE = ["pool_water", "pool_shore"]
 # Vignettes: source name -> output name. Drawings that aren't ovals already are fitted
 # inside the oval (FIT) rather than cropped by it.

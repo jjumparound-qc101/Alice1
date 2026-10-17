@@ -1,5 +1,5 @@
 # Handoff: read this first
-Updated: 2026-10-17, session 6 (the four-drawing walk in; loading by chapter finished and published; camera reports VII-XII under way). Before that, end of session 5 (patch notes worked through: the glass table, the long neck, mirror-image guests, thought bubbles in their pictures' shapes, the banister picture without words; Alice moved onto the shared engine; the web link packed into 42 files; **a polish pass begun with the owner**: decisions below, a four-frame walk cycle drawn and waiting for the owner's yes, loading by chapter built and being tested). For the next Claude Code session (or anyone) picking up the work.
+Updated: 2026-10-17, session 6 (the four-drawing walk in; loading by chapter finished and published; round 4 polish list put to the owner and Part A items 1-7 done: see docs/POLISH_LIST.md). Before that, end of session 5 (patch notes worked through: the glass table, the long neck, mirror-image guests, thought bubbles in their pictures' shapes, the banister picture without words; Alice moved onto the shared engine; the web link packed into 42 files; **a polish pass begun with the owner**: decisions below, a four-frame walk cycle drawn and waiting for the owner's yes, loading by chapter built and being tested). For the next Claude Code session (or anyone) picking up the work.
 
 ## The polish pass (owner, 2026-10-17): decisions and where it stands
 The owner asked to "polish up this 2.5D book project" and settled these in three rounds of questions (each my recommendation, accepted):
@@ -99,6 +99,11 @@ Alice now runs on the shared Library of Living Books engine, LoLBookEngine (`eng
 | XII Alice's Evidence | CHAPTER_12_ASSETS.md | ✓ | `evidence.js`: `evidence`, `waking` (court and riverbank sets) |
 
 ## Open decisions for the owner
+- Round 4 (docs/POLISH_LIST.md): approve all, or strike items (asked 2026-10-17 on a card; work proceeds on "approve all").
+
+## Image generation from a project thread (2026-10-17)
+This project's threads run in a built-in cloud environment whose network refuses api.openai.com, so `engine/tools/gen_image.py` fails there ("CONNECT tunnel failed, response 403"). The project's main (coordinator) session can reach it: send it the exact prompt, model, size and target path under `/mnt/project-files/alice/incoming/`, look at what comes back, then process as usual. The owner can instead add api.openai.com under Allowed domains in a project cloud environment (Project settings, Cloud environment).
+
 - None open. Decided this session (2026-10-15): structures and backgrounds place by place with the owner shown the first pictures (done); the Chapter I tailpiece on the end card under the last line (done); Alice walks round the glass table, the table stays put (done).
 - The Tenniel plates are all on Project Gutenberg ebook 114 (*The Tenniel Illustrations*), `https://www.gutenberg.org/files/114/114-h/images/aliceNNa.gif` (01 = the trial frontispiece, kept as `source/plates/tenniel_frontispiece_trial_gutenberg.png`; small images). Ebook 28885 is Arthur Rackham's 1907 edition, not Tenniel: don't use it. commons.wikimedia.org stays blocked.
 

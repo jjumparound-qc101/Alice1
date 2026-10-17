@@ -87,7 +87,10 @@ export const hall = {
       const A = Math.atan2(a.z - TABLE.z, a.x - TABLE.x), B = Math.atan2(b.z - TABLE.z, b.x - TABLE.x);
       const TAU = Math.PI * 2, wrap = (v) => ((v % TAU) + TAU) % TAU;
       const ccw = wrap(B - A), viaNear = wrap(Math.PI / 2 - A) <= ccw;
-      const arc = viaNear ? ccw : ccw - TAU;
+      let arc = viaNear ? ccw : ccw - TAU;
+      // Leaving the table's side for somewhere just round it, the near way can be nearly a full circle
+      // (Chapter I, off to try the key in the doors: she circled the table first); then the short way.
+      if (Math.abs(arc) > Math.PI * 1.5) arc = arc > 0 ? arc - TAU : arc + TAU;
       const n = Math.max(2, Math.ceil(Math.abs(arc) / (Math.PI / 8)));
       const R = CLEAR / Math.cos(Math.abs(arc) / n / 2);          // chords between the points stay outside CLEAR
       const pts = [a];
@@ -118,15 +121,15 @@ export const hall = {
       [T.doors + 8, { x: 0.5, z: -2.3 }],
       [T.doors + 12, { x: 2.5, z: -2.3 }],
       [T.key - 0.5, AT_TABLE],                // round the front of the table, at a walk (owner, 2026-10-15)
-      [T.tryKey, AT_TABLE],
-      [T.tryKey + 3, { x: -2.5, z: -2.4 }],    // tries the key in the doors
+      [T.tryKey - 4.5, AT_TABLE],             // "it might belong to one of the doors": off at a walk
+      [T.tryKey + 0.5, { x: -2.5, z: -2.4 }],  // tries the key in the doors
       [T.curtain, { x: AT_DOOR.x - 0.4, z: AT_DOOR.z }],
       [T.curtain + 1.5, AT_DOOR],
       [T.waiting, AT_DOOR],
       [T.backToTable, AT_TABLE],
       [T.decided - 1.5, AT_TABLE],
       [T.forgotten + 0.5, AT_DOOR],          // off to the garden, small now: the whole way at her pace
-      [T.forgotten + 6.5, BY_LEG],
+      [T.forgotten + 8, BY_LEG],             // back to the table, at a pace her size can walk
       [T.box, BY_LEG],
       [T.box + 2.5, { x: TABLE.x - 0.05, z: TABLE.z + 0.45 }],
     ], { phase: t * 2.2 });
@@ -145,7 +148,7 @@ export const hall = {
       // Holding the key, or the bottle, up to look at it while she stands still.
       const holding = !s.moving && ((t >= T.key && t < T.tryKey) || (t >= T.bottle + 1 && t < T.drunk));
       // "she found she could not possibly reach it": up on tiptoe under the table, before climbing a leg.
-      const reaching = !s.moving && t >= T.forgotten + 6.5 && t < T.legs;
+      const reaching = !s.moving && t >= T.forgotten + 8 && t < T.legs;
       const climbing = t >= T.legs && t < T.sat;
       const pose = reaching || climbing ? 'reach' : kneeling ? 'kneel' : crying ? 'cry' : eating && !s.moving ? 'eat' : holding ? 'hold' : 'stand';
       // Climbing, she follows the leg as it leans in toward the table top.
