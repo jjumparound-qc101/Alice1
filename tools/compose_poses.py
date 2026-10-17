@@ -42,6 +42,13 @@ DRAWN = {
     "walk_b": {"src": "source/ai/alice_walk_cycle.png", "crop": (464, 140, 756, 905), "h": 709, "torso": 608.5},
     "walk_c": {"src": "source/ai/alice_walk_cycle.png", "crop": (763, 140, 1172, 905), "h": 695, "torso": 1002.5},
     "walk_d": {"src": "source/ai/alice_walk_cycle.png", "crop": (1224, 140, 1500, 905), "h": 697, "torso": 1361.5},
+    # The walk seen from behind (2026-10-17, gpt-image-2.5-sunburst with the model sheet and the side walk
+    # as references): contact, passing, contact, passing, for walking away from the camera. One scale
+    # (788 px -> 700); torso: the parting of her hair, so the head holds steady.
+    "back_a": {"src": "source/ai/alice_walk_back.png", "crop": (30, 110, 375, 925), "h": 711, "torso": 199.5},
+    "back_b": {"src": "source/ai/alice_walk_back.png", "crop": (415, 110, 738, 925), "h": 699, "torso": 577},
+    "back_c": {"src": "source/ai/alice_walk_back.png", "crop": (784, 110, 1116, 925), "h": 702, "torso": 944.5},
+    "back_d": {"src": "source/ai/alice_walk_back.png", "crop": (1173, 110, 1494, 925), "h": 700, "torso": 1331.5},
     "jump": {"src": "source/ai/alice_jump.webp", "h": 751, "bodyX": 350},
     # Chapter II (matched by eye against the standing Alice: dress, hands and head size).
     "feet": {"src": "source/ai/alice2_feet.webp", "h": 695, "bodyX": None},

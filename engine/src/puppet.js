@@ -36,7 +36,7 @@ export class Puppet {
   //          idle (seconds: standing-still life, a gentle rock and a bounce on the toes) }
   apply(s, camera) {
     this.root.visible = s.visible !== false;
-    if (!this.root.visible) return;
+    if (!this.root.visible) { this.last = null; return; }
     // Walking (any speed): the two step drawings alternate once per step, and the step
     // count comes from the distance covered, so the feet keep pace with the ground at any
     // speed or size. Without walk drawings, the standing pose bobs. (The composed running
@@ -47,7 +47,13 @@ export class Puppet {
     // A four-drawing cycle (walk_a..walk_d: contact, passing, contact, passing; Alice, 2026-10-17)
     // shows a drawing every half step and carries its own bob, so it has no hop.
     const cycle = walking && !!this.poses.walk_d;
-    if (cycle) pose = ['walk_a', 'walk_b', 'walk_c', 'walk_d'][Math.floor(steps * 2) % 4];
+    // Walking away from the camera (within about 40 degrees of straight away), a figure with a
+    // back-view cycle (back_a..back_d) shows that instead; it goes back to the side view past
+    // about 55 degrees, so it doesn't flicker on a curve. A scene can force it with s.away.
+    if (walking && this.poses.back_d) this.away = s.away ?? this.awayFrom(s, camera);
+    else this.away = false;
+    if (cycle && this.away) pose = ['back_a', 'back_b', 'back_c', 'back_d'][Math.floor(steps * 2) % 4];
+    else if (cycle) pose = ['walk_a', 'walk_b', 'walk_c', 'walk_d'][Math.floor(steps * 2) % 4];
     else if (walking && this.poses.walk_a) pose = Math.floor(steps) % 2 ? (this.poses.walk_b ? 'walk_b' : 'stand') : 'walk_a';
     if (pose !== this.pose) {
       if (this.pose) this.poses[this.pose].visible = false;
@@ -73,11 +79,24 @@ export class Puppet {
     flat.rotation.z = rock + (s.tilt ?? 0);
     // Mirror so the figure faces its direction of travel.
     const facingLeft = (s.dir ?? -1) < 0;
-    flat.scale.x = facingLeft === flat.userData.facesLeft ? 1 : -1;
+    flat.scale.x = flat.userData.facesLeft === null || facingLeft === flat.userData.facesLeft ? 1 : -1; // null: a back or front view, never mirrored
     flat.position.x = flat.userData.offsetX * flat.scale.x;
     // Turn toward the camera, within limits.
     const toCam = Math.atan2(camera.position.x - s.x, camera.position.z - s.z);
     this.root.rotation.y = THREE.MathUtils.clamp(toCam, -MAX_TURN, MAX_TURN);
+    this.last = { x: s.x, z: s.z };
+  }
+
+  // Is the figure moving away from the camera? From its motion since the last frame, with
+  // hysteresis; a frame without motion (paused, or a jump in time) keeps the last answer.
+  awayFrom(s, camera) {
+    const last = this.last;
+    if (!last) return this.away ?? false;
+    const mx = s.x - last.x, mz = s.z - last.z, m = Math.hypot(mx, mz);
+    if (m < 1e-5 || m > 0.5) return this.away ?? false;
+    const cx = s.x - camera.position.x, cz = s.z - camera.position.z, c = Math.hypot(cx, cz) || 1;
+    const cos = (mx * cx + mz * cz) / (m * c);
+    return this.away ? cos > 0.57 : cos > 0.77;
   }
 
   // World position of the hand drawn in the current pose, just in front of the card,

@@ -95,6 +95,11 @@ export const BOOK = {
         walk_b: { ...posed.walk_b, hand: [0.06, 0.51] },
         walk_c: { ...posed.walk_c, hand: [0.17, 0.47] },
         walk_d: { ...posed.walk_d, hand: [0.09, 0.52] },
+        // The walk seen from behind (2026-10-17), shown when she walks away from the camera; never mirrored.
+        back_a: { ...posed.back_a, facesLeft: null, hand: [0.85, 0.5] },
+        back_b: { ...posed.back_b, facesLeft: null, hand: [0.85, 0.52] },
+        back_c: { ...posed.back_c, facesLeft: null, hand: [0.85, 0.52] },
+        back_d: { ...posed.back_d, facesLeft: null, hand: [0.85, 0.52] },
         jump: { ...posed.jump, hand: [0.03, 0.37] },
         fall: { ...posed.fall, hand: [0.06, 0.06] },        // the marmalade jar, in her raised left hand (Chapter I)
         hold: { ...posed.hold, hand: [0.05, 0.17] },        // the key or bottle held up (Chapter I)

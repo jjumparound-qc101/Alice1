@@ -1,5 +1,10 @@
 # Engine changes (newest first)
 
+## 2026-10-17: a walk seen from behind
+- `puppet.js`: a figure that also has `back_a`..`back_d` (a four-drawing walk seen from behind) shows it while it walks away from the camera: within about 40 degrees of straight away, judged from its motion since the last frame, and back to the side view past about 55 degrees, so a curving path doesn't flicker. A scene can force it either way with `away: true/false` in the figure's state. A pose with `facesLeft: null` (a back or front view) is never mirrored.
+- Why (owner, Alice: the walk plan's step (f)): walking away down the passage or into the garden, the side view slid sideways into the distance.
+- Checked against: Alice1 (every chapter swept for when the back walk shows; screenshots; full smoke test). Books to take it: any with a back-view walk; others are unchanged.
+
 ## 2026-10-17: a bigger picture on upright phones and tablets
 - `main.js`: held upright, the picture takes what the text doesn't need (room for about eight lines of text above the controls; a longer passage scrolls), between 4:3 and 1:1.35 width to height and at most 70% of the screen, instead of at most 4:5 and 58%. An upright picture keeps 90% of the width the shots were framed for (figures a little larger) and may look up to 84° high. `style.css`: the text is larger on a tablet held upright (`clamp(1.15rem, 2.6vw, 1.5rem)`).
 - Why (owner, Alice 2026-10-17, audit): on tall phones the picture was the top third, with 30-45% of the screen blank under the text; on a tablet the text was small.
