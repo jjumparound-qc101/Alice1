@@ -1,5 +1,9 @@
 # Engine changes (newest first)
 
+## 2026-10-17: art packs as .json data files
+- `tools/pack_art.py`, `src/packs.js`: the packs were uncompressed .zip files, which the web link refuses ("archives can't be attached"); they are now .json data files of the pictures' bytes in base64 (at most 11 MB of pictures each, under the 16 MB text-file limit), read one at a time (so a phone never holds several at once) and let go once the book's art is made. A third larger than the pictures themselves.
+- Checked against: Alice1 (the packed web build served locally: full smoke test).
+
 ## 2026-10-17: thought bubbles in their picture's own shape
 - `thoughts.js`: each bubble is an oval in its picture's own shape (width / height, kept between 0.6 and 2.2), at the area a standard bubble (1024:720) would have, within the same share of the picture; it was one shape for every picture, which cut off the edges of round, upright and very wide ones (owner, Alice 2026-10-17: "every thought bubble resized to fit the image"). `style.css`: the picture fills its bubble (2% overscan under the outline instead of 6%).
 - A book's thought pictures should be drawn as ovals filling their own box (Alice: `tools/ch2_art.py` `vignette()` now keeps each drawing's own shape and leaves the outline to the bubble). Rectangular pictures lose only their corners, as before.

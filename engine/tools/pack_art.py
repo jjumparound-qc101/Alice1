@@ -1,21 +1,21 @@
 """Pack a web build's pictures into a few files, for the playable web link.
 
-A web link (a claude.ai artifact) holds at most 511 files and 15 MB per binary file, and a book has
-hundreds of pictures. This stores every picture under DIST/art/ in uncompressed .zip packs of at most
---max-mb each (DIST/packs/art01.zip, ...; the pictures are already compressed), in path order so each
-place's pictures sit together, and writes DIST/packs/index.json: for each picture's path, its pack,
-the offset of its bytes and their length. The game (src/packs.js) loads each pack once and makes the
-pictures from it; the packed files are removed from DIST, and DIST/index.html names the index
-(window.ART_PACKS), so a build without packs never asks for one. Anything else (audio, words, .json)
-stays loose. Run by web_build.sh; the desktop build doesn't use it.
+A web link (a claude.ai artifact) holds at most 511 files, 15 MB per binary file and 16 MB per text file,
+and serves only web file types (no archives such as .zip), while a book has hundreds of pictures. This
+stores every picture under DIST/art/ in a few .json data files (DIST/packs/art01.json, ...: each picture's
+bytes in base64, by path; at most --max-mb of pictures each, so the file stays under 16 MB), in path order
+so each place's pictures sit together, and writes DIST/packs/index.json: for each picture's path, its pack
+and type. The game (src/packs.js) reads the packs one at a time and makes the pictures from them; the
+packed files are removed from DIST, and DIST/index.html names the index (window.ART_PACKS), so a build
+without packs never asks for one. Anything else (audio, words, .json) stays loose. Run by web_build.sh;
+the desktop build doesn't use it.
 
-Usage: python3 engine/tools/pack_art.py DIST [--max-mb 14]
+Usage: python3 engine/tools/pack_art.py DIST [--max-mb 11]
 """
 import argparse
+import base64
 import json
 import os
-import struct
-import zipfile
 
 TYPES = {".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}
 
@@ -23,7 +23,7 @@ TYPES = {".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg", ".jpe
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("dist")
-    ap.add_argument("--max-mb", type=float, default=14)
+    ap.add_argument("--max-mb", type=float, default=11)
     a = ap.parse_args()
     limit = int(a.max_mb * 1024 * 1024)
     pictures = []
@@ -49,20 +49,15 @@ def main():
     os.makedirs(os.path.join(a.dist, "packs"), exist_ok=True)
     index = {"files": {}}
     for i, group in enumerate(groups):
-        name = f"art{i + 1:02d}.zip"
+        name = f"art{i + 1:02d}.json"
+        files = {}
+        for rel, p in group:
+            with open(p, "rb") as f:
+                files[rel] = base64.b64encode(f.read()).decode("ascii")
+            index["files"][rel] = {"pack": name, "type": TYPES[os.path.splitext(rel)[1].lower()]}
         path = os.path.join(a.dist, "packs", name)
-        with zipfile.ZipFile(path, "w", zipfile.ZIP_STORED) as z:
-            for rel, p in group:
-                z.write(p, rel)
-        # Where each picture's bytes begin: after its local header (30 bytes, its name, any extra field).
-        with zipfile.ZipFile(path) as z, open(path, "rb") as f:
-            for info in z.infolist():
-                f.seek(info.header_offset)
-                head = f.read(30)
-                n, m = struct.unpack("<HH", head[26:30])
-                index["files"][info.filename] = {"pack": name, "at": info.header_offset + 30 + n + m,
-                                                 "size": info.file_size,
-                                                 "type": TYPES[os.path.splitext(info.filename)[1].lower()]}
+        with open(path, "w") as f:
+            json.dump({"files": files}, f, separators=(",", ":"))
         for _, p in group:
             os.remove(p)
         print(f"packs/{name}: {len(group)} pictures, {os.path.getsize(path) / 1e6:.1f} MB")
