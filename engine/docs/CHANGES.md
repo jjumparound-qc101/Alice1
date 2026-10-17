@@ -1,5 +1,19 @@
 # Engine changes (newest first)
 
+## 2026-10-17: a bigger picture on upright phones and tablets
+- `main.js`: held upright, the picture takes what the text doesn't need (room for about eight lines of text above the controls; a longer passage scrolls), between 4:3 and 1:1.35 width to height and at most 70% of the screen, instead of at most 4:5 and 58%. An upright picture keeps 90% of the width the shots were framed for (figures a little larger) and may look up to 84° high. `style.css`: the text is larger on a tablet held upright (`clamp(1.15rem, 2.6vw, 1.5rem)`).
+- Why (owner, Alice 2026-10-17, audit): on tall phones the picture was the top third, with 30-45% of the screen blank under the text; on a tablet the text was small.
+- Checked against: Alice1 (phone and tablet screenshots in both orientations at five moments; full smoke test). Landscape and computer screens are unchanged. Books to take it: all.
+
+## 2026-10-17: Explore's play button reads Play
+- `main.js` (`setMode`): the play button's label is set after the narration pauses, so on entering Explore on a wide screen it reads "Play" (it read "Pause" while the narration was paused).
+- Found by pp1's `tools/controls_check.mjs` sweep. Checked against: Pride and Prejudice (pp1: controls check, smoke test). Books to take it: all.
+
+## 2026-10-17: the lead-keeping tilt no longer cuts off other heads
+- `main.js` (`keepLeadInFrame`, new `othersTop`): when the camera tilts down to lift the lead out from under the text strip, it now stops before the highest head of anyone else standing in the picture would leave its top edge. Before, close two-shots tilted as far as the lead needed, and a taller or nearer figure lost his head (owner, pp1 2026-10-17: "heads can be cropped in close two-shots"). The lead may then stand a little lower, with her feet under the text strip.
+- Found with pp1's `tools/frame_audit.mjs` (every half second of every scene): 64 stretches of cut-off heads in Pride and Prejudice, none after.
+- Checked against: Pride and Prejudice (pp1: the framing audit of all 61 chapters, screenshots of the worst cases, full smoke test). Books to take it: all (it only ever tilts less).
+
 ## 2026-10-17: four-drawing walk cycles
 - `puppet.js`: a figure with `walk_a`..`walk_d` (contact, passing, contact, passing) shows a drawing every half step, still counted from the distance walked, and no code hop (the drawings carry the bob). Two-drawing walks are unchanged.
 - Why (owner, Alice 2026-10-17): Alice's two-drawing walk snapped between poses; her four-drawing cycle was approved.
