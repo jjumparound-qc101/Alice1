@@ -209,13 +209,13 @@ export const evidence = {
       key(116.5, KING_S, 1.2), key(122.5, MID_R, 2), key(129.8, JURY_A, 2),     // the King tries the words; the jury writes, Alice looks over their slates
       key(140.8, KING_S, 1.2), key(150.5, MID_R, 2.5),                           // "Silence!" Rule Forty-two; everybody looked at Alice
       key(160.3, THRONE_S, 1), key(165.4, MID_L, 1.5),                           // "You are"; "Nearly two miles high"; "I shan't go"
-      key(173.7, KING_S, 1),                                                     // the oldest rule; "Number One"; the King turned pale
-      key(188.4, HERALD_S, 1.2), key(192.3, MID_R, 2), key(197.5, KING_R, 1.2),  // "this paper has just been picked up"; "a letter"
-      key(207.7, KING_S, 1), key(214.5, JURY_S, 1.2), key(218.5, HERALD_S, 1),   // "Who is it directed to?"; "a set of verses"
+      key(173.7, KING_S, 1), key(180.5, MID_L, 1.5),                             // the oldest rule; "Number One"; the King turned pale
+      key(188.4, HERALD_S, 1.2), key(192.3, MID_R, 2), key(197.5, KING_R, 1.2),  // "this paper has just been picked up"
+      key(203, MID_L, 2), key(207.7, KING_S, 1), key(214.5, JURY_A, 1.5), key(218.5, HERALD_S, 1),   // "a letter"; "Who is it directed to?"; "a set of verses"
       key(224.3, MID_R, 2), key(231.5, JURY_A, 1.5),                             // the prisoner's handwriting?
-      key(236, KING_R, 1), key(242, KING_S, 1),                                  // the jury puzzled; "imitated somebody else's hand"
+      key(236, KING_R, 1), key(242, MID_L, 1.5),                                 // the jury puzzled; "imitated somebody else's hand"
       key(249, KNAVE_S, 1.2),                                                    // the jury brightened; the Knave: "I didn't write it"
-      key(258.4, KING_S, 1), key(266.5, MID_R, 2),                               // "like an honest man"; clapping; "proves his guilt"
+      key(258.4, MID_L, 1.5), key(266.5, MID_R, 2),                              // "like an honest man"; clapping; "proves his guilt"
       key(276.9, MID_L, 1.5), key(282.5, KING_R, 1.2),                           // "It proves nothing of the sort!"; "Read them"
       key(289, MID_R, 2), key(295, MID_L, 2.5),                                  // "Begin at the beginning"
       key(305.5, HERALD_S, 2.5), key(315, JURY_A, 3), key(326, HERALD_S, 2.5),   // the verses
@@ -225,7 +225,7 @@ export const evidence = {
       key(395.5, KING_S, 1.2), key(400.5, MID_R, 1.5), key(408.2, KNAVE_S, 1.2), key(413, MID_L, 2),   // the verses on his knee; "you can't swim, can you?"; cardboard
       key(418.3, KING_S, 1.2), key(427, MID_R, 2.5),                             // muttering over the verses
       key(435.7, MID_L, 1.5), key(440.4, KING_S, 1),                             // "they all returned"; "there they are!" (the tarts)
-      key(447.3, THRONE_S, 1.2), key(458.3, BILL_S, 1),                          // "you never had fits"; "Never!" the inkstand at the Lizard
+      key(447.3, THRONE_S, 1.2), key(452, MID_R, 1.5), key(458.3, BILL_S, 1),                          // "you never had fits"; "Never!" the inkstand at the Lizard
       key(462.5, JURY_A, 2), key(470.3, KING_S, 1), key(475.4, MID_R, 2),        // the ink; the pun; a dead silence
       key(482, MID_L, 2), key(487.5, QUEEN_S, 1), key(492.7, MID_R, 1.2),        // "Let the jury consider"; "Sentence first"; "Stuff and nonsense!"
       key(499, QUEEN_S, 0.8),                                                    // "Hold your tongue!" purple; "I won't!"; "Off with her head!"

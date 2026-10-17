@@ -253,8 +253,8 @@ export const mockTurtleRock = {
       { t: T.paws - 1, dur: 2, pos: [GSEAT.x + 0.1, 0.3, GSEAT.z + 0.8], look: [GSEAT.x + 0.1, 0.2, GSEAT.z] }, // "Never heard of uglifying!"
       { t: T.flappers - 1, dur: 2, pos: [0.1, 0.36, 0.3], look: L },                                 // counting off on his flappers
       { t: T.flappers + 9, dur: 3, ...MIDS[0] },
-      { t: T.flappers + 20, dur: 3, pos: [0.1, 0.36, 0.3], look: L },
-      { t: T.crab, dur: 3, ...MIDS[1] },
+      { t: T.flappers + 20, dur: 3, ...MIDS[1] },                                // (Alice back in the picture)
+      { t: T.crab, dur: 3, ...MIDS[0] },
       { t: T.faces - 1, dur: 3, pos: [-0.15, 0.32, 0.8], look: [LEDGE_AT.x - 0.3, 0.22, ROCK.z + 0.1] }, // both hid their faces
       { t: T.games - 8, dur: 6, pos: [-0.6, 0.4, 1.4], look: mid },
     ]);
