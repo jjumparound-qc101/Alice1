@@ -7,7 +7,7 @@
 // Figures and props not yet drawn are placeholders from props6.js.
 import * as THREE from 'three';
 import { paperFlat } from '@engine/stage.js';
-import { texture, PAPER } from '@engine/ink.js';
+import { PAPER } from '@engine/ink.js';
 import { thoughts } from '@engine/thoughts.js';
 import { carry } from '@engine/puppet.js';
 import { smooth, lerp, route, cameraTrack } from '@engine/track.js';
@@ -29,7 +29,7 @@ export const doorstep = {
     outdoors(group, ai);
     trees(group, ai, [[-1.6, -0.4, 3.2, 1], [1.4, -1.6, 3.4, -1], [-2.4, -2.6, 3.6, 1], [2.6, -0.2, 3.2, -1]]);
     const house = paperFlat(ai['ch6/little_house'].tex, 1.15, 1.15 / ai['ch6/little_house'].aspect); house.position.set(0, 0, -0.6); group.add(house);
-    const plate = paperFlat(texture((() => { const c = document.createElement('canvas'); c.width = 200; c.height = 120; const g = c.getContext('2d'); g.fillStyle = PAPER; g.strokeStyle = '#17140f'; g.lineWidth = 6; g.beginPath(); g.ellipse(100, 60, 90, 50, 0, 0, Math.PI * 2); g.fill(); g.stroke(); return c; })()), 0.08, 0.05, { anchor: 'center' });
+    const plate = paperFlat(ai['ch6/thrown_plate'].tex, 0.08, 0.08 / ai['ch6/thrown_plate'].aspect, { anchor: 'center' }); // the kitchen's thrown plate (AI drawing)
     group.add(plate);
     const DOOR = { x: 0, z: -0.5 };
     // "they both bowed low, and their curls got entangled together": one drawing of the two

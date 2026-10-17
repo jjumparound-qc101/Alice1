@@ -94,10 +94,16 @@ export function buildHall({ group, ai, hallMeta }) {
     const curve = new THREE.CatmullRomCurve3([
       pt(R, base), pt(R * 0.96, base * 0.75), pt(R * 1.0, base * 0.4), pt(R * 1.18, base * 0.12), pt(R * 1.4, 0.015),
     ]);
-    // A leg is a pale rod with an inked outline on either side (a slightly larger tube showing only its
-    // inside, behind it), not glass(): the edges of its eight faces read as stray wavy lines (audit, 2026-10-17).
-    table.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.02, 10, false), new THREE.MeshBasicMaterial({ color: '#e4ebe8' })));
-    table.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.0255, 10, false), new THREE.MeshBasicMaterial({ color: INK, side: THREE.BackSide })));
+    // A leg is a see-through rod with an inked outline on either side, not glass(): the edges of its
+    // eight faces read as stray wavy lines (audit, 2026-10-17). The rod first writes only depth (after
+    // the opaque set is drawn, so the floor behind it still shows), which hides the middle of a slightly
+    // larger inked tube seen from inside, leaving its two edges; then the glass tint.
+    const rod = new THREE.TubeGeometry(curve, 24, 0.02, 10, false);
+    const mask = new THREE.Mesh(rod, new THREE.MeshBasicMaterial({ colorWrite: false }));
+    const edge = new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.0255, 10, false), new THREE.MeshBasicMaterial({ color: INK, side: THREE.BackSide }));
+    const tint = new THREE.Mesh(rod, new THREE.MeshBasicMaterial({ color: '#e6eeee', transparent: true, opacity: 0.28, depthWrite: false }));
+    mask.renderOrder = 1; edge.renderOrder = 2;
+    table.add(mask, edge, tint);
     const collar = glass(new THREE.CylinderGeometry(0.035, 0.028, 0.03, 12));
     collar.position.copy(pt(R, base)); table.add(collar);
   }

@@ -106,22 +106,6 @@ export function fan() {
   dot(g, 160, 186, 8);
   return c;
 }
-// The pool's surface, in Tenniel's horizontal engraved water lines; tiles both ways.
-export function water() {
-  const { c, g } = canvas(512, 512);
-  g.fillStyle = PAPER; g.fillRect(0, 0, 512, 512);
-  g.strokeStyle = INK;
-  for (let y = 4, k = 0; y < 512; y += 9, k++) {
-    g.lineWidth = 0.9 + (k % 3) * 0.35;
-    g.globalAlpha = 0.55 + (k % 4) * 0.1;
-    g.beginPath();
-    for (let x = 0; x <= 512; x += 8) g.lineTo(x, y + Math.sin((x / 512) * Math.PI * 2 * (2 + (k % 3)) + k) * 2.2);
-    g.stroke();
-  }
-  g.globalAlpha = 1;
-  grain(g, 0.04, 9);
-  return c;
-}
 
 // --- Thought vignettes ------------------------------------------------------------
 // "Alice's Right Foot, Esq., Hearthrug, near the Fender, (with Alice's love)."

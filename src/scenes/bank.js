@@ -7,7 +7,6 @@ import * as THREE from 'three';
 import { paperFlat } from '@engine/stage.js';
 import { texture } from '@engine/ink.js';
 import { buildHall, DOOR } from '../sets/hall.js';
-import { water } from '../props2.js';
 import { mouseTale } from '../props3.js';
 import { thoughts } from '@engine/thoughts.js';
 import { carry } from '@engine/puppet.js';
@@ -66,7 +65,11 @@ export const bank = {
     // --- The set: the hall floor at the pool's edge, the pool as Chapter II left it -----
     const { curt } = buildHall({ group, ai, hallMeta });
     curt.position.set(DOOR.x + 0.85, 0, DOOR.z + 0.03);
-    const waterTex = texture(water(), { repeat: [(POOL.rx * 2) / 0.7, (POOL.rz * 2) / 0.7] });
+    // The pool is Chapter II's AI water (tools/ch2_art.py), at Chapter II's scale (one drawing to 0.7 m).
+    const waterTex = ai['ch2/pool_water'].tex.clone();
+    waterTex.wrapS = waterTex.wrapT = THREE.RepeatWrapping;
+    waterTex.repeat.set((POOL.rx * 2) / 0.7, (POOL.rz * 2) / 0.7);
+    waterTex.needsUpdate = true;
     const pond = new THREE.Mesh(new THREE.CircleGeometry(1, 72), new THREE.MeshBasicMaterial({ map: waterTex }));
     pond.rotation.x = -Math.PI / 2; pond.scale.set(POOL.rx, POOL.rz, 1); pond.position.set(POOL.x, WATER_Y, POOL.z);
     group.add(pond);
