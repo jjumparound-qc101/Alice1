@@ -111,14 +111,20 @@ body[data-mode="explore"] #timeline { display: none; }
 }
 #sceneMenu h2 { margin: 0 0 0.6em; font-weight: normal; font-style: italic; }
 #contents { text-align: left; margin-bottom: 1em; }
-#contents h3 { font-weight: normal; font-size: 1rem; margin: 0.35em 0 0.15em; }
-#contents h3 button { border: none; padding: 0; background: none; text-align: left; font-size: inherit; }
-#contents h3 button:hover:not(:disabled) { background: none; color: var(--ink); text-decoration: underline; }
-#contents h3 .later { color: var(--faint); font-style: italic; font-size: 0.9rem; }
-#sceneMenu ol { list-style: none; padding: 0 0 0 1em; margin: 0 0 0.4em; display: grid; gap: 3px; }
-#sceneMenu li button { padding: 0.15em 0.8em; font-size: 0.95rem; }
-#sceneMenu li button { width: 100%; display: flex; justify-content: space-between; gap: 1em; }
-#sceneMenu li button.here { background: var(--ink); color: var(--paper); }
+#contents ol { list-style: none; margin: 0; padding: 0; }
+#contents .chapters > li { border-top: 1px solid var(--faint); }
+#contents .chapters > li:first-child { border-top: none; }
+#contents button.chapter { width: 100%; display: flex; gap: 0.8em; align-items: baseline; border: none; background: none;
+  padding: 0.35em 0.5em; text-align: left; font-size: 1rem; }
+#contents button.chapter .num { flex: 0 0 3.6em; text-align: right; color: var(--faint); font-variant: small-caps; }
+#contents button.chapter:hover:not(:disabled) { background: rgba(23, 20, 15, 0.08); color: var(--ink); }
+#contents button.chapter.here { background: var(--ink); color: var(--paper); }
+#contents button.chapter.here .num { color: var(--paper); }
+#contents button.chapter:disabled { color: var(--faint); font-style: italic; }
+#contents .scenes { display: grid; gap: 3px; padding: 0.3em 0 0.5em 4.9em; }
+#contents .scenes[hidden] { display: none; }
+#contents .scenes button { width: 100%; display: flex; justify-content: space-between; gap: 1em; padding: 0.15em 0.8em; font-size: 0.95rem; text-align: left; }
+#contents .scenes button.here { background: var(--ink); color: var(--paper); }
 #sceneMenu .keys { color: var(--faint); font-size: 0.95rem; }
 #aboutSkipped { margin: 0 0 0.8em; }
 #aboutSkipped summary { display: inline-block; cursor: pointer; border: 1.5px solid var(--ink); padding: 0.15em 0.8em; font-size: 0.95rem; list-style: none; }
@@ -210,3 +216,10 @@ body.chrome-hidden[data-form="landscape"] #page { bottom: calc(10px + env(safe-a
 #thoughts .thought img, #thoughts .thought canvas { position: absolute; left: -1%; top: -1%; width: 102%; height: 102%; object-fit: cover; }
 #thoughts .thought-dot { position: fixed; display: none; border-radius: 50%; background: var(--paper, #efe9da); border: 2px solid #17140f; }
 body[data-mode="explore"] #thoughts { display: none; }
+
+/* Loading by chapter (main.js): a note on the start screen while the first chapter's pictures load, and a
+   card over the page when a chapter is opened before its pictures are in. Hidden while empty. */
+#intro .loading-note { margin-top: 1.2em; font-style: italic; opacity: 0.75; min-height: 1.4em; }
+#loading { position: fixed; left: 50%; top: 45%; transform: translate(-50%, -50%); z-index: 6; padding: 0.8em 1.4em;
+  background: var(--paper, #efe9da); border: 1.5px solid #17140f; font-style: italic; box-shadow: 0 2px 10px rgba(23, 20, 15, 0.25); }
+#loading:empty { display: none; }

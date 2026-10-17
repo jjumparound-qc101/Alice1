@@ -44,7 +44,11 @@ export class Puppet {
     let pose = s.pose;
     const walking = pose === 'stand' && s.moving && !s.float;
     const steps = walking ? (s.dist !== undefined ? s.dist / (STEP * this.height * (s.scale ?? 1)) : s.phase) : 0;
-    if (walking && this.poses.walk_a) pose = Math.floor(steps) % 2 ? (this.poses.walk_b ? 'walk_b' : 'stand') : 'walk_a';
+    // A four-drawing cycle (walk_a..walk_d: contact, passing, contact, passing; Alice, 2026-10-17)
+    // shows a drawing every half step and carries its own bob, so it has no hop.
+    const cycle = walking && !!this.poses.walk_d;
+    if (cycle) pose = ['walk_a', 'walk_b', 'walk_c', 'walk_d'][Math.floor(steps * 2) % 4];
+    else if (walking && this.poses.walk_a) pose = Math.floor(steps) % 2 ? (this.poses.walk_b ? 'walk_b' : 'stand') : 'walk_a';
     if (pose !== this.pose) {
       if (this.pose) this.poses[this.pose].visible = false;
       this.poses[pose].visible = true;
@@ -53,7 +57,7 @@ export class Puppet {
     const flat = this.poses[pose];
     // A walk rises a little mid-step; anything else that moves hops.
     const hop = s.float ? Math.sin((s.phase ?? 0) * Math.PI * 2) * 0.03 * this.height
-      : !s.moving ? 0 : walking
+      : !s.moving || cycle ? 0 : walking
       ? Math.sin((steps % 1) * Math.PI) * 0.01 * this.height
       : Math.abs(Math.sin(s.phase * Math.PI * 2)) * 0.12 * this.height;
     let rock = s.float ? Math.sin((s.phase ?? 0) * Math.PI) * 0.04 : !s.moving ? 0 : walking ? Math.sin(steps * Math.PI) * 0.02 : Math.sin(s.phase * Math.PI * 2) * 0.06;

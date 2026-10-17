@@ -21,6 +21,8 @@ function ensureLayer() {
 // to a canvas instead (at most 1024 px across, more than a card ever shows).
 function picture(art) {
   const img = art.isTexture ? art.image : art;
+  // A packed picture not loaded yet (loading by chapter): an empty canvas until it arrives.
+  if (!img || !(img.naturalWidth || img.width)) { const c = document.createElement('canvas'); c.width = c.height = 1; return c; }
   const url = img instanceof HTMLCanvasElement ? img.toDataURL() : img?.src?.startsWith('blob:') ? null : img?.src;
   if (url) { const el = document.createElement('img'); el.src = url; el.alt = ''; return el; }
   const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, k = Math.min(1, 1024 / Math.max(w, h));
@@ -34,7 +36,7 @@ const STD = 1024 / 720;
 // A picture's shape (width / height), kept within reason so that no bubble becomes a sliver.
 function aspectOf(art) {
   const img = art.isTexture ? art.image : art;
-  const a = (img.naturalWidth || img.width) / (img.naturalHeight || img.height);
+  const a = img ? (img.naturalWidth || img.width) / (img.naturalHeight || img.height) : art.userData?.aspect;
   return Number.isFinite(a) ? Math.min(2.2, Math.max(0.6, a)) : STD;
 }
 

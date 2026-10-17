@@ -28,12 +28,22 @@ function load(url) {
 
 // The seat in the stalls, and the view from it: the camera's first key.
 export const SEAT = { pos: [0, 2.0, 17.5], look: [0, 1.6, -3] };
+const AISLE = { pos: [0, 1.9, 11.0], look: [0, 1.5, -3] };
 
 // Adds the book's toy-theatre front at z (its stage opening `open.w` metres wide, centred on x = 0, its
 // middle at height `open.cy`), the auditorium around it and the row of stalls before the seat.
 // pros: { tex, size: [w, h], opening: [x0, y0, x1, y1] } in pixels (the .json beside the front's .webp).
 // Everything is drawn over the set (no depth test), but only from the audience's side.
+// A front smaller (or larger) than the usual 8.4 m opening gets the whole theatre scaled with it, the
+// seat, the aisle and the row of stalls too, so the auditorium still fills the picture (Pride and
+// Prejudice, 2026-10-17: its 4.4 m front left gaps round a half-size auditorium seen from the usual
+// seat). Returns `seat` and `aisle`: pass them to openingKeys.
 export function theatre(group, pros, { open = { w: 8.4, cy: 2.55 }, z = 2.2, house = true } = {}) {
+  const s = open.w / 8.4;
+  // A point placed for the usual theatre (opening 8.4 m wide, its middle 2.55 m up, at z = 2.2).
+  const at = s === 1 ? (px, py, pz) => [px, py, pz] : (px, py, pz) => [px * s, open.cy + (py - 2.55) * s, z + (pz - 2.2) * s];
+  const seat = { pos: at(...SEAT.pos), look: at(...SEAT.look) };
+  const aisle = { pos: at(...AISLE.pos), look: at(...AISLE.look) };
   const [x0, y0p, x1, y1p] = pros.opening, [PW, PH] = pros.size;
   const k = open.w / (x1 - x0); // metres per pixel
   const W = PW * k, H = PH * k, openH = (y1p - y0p) * k;
@@ -49,11 +59,11 @@ export function theatre(group, pros, { open = { w: 8.4, cy: 2.55 }, z = 2.2, hou
     hall.position.set(x + (HOUSE.w / 2 - (HOUSE.opening[0] + HOUSE.opening[2]) / 2) * k2, y0 - (HOUSE.h - HOUSE.opening[3]) * k2, z + 0.1);
     group.add(hall);
     layers.push([hall, 50]);
-    const sw = 4.6, sh = sw * SEATS.h / SEATS.w, sz = SEAT.pos[2] - 3.3;
+    const sw = 4.6 * s, sh = sw * SEATS.h / SEATS.w, [rx, ry, sz] = at(-0.5, 1.22, SEAT.pos[2] - 3.3);
     // The shortest figure straight ahead, so the stage shows over her; empty chairs on at each end, for
     // wide screens (drawn over the row: the first at each end covers its half-cut end chair).
     const row = paperFlat(load(SEATS.url), sw, sh, { edge: false });
-    row.position.set(-0.5, 1.22 - (1 - SEATS.hats / SEATS.h) * sh, sz);
+    row.position.set(rx, ry - (1 - SEATS.hats / SEATS.h) * sh, sz);
     group.add(row);
     layers.push([row, 60]);
     const px = sw / SEATS.w, chair = load(CHAIR.url), x0 = row.position.x - sw / 2;
@@ -78,15 +88,16 @@ export function theatre(group, pros, { open = { w: 8.4, cy: 2.55 }, z = 2.2, hou
   // Drawn over the set (the ground beside a stage can reach out in front of it); from the stage side
   // the paper flats' backs are not drawn over it, because the camera has passed them.
   for (const [o, r] of layers) o.traverse((m) => { if (m.material) { m.material.depthTest = false; m.material.transparent = true; m.material.fog = false; m.renderOrder = r; } });
-  return { front, width: W, height: H, foot: y0 };
+  return { front, width: W, height: H, foot: y0, seat, aisle };
 }
 
 // Camera keys for the opening: the seat until `start` (the first word), then up the aisle over the
 // heads (`aisle`) and on to `into`, the scene's first view; `dur` seconds in all. The moves are marked
-// exact (timed by the owner), so the calm-move rule doesn't stretch them.
-export function openingKeys(start, into, { dur = 6.5, aisle = { pos: [0, 1.9, 11.0], look: [0, 1.5, -3] } } = {}) {
+// exact (timed by the owner), so the calm-move rule doesn't stretch them. Pass theatre()'s `seat` and
+// `aisle` (they differ from the usual ones only for a front that is not the usual size).
+export function openingKeys(start, into, { dur = 6.5, seat = SEAT, aisle = AISLE } = {}) {
   return [
-    { t: 0, dur: 0, ...SEAT },
+    { t: 0, dur: 0, ...seat },
     { t: start, dur: dur * 0.55, ...aisle, exact: true },
     { t: start + dur * 0.35, dur: dur * 0.65, ...into, exact: true },
   ];
