@@ -75,3 +75,13 @@ The owner's fifteen decisions are in docs/HANDOFF.md ("The polish pass"). Checke
 **Housekeeping**
 - The handoff's "Last published: version 99" line is stale (the link is at version 109).
 - The engine branch `claude/loading-by-chapter` (LoLBookEngine) is superseded by main; delete it if the owner agrees.
+
+## Round 5 (2026-10-17, after version 110): a fresh audit
+Checked: frame report and jerk report for all twelve chapters, the theatre zoom on four screen shapes, the start screen, reading, More panel, contents and end card on a computer, a phone and an upright tablet, and the pictures each chapter holds in memory.
+Clean: Chapters I and II keep Alice in the picture (longest gap 6.5 s); every other chapter's gaps are 12 s or less except item 31. No camera jerks anywhere except deliberate cuts (IV's house and XII's court cut between shots on purpose). The walk from behind shows wherever she walks away.
+
+31. **III, the Mouse's tale (6:13-6:36)**: Alice is out of the picture for 23 s while the camera reads down the tail. Cut to her looking at it once, midway.
+32. **Tablets held upright**: the start screen, the contents menu and the end card keep their small computer-sized text (the reading text was enlarged, these were not). Enlarge them to match (engine, every book).
+33. **Phone memory**: a chapter now holds 110-360 MB of pictures (XII the most; the whole book would be 1.5 GB). Wait for the phone test (C above); if the page reloads on your phone, load the pictures at half size on phones (a quarter of the memory).
+34. **The other books' theatre opening** (engine): the same blank band shows on upright phones in A Christmas Carol and Pride and Prejudice, whose theatre is the engine's. Port the row of empty chairs into the engine and check it in Carol.
+Not checked yet: the Continue button after a saved place, and real devices (C).
