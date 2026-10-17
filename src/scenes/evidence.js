@@ -188,7 +188,7 @@ export const evidence = {
     const THRONE_S = shot([0.0, 0.38, -1.15], [0.0, 0.28, -1.83]);               // the King and Queen together
     const HERALD_S = shot([-0.55, 0.3, -0.9], [-0.62, 0.16, -1.6]);               // the White Rabbit
     const KING_R = shot([-0.6, 0.33, -0.9], [-0.38, 0.22, -1.75]);               // the King and the Rabbit
-    const KNAVE_S = shot([0.5, 0.3, -0.3], [0.02, 0.16, -1.3]);                  // the Knave
+    const KNAVE_S = shot([0.65, 0.32, -0.4], [0.02, 0.12, -1.3]);                 // the Knave (the tarts table kept out of the corner)
     const FULL = shot([1.7, 0.95, 3.0], [0.25, 0.5, -0.5]);                      // Alice at her full size
     const PACK = shot([1.7, 1.0, 3.0], [0.3, 0.75, -0.5]);                       // the pack flying down upon her
     // Once she stands in the middle of the court, a move between her and the throne would pass through her:
@@ -304,7 +304,7 @@ export const waking = {
         l.rotation.z = t * (k % 2 ? 1.5 : -1.2);
       });
       for (const g of ghosts) {
-        const o = smooth((t - g.t0) / 1.5) * (1 - smooth((t - g.t1) / 2.5)) * 0.7;
+        const o = smooth((t - g.t0) / 1.5) * (1 - smooth((t - g.t1) / 2.5)) * 0.45; // faint, so no colour stands out among them
         g.f.visible = o > 0.01; g.m.opacity = o;
       }
       think(t, { x: SISTER.x + 0.9, y: 1.7, z: SISTER.z + 0.3 }, 1.0);

@@ -39,6 +39,12 @@ export function buildSeashore({ group, ai }) {
     sea.rotation.y = -side * Math.PI / 2; sea.position.set(side * 15.9, 0, (SHORE_Z - 16) / 2); group.add(sea);
     const duneLen = 20 - SHORE_Z, dunes = paperFlat(tile(ai, 'ch9/bank_sunny', duneLen / (DUNE_H * BK.aspect), 1, true), duneLen, DUNE_H, { edge: false });
     dunes.rotation.y = -side * Math.PI / 2; dunes.position.set(side * 15.9, 0, (SHORE_Z + 20) / 2); group.add(dunes);
+    // Faded out over its first few metres from the shore, so the bank doesn't stop short against the sky (2026-10-17).
+    const fade = document.createElement('canvas'); fade.width = 256; fade.height = 1;
+    const fg = fade.getContext('2d'), grad = fg.createLinearGradient(side > 0 ? 0 : 256, 0, side > 0 ? 256 : 0, 0);
+    grad.addColorStop(0, '#000'); grad.addColorStop(0.18, '#fff'); grad.addColorStop(1, '#fff');
+    fg.fillStyle = grad; fg.fillRect(0, 0, 256, 1);
+    const dm = dunes.userData.front.material; dm.alphaMap = new THREE.CanvasTexture(fade); dm.alphaTest = 0.02; dm.depthWrite = false;
   }
   const R = ai['ch9/rock_ledge'];
   const rock = paperFlat(R.tex, ROCK.w, ROCK.h); rock.position.set(ROCK.x, 0, ROCK.z); group.add(rock);
