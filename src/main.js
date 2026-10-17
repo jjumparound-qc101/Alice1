@@ -196,6 +196,20 @@ async function run(book) {
   // turn the camera just enough to take him in. The turn is eased in and out over about half a
   // second (owner, Alice project 2026-10-14: it used to snap on and off, which made the camera jerk).
   const nudge = { yaw: 0, pitch: 0, last: 0 };
+  // The highest head on screen (view coordinates) among the other figures standing in the picture.
+  function othersTop() {
+    let top = -1;
+    for (const [name, p] of Object.entries(cast)) {
+      const flat = p.poses[p.pose];
+      if (name === LEAD || !p.root.visible || !flat) continue;
+      const [w, h] = flat.userData.size;
+      const feet = flat.localToWorld(corner.set(0, 0.05 * h, 0)).project(camera);
+      if (feet.z > 1 || Math.abs(feet.x) > 1 || feet.y > 1) continue; // behind, beside or above the shot
+      const head = flat.localToWorld(corner.set(0, 0.95 * h, 0)).project(camera);
+      if (head.z <= 1 && Math.abs(head.x) <= 1) top = Math.max(top, head.y);
+    }
+    return top;
+  }
   function keepLeadInFrame(dt, seeked) {
     // Measured against the shot as directed (before this frame's turn), so the target is absolute.
     const a = leadOnScreen();
@@ -205,6 +219,9 @@ async function run(book) {
       let dx = 0, dy = 0;
       if (x1 - x0 < 2 * M) dx = x1 > M ? x1 - M : x0 < -M ? x0 + M : 0;
       if (y1 - y0 < M - BOTTOM) dy = y0 < BOTTOM ? y0 - BOTTOM : y1 > M ? y1 - M : 0;
+      // Tilting down to lift the lead out from under the text must not cut off the head of anyone
+      // else in the shot (owner, pp1 2026-10-17: heads cropped in close two-shots).
+      if (dy < 0) dy = Math.max(dy, Math.min(0, othersTop() - 0.98));
       const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)), cap = 0.3;
       yaw = -THREE.MathUtils.clamp(Math.atan(dx * tanV * camera.aspect), -cap, cap);
       pitch = THREE.MathUtils.clamp(Math.atan(dy * tanV), -cap, cap);
@@ -308,9 +325,10 @@ async function run(book) {
     mode = m;
     document.body.dataset.mode = m;
     $('modeBtn').textContent = m === 'watch' ? 'Explore' : 'Back to the story';
-    $('playBtn').textContent = m === 'explore' && document.body.dataset.form !== 'wide' ? 'Back to the story' : audio.paused ? 'Play' : 'Pause';
     if (m === 'explore') { audio.pause(); explorer.bounds = active.bounds; explorer.enter(); }
     else { explorer.exit(); closeCard(); if (atEnd()) endDismissed = false; else play(audio); }
+    // After pausing, so Explore's play button reads Play, not Pause.
+    $('playBtn').textContent = m === 'explore' && document.body.dataset.form !== 'wide' ? 'Back to the story' : audio.paused ? 'Play' : 'Pause';
     resize();
   }
 
@@ -567,15 +585,26 @@ async function run(book) {
       $('layoutBtn').hidden = form === 'portrait';
       document.body.classList.remove('more-open');
     }
-    // Portrait: the picture is a 4:3-ish band, never more than 58% of the screen.
-    const w = W, h = form === 'portrait' ? Math.round(Math.min(W * 0.8, H * 0.58)) : H;
+    // Portrait: the picture takes what the text doesn't need. The text keeps room for about eight
+    // lines (a longer passage scrolls) above the controls; the picture is between 4:3 and 1:1.35
+    // (width to height), so it no longer leaves the bottom third of a tall phone blank (owner,
+    // Alice 2026-10-17: the picture was only the top third with blank space below the text).
+    let h = H;
+    if (form === 'portrait') {
+      const lh = parseFloat(getComputedStyle($('page')).lineHeight) || 28;
+      h = Math.round(Math.max(W * 0.75, Math.min(W * 1.35, H * 0.7, H - 106 - 8 * lh - 18)));
+    }
+    const w = W;
     document.body.style.setProperty('--pic-h', `${h}px`);
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     // Keep at least the width of view the shots were framed for (45° on 16:9), so a narrow or
     // tall picture shows more above and below instead of cutting off the sides.
-    const minV = 2 * Math.atan(Math.tan(HFOV / 2) / camera.aspect);
-    camera.fov = THREE.MathUtils.clamp(THREE.MathUtils.radToDeg(minV), 45, 72);
+    // An upright phone's picture keeps 90% of that width (a little closer, so figures aren't tiny)
+    // and may look further above and below.
+    const keep = form === 'portrait' ? 0.9 : 1;
+    const minV = 2 * Math.atan(Math.tan(HFOV / 2) * keep / camera.aspect);
+    camera.fov = THREE.MathUtils.clamp(THREE.MathUtils.radToDeg(minV), 45, form === 'portrait' ? 84 : 72);
     const l = shownLayout();
     if (mode === 'watch' && form === 'landscape' && l === 'bottom') camera.setViewOffset(w, h, 0, 0.14 * h, w, h); // lift the picture above the strip
     else if (mode === 'watch' && form !== 'portrait' && l === 'top') camera.setViewOffset(w, h, 0, -0.2 * h, w, h);
