@@ -104,7 +104,7 @@ export const evidence = {
       const reading = t >= T.paper - 1 && t < T.read + 70;
       return { pose: reading ? 'specs' : 'herald', x: HERALD.x, z: HERALD.z, y: hop, scale: RABBIT, dir: 1, idle: t, visible: !flown(t) };
     };
-    const gryphonA = (t) => ({ pose: 'sit', x: 1.3, z: 0.45, dir: -1, scale: 0.85 });
+    const gryphonA = (t) => ({ pose: 'sit', x: 2.15, z: -0.25, dir: -1, scale: 0.85 }); // by the witness-box side, clear of the shots from the right
     const guardStates = (t) => (flown(t) ? [] : [
       { pose: 'stand', x: KNAVE.x - 0.2, z: KNAVE.z, dir: 1, idle: t }, { pose: 'stand', x: KNAVE.x + 0.2, z: KNAVE.z, dir: -1, idle: t + 0.7 },
       { pose: 'stand', x: -1.95, z: 0.75, dir: 1, idle: t + 0.3 }, { pose: 'stand', x: -2.17, z: 0.75, dir: 1, idle: t + 1.1 },

@@ -127,7 +127,7 @@ export const duchessWalk = {
       { t: T.squeezed + 30, dur: T.chin4 - T.squeezed - 32, pos: [3.0, 0.3, 1.1], look: [3.1, 0.2, 0.35] }, // walking on together
       { t: T.tremble - 1, dur: 3, pos: [3.0, 0.32, 1.1], look: [3.4, 0.24, 0.35] },                     // the Queen in front of them
       { t: T.gone, dur: 3, pos: [2.8, 0.45, 1.6], look: [2.6, 0.15, -0.2] },                            // the Duchess flees
-      { t: T.resting - 1, dur: 3, pos: [4.3, 0.4, 0.9], look: [FTREE.x - 0.3, 0.15, FTREE.z + 0.5] },   // resting in the shade
+      { t: T.resting - 1, dur: 3, pos: [4.65, 0.42, 0.9], look: [FTREE.x - 0.05, 0.15, FTREE.z + 0.5] }, // resting in the shade (no card half in at the edge)
       { t: T.quarrel, dur: 4, pos: [2.9, 0.6, 2.0], look: [3.0, 0.1, -0.5] },                           // all in custody
       { t: T.breath - 1, dur: 3, pos: [2.6, 0.3, 0.9], look: [2.75, 0.22, -0.1] },                      // "Have you seen the Mock Turtle yet?"
       { t: T.walked, dur: T.end - T.walked, pos: [1.8, 0.35, 1.2], look: [1.5, 0.2, 0.0] },              // "You are all pardoned"

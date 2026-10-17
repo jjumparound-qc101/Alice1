@@ -111,7 +111,7 @@ export const quadrille = {
     const mid = [(ASEAT.x + LEDGE_AT.x) / 2 - 0.15, 0.2, ROCK.z + 0.25];
     const DC = [D.x, 0.14, D.z - 0.05];
     const camera = cameraTrack([
-      { t: 0, dur: 0, pos: [0.1, 0.36, 0.3], look: LG },                                                // sobs choked his voice
+      { t: 0, dur: 0, pos: [0.25, 0.4, 0.75], look: LG },                                               // sobs choked his voice (the Gryphon whole, not cut by the corner)
       { t: 9, dur: 3, pos: [-0.2, 0.32, 0.8], look: mid },                                              // Alice listening
       { t: T.shaking - 1, dur: 2, pos: [-0.2, 0.32, 0.8], look: mid },                                  // shaking him and punching him in the back
       { t: T.quadrille + 2, dur: 4, pos: [-0.4, 0.35, 1.1], look: [0.0, 0.16, -0.35] },                 // a Lobster Quadrille
