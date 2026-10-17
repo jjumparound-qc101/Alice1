@@ -112,6 +112,18 @@ export function buildStage(scene, ai = {}) {
       const house = paperFlat(ai.theatre_house.tex, 1536 * k2, 1024 * k2, { edge: false });
       house.position.set((768 - (502 + 1035) / 2) * k2, y0 - (1024 - 822) * k2, 2.3);
       scene.add(house);
+      // One more row of empty chairs below the auditorium's nearest row, running on past its foot: on
+      // upright phones, rising up the aisle past the row in front, the drawing's bottom edge showed as a
+      // band of blank paper (owner, 2026-10-17). Chairs a little larger than that row (nearer), half a
+      // chair along from it, the tops of their backs over its lower half (975 px down the drawing).
+      const under = [];
+      if (ai.theatre_seat_empty) {
+        const cw = 182 * k2, ch = cw * 793 / 303, backTop = house.position.y + (1024 - 975) * k2;
+        for (let px0 = -400; px0 < 1536 + 400; px0 += 182) {
+          const m = paperFlat(ai.theatre_seat_empty.tex, cw, ch, { edge: false });
+          m.position.set(house.position.x + (px0 + 91 - 768) * k2, backTop - ch * (793 - 285) / 793, 2.29); scene.add(m); under.push(m);
+        }
+      }
       // The row in front of our seat: hat-tops at about the lower third of the opening shot.
       const row = ai.theatre_seats_row ?? ai.theatre_seats;
       const seatsW = 4.6, seatsH = seatsW / row.aspect, seats = paperFlat(row.tex, seatsW, seatsH, { edge: false });
@@ -131,7 +143,7 @@ export function buildStage(scene, ai = {}) {
           }
         }
       }
-      [[house, 50], [seats, 60], ...more.map((m) => [m, 61])].forEach(([o, r]) => o.traverse((m) => { if (m.material) { m.material.depthTest = false; m.material.transparent = true; m.material.fog = false; m.renderOrder = r; } }));
+      [[house, 50], ...under.map((m) => [m, 55]), [seats, 60], ...more.map((m) => [m, 61])].forEach(([o, r]) => o.traverse((m) => { if (m.material) { m.material.depthTest = false; m.material.transparent = true; m.material.fog = false; m.renderOrder = r; } }));
     }
   }
   scene.add(pros);
