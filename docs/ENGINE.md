@@ -68,9 +68,13 @@ Every book opens the same way (owner, Alice 2026-10-14; Carol 2026-10-15): from 
 | `engine/tools/chapter_shots.mjs`, `mobile_shots.mjs`, `shot_check.mjs`, `electron_smoke.mjs` | Screenshots of one chapter; phones and tablets; where figures land for a camera key; the packaged desktop app |
 | `engine/tools/gen_image.py` | One image from the OpenAI API with the book's style block (`docs/ART_PROMPTS.md`, "## 0. Style block") in front |
 | `engine/tools/whitecut.py`, `cutout.py` | Cut an AI drawing out of its white ground; cut a figure out of an engraving scan |
-| `engine/tools/web_build.sh OUTDIR` | The build for the playable web link (narration re-encoded at 40 kbps to fit the artifact's 15 MB per file) |
+| `engine/tools/web_build.sh OUTDIR` | The build for the playable web link: narration re-encoded at 40 kbps mono, pictures packed (`pack_art.py`), `OUTDIR/page.html` for the artifact |
+| `engine/tools/pack_art.py DIST` | Packs a web build's pictures into a few uncompressed .zip files (`packs/`, at most 14 MB each) with an index the game reads (`src/packs.js`), because a web link holds at most 511 files |
 | `engine/tools/proscenium.py SRC OUT.webp --text "TITLE@x,y,size"` | A book's toy-theatre front for the theatre opening |
 | `engine/tools/lead_silence.py N --first 5.0` | Silence before chapter N's first word (the hold in the theatre seat) |
+
+## The playable web link
+A book's web link is a claude.ai artifact, which holds at most **511 files and 256 MB** per version, **15 MB per file** (16 MB per text file); one publish sends at most 255 files / 64 MB (more go up in several publishes to the same link). `engine/tools/web_build.sh OUTDIR` makes a build that fits: the narration at 40 kbps mono (the desktop build keeps 96 kbps) and every picture under `art/` packed into a few files (`pack_art.py`; the page names the index as `window.ART_PACKS`, and `loadTexture` and the end cards' tailpieces read from the packs; the packs are let go once the pictures are made). Alice: 519 files and 204 MB became 41 files and 135 MB. Publish `OUTDIR/page.html` with `root` = `OUTDIR/dist` and the files that changed. A book too big even so (e.g. a very long narration) needs a link per part, or another host.
 
 ## Updating a book to the latest engine
 In a session with both repositories:

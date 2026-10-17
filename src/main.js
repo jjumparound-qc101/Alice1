@@ -11,13 +11,17 @@ import { PerfMeter } from './perf.js';
 import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { texture } from './ink.js';
 import { COLOUR } from './stage.js';
+import { initPacks, artUrl, releasePacks } from './packs.js';
 
 const $ = (id) => document.getElementById(id);
 const SPEEDS = [1, 1.25, 1.5, 2];
 
 // A picture for the stage: { tex, aspect }. Books use it in their loadArt().
+// On the web link its bytes may come from an art pack (packs.js).
 export async function loadTexture(url) {
-  const t = await new THREE.TextureLoader().loadAsync(url);
+  const src = await artUrl(url);
+  const t = await new THREE.TextureLoader().loadAsync(src);
+  if (src !== url) URL.revokeObjectURL(src);
   t.colorSpace = THREE.SRGBColorSpace;
   t.anisotropy = 4;
   return { tex: t, aspect: t.image.width / t.image.height };
@@ -73,11 +77,16 @@ async function run(book) {
   const camera = new THREE.PerspectiveCamera(45, 1, 0.02, 80);
 
   // The book's shared art (by name) and whatever else its scenes need, and every narrated chapter's word timings.
+  // On the web link the pictures come from art packs (packs.js); the packs are let go once all are made,
+  // keeping only the end cards' tailpieces (object URLs, for their <img>).
   const narrated = CHAPTERS.filter((c) => c.narrated);
+  await initPacks();
   const [wordsList, loaded] = await Promise.all([
     Promise.all(narrated.map((c) => fetch(c.words).then((r) => r.json()))),
     book.loadArt ? book.loadArt(loadTexture) : {},
+    ...CHAPTERS.filter((c) => c.tailpiece).map(async (c) => { c.tailpiece = await artUrl(c.tailpiece); }),
   ]);
+  releasePacks();
   const ai = loaded.ai ?? {}, extras = loaded.extras ?? {};
   // Lettering on props and title pages is drawn to canvas, so the fonts must be loaded first.
   if (document.fonts) await Promise.all([document.fonts.load('600 64px "IM Fell English"'), document.fonts.load('italic 40px "IM Fell English"')]);

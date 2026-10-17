@@ -5,7 +5,7 @@ const n = Number(chArg);
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-gl=angle','--use-angle=swiftshader','--autoplay-policy=no-user-gesture-required'] });
 const p = await b.newPage({ viewport: { width: 960, height: 540 } });
 const errs = []; p.on('pageerror', e => errs.push(String(e))); p.on('console', m => m.type()==='error' && errs.push(m.text()));
-await p.goto(url); await p.waitForTimeout(1500);
+await p.goto(url); await p.waitForFunction(() => window.__slice, null, { timeout: 180000 }); // the book's art is loaded
 await p.evaluate((n) => window.__slice.begin(window.__slice.chapters[n - 1], 0), n);
 await p.waitForFunction((n) => window.__slice?.ready && window.__slice.chapter?.n === n, n);
 const ts = tsArg ? tsArg.split(',').map(Number) : await p.evaluate(() => { const c = window.__slice.chapter; const end = c.cue.end; return Array.from({ length: 30 }, (_, i) => +(i * end / 30 + 2).toFixed(1)); });

@@ -9,8 +9,14 @@ import { paperFlat } from './stage.js';
 
 // The auditorium: its own stage opening (in pixels) frames the toy front.
 const HOUSE = { url: new URL('../art/theatre_house.webp', import.meta.url).href, w: 1536, h: 1024, opening: [502, 349, 1035, 822] };
-// The row in front of our seat (the audience from behind); y of the hat-tops of the shortest figure.
-const SEATS = { url: new URL('../art/theatre_seats.webp', import.meta.url).href, w: 1536, h: 793, hats: 233 };
+// The row in front of our seat (the audience from behind; the drawing's cut edges rounded off); y of the
+// hat-tops of the shortest figure.
+const SEATS = { url: new URL('../art/theatre_seats_row.webp', import.meta.url).href, w: 1536, h: 793, hats: 233 };
+// The row's one empty chair, from post to post (x 222-525 of the row): the row runs on in empty chairs at
+// each end, not in mirrored copies of itself, which showed flipped guests (owner, Alice 2026-10-16). The
+// row's last whole posts are at x 222 and 1368, so the first empty chair at each end lies over its half-cut
+// end chair and the guests there sit in whole chairs. (Both made by tools/theatre_seats.py in Alice1.)
+const CHAIR = { url: new URL('../art/theatre_seat_empty.webp', import.meta.url).href, w: 303, left: 222, right: 1368 };
 const PAPER = '#efe9da';
 
 function load(url) {
@@ -44,15 +50,21 @@ export function theatre(group, pros, { open = { w: 8.4, cy: 2.55 }, z = 2.2, hou
     group.add(hall);
     layers.push([hall, 50]);
     const sw = 4.6, sh = sw * SEATS.h / SEATS.w, sz = SEAT.pos[2] - 3.3;
-    // The shortest figure straight ahead, so the stage shows over her; the same row mirrored at
-    // each end, for tall phone screens.
-    [0, -1, 1].forEach((d) => {
-      const row = paperFlat(load(SEATS.url), sw, sh, { edge: false });
-      if (d) row.scale.x = -1;
-      row.position.set(-0.5 + d * sw, 1.22 - (1 - SEATS.hats / SEATS.h) * sh, sz);
-      group.add(row);
-      layers.push([row, 60]);
-    });
+    // The shortest figure straight ahead, so the stage shows over her; empty chairs on at each end, for
+    // wide screens (drawn over the row: the first at each end covers its half-cut end chair).
+    const row = paperFlat(load(SEATS.url), sw, sh, { edge: false });
+    row.position.set(-0.5, 1.22 - (1 - SEATS.hats / SEATS.h) * sh, sz);
+    group.add(row);
+    layers.push([row, 60]);
+    const px = sw / SEATS.w, chair = load(CHAIR.url), x0 = row.position.x - sw / 2;
+    for (let k = 0; k < 6; k++) {
+      for (const left of [CHAIR.left - CHAIR.w * (k + 1), CHAIR.right + CHAIR.w * k]) {
+        const m = paperFlat(chair, CHAIR.w * px, sh, { edge: false });
+        m.position.set(x0 + (left + CHAIR.w / 2) * px, row.position.y, sz);
+        group.add(m);
+        layers.push([m, 61]);
+      }
+    }
   } else {
     // A plain paper surround, so the opening shot shows the theatre on the page, not the set around it.
     const outer = new THREE.Shape([new THREE.Vector2(-40, -20), new THREE.Vector2(40, -20), new THREE.Vector2(40, 30), new THREE.Vector2(-40, 30)]);
