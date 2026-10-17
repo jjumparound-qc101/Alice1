@@ -1,6 +1,6 @@
 # Alice polish list, round 4
 
-Status (2026-10-17, session 6): put to the owner; working on the recommended option (approve all) until they answer. Done: 1, 2, 3, 4, 5, 6, 7. Left in Part A: 8 (the floor's cracks at tiny size), 9 (tidy-up).
+Status (2026-10-17, session 6): put to the owner; working on the recommended option (approve all) until they answer. Done: 1-7 (published, versions 103-105). 9: checked, no change needed (7:09-7:13 is her own view through the little door; 8:06-8:12 is a close-up of her with the bottle, which the frame report counts as out because her feet are cut). 8: put to the owner to defer (the stones are the right size for ten-inch Alice; the lines look thick because the floor drawing is magnified in the low close shots, and a finer one would need a new matching drawing). Device checklist sent.
 
 Ranked top-down. Strike any numbers you don't want. I'll work the rest in this order and update the web link after each batch. Times are minutes:seconds into the chapter.
 
