@@ -1,5 +1,26 @@
 # Engine changes (newest first)
 
+## 2026-10-17: four-drawing walk cycles
+- `puppet.js`: a figure with `walk_a`..`walk_d` (contact, passing, contact, passing) shows a drawing every half step, still counted from the distance walked, and no code hop (the drawings carry the bob). Two-drawing walks are unchanged.
+- Why (owner, Alice 2026-10-17): Alice's two-drawing walk snapped between poses; her four-drawing cycle was approved.
+- Checked against: Alice1 (walk_report; screenshots of her walking in Chapters I and II; full smoke test). Books to take it: any with a four-drawing walk.
+
+## 2026-10-17: the web link loads by chapter
+- `tools/art_usage.mjs` (new): records the pictures each chapter shows (its scenes' use of the book's art, and everything on stage, stepping through the chapter without drawing) into the book's `public/data/art_usage.json`. `main.js`: `window.__artUsage`, `__slice.recordArtAt(t)`, `__slice.usage()` for it.
+- `tools/pack_art.py`: with that record, packs pictures by the first chapter that shows them and writes each picture's size and the record into `packs/index.json`.
+- `main.js`, `packs.js`: with such an index, `loadTexture` makes empty textures at once (shape from the index); a chapter's pictures load when it is opened (a note on the start screen, a card if it takes a moment), the next chapter's in the background; tailpieces when their end card is set; anything missed loads late (render-loop check, `picture loaded late` in the console). Without the record, nothing changes. `thoughts.js`: a bubble's shape from the index if its picture isn't in yet, and an empty card until the picture arrives. `style.css`: the note and the card.
+- Why (owner, Alice 2026-10-17): the web link downloaded all 121 MB of pictures before starting; Alice's first chapter now needs 24 MB.
+- `art_usage.mjs` opens each chapter in a fresh page, as a reader opening it from the contents would: run in one page, Alice's Chapter XII missed the court's cards (already composed in Chapter VIII) and opening XII directly crashed.
+- Checked against: Alice1 (record made; the packed build served locally: full smoke test).
+
+## 2026-10-17: a plainer contents menu
+- `main.js`, `style.css`: the contents is one row per chapter, all alike (its number in a column, its title; the row plays the chapter from the start), with a rule between rows; only the chapter being read shows its scenes beneath it (boxed, the current one dark), and the menu opens scrolled to that chapter. Before, every chapter with several scenes listed them all as boxes and chapters with one scene listed none, so the menu was long and uneven (owner, pp1 2026-10-17: "the chapter menu looks bugged out").
+- Checked against: Pride and Prejudice (pp1: the menu from the start screen and mid-chapter, wide screen and phone; full smoke test). Books to take it: all.
+
+## 2026-10-17: the theatre opening scales with a small toy-theatre front
+- `theatre.js`: a front given a smaller (or larger) `open.w` than the usual 8.4 m now scales the whole theatre with it: the auditorium already was, now the seat, the aisle and the row of stalls (with its empty chairs) are too. Pride and Prejudice's front is 4.4 m (its stage is a drawing room), and from the usual seat its half-size auditorium left gaps of bare paper round it and the audience floated (owner, pp1 2026-10-17). `theatre()` returns `seat` and `aisle`; `openingKeys(start, into, { seat, aisle })` takes them. At the usual size nothing changes (same seat, same row, same positions).
+- Checked against: Pride and Prejudice (pp1: chapter 1's opening frame by frame, wide screen and phones; full smoke test). Books to take it: pp1 (needs it; its chapter 1 passes `seat` and `aisle`); Alice1 and Carol1 lose nothing by taking it (their fronts are the usual size).
+
 ## 2026-10-17: art packs as .json data files
 - `tools/pack_art.py`, `src/packs.js`: the packs were uncompressed .zip files, which the web link refuses ("archives can't be attached"); they are now .json data files of the pictures' bytes in base64 (at most 11 MB of pictures each, under the 16 MB text-file limit), read one at a time (so a phone never holds several at once) and let go once the book's art is made. A third larger than the pictures themselves.
 - Checked against: Alice1 (the packed web build served locally: full smoke test).

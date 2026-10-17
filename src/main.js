@@ -11,20 +11,53 @@ import { PerfMeter } from './perf.js';
 import { sentenceStarts, skip, Timeline } from './navigate.js';
 import { texture } from './ink.js';
 import { COLOUR } from './stage.js';
-import { initPacks, artUrl, releasePacks } from './packs.js';
+import { initPacks, artUrl, releasePacks, byChapter, packedSize, chapterArt } from './packs.js';
 
 const $ = (id) => document.getElementById(id);
 const SPEEDS = [1, 1.25, 1.5, 2];
 
 // A picture for the stage: { tex, aspect }. Books use it in their loadArt().
-// On the web link its bytes may come from an art pack (packs.js).
+// On the web link its bytes may come from an art pack (packs.js). When the packs are grouped by chapter
+// (packs.js, byChapter), the texture is made empty at once, its shape known from the index, and its
+// picture loads when a chapter that shows it is opened (loadChapterArt), or late if a chapter shows it
+// unexpectedly (the check in the render loop).
+const lazy = new Map(); // url -> { tex, done } (loading by chapter)
 export async function loadTexture(url) {
+  const size = byChapter() && packedSize(url);
+  if (size) {
+    const known = lazy.get(url);
+    if (known) return { tex: known.tex, aspect: size[0] / size[1] };
+    const t = new THREE.Texture();
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = 4;
+    t.userData = { url, aspect: size[0] / size[1] };
+    lazy.set(url, { tex: t, done: null });
+    return { tex: t, aspect: size[0] / size[1] };
+  }
   const src = await artUrl(url);
   const t = await new THREE.TextureLoader().loadAsync(src);
   if (src !== url) URL.revokeObjectURL(src);
   t.colorSpace = THREE.SRGBColorSpace;
   t.anisotropy = 4;
+  t.userData = { url };
   return { tex: t, aspect: t.image.width / t.image.height };
+}
+// Loading by chapter: a picture's bytes into its texture (once), and all of chapter n's pictures.
+function fetchPicture(url) {
+  const e = lazy.get(url);
+  if (!e) return Promise.resolve();
+  e.done ??= artUrl(url, { once: true }).then((src) => new Promise((ok, fail) => {
+    const img = new Image();
+    img.onload = () => { if (src !== url) URL.revokeObjectURL(src); e.tex.image = img; e.tex.needsUpdate = true; ok(); };
+    img.onerror = () => fail(new Error(`picture ${url}`));
+    img.src = src;
+  }));
+  return e.done;
+}
+function loadChapterArt(n, progress) {
+  const urls = chapterArt(n);
+  let k = 0;
+  return Promise.all(urls.map((u) => fetchPicture(u).then(() => progress?.(++k, urls.length))));
 }
 
 // The reader's place: the chapter, and the time reached in each chapter, under the book's own
@@ -79,15 +112,33 @@ async function run(book) {
   // The book's shared art (by name) and whatever else its scenes need, and every narrated chapter's word timings.
   // On the web link the pictures come from art packs (packs.js); the packs are let go once all are made,
   // keeping only the end cards' tailpieces (object URLs, for their <img>).
+  // Grouped by chapter, the pictures load as their chapters open instead (loadChapterArt), and the
+  // tailpieces when their end card is set.
   const narrated = CHAPTERS.filter((c) => c.narrated);
   await initPacks();
+  const byChap = byChapter();
   const [wordsList, loaded] = await Promise.all([
     Promise.all(narrated.map((c) => fetch(c.words).then((r) => r.json()))),
     book.loadArt ? book.loadArt(loadTexture) : {},
-    ...CHAPTERS.filter((c) => c.tailpiece).map(async (c) => { c.tailpiece = await artUrl(c.tailpiece); }),
+    ...(byChap ? [] : CHAPTERS.filter((c) => c.tailpiece).map(async (c) => { c.tailpiece = await artUrl(c.tailpiece); })),
   ]);
-  releasePacks();
+  if (!byChap) releasePacks();
   const ai = loaded.ai ?? {}, extras = loaded.extras ?? {};
+  // engine/tools/art_usage.mjs: a record of the pictures each chapter shows (window.__artUsage, set by the
+  // tool before the page loads): what its scenes take from `ai`, and what is on stage at each moment.
+  const usage = window.__artUsage ? (window.__artUsage.chapters = {}) : null;
+  const note = (n, tex) => { const u = tex?.userData?.url; if (u) (usage[n] ??= new Set()).add(u); };
+  const watchAi = (n) => new Proxy(ai, { get: (o, k) => { const v = o[k]; note(n, v?.tex ?? v); return v; } });
+  // Loading by chapter: a note on the start screen while the first chapter's pictures load, and a card
+  // over the page when a chapter is opened before its pictures are in.
+  const loadingNote = document.createElement('p');
+  loadingNote.className = 'loading-note';
+  $('intro').append(loadingNote);
+  const loadingCard = document.createElement('div');
+  loadingCard.id = 'loading';
+  loadingCard.hidden = true;
+  document.body.append(loadingCard);
+  const showLoading = (el, text) => (k, n) => { el.textContent = k < n ? `${text} ${Math.round(100 * k / n)}%` : ''; };
   // Lettering on props and title pages is drawn to canvas, so the fonts must be loaded first.
   if (document.fonts) await Promise.all([document.fonts.load('600 64px "IM Fell English"'), document.fonts.load('italic 40px "IM Fell English"')]);
 
@@ -106,7 +157,7 @@ async function run(book) {
       const group = new THREE.Group();
       group.visible = false;
       scene.add(group);
-      return { def, group, start: c.starts[i], ...def.build({ group, ai, cue: c.cue, ...extras }) };
+      return { def, group, start: c.starts[i], ...def.build({ group, ai: usage ? watchAi(c.n) : ai, cue: c.cue, ...extras }) };
     });
     const words = c.wordsData;
     const flat = words.paragraphs.flat();
@@ -216,6 +267,12 @@ async function run(book) {
     if (chapter) place.save(chapter.n, audio.currentTime);
     switching = true;
     audio.pause();
+    if (byChap) { // its pictures first (a card while they load); then the next chapter's, unseen
+      loadingCard.hidden = false;
+      await loadChapterArt(c.n, showLoading(loadingCard, `Turning to ${c.label} ${c.roman}…`));
+      loadingCard.hidden = true;
+      loadingCard.textContent = '';
+    }
     // Free the pictures held on the graphics card (owner, Alice project 2026-10-14: the tab ran out of
     // memory late in the book and the browser reloaded the page). Textures upload again by themselves when next shown.
     if (chapter) freeTextures();
@@ -227,7 +284,9 @@ async function run(book) {
     timeline.set(ch.cue.end + 0.9, c.marks);
     const next = CHAPTERS[c.n];
     $('endQuote').textContent = `“${ch.lastSentence.replace(/^[“"]|[”"]$/g, '')}”`;
-    $('endTail').hidden = !c.tailpiece; if (c.tailpiece) $('endTail').src = c.tailpiece; // under the chapter's last line
+    $('endTail').hidden = !c.tailpiece; // under the chapter's last line
+    if (usage && c.tailpiece) (usage[c.n] ??= new Set()).add(c.tailpiece);
+    if (c.tailpiece) (byChap ? artUrl(c.tailpiece) : Promise.resolve(c.tailpiece)).then((u) => { if (chapter === c) $('endTail').src = u; });
     $('endTitle').textContent = `${c.label} ${c.roman} complete`;
     $('endSub').textContent = c.title;
     const last = ch.scenes[ch.scenes.length - 1];
@@ -241,6 +300,7 @@ async function run(book) {
     audio.defaultPlaybackRate = audio.playbackRate = speed;
     await new Promise((ok) => audio.addEventListener('loadedmetadata', ok, { once: true }));
     switching = false;
+    if (byChap && CHAPTERS[c.n]?.narrated) loadChapterArt(CHAPTERS[c.n].n);
   }
 
   function setMode(m) {
@@ -316,33 +376,45 @@ async function run(book) {
   setSpeed(SPEEDS.includes(savedSpeed) ? savedSpeed : 1);
   $('speedBtn').addEventListener('click', () => setSpeed(SPEEDS[(SPEEDS.indexOf(speed) + 1) % SPEEDS.length]));
 
-  // The contents: every chapter, and the scenes of each narrated one. From the controls
-  // (pausing the reading) and on the start screen.
-  const sceneButtons = [];
+  // The contents: one row per chapter, all alike (its number and title; it plays the chapter from the
+  // start), and under the chapter being read, its scenes (owner, pp1 2026-10-17: the menu listed the
+  // scenes of every chapter, some boxed and some not, and was long and uneven). From the controls
+  // (pausing the reading) and on the start screen; it opens at the chapter being read.
+  const sceneButtons = [], rows = [];
+  const list = document.createElement('ol');
+  list.className = 'chapters';
   for (const c of CHAPTERS) {
-    const h = document.createElement('h3');
+    const li = document.createElement('li');
     const hb = document.createElement('button');
-    hb.textContent = `${c.label} ${c.roman}. ${c.title}`;
+    hb.className = 'chapter';
+    hb.innerHTML = '<span class="num"></span><span class="name"></span>';
+    hb.children[0].textContent = c.roman;
+    hb.children[1].textContent = c.narrated ? c.title : `${c.title} (coming)`;
     hb.disabled = !c.narrated;
     hb.addEventListener('click', () => begin(c, 0));
-    h.append(hb);
-    if (!c.narrated) h.insertAdjacentHTML('beforeend', ' <span class="later">(coming)</span>');
-    $('contents').append(h);
-    if (!c.narrated || !c.marks || c.marks.length < 2) continue;
-    const ol = document.createElement('ol');
-    c.marks.forEach((m) => {
-      const li = document.createElement('li');
-      const b = document.createElement('button');
-      b.innerHTML = '<span></span><span></span>';
-      b.children[0].textContent = m.title;
-      b.children[1].textContent = clock(m.t);
-      b.addEventListener('click', () => begin(c, m.t));
-      sceneButtons.push({ b, c, m });
-      li.append(b);
-      ol.append(li);
-    });
-    $('contents').append(ol);
+    li.append(hb);
+    let ol = null;
+    if (c.narrated && c.marks && c.marks.length > 1) {
+      ol = document.createElement('ol');
+      ol.className = 'scenes';
+      ol.hidden = true;
+      c.marks.forEach((m) => {
+        const sli = document.createElement('li');
+        const b = document.createElement('button');
+        b.innerHTML = '<span></span><span></span>';
+        b.children[0].textContent = m.title;
+        b.children[1].textContent = clock(m.t);
+        b.addEventListener('click', () => begin(c, m.t));
+        sceneButtons.push({ b, c, m });
+        sli.append(b);
+        ol.append(sli);
+      });
+      li.append(ol);
+    }
+    rows.push({ c, hb, ol });
+    list.append(li);
   }
+  $('contents').append(list);
   let menuResume = false;
   function openMenu() {
     menuResume = !audio.paused;
@@ -350,7 +422,12 @@ async function run(book) {
     const t = audio.currentTime;
     const here = chapter?.marks.reduce((cur, m) => (t >= m.t ? m : cur), chapter.marks[0]);
     sceneButtons.forEach(({ b, m }) => b.classList.toggle('here', m === here));
+    for (const r of rows) {
+      r.hb.classList.toggle('here', r.c === chapter);
+      if (r.ol) r.ol.hidden = r.c !== chapter;
+    }
     $('sceneMenu').hidden = false;
+    rows.find((r) => r.c === chapter)?.hb.scrollIntoView({ block: 'center' });
   }
   function closeMenu(resume = menuResume) {
     $('sceneMenu').hidden = true;
@@ -550,7 +627,7 @@ async function run(book) {
   }
 
   const look = new THREE.Vector3();
-  let last = performance.now(), smoothT = 0;
+  let last = performance.now(), smoothT = 0, lateCheck = 0;
   const perf = new PerfMeter(renderer);
   renderer.setAnimationLoop((now) => {
     const dt = Math.min(0.05, (now - last) / 1000);
@@ -597,14 +674,32 @@ async function run(book) {
     const f = mode !== 'watch' || endDismissed ? 0 : atEnd() ? 1 : smooth((t - ch.cue.end + 0.1) / 0.8);
     $('fade').style.opacity = f;
     $('endCard').hidden = f < 0.99;
+    if (byChap && now - lateCheck > 500) { // a picture this chapter shows that its record missed: load it now
+      lateCheck = now;
+      scene.traverseVisible((o) => { for (const m of [o.material].flat()) if (m?.map?.userData?.url && !m.map.image && !lazy.get(m.map.userData.url)?.done) { console.info(`picture loaded late: ${m.map.userData.url}`); fetchPicture(m.map.userData.url); } });
+    }
     renderer.render(scene, camera);
     perf.tick(now);
   });
 
   // Exposed for automated checks (tools/smoke.mjs). The first chapter's sets are built up front
   // so checks can read its scenes before Begin is pressed.
+  if (byChap) await loadChapterArt(CHAPTERS[0].n, showLoading(loadingNote, 'Preparing the pictures…'));
   build(CHAPTERS[0]);
+  if (byChap && CHAPTERS[1]?.narrated) loadChapterArt(CHAPTERS[1].n);
+  // engine/tools/art_usage.mjs: pose the open chapter at time t (no drawing) and note every picture on stage.
+  function recordArtAt(t) {
+    show(sceneAt(t));
+    const c = active.camera(t);
+    camera.position.set(...c.pos);
+    camera.lookAt(look.set(...c.look));
+    const actors = active.actors(t);
+    for (const [name, puppet] of Object.entries(cast)) puppet.apply(actors[name] ?? { visible: false }, camera);
+    active.update?.(t, cast, camera);
+    scene.traverseVisible((o) => { for (const m of [o.material].flat()) if (m) for (const v of Object.values(m)) if (v?.isTexture) note(chapter.n, v); });
+  }
   window.__slice = {
+    recordArtAt, usage: () => usage && Object.fromEntries(Object.entries(usage).map(([n, s]) => [n, [...s]])),
     colour: COLOUR,
     audio, setMode, setLayout, camera, perf, chapters: CHAPTERS, begin, explorer, cast, lead: LEAD,
     get chapter() { return chapter; },
