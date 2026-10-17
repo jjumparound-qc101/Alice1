@@ -127,18 +127,39 @@ export function thimble() {
 // long tail as the book prints it, each line smaller as the tail narrows.
 export function mouseTale() {
   const LINES = ['Fury said to a', 'mouse, That he', 'met in the', 'house,', '“Let us', 'both go to', 'law: I will', 'prosecute', 'you.—Come,', 'I’ll take no', 'denial; We', 'must have a', 'trial: For', 'really this', 'morning I’ve', 'nothing', 'to do.”', 'Said the', 'mouse to the', 'cur, “Such', 'a trial,', 'dear sir,', 'With', 'no jury', 'or', 'judge,', 'would be', 'wasting', 'our', 'breath.”', '“I’ll be', 'judge, I’ll', 'be jury,”', 'Said', 'cunning', 'old Fury:', '“I’ll', 'try the', 'whole', 'cause,', 'and', 'condemn', 'you', 'to', 'death.”'];
-  const { c, g } = canvas(700, 1400);
-  g.fillStyle = PAPER; g.fillRect(0, 0, 700, 1400);
-  g.fillStyle = INK; g.textAlign = 'left';
-  let y = 40;
-  LINES.forEach((t, i) => {
-    const size = Math.max(11, 34 - i * 0.55);
+  // Laid out as in the book: the lines wind down the page and dwindle, so the tale is the shape of a
+  // tail. The paper is cut to that shape (a tapering strip, ending in a point), with no board round it.
+  const W = 700, H = 1400;
+  const { c, g } = canvas(W, H);
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  let y = 46;
+  const rows = LINES.map((t, i) => {
+    const size = Math.max(12, 36 - i * 0.56);
     g.font = FONT(size);
-    const x = 250 + Math.sin(i * 0.33) * 170 + i * 2;
-    g.fillText(t, x, y);
-    y += size * 0.95;
+    const row = { t, size, x: 330 + Math.sin(i * 0.3) * 160 + i * 1.5, y, w: g.measureText(t).width / 2 + size * 0.45 };
+    y += size * 1.0;
+    return row;
   });
-  g.strokeStyle = INK; g.lineWidth = 3; g.strokeRect(8, 8, 684, 1384);
+  const top = rows[0], last = rows[rows.length - 1];
+  const tip = { x: last.x + 40, y: last.y + 70 };
+  const right = rows.map((r) => [r.x + r.w, r.y]), left = rows.map((r) => [r.x - r.w, r.y]).reverse();
+  const path = new Path2D();
+  path.moveTo(top.x - top.w, top.y - top.size * 0.75);
+  path.lineTo(top.x + top.w, top.y - top.size * 0.75);
+  // A smooth edge through the ends of the lines: down the right side to the tip, back up the left.
+  const edge = (pts) => pts.forEach(([x, py], k) => {
+    const [nx, ny] = pts[k + 1] || pts[k];
+    path.quadraticCurveTo(x, py, (x + nx) / 2, (py + ny) / 2);
+  });
+  edge(right);
+  path.quadraticCurveTo(last.x + last.w, tip.y - 30, tip.x, tip.y);
+  path.quadraticCurveTo(last.x - last.w, tip.y - 40, last.x - last.w, last.y);
+  edge(left);
+  path.closePath();
+  g.fillStyle = PAPER; g.fill(path);
+  g.strokeStyle = INK; g.lineWidth = 3; g.stroke(path);
+  g.fillStyle = INK;
+  rows.forEach((r) => { g.font = FONT(r.size); g.fillText(r.t, r.x, r.y); });
   return c;
 }
 

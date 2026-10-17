@@ -9,7 +9,7 @@ import { crowdCard } from '../cards.js';
 import { paperFlat } from '@engine/stage.js';
 import { texture, PAPER, canvas, INK } from '@engine/ink.js';
 import { card, OFFICERS } from '../props8.js';
-import { trumpet, scroll, canvasBag, shoe } from '../props11.js';
+import { trumpet, scroll } from '../props11.js';
 import { FOOT } from '../sets/croquet.js';
 import { buildCourt, THRONE, KING, QUEEN, HERALD, KNAVE, TARTS, JURY, WITNESS, DOOR, FRONT, SEAT, BILL } from '../sets/court.js';
 import { drawnPose, extras } from '../crowd.js';
@@ -56,9 +56,9 @@ export const trial = {
     const scrollOpen = paperFlat(texture(scroll(true)), 0.07, 0.091, { anchor: 'center' });
     const pencilC = canvas(120, 16); pencilC.g.fillStyle = INK; pencilC.g.fillRect(0, 4, 120, 8);
     const pencil = paperFlat(texture(pencilC.c), 0.04, 0.006, { anchor: 'center', edge: false });
-    const shoeTex = texture(shoe());
-    const shoes = [0, 1].map(() => { const s = paperFlat(shoeTex, 0.04, 0.02); group.add(s); return s; });
-    const bags = [0, 1].map(() => { const b = paperFlat(texture(canvasBag()), 0.09, 0.076); group.add(b); return b; });
+    const SH = ai['ch11/hatter_shoe'], shoeTex = SH.tex;
+    const shoes = [0, 1].map(() => { const s = paperFlat(shoeTex, 0.04, 0.04 / SH.aspect); group.add(s); return s; });
+    const bags = [0, 1].map(() => { const b = paperFlat(ai['ch11/canvas_bag'].tex, 0.08 * ai['ch11/canvas_bag'].aspect, 0.08); group.add(b); return b; });
     const dorSleep = paperFlat(ai['ch7/dormouse_sleep'].tex, 0.055, 0.055 / ai['ch7/dormouse_sleep'].aspect), dorTalk = paperFlat(ai['ch7/dormouse_talk'].tex, 0.055, 0.055 / ai['ch7/dormouse_talk'].aspect); // AI
     const dorSulky = paperFlat(ai['ch11/dormouse_sulky'].tex, 0.06 * ai['ch11/dormouse_sulky'].aspect, 0.06); // walking off sulkily (2026-10-14)
     group.add(trump, scrollRolled, scrollOpen, pencil, dorSleep, dorTalk, dorSulky);

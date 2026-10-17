@@ -16,6 +16,7 @@ const TINY = 0.13;
 const WATER_Y = 0.1;
 const POOL = { x: 3.2, z: -0.6, rx: 2.8, rz: 1.3 };       // as Chapter II left it
 const RC = { x: -0.05, z: -0.55 }, R = 0.22;              // the ring, on dry floor by the pool
+const TALE = { x: RC.x + 0.02, z: RC.z + 0.12 };            // where the Mouse's tale hangs, as Alice pictures it
 const slot = (deg, r = R) => ({ x: RC.x + r * Math.cos((deg * Math.PI) / 180), z: RC.z + r * Math.sin((deg * Math.PI) / 180) });
 
 // Each member of the party: their place in the ring (degrees; 90 is nearest the camera),
@@ -89,7 +90,7 @@ export const bank = {
     const box = prop('comfits', 0.035), thim = prop('thimble', 0.013);
     const dropArt = ai['ch2/tear']; // the engraved drop of Chapter II (tools/ch2_art.py)
     const drops = Array.from({ length: 6 }, () => { const d = paperFlat(dropArt.tex, 1, 1 / dropArt.aspect, { anchor: 'center', edge: false }); group.add(d); return d; });
-    const tale = paperFlat(texture(mouseTale()), 0.17, 0.34, { anchor: 'center' });
+    const tale = paperFlat(texture(mouseTale()), 0.17, 0.34, { anchor: 'center', edge: false }); // the paper is cut to the tail's shape
     group.add(box, thim, tale);
     const think = thoughts(group, [
       { t0: T.finger - 1, t1: T.everybody, art: ai['vignettes/shakespeare'].tex },
@@ -231,7 +232,7 @@ export const bank = {
       const open = smooth((t - T.tale + 0.3) / 0.6) * (1 - smooth((t - T.attending + 0.5) / 0.5));
       tale.visible = open > 0.01;
       tale.scale.setScalar(open);
-      tale.position.set(RC.x + 0.02, 0.2, RC.z + 0.12);
+      tale.position.set(TALE.x, 0.2, TALE.z);
       // Tears, at the end.
       drops.forEach((d, i) => {
         d.visible = t >= T.cry && t < T.pattering;
@@ -278,6 +279,9 @@ export const bank = {
       cam(T.ringAgain + 1, 3, [0.13, 0.14, -0.02], [RC.x, 0.06, RC.z]),
       cam(T.sad - 1, 2, [0.12, 0.09, -0.3], [RC.x + 0.03, 0.06, RC.z + 0.1]),                         // "a long and a sad tale"
       cam(T.tale - 1, 2, ...TALE_A),                                                                   // the tale, as she pictures it
+      // Then close, reading down the tail from its head to its tip as the Mouse tells it.
+      cam(T.tale + 4, 3, [TALE.x + 0.06, 0.32, TALE.z + 0.26], [TALE.x, 0.3, TALE.z]),
+      cam(T.tale + 7, T.attending - T.tale - 11, [TALE.x + 0.08, 0.1, TALE.z + 0.26], [TALE.x + 0.02, 0.08, TALE.z]),
       cam(T.attending - 0.5, 2, [0.12, 0.09, -0.3], [RC.x + 0.03, 0.06, RC.z + 0.1]),
       cam(T.walking, 4, [0.2, 0.16, -0.25], [-0.6, 0.05, -0.85]),                                     // the Mouse walks away
       cam(T.pity - 1, 3, [0.2, 0.11, -0.25], [S('crab').x, 0.04, S('crab').z]),                       // the Crabs

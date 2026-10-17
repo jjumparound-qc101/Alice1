@@ -8,8 +8,7 @@
 // Figures and props not yet drawn are placeholders from props4.js.
 import * as THREE from 'three';
 import { paperFlat } from '@engine/stage.js';
-import { texture, PAPER } from '@engine/ink.js';
-import { plainBottle, stick } from '../props4.js';
+import { PAPER } from '@engine/ink.js';
 import { thoughts } from '@engine/thoughts.js';
 import { panorama } from '../sets/panorama.js';
 import { carry } from '@engine/puppet.js';
@@ -159,7 +158,7 @@ export const rabbitHouse = {
     // 2026-10-15, tools/wood_art.py): with them, then empty once she has taken them up.
     const tableArt = (n) => { const a = ai[`ch4/${n}`], h = 0.375; const f = paperFlat(a.tex, h * a.aspect, h); f.position.set((WIN.x0 + WIN.x1) / 2, ROOM.floor, ROOM.z1 - 0.12); house.add(f); return f; };
     const table = tableArt('table_gloves'), tableEmpty = tableArt('table_empty');
-    const bottle = paperFlat(texture(plainBottle()), 0.04, 0.08); house.add(bottle);
+    const PB = ai['ch4/plain_bottle'], bottle = paperFlat(PB.tex, 0.08 * PB.aspect, 0.08); house.add(bottle);
     // The dollhouse view (2026-10-14): the room is seen from in front of the house, with the front
     // cut away over it, so the whole of her is in the picture however large she grows. Once her arm is
     // out of the window, only the part left of the window is cut, so the window and the arm stay.
@@ -452,7 +451,7 @@ export const wood = {
     const mu = paperFlat(ai['ch5/mushroom'].tex, MUSH.w, MUSH.h); mu.position.set(MU.x, 0, MU.z); group.add(mu);
     const C = ai['ch5/caterpillar_sit']; // the AI drawing (tools/ch5_art.py), as in Chapter V
     const cat = paperFlat(C.tex, 0.1 * C.aspect, 0.1); cat.position.set(MU.x + 0.01, MUSH.seat, MU.z + 0.005); group.add(cat);
-    const st = paperFlat(texture(stick()), 0.1, 0.015, { anchor: 'center' }); group.add(st);
+    const ST = ai['ch4/little_stick'], st = paperFlat(ST.tex, 0.1, 0.1 / ST.aspect, { anchor: 'center' }); group.add(st);
 
     function alice(t) {
       const s = route(t, [

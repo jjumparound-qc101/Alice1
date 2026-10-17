@@ -16,7 +16,8 @@ from PIL import Image
 
 OUT = "public/art/ai/ch4"
 NAMES = ["bill_stand", "bill_ladder", "bill_climb", "bill_rocket", "bill_limp", "guinea_stand", "guinea_hold",
-         "guinea_bottle", "pat", "pat_cap", "puppy_look", "puppy_jump", "puppy_tumble", "puppy_sit"]
+         "guinea_bottle", "pat", "pat_cap", "puppy_look", "puppy_jump", "puppy_tumble", "puppy_sit",
+         "plain_bottle", "little_stick"]  # props (2026-10-17): the bottle by the looking-glass, the puppy's stick
 CLEAR = {"bill_ladder": "178,226;275,308;374,392;474,478;549,543;811,784"}
 
 

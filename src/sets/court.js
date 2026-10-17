@@ -5,7 +5,6 @@
 import * as THREE from 'three';
 import { paperFlat } from '@engine/stage.js';
 import { texture, canvas, hatch, PAPER } from '@engine/ink.js';
-import { slate } from '../props11.js';
 
 // The set is AI drawings after the book and Tenniel's frontispiece (2026-10-15, tools/court_art.py):
 // the walls (two window bays repeated), the flagstones, the beamed ceiling, the throne under its
@@ -101,7 +100,7 @@ export function buildCourt({ group, ai }) {
   const boxBack = paperFlat(ai['ch11/court_jury_box'].tex, JURY.w, JURY.h); boxBack.position.z = -0.22;
   const box = paperFlat(ai['ch11/court_jury_box_front'].tex, JURY.w, JURY.h);
   jury.add(boxBack, box);
-  const slateTex = texture(slate());
+  const SL = ai['ch11/slate'], slateTex = SL.tex;
   const toWorld = (lx, ly, lz) => new THREE.Vector3(lx, ly, lz).applyAxisAngle(new THREE.Vector3(0, 1, 0), JURY.turn).add(jury.position);
   const jurors = JURORS.map((draw, i) => {
     const row = i < 6 ? 0 : 1, col = i % 6;
@@ -110,7 +109,7 @@ export function buildCourt({ group, ai }) {
     const flat = a ? paperFlat(a.tex, h * a.aspect, h) : paperFlat(texture(c), h * c.width / c.height, h);
     const home = toWorld(-JURY.w / 2 + 0.1 + col * 0.14, row === 0 ? JURY.rail - 0.01 : JURY.rail - 0.07, row === 0 ? -0.14 : -0.06);
     flat.position.copy(home); flat.rotation.y = JURY.turn; group.add(flat);
-    const sl = paperFlat(slateTex, 0.05, 0.0375, { anchor: 'center', edge: false });
+    const sl = paperFlat(slateTex, 0.05, 0.05 / SL.aspect, { anchor: 'center', edge: false });
     const slateHome = toWorld(-JURY.w / 2 + 0.1 + col * 0.14 - 0.02, JURY.rail + (row === 0 ? 0.06 : 0.015), row === 0 ? -0.1 : 0.012);
     sl.position.copy(slateHome); sl.rotation.y = JURY.turn; group.add(sl);
     return { flat, home, slate: sl, slateHome };

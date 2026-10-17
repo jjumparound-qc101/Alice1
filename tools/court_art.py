@@ -23,7 +23,9 @@ sys.path.insert(0, os.path.dirname(__file__))
 from ch8_art import cut, PAPER, SUIT_RED  # noqa: E402
 
 OUT = "public/art/ai/ch11"
-CUTS = ["court_throne", "court_table", "court_jury_box", "court_witness_box", "court_door"]
+# Props (2026-10-17): the jurors' slates, the Hatter's shoe and the canvas bag the guinea-pigs are put in.
+CUTS = ["court_throne", "court_table", "court_jury_box", "court_witness_box", "court_door",
+        "slate", "hatter_shoe", "canvas_bag"]
 # The front pieces: everything below the top of the front rail, plus the corner posts above it
 # (fractions of the cut-out's width and height, measured on the drawings).
 FRONT = {
