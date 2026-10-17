@@ -56,3 +56,22 @@ Then I'll send you the 5-point checklist for your phone and the Windows build.
 26. Bring the stale docs up to date: the chapter rough-cut notes and parts of the handoff still list placeholders that are drawings now.
 
 Checked: frame and jerk reports for all twelve chapters (VII-XII rerun this session), 30 screenshots per chapter, and phone layouts, with no console errors. Not checked yet: real phones, the Windows build, Explore mode and frame rate. Those are in the device checklist after Part A.
+
+## Check against the owner's polish decisions (2026-10-17, end of session 5's thread)
+The owner's fifteen decisions are in docs/HANDOFF.md ("The polish pass"). Checked against the project as of version 109: done as decided: the four-drawing walk and the walk from behind (approved preview), loading by chapter, new art generated and logged, the start-screen note, running on the walk, the audit ranked into this list and worked in the agreed order. Still open, to be worked in this order:
+
+**Waiting on the owner**
+- A. Approve this list or strike numbers (work so far assumed "approve all").
+- B. Item 8 (the hall floor's cracks at small sizes): defer, as recommended, or make a finer matching floor drawing now.
+- C. The 5-point device checklist (phone with the web link, the Windows build): the results.
+- D. A play-through of the opening and Chapters I-II: the last condition of the demo standard (nothing left to fix).
+
+**Not yet done (in scope, never worked)**
+27. **The reading experience** (scope item 4): check the text strip at every layout (Bottom, Side, phone forms) for line breaks, size and contrast; the faint words (still clear what they are, the "Why are some words faint?" note reachable); the text-strip colours (TINTS); the end cards (quote, tailpiece, buttons) on desktop and phones; the contents menu (the plainer one) for long chapter titles. List what needs changing and put it to the owner with recommendations.
+28. **Settings and menus** (scope item 5): review the More panel, speed, layout and Explore buttons, Continue on the start screen (it should name the saved place clearly), keyboard hints on touch devices.
+29. **Frame rate and phone memory** (scope item 6): measure frame rate with the F3 readout on the desktop build and a phone-sized window; the decoded pictures are about 1.07 GB, a likely cause of phone reloads: measure what a chapter holds now that loading is by chapter and recommend whether compressed textures (KTX2, a "maybe later" item) are needed before phones.
+30. **Real devices** (scope item 7): after C, fix whatever the owner's devices show.
+
+**Housekeeping**
+- The handoff's "Last published: version 99" line is stale (the link is at version 109).
+- The engine branch `claude/loading-by-chapter` (LoLBookEngine) is superseded by main; delete it if the owner agrees.
