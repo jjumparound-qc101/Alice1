@@ -237,21 +237,24 @@ export const mockTurtleRock = {
     }
     const L = [LEDGE_AT.x, LEDGE_AT.y + 0.12, LEDGE_AT.z];
     const mid = [(ASEAT.x + LEDGE_AT.x) / 2 - 0.1, 0.2, ROCK.z + 0.2];
+    // The three of them, nearer than the old wide shot (2026-10-17: the figures were tiny for five minutes), from the
+    // left and from the right in turn.
+    const MIDS = [{ pos: [-0.05, 0.3, 0.85], look: [0.2, 0.2, -0.5] }, { pos: [0.8, 0.3, 0.7], look: [0.15, 0.2, -0.5] }];
     const camera = cameraTrack([
       { t: start, dur: 0, pos: [-3.5, 0.5, 1.9], look: [-0.8, 0.1, -0.4] },                          // the Mock Turtle in the distance, Alice and the Gryphon walking to him
       { t: start + 18, dur: T.tears - start - 18, pos: [-0.5, 0.3, 1.1], look: [ROCK.x - 0.1, 0.25, ROCK.z] },
       { t: T.tears - 1, dur: 2, pos: [0.15, 0.36, 0.25], look: L },                                  // large eyes full of tears
-      { t: T.tears + 8, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },                                  // Alice and the Gryphon with him (Alice in frame every ~10 s)
-      { t: T.sat, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },                                        // they sat down
+      { t: T.tears + 8, dur: 3, ...MIDS[0] },                                  // Alice and the Gryphon with him (Alice in frame every ~10 s)
+      { t: T.sat, dur: 3, ...MIDS[1] },                                        // they sat down
       { t: T.real - 1, dur: 2, pos: [0.1, 0.36, 0.3], look: L },                                     // "Once I was a real Turtle"
-      { t: T.hjckrrh - 1, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },
+      { t: T.hjckrrh - 1, dur: 3, ...MIDS[0] },
       { t: T.dull - 1, dur: 2, pos: [ASEAT.x + 0.15, 0.2, ASEAT.z + 0.45], look: [ASEAT.x, 0.12, ASEAT.z] }, // poor Alice
-      { t: T.drive, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },
+      { t: T.drive, dur: 3, ...MIDS[1] },
       { t: T.paws - 1, dur: 2, pos: [GSEAT.x + 0.1, 0.3, GSEAT.z + 0.8], look: [GSEAT.x + 0.1, 0.2, GSEAT.z] }, // "Never heard of uglifying!"
       { t: T.flappers - 1, dur: 2, pos: [0.1, 0.36, 0.3], look: L },                                 // counting off on his flappers
-      { t: T.flappers + 9, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },
+      { t: T.flappers + 9, dur: 3, ...MIDS[0] },
       { t: T.flappers + 20, dur: 3, pos: [0.1, 0.36, 0.3], look: L },
-      { t: T.crab, dur: 3, pos: [-0.3, 0.3, 1.0], look: mid },
+      { t: T.crab, dur: 3, ...MIDS[1] },
       { t: T.faces - 1, dur: 3, pos: [-0.15, 0.32, 0.8], look: [LEDGE_AT.x - 0.3, 0.22, ROCK.z + 0.1] }, // both hid their faces
       { t: T.games - 8, dur: 6, pos: [-0.6, 0.4, 1.4], look: mid },
     ]);
