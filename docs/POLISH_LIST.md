@@ -64,7 +64,7 @@ The owner's fifteen decisions are in docs/HANDOFF.md ("The polish pass"). Checke
 - A. Approve this list or strike numbers (work so far assumed "approve all").
 - B. Item 8 (the hall floor's cracks at small sizes): defer, as recommended, or make a finer matching floor drawing now.
 - C. The 5-point device checklist (phone with the web link, the Windows build): the results.
-- D. A play-through of the opening and Chapters I-II: the last condition of the demo standard (nothing left to fix).
+- D. A play-through of the opening and Chapters I-II: the last condition of the demo standard (nothing left to fix). **Done: the owner approved Chapters I and II (2026-10-17: "look good ... for now they are approved"; more testing to come).**
 
 **Not yet done (in scope, never worked)**
 27. **The reading experience** (scope item 4): check the text strip at every layout (Bottom, Side, phone forms) for line breaks, size and contrast; the faint words (still clear what they are, the "Why are some words faint?" note reachable); the text-strip colours (TINTS); the end cards (quote, tailpiece, buttons) on desktop and phones; the contents menu (the plainer one) for long chapter titles. List what needs changing and put it to the owner with recommendations.

@@ -11,6 +11,7 @@ The owner asked to "polish up this 2.5D book project" and settled these in three
 - **Walk cycle**: four side-view drawings (contact, passing, contact, passing) generated together (done: `source/ai/alice_walk_cycle.png`, gpt-image-2.5-sunburst with the walk pair and the model sheet as references), timed to the ground; then a walk seen from behind (walking away: passage, garden, chapter ends); a walk toward us only if needed. **Approved and in** (owner, 2026-10-17, from the moving preview `docs/img/walk_preview.gif`; session 6). Running keeps using the walk, sped up, unless the play-through shows it looks wrong.
 - **Order**: the opening + Chapters I-II to demo standard (with the new walk), then the rest of the book by kind of problem.
 - **Loading**: load each chapter's pictures when it opens (engine, every book). **Testing on the owner's devices**: phone (web link) and Windows build at milestones (end of the demo chapters, end of the pass), with a short 5-point checklist from Claude.
+- **Demo standard reached** (owner, 2026-10-17: Chapters I and II "look good ... for now they are approved"; more testing to come, so treat their notes as patch notes).
 - **Demo standard** (opening, I, II): Alice never out of the picture over 10 s; no camera jumps but deliberate cuts; no code-drawn placeholders; the new walk; every thought picture readable on a phone; the owner's play-through finds nothing to fix.
 - Start-screen note: "Narration: the LibriVox full-cast reading. Pictures: AI drawings made after John Tenniel's illustrations." (done, `index.html`).
 
