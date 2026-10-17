@@ -66,7 +66,8 @@ def whitecut(path, *args):
 
 
 def vignette(name, out, paint=None):
-    """Paper-tint, crop to the content, cover an oval of 512:360 and outline it.
+    """Paper-tint, crop to the drawing and lay it on an oval card in the drawing's own shape (owner,
+    2026-10-17: each thought bubble fits its picture; the game's bubble draws the oval's outline).
     paint(rgb, g): optional, colours the paper-tinted drawing in place (source pixels)."""
     g = np.asarray(Image.open(src(name)).convert("L"), np.float32)
     rgb = g[..., None] / 255.0 * PAPER
@@ -85,37 +86,29 @@ def vignette(name, out, paint=None):
         brown = tone * (BROWN * 0.55 + PAPER * 0.45)
         rgb = np.where(inside[..., None], brown, rgb)
     img = Image.fromarray(rgb.astype(np.uint8), "RGB")
-    # Crop to the drawing (non-white), then cover a 512:360 box around it.
+    # The drawing's box (non-white). Most are drawn as oval vignettes, so the card is their own oval;
+    # free-standing figures (FIT) get an oval round them, with room for the box's corners.
     ys, xs = np.nonzero(g < 230)
     x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max()
     cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
-    w, h = x1 - x0, y1 - y0
-    aspect = 512 / 360
-    # An oval inscribed in the box loses its corners: grow the box a little so the oval
-    # holds most of the drawing (more for square-ish drawings that aren't ovals already).
-    if out in FIT:
-        # The drawing's box inside the oval: an oval holds a centred box about 1.3x smaller
-        # than its own (corners of these drawings are mostly empty).
-        bw = max(w, h * aspect) * 1.3
-    elif w / h < aspect:
-        bw = max(w * 1.08, h * aspect * 0.92)
-    else:
-        bw = w * 1.04
-    bh = bw / aspect
+    grow = 1.3 if out in FIT else 1.02
+    bw, bh = (x1 - x0) * grow, (y1 - y0) * grow
+    # No slivers: the shape kept between 0.6 and 2.2 wide to tall (as the game's bubbles, thoughts.js).
+    bw, bh = max(bw, bh * 0.6), max(bh, bw / 2.2)
+    a = bw / bh
     box = (round(cx - bw / 2), round(cy - bh / 2), round(cx + bw / 2), round(cy + bh / 2))
     pad = Image.new("RGB", img.size, tuple(int(v) for v in PAPER))
     pad.paste(img)
-    W, H = 1024, 720
+    W, H = (1024, round(1024 / a)) if a >= 1 else (round(1024 * a), 1024)
     card = Image.new("RGB", (round(bw), round(bh)), tuple(int(v) for v in PAPER))
     card.paste(pad.crop((max(0, box[0]), max(0, box[1]), min(img.width, box[2]), min(img.height, box[3]))),
                (max(0, -box[0]), max(0, -box[1])))
     card = card.resize((W, H), Image.LANCZOS).convert("RGBA")
     mask = Image.new("L", (W, H), 0)
-    ImageDraw.Draw(mask).ellipse((8, 8, W - 9, H - 9), fill=255)
+    ImageDraw.Draw(mask).ellipse((2, 2, W - 3, H - 3), fill=255)
     card.putalpha(mask.filter(ImageFilter.GaussianBlur(1)))
-    ImageDraw.Draw(card).ellipse((8, 8, W - 9, H - 9), outline=INK, width=7)
     card.save(f"{VIG}/{out}.webp", quality=90, method=6)
-    print(f"{VIG}/{out}.webp")
+    print(f"{VIG}/{out}.webp: {W}x{H}")
 
 
 def main():
