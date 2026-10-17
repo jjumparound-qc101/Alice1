@@ -281,7 +281,14 @@ export const bank = {
       cam(T.tale - 1, 2, ...TALE_A),                                                                   // the tale, as she pictures it
       // Then close, reading down the tail from its head to its tip as the Mouse tells it.
       cam(T.tale + 4, 3, [TALE.x + 0.06, 0.32, TALE.z + 0.26], [TALE.x, 0.3, TALE.z]),
-      cam(T.tale + 7, T.attending - T.tale - 11, [TALE.x + 0.08, 0.1, TALE.z + 0.26], [TALE.x + 0.02, 0.08, TALE.z]),
+      // Midway, a cut to Alice listening (TALE_A) for 4 s, then back to the tail where the reading left
+      // off, so she is never out of the picture for more than about 10 s (round 5, 2026-10-17).
+      ...(() => {
+        const t0 = T.tale + 7, t1 = T.attending - 4, mid = (t0 + t1) / 2 - 2;
+        const at = (k) => [[TALE.x + 0.06 + 0.02 * k, 0.32 - 0.22 * k, TALE.z + 0.26], [TALE.x + 0.02 * k, 0.3 - 0.22 * k, TALE.z]];
+        const k = (mid - t0) / (t1 - t0);
+        return [cam(t0, mid - t0, ...at(k)), cam(mid, 0, ...TALE_A), cam(mid + 4, 0, ...at(k)), cam(mid + 4, t1 - mid - 4, ...at(1))];
+      })(),
       cam(T.attending - 0.5, 2, [0.12, 0.09, -0.3], [RC.x + 0.03, 0.06, RC.z + 0.1]),
       cam(T.walking, 4, [0.2, 0.16, -0.25], [-0.6, 0.05, -0.85]),                                     // the Mouse walks away
       cam(T.pity - 1, 3, [0.2, 0.11, -0.25], [S('crab').x, 0.04, S('crab').z]),                       // the Crabs
