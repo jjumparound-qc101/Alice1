@@ -10,6 +10,7 @@ Usage (from the book's folder):
   python3 engine/tools/proscenium.py source/ai/proscenium.png public/art/ai/proscenium.webp \\
       --text "A CHRISTMAS@620,171,24" --text "CAROL@905,171,24" [--inside 768,560]
   --text TEXT@x,y[,size]: one line of lettering centred on (x, y) in source pixels (repeatable)
+  --color: keep a watercolour front's colours (paper-tinted the same way); without it, ink on paper
 """
 import argparse
 import json
@@ -28,6 +29,7 @@ def main():
     ap.add_argument("src")
     ap.add_argument("out")
     ap.add_argument("--text", action="append", default=[])
+    ap.add_argument("--color", action="store_true", help="keep the drawing's colours")
     ap.add_argument("--inside", default=None, help="x,y of a point in the stage opening (default: the centre)")
     a = ap.parse_args()
     src = Image.open(a.src).convert("L")
@@ -41,7 +43,8 @@ def main():
     opening = [int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())]
     print(f"opening: x {opening[0]}-{opening[2]}, y {opening[1]}-{opening[3]} of {src.size}")
     alpha = Image.fromarray(((~hole) * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.8))
-    rgb = Image.fromarray((g[..., None] / 255 * PAPER).astype(np.uint8), "RGB")
+    base = np.asarray(Image.open(a.src).convert("RGB"), np.float32) if a.color else g[..., None]
+    rgb = Image.fromarray((base / 255 * PAPER).astype(np.uint8), "RGB")
     d = ImageDraw.Draw(rgb)
     for t in a.text:
         text, at = t.rsplit("@", 1)

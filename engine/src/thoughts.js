@@ -1,7 +1,7 @@
 // Thought vignettes: oval pictures of what Scrooge (or whoever the story follows) is imagining, shown while the narration speaks
 // of them. (Owner, 2026-10-14) They are drawn flat over the picture, not inside the 3D scene, so:
-// every bubble is the same oval shape, its picture fills the oval evenly and is never cut off by
-// the edge of the screen, it is large enough to read, and it never covers the lead figure (it is placed in
+// each bubble is an oval in its own picture's shape (owner, Alice 2026-10-17: the bubble fits the picture,
+// none of it cut off), about the same size as the others, never cut off by the edge of the screen, it is large enough to read, and it never covers the lead figure (it is placed in
 // the free space beside her, with a trail of small bubbles toward her head).
 import { smooth } from './track.js';
 
@@ -16,13 +16,26 @@ function ensureLayer() {
   return layer;
 }
 
-// The picture as an image URL: an AI drawing's texture (its <img>), or a canvas drawn in code.
-function source(art) {
+// The picture for a card: an <img> of an AI drawing's texture (by its URL) or of a canvas drawn in code.
+// A drawing from an art pack (web link, packs.js) has let go of its URL once loaded, so it is copied
+// to a canvas instead (at most 1024 px across, more than a card ever shows).
+function picture(art) {
   const img = art.isTexture ? art.image : art;
-  if (img instanceof HTMLCanvasElement) return img.toDataURL();
-  if (img?.src) return img.src;
-  const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
-  c.getContext('2d').drawImage(img, 0, 0); return c.toDataURL();
+  const url = img instanceof HTMLCanvasElement ? img.toDataURL() : img?.src?.startsWith('blob:') ? null : img?.src;
+  if (url) { const el = document.createElement('img'); el.src = url; el.alt = ''; return el; }
+  const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, k = Math.min(1, 1024 / Math.max(w, h));
+  const c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
+  const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(img, 0, 0, c.width, c.height);
+  return c;
+}
+
+// The shape every bubble had before (Alice, 2026-10-14 to 10-17); bubbles keep its area in their own shape.
+const STD = 1024 / 720;
+// A picture's shape (width / height), kept within reason so that no bubble becomes a sliver.
+function aspectOf(art) {
+  const img = art.isTexture ? art.image : art;
+  const a = (img.naturalWidth || img.width) / (img.naturalHeight || img.height);
+  return Number.isFinite(a) ? Math.min(2.2, Math.max(0.6, a)) : STD;
 }
 
 // list: [{ t0, t1, art (a canvas from props.js, or an AI drawing's texture) }].
@@ -32,10 +45,10 @@ export function thoughts(group, list) {
   const cards = list.map(({ t0, t1, art }) => {
     const el = document.createElement('div');
     el.className = 'thought';
-    const img = document.createElement('img'); img.src = source(art); img.alt = ''; el.appendChild(img);
+    el.appendChild(picture(art));
     const trail = [0, 1, 2].map(() => { const b = document.createElement('div'); b.className = 'thought-dot'; layer.appendChild(b); return b; });
     layer.appendChild(el);
-    const card = { el, trail, open: 0, place: null, group, dots: [] };
+    const card = { el, trail, open: 0, place: null, group, dots: [], aspect: aspectOf(art) };
     ALL.add(card);
     return { t0, t1, card };
   });
@@ -60,11 +73,14 @@ export function layoutThoughts(view, lead) {
     if (c.place && lead && overlap(c.place, lead, 4)) c.covering = c.covering ?? now; else c.covering = null;
     const replace = !c.place || (c.covering && now - c.covering > 500);
     if (replace) {
-      const narrow = view.w < 600;
-      let w = Math.min(view.w * (narrow ? 0.62 : 0.4), 420, view.h * (narrow ? 0.72 : 0.5) * (1024 / 720));
+      // As large as a standard bubble (STD) of the same area, in the picture's own shape, within the
+      // share of the picture a bubble may take.
+      const narrow = view.w < 600, a = c.aspect, maxW = view.w * (narrow ? 0.62 : 0.4), maxH = view.h * (narrow ? 0.72 : 0.5);
+      const w0 = Math.min(maxW, 420, maxH * STD);
+      let w = Math.min(w0 * Math.sqrt(a / STD), maxW, maxH * a);
       let spot = null;
-      for (let tries = 0; tries < 4 && !spot; tries++, w *= 0.85) spot = findSpot(view, w, w * 720 / 1024, taken, lead);
-      if (!spot) { w = Math.min(view.w * 0.3, 260); spot = { x: view.x + 8, y: view.y + 8, w, h: w * 720 / 1024 }; }
+      for (let tries = 0; tries < 4 && !spot; tries++, w *= 0.85) spot = findSpot(view, w, w / a, taken, lead);
+      if (!spot) { w = Math.min(view.w * 0.3, 260 * Math.sqrt(a / STD), view.h * 0.4 * a); spot = { x: view.x + 8, y: view.y + 8, w, h: w / a }; }
       c.from = c.place ? { ...shown(c, now) } : null;
       c.place = spot; c.movedAt = now; c.covering = null;
       // The trail: from the oval toward where her head is now, fixed with the bubble.
