@@ -90,8 +90,11 @@ export const BOOK = {
         sit: { ...ai.alice_sit, facesLeft: false, height: 0.85, hand: [0.65, 0.7] },
         stand: { ...ai.alice_stand, facesLeft: true, hand: [0.55, 0.57] },
         ...posed,
-        walk_a: { ...posed.walk_a, hand: [0.03, 0.48] },
-        walk_b: { ...posed.walk_b, hand: [0.09, 0.45] },
+        // The four-drawing walk (2026-10-17): the forward hand in each drawing.
+        walk_a: { ...posed.walk_a, hand: [0.05, 0.49] },
+        walk_b: { ...posed.walk_b, hand: [0.06, 0.51] },
+        walk_c: { ...posed.walk_c, hand: [0.17, 0.47] },
+        walk_d: { ...posed.walk_d, hand: [0.09, 0.52] },
         jump: { ...posed.jump, hand: [0.03, 0.37] },
         fall: { ...posed.fall, hand: [0.06, 0.06] },        // the marmalade jar, in her raised left hand (Chapter I)
         hold: { ...posed.hold, hand: [0.05, 0.17] },        // the key or bottle held up (Chapter I)

@@ -34,11 +34,15 @@ POSES = {
 # her full height; matched by head size), and bodyX, the x in the scaled image that lines
 # up with the standing figure's centre (her belt is ~20 px left of that centre).
 DRAWN = {
-    # The walk: one drawing of two matching steps (owner, 2026-10-13), split in two; bodyX is
-    # the apron's centre line. Replaces the earlier walk_a and the walk_b screenshot.
-    "walk_a": {"src": "source/ai/alice_walk_pair.webp", "crop": (100, 0, 740, 1024), "h": 700, "torso": 395},
+    # The walk: four side views (contact, passing, contact, passing) drawn together (owner approved
+    # 2026-10-17; replaces the two-step alice_walk_pair). torso: the hip line (the skirt's middle at
+    # y 620), so the head holds steady; one scale for all four (716 px -> 700), so the passing frames
+    # stand a little taller: the drawn bob.
+    "walk_a": {"src": "source/ai/alice_walk_cycle.png", "crop": (17, 140, 438, 905), "h": 700, "torso": 242},
+    "walk_b": {"src": "source/ai/alice_walk_cycle.png", "crop": (464, 140, 756, 905), "h": 709, "torso": 608.5},
+    "walk_c": {"src": "source/ai/alice_walk_cycle.png", "crop": (763, 140, 1172, 905), "h": 695, "torso": 1002.5},
+    "walk_d": {"src": "source/ai/alice_walk_cycle.png", "crop": (1224, 140, 1500, 905), "h": 697, "torso": 1361.5},
     "jump": {"src": "source/ai/alice_jump.webp", "h": 751, "bodyX": 350},
-    "walk_b": {"src": "source/ai/alice_walk_pair.webp", "crop": (770, 0, 1410, 1024), "h": 700, "torso": 1057},
     # Chapter II (matched by eye against the standing Alice: dress, hands and head size).
     "feet": {"src": "source/ai/alice2_feet.webp", "h": 695, "bodyX": None},
     "longneck": {"src": "source/ai/alice2_longneck.webp", "h": 950, "bodyX": None},
