@@ -48,11 +48,25 @@ function fetchPicture(url) {
   if (!e) return Promise.resolve();
   e.done ??= artUrl(url, { once: true }).then((src) => new Promise((ok, fail) => {
     const img = new Image();
-    img.onload = () => { if (src !== url) URL.revokeObjectURL(src); e.tex.image = img; e.tex.needsUpdate = true; ok(); };
+    img.onload = () => { if (src !== url) URL.revokeObjectURL(src); e.tex.image = smaller(img); e.tex.needsUpdate = true; ok(); };
     img.onerror = () => fail(new Error(`picture ${url}`));
     img.src = src;
   }));
   return e.done;
+}
+// On touch screens (phones, tablets) a large picture is drawn at half size, a quarter of the graphics
+// memory: a chapter's pictures took 110-360 MB, enough for a tablet's browser to drop the page's 3D
+// drawing (and then refuse to start it again; owner's tablet, Alice 2026-10-19). Their screens are
+// rendered at a lower resolution anyway (setPixelRatio below).
+const TOUCH = matchMedia('(pointer: coarse)').matches, BIG = 1200;
+function smaller(img) {
+  if (!TOUCH || Math.max(img.width, img.height) <= BIG) return img;
+  const c = document.createElement('canvas');
+  c.width = Math.round(img.width / 2); c.height = Math.round(img.height / 2);
+  const g = c.getContext('2d');
+  g.imageSmoothingQuality = 'high';
+  g.drawImage(img, 0, 0, c.width, c.height);
+  return c;
 }
 function loadChapterArt(n, progress) {
   const urls = chapterArt(n);
@@ -92,15 +106,40 @@ const clock = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStar
 export function startBook(book) {
   run(book).catch((e) => {
     console.error(e);
+    if (e.noWebGL) return noWebGL();
     document.body.insertAdjacentHTML('beforeend', `<pre class="error">${e.message}</pre>`);
   });
+}
+
+// The browser would not start 3D drawing (WebGL): it is switched off, the graphics card is blocked,
+// or the browser stopped it for this site after running out of graphics memory, until it restarts.
+// Say what to try, in place of three.js's bare error.
+function noWebGL() {
+  const box = $('intro');
+  box.hidden = false;
+  box.querySelector('.start')?.remove();
+  box.insertAdjacentHTML('beforeend', `<div class="nogl">
+    <p>This browser could not start the pictures (3D drawing is switched off or blocked on this device).</p>
+    <p>Close other tabs and apps, then reload. If that doesn't help, close the browser completely and open the link again,
+    or try another browser (Chrome, Safari or Firefox) with hardware acceleration switched on.</p>
+    <div class="start"><button id="noglRetry">Reload</button></div></div>`);
+  $('noglRetry').onclick = () => location.reload();
+}
+
+// The renderer, with a second try on plainer settings (no antialiasing, the low-power graphics) for
+// devices that refuse the first.
+function makeRenderer(canvas) {
+  for (const opts of [{ antialias: true }, { antialias: false, powerPreference: 'low-power' }]) {
+    try { return new THREE.WebGLRenderer({ canvas, ...opts }); } catch (e) { console.warn('WebGL:', e.message); }
+  }
+  throw Object.assign(new Error('WebGL could not start'), { noWebGL: true });
 }
 
 async function run(book) {
   const CHAPTERS = book.chapters;
   const place = placeStore(book.storage.place, book.storage.upgrade);
   const SPEED_KEY = book.storage.speed;
-  const renderer = new THREE.WebGLRenderer({ canvas: $('stage'), antialias: true });
+  const renderer = makeRenderer($('stage'));
   // Touch screens (phones, tablets) render at a lower resolution, to stay smooth and cool.
   const coarse = matchMedia('(pointer: coarse)').matches;
   renderer.setPixelRatio(Math.min(devicePixelRatio, coarse ? 1.5 : 2));

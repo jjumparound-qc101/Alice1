@@ -224,6 +224,7 @@ body[data-mode="explore"] #thoughts { display: none; }
 
 /* Loading by chapter (main.js): a note on the start screen while the first chapter's pictures load, and a
    card over the page when a chapter is opened before its pictures are in. Hidden while empty. */
+#intro .nogl { max-width: 30em; line-height: 1.5; }
 #intro .loading-note { margin-top: 1.2em; font-style: italic; opacity: 0.75; min-height: 1.4em; }
 #loading { position: fixed; left: 50%; top: 45%; transform: translate(-50%, -50%); z-index: 6; padding: 0.8em 1.4em;
   background: var(--paper, #efe9da); border: 1.5px solid #17140f; font-style: italic; box-shadow: 0 2px 10px rgba(23, 20, 15, 0.25); }

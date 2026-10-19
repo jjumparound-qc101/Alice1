@@ -1,5 +1,10 @@
 # Engine changes (newest first)
 
+## 2026-10-19: pages that can't start 3D drawing say what to try; half-size pictures on touch screens
+- `main.js`: the renderer gets a second try on plainer settings (no antialiasing, low-power graphics); if the browser still refuses WebGL, the start screen says what to try (close other tabs, restart the browser, another browser with hardware acceleration) with a Reload button, in place of three.js's bare "Error creating WebGL context" (owner's tablet, Alice 2026-10-19).
+- `main.js`: on touch screens, pictures over 1200 px on their long side load at half size when loading by chapter (a quarter of the graphics memory; a chapter held 110-360 MB, enough for a tablet browser to drop the page's 3D drawing and then refuse to start it again).
+- Checked against: Alice1 (WebGL switched off: the message shows; the web build as a tablet, Chapters I, II and XII, no errors; full smoke test on the web build). Books to take it: all.
+
 ## 2026-10-17: the theatre's stalls reach the bottom of upright phones; bigger menus on upright tablets
 - `theatre.js`: one more row of empty chairs below the auditorium's nearest row. On an upright phone, as the camera rose up the aisle past the row in front, the auditorium drawing's bottom edge showed for about a second as a band of blank paper (owner, Alice 2026-10-17). Wide screens are unchanged (the new row stays below the picture).
 - `style.css`: on a tablet held upright, the start screen, the end card and the contents menu are 1.3 times larger, to match the reading text enlarged earlier.
