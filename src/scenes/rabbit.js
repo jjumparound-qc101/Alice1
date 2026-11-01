@@ -177,7 +177,8 @@ export const rabbitHouse = {
     const fr = (n) => paperFlat(ai[`ch4/${n}`].tex, 1.3, 1.3 / ai[`ch4/${n}`].aspect); // AI (2026-10-14)
     const framesWhole = fr('cucumber_frames'), framesBroken = fr('cucumber_frames_broken');
     for (const f of [framesWhole, framesBroken]) { f.position.set(FRAMES.x, 0, FRAMES.z); group.add(f); }
-    const LD = ai['ch4/ladders'], lad = paperFlat(LD.tex, (ROOM.ceil + 0.4) * LD.aspect, ROOM.ceil + 0.4); // two ladders tied together, up to the eaves lad.position.set(HW / 2 - 0.25, 0, 0.25); lad.rotation.x = -0.08; group.add(lad);
+    const LD = ai['ch4/ladders'], lad = paperFlat(LD.tex, (ROOM.ceil + 0.4) * LD.aspect, ROOM.ceil + 0.4); // two ladders tied together, up to the eaves
+    lad.position.set(HW / 2 - 0.25, 0, 0.25); lad.rotation.x = -0.08; group.add(lad);
     const CB = ai['ch4/cart_barrow'], bar = paperFlat(CB.tex, 0.75, 0.75 / CB.aspect); bar.position.set(1.75, 0, 0.75); group.add(bar); // the hand-cart and the barrow of pebbles (AI)
     // Her arm out of the window, hanging down the front of the house: the same arm that reaches up to the
     // window inside (forearm and hand from the model sheet drawing, sized to the lying Alice's arm).

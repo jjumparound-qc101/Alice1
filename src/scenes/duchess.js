@@ -109,6 +109,10 @@ export const kitchen = {
     const plain = (map, side = THREE.FrontSide) => new THREE.MeshBasicMaterial({ map, side });
     const back = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.h), plain(ai['ch6/kitchen_back'].tex)); back.position.set(0, K.h / 2, K.z0); group.add(back); // AI drawing
     for (const s of [-1, 1]) { const side = new THREE.Mesh(new THREE.PlaneGeometry(K.z1 - K.z0, K.h), plain(ai['ch6/kitchen_side'].tex)); side.rotation.y = -s * Math.PI / 2; side.position.set(s * K.w / 2, K.h / 2, (K.z0 + K.z1) / 2); group.add(side); }
+    // The low ceiling (owner, 2026-10-27: the shots looked over the walls into the dark): plaster between dark
+    // beams (the hall's ceiling drawing, beams about 30 cm apart), facing down.
+    const beams = ai['walls/hall_ceiling'].tex.clone(); beams.wrapS = beams.wrapT = THREE.RepeatWrapping; beams.repeat.set(K.w / 0.6, (K.z1 - K.z0) / 0.6); beams.anisotropy = 8; beams.needsUpdate = true;
+    const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.z1 - K.z0), plain(beams)); ceiling.rotation.x = Math.PI / 2; ceiling.position.set(0, K.h, (K.z0 + K.z1) / 2); group.add(ceiling);
     // The flagstones: the court's engraved floor tile (AI), stones about 30 cm across (play-through, 2026-10-15).
     const stones = ai['ch11/court_floor'].tex.clone(); stones.wrapS = stones.wrapT = THREE.RepeatWrapping; stones.repeat.set(K.w / 1.2, (K.z1 - K.z0) / 1.2); stones.anisotropy = 8; stones.needsUpdate = true;
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(K.w, K.z1 - K.z0), plain(stones)); floor.rotation.x = -Math.PI / 2; floor.position.z = (K.z0 + K.z1) / 2; group.add(floor);

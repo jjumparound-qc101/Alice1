@@ -68,7 +68,8 @@ export const teaParty = {
     // The arm-chair at the end of the table, the same chair as in Alice's drawing sitting in it.
     const chair = art('tea_armchair', 0.45 * ai['ch7/tea_armchair'].aspect); chair.position.set(TBL.x0 - 0.14, 0, TBL.z + 0.08); chair.rotation.y = 0.9; group.add(chair);
     const W = ai['props/hatter_watch_close'], watch = paperFlat(W.tex, 0.04, 0.04 / W.aspect, { anchor: 'center' }); group.add(watch); // the days of the month, a little butter on it (AI)
-    const dA = ai['ch7/dormouse_sleep'], dB = ai['ch7/dormouse_talk']; const dor = paperFlat(dA.tex, 0.11, 0.11 / dA.aspect); const dorTalk = paperFlat(dB.tex, 0.11, 0.11 / dB.aspect); // AI (tools/ch7_art.py) group.add(dor, dorTalk);
+    const dA = ai['ch7/dormouse_sleep'], dB = ai['ch7/dormouse_talk']; const dor = paperFlat(dA.tex, 0.11, 0.11 / dA.aspect); const dorTalk = paperFlat(dB.tex, 0.11, 0.11 / dB.aspect); // AI (tools/ch7_art.py)
+    group.add(dor, dorTalk);
     const DT = ai['ch7/dormouse_teapot']; const potDor = paperFlat(DT.tex, 0.19, 0.19 / DT.aspect); group.add(potDor); // the Dormouse in the teapot (AI, after plate 7.3)
     potDor.position.set(SEATS[2] - 0.02, TBL.h + 0.008, TBL.z + 0.02);
     const tree = art('tree_door', 1.47 * ai['ch7/tree_door'].aspect); tree.position.set(-3.6, 0, 0.2); group.add(tree); // the same tree as in her drawing at its door
